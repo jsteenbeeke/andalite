@@ -21,15 +21,15 @@ import com.jeroensteenbeeke.andalite.transformation.operations.CompilationUnitOp
 
 class CompilationUnitOperationBuilder implements
 		ScopedOperationBuilder<AnalyzedSourceFile, CompilationUnitOperation> {
-	private final RecipeBuilder parent;
+	private final StepCollector collector;
 
-	CompilationUnitOperationBuilder(RecipeBuilder parent) {
+	CompilationUnitOperationBuilder(StepCollector collector) {
 		super();
-		this.parent = parent;
+		this.collector = collector;
 	}
 
 	public void ensure(CompilationUnitOperation compilationUnitOperation) {
-		parent.addStep(CompilationUnitNavigation.getInstance(),
+		collector.addStep(CompilationUnitNavigation.getInstance(),
 				compilationUnitOperation);
 	}
 }

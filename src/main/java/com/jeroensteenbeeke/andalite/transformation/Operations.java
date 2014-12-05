@@ -15,12 +15,20 @@
 
 package com.jeroensteenbeeke.andalite.transformation;
 
+import javax.annotation.Nonnull;
+
+import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.CompilationUnitOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.FieldOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.impl.EnsureClassAnnotation;
+import com.jeroensteenbeeke.andalite.transformation.operations.impl.EnsureField;
+import com.jeroensteenbeeke.andalite.transformation.operations.impl.EnsureFieldAnnotation;
 import com.jeroensteenbeeke.andalite.transformation.operations.impl.EnsureImports;
 import com.jeroensteenbeeke.andalite.transformation.operations.impl.EnsurePublicClass;
 
 public class Operations {
+
 	private Operations() {
 
 	}
@@ -29,12 +37,49 @@ public class Operations {
 		return new EnsurePublicClass();
 	}
 
-	public static CompilationUnitOperation imports(String fqdn) {
+	public static CompilationUnitOperation imports(@Nonnull String fqdn) {
 		return new EnsureImports(fqdn);
 	}
 
-	public static ClassOperation hasAnnotation(String annotation) {
-		return null;
+	public static ClassOperation hasClassAnnotation(@Nonnull String annotation) {
+		return new EnsureClassAnnotation(annotation);
 	}
 
+	public static FieldOperation hasFieldAnnotation(@Nonnull String annotation) {
+		return new EnsureFieldAnnotation(annotation);
+	}
+
+	public static HasFieldBuilderName hasField(@Nonnull String name) {
+		return new HasFieldBuilderName(name);
+	}
+
+	public static class HasFieldBuilderName {
+		private final String name;
+
+		private HasFieldBuilderName(@Nonnull String name) {
+			super();
+			this.name = name;
+		}
+
+		public HasFieldBuilderNameType typed(@Nonnull String type) {
+			return new HasFieldBuilderNameType(name, type);
+		}
+	}
+
+	public static class HasFieldBuilderNameType {
+		private final String name;
+
+		private final String type;
+
+		private HasFieldBuilderNameType(@Nonnull String name,
+				@Nonnull String type) {
+			super();
+			this.name = name;
+			this.type = type;
+		}
+
+		public ClassOperation withAccess(@Nonnull AccessModifier modifier) {
+			return new EnsureField(name, type, modifier);
+		}
+	}
 }

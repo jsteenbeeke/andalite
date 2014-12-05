@@ -22,14 +22,16 @@ import com.jeroensteenbeeke.andalite.analyzer.Locatable;
 import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
 import com.jeroensteenbeeke.andalite.transformation.operations.Operation;
 
-public class RecipeBuilder {
+public class RecipeBuilder implements StepCollector {
 	private final List<RecipeStep<?>> steps;
 
 	public RecipeBuilder() {
 		this.steps = Lists.newArrayList();
 	}
 
-	<T extends Locatable> void addStep(Navigation<T> nav, Operation<T> oper) {
+	@Override
+	public <T extends Locatable> void addStep(Navigation<T> nav,
+			Operation<T> oper) {
 		this.steps.add(new RecipeStep<T>(nav, oper));
 	}
 

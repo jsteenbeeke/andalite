@@ -23,6 +23,7 @@ import com.jeroensteenbeeke.andalite.analyzer.Locatable;
 import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.NavigationException;
 import com.jeroensteenbeeke.andalite.transformation.operations.Operation;
+import com.jeroensteenbeeke.andalite.transformation.operations.OperationException;
 
 public class RecipeStep<T extends Locatable> {
 	private final Navigation<T> navigation;
@@ -43,7 +44,13 @@ public class RecipeStep<T extends Locatable> {
 			return ActionResult.error(e.getMessage());
 		}
 		if (target != null) {
-			List<Transformation> transformations = operation.perform(target);
+			List<Transformation> transformations;
+			try {
+				transformations = operation.perform(target);
+			} catch (OperationException e) {
+				return ActionResult.error("Operation cannot be performed: %s",
+						e.getMessage());
+			}
 			for (Transformation transformation : transformations) {
 				ActionResult result = transformation.applyTo(file
 						.getOriginalFile());

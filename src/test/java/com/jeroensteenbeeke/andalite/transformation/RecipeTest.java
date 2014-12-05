@@ -20,7 +20,7 @@ import static com.jeroensteenbeeke.andalite.transformation.Operations.*;
 
 import org.junit.Test;
 
-import com.jeroensteenbeeke.andalite.transformation.RecipeBuilder;
+import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 
 public class RecipeTest {
 	@Test
@@ -28,7 +28,13 @@ public class RecipeTest {
 		RecipeBuilder builder = new RecipeBuilder();
 
 		builder.atRoot().ensure(imports("javax.persistence.Entity"));
+		builder.atRoot().ensure(imports("javax.persistence.Column"));
 		builder.atRoot().ensure(hasPublicClass());
-		builder.inClass(publicClass()).ensure(hasAnnotation("Entity"));
+		builder.inClass(publicClass()).ensure(hasClassAnnotation("Entity"));
+		builder.inClass(publicClass()).ensure(
+				hasField("foo").typed("String").withAccess(
+						AccessModifier.PRIVATE));
+		builder.inClass(publicClass()).forField("foo")
+				.ensure(hasFieldAnnotation("Column"));
 	}
 }

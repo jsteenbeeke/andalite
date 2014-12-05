@@ -22,18 +22,22 @@ import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
 public class ClassScopeOperationBuilder implements
 		ScopedOperationBuilder<AnalyzedClass, ClassOperation> {
 
-	private final RecipeBuilder parent;
+	private final StepCollector collector;
 
 	private final Navigation<AnalyzedClass> navigation;
 
-	ClassScopeOperationBuilder(RecipeBuilder recipeBuilder,
+	ClassScopeOperationBuilder(StepCollector collector,
 			Navigation<AnalyzedClass> navigation) {
-		this.parent = recipeBuilder;
+		this.collector = collector;
 		this.navigation = navigation;
 	}
 
 	@Override
 	public void ensure(ClassOperation operation) {
-		parent.addStep(navigation, operation);
+		collector.addStep(navigation, operation);
+	}
+
+	public FieldOperationBuilder forField(String name) {
+		return new FieldOperationBuilder(collector, navigation, name);
 	}
 }
