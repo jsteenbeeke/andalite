@@ -39,6 +39,8 @@ public final class AnalyzedClass extends AccessModifiable {
 
 	private final List<AnalyzedConstructor> constructors;
 
+	private final Map<String, AnalyzedClass> innerClasses;
+
 	private Location bodyLocation = null;
 
 	public AnalyzedClass(@Nonnull Location location, int modifiers,
@@ -47,6 +49,7 @@ public final class AnalyzedClass extends AccessModifiable {
 		this.packageName = packageName;
 		this.className = className;
 		this.methods = LinkedHashMultimap.create();
+		this.innerClasses = Maps.newHashMap();
 		this.fields = Maps.newHashMap();
 		this.constructors = Lists.newArrayList();
 	}
@@ -88,6 +91,19 @@ public final class AnalyzedClass extends AccessModifiable {
 		return null;
 	}
 
+	public boolean hasInnerClass(@Nonnull String name) {
+		return innerClasses.containsKey(name);
+	}
+
+	@CheckForNull
+	public AnalyzedClass getInnerClass(@Nonnull String name) {
+		if (hasInnerClass(name)) {
+			return innerClasses.get(name);
+		}
+
+		return null;
+	}
+
 	@Nonnull
 	public List<AnalyzedMethod> getMethods() {
 		return ImmutableList.copyOf(methods.values());
@@ -96,6 +112,11 @@ public final class AnalyzedClass extends AccessModifiable {
 	@Nonnull
 	public List<AnalyzedConstructor> getConstructors() {
 		return ImmutableList.copyOf(constructors);
+	}
+
+	@Nonnull
+	public List<AnalyzedClass> getInnerClasses() {
+		return ImmutableList.copyOf(innerClasses.values());
 	}
 
 	void addField(@Nonnull AnalyzedField field) {
@@ -110,6 +131,10 @@ public final class AnalyzedClass extends AccessModifiable {
 
 	void addConstructor(@Nonnull AnalyzedConstructor constructor) {
 		this.constructors.add(constructor);
+	}
+
+	void addInnerClass(@Nonnull AnalyzedClass innerClass) {
+		this.innerClasses.put(innerClass.getClassName(), innerClass);
 	}
 
 	@Override

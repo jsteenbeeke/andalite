@@ -16,6 +16,7 @@
 package com.jeroensteenbeeke.andalite.transformation;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.transformation.navigation.InnerClassNavigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
 import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
 
@@ -39,5 +40,10 @@ public class ClassScopeOperationBuilder implements
 
 	public FieldOperationBuilder forField(String name) {
 		return new FieldOperationBuilder(collector, navigation, name);
+	}
+
+	public ClassScopeOperationBuilder forInnerClass(String name) {
+		return new ClassScopeOperationBuilder(collector,
+				new InnerClassNavigation(navigation, name));
 	}
 }
