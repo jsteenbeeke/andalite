@@ -120,11 +120,11 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>org.codehaus.mojo</groupId>
+										<groupId>com.mycila</groupId>
 										<artifactId>license-maven-plugin</artifactId>
 										<versionRange>[${maven.license.plugin.version},)</versionRange>
 										<goals>
-											<goal>check-file-header</goal>
+											<goal>check</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
@@ -145,23 +145,30 @@
 					</configuration>
 				</plugin>
 				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
+					<groupId>com.mycila</groupId>
 					<artifactId>license-maven-plugin</artifactId>
 					<version>${maven.license.plugin.version}</version>
-					<configuration>
-						<failOnMissingHeader>true</failOnMissingHeader>
-						<licenseName>lgpl_v3</licenseName>
-						<licenseFile>${basedir}/LICENSE</licenseFile>
-					</configuration>
 					<executions>
 						<execution>
 							<id>check-license</id>
 							<phase>compile</phase>
 							<goals>
-								<goal>check-file-header</goal>
+								<goal>check</goal>
 							</goals>
+							<inherited>false</inherited>
+							<configuration>
+							</configuration>
 						</execution>
 					</executions>
+					<configuration>
+						<header>header.txt</header>
+						<includes>
+							<include>src/**/*.java</include>
+						</includes>
+						<mappings>
+							<java>JAVADOC_STYLE</java>
+						</mappings>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -207,7 +214,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
+				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
@@ -224,7 +231,7 @@
 		<!-- Plugin Versions -->
 		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
 		<maven.javadoc.plugin.version>2.10.1</maven.javadoc.plugin.version>
-		<maven.license.plugin.version>1.7</maven.license.plugin.version>
+		<maven.license.plugin.version>2.3</maven.license.plugin.version>
 		<maven.source.plugin.version>2.4</maven.source.plugin.version>
 
 		<!-- Other settings -->
