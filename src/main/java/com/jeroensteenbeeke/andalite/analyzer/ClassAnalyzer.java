@@ -115,16 +115,22 @@ public class ClassAnalyzer {
 		int start = classEndMinusOne;
 		final int end = classEndMinusOne;
 
-		for (ClassOrInterfaceType type : decl.getExtends()) {
-			element.setSuperClass(type.getName());
-			element.setExtendsLocation(Location.from(type));
+		List<ClassOrInterfaceType> extendedClasses = decl.getExtends();
+		if (extendedClasses != null) {
+			for (ClassOrInterfaceType type : extendedClasses) {
+				element.setSuperClass(type.getName());
+				element.setExtendsLocation(Location.from(type));
 
-			break; // Classes only have single inheritance
+				break; // Classes only have single inheritance
+			}
 		}
 
-		for (ClassOrInterfaceType type : decl.getImplements()) {
-			element.addInterface(type.getName());
-			element.setLastImplementsLocation(Location.from(type));
+		List<ClassOrInterfaceType> implementedInterfaces = decl.getImplements();
+		if (implementedInterfaces != null) {
+			for (ClassOrInterfaceType type : implementedInterfaces) {
+				element.addInterface(type.getName());
+				element.setLastImplementsLocation(Location.from(type));
+			}
 		}
 
 		for (BodyDeclaration member : decl.getMembers()) {
