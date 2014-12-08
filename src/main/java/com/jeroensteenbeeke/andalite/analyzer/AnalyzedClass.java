@@ -17,15 +17,12 @@ package com.jeroensteenbeeke.andalite.analyzer;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
+import com.google.common.collect.*;
 import com.jeroensteenbeeke.andalite.Location;
 
 public final class AnalyzedClass extends AccessModifiable {
@@ -43,6 +40,14 @@ public final class AnalyzedClass extends AccessModifiable {
 
 	private Location bodyLocation = null;
 
+	private Location extendsLocation = null;
+
+	private Location lastImplementsLocation = null;
+
+	private String superClass = null;
+
+	private Set<String> interfaces;
+
 	public AnalyzedClass(@Nonnull Location location, int modifiers,
 			@Nonnull String packageName, @Nonnull String className) {
 		super(location, modifiers);
@@ -52,6 +57,47 @@ public final class AnalyzedClass extends AccessModifiable {
 		this.innerClasses = Maps.newHashMap();
 		this.fields = Maps.newHashMap();
 		this.constructors = Lists.newArrayList();
+		this.interfaces = Sets.newHashSet();
+	}
+
+	@CheckForNull
+	public Location getExtendsLocation() {
+		return extendsLocation;
+	}
+
+	void setExtendsLocation(@Nonnull Location extendsLocation) {
+		this.extendsLocation = extendsLocation;
+	}
+
+	@CheckForNull
+	public Location getLastImplementsLocation() {
+		return lastImplementsLocation;
+	}
+
+	void setLastImplementsLocation(@Nonnull Location lastImplementsLocation) {
+		this.lastImplementsLocation = lastImplementsLocation;
+	}
+
+	@Nonnull
+	public Set<String> getInterfaces() {
+		return ImmutableSet.copyOf(interfaces);
+	}
+
+	void addInterface(@Nonnull String interfaceName) {
+		this.interfaces.add(interfaceName);
+	}
+
+	public boolean implementsInterface(@Nonnull String interfaceName) {
+		return this.interfaces.contains(interfaceName);
+	}
+
+	@CheckForNull
+	public String getSuperClass() {
+		return superClass;
+	}
+
+	void setSuperClass(String superClass) {
+		this.superClass = superClass;
 	}
 
 	@CheckForNull
@@ -168,4 +214,5 @@ public final class AnalyzedClass extends AccessModifiable {
 		callback.newline();
 
 	}
+
 }

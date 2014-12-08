@@ -28,6 +28,7 @@ import com.github.antlrjavaparser.api.ImportDeclaration;
 import com.github.antlrjavaparser.api.PackageDeclaration;
 import com.github.antlrjavaparser.api.body.*;
 import com.github.antlrjavaparser.api.expr.*;
+import com.github.antlrjavaparser.api.type.ClassOrInterfaceType;
 import com.github.antlrjavaparser.api.type.Type;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -88,12 +89,16 @@ public class ClassAnalyzer {
 		if (typeDeclaration instanceof ClassOrInterfaceDeclaration) {
 			ClassOrInterfaceDeclaration decl = (ClassOrInterfaceDeclaration) typeDeclaration;
 
-			AnalyzedClass element = new AnalyzedClass(Location.from(decl),
-					decl.getModifiers(), packageName, decl.getName());
+			if (decl.isInterface()) {
 
-			processClassDeclaration(decl, element);
+			} else {
+				AnalyzedClass element = new AnalyzedClass(Location.from(decl),
+						decl.getModifiers(), packageName, decl.getName());
 
-			sourceFile.addClass(element);
+				processClassDeclaration(decl, element);
+
+				sourceFile.addClass(element);
+			}
 		}
 
 	}
@@ -105,6 +110,18 @@ public class ClassAnalyzer {
 			if (annotation != null) {
 				element.addAnnotation(annotation);
 			}
+		}
+
+		for (ClassOrInterfaceType type : decl.getExtends()) {
+			element.setSuperClass(type.getName());
+			element.setExtendsLocation(Location.from(type));
+
+			break; // Classes only have single inheritance
+		}
+
+		for (ClassOrInterfaceType type : decl.getImplements()) {
+			element.addInterface(type.getName());
+			element.setLastImplementsLocation(Location.from(type));
 		}
 
 		CodePoint start = null;
@@ -133,6 +150,19 @@ public class ClassAnalyzer {
 				if (constr != null) {
 					element.addConstructor(constr);
 				}
+			} else if (member instanceof ClassOrInterfaceDeclaration) {
+				ClassOrInterfaceDeclaration innerClassDecl = (ClassOrInterfaceDeclaration) member;
+
+				AnalyzedClass innerClass = new AnalyzedClass(
+						Location.from(innerClassDecl),
+						innerClassDecl.getModifiers(), String.format("%s.%s",
+								element.getPackageName(),
+								element.getClassName()),
+						innerClassDecl.getName());
+
+				processClassDeclaration(innerClassDecl, innerClass);
+
+				element.addInnerClass(innerClass);
 			}
 		}
 		CodePoint end = null;
@@ -143,9 +173,11 @@ public class ClassAnalyzer {
 			if (decl.getEndColumn() > 1) {
 				end = new CodePoint(decl.getEndLine(), decl.getEndColumn() - 1);
 			} else {
-
+				end = new CodePoint(decl.getEndLine() - 1, decl.getEndColumn());
 			}
 		}
+
+		element.setBodyLocation(new Location(start, end));
 	}
 
 	private AnalyzedConstructor analyze(String className,
