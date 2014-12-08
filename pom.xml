@@ -108,6 +108,13 @@
 					<include>**</include>
 				</includes>
 			</testResource>
+			<testResource>
+				<filtering>false</filtering>
+				<directory>src/test/dummy</directory>
+				<includes>
+					<include>**/*.java</include>
+				</includes>
+			</testResource>
 		</testResources>
 		<pluginManagement>
 			<plugins>
