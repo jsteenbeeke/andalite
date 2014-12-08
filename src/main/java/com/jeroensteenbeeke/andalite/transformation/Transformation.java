@@ -20,17 +20,16 @@ import java.io.File;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.ActionResult;
-import com.jeroensteenbeeke.andalite.CodePoint;
 import com.jeroensteenbeeke.andalite.FileRewriter;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.Locatable;
 
 public class Transformation {
-	private final CodePoint point;
+	private final int point;
 
 	private final String code;
 
-	private Transformation(CodePoint point, String code) {
+	private Transformation(int point, String code) {
 		super();
 		this.point = point;
 		this.code = code;

@@ -32,7 +32,6 @@ import com.github.antlrjavaparser.api.type.ClassOrInterfaceType;
 import com.github.antlrjavaparser.api.type.Type;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import com.jeroensteenbeeke.andalite.CodePoint;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.TypedActionResult;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.AnnotationValue;
@@ -112,6 +111,10 @@ public class ClassAnalyzer {
 			}
 		}
 
+		final int classEndMinusOne = decl.getEndIndex() - 1;
+		int start = classEndMinusOne;
+		final int end = classEndMinusOne;
+
 		for (ClassOrInterfaceType type : decl.getExtends()) {
 			element.setSuperClass(type.getName());
 			element.setExtendsLocation(Location.from(type));
@@ -124,15 +127,9 @@ public class ClassAnalyzer {
 			element.setLastImplementsLocation(Location.from(type));
 		}
 
-		CodePoint start = null;
-
-		BodyDeclaration last = null;
-
 		for (BodyDeclaration member : decl.getMembers()) {
-			last = member;
-			if (start == null) {
-				start = new CodePoint(member.getBeginLine(),
-						member.getBeginColumn());
+			if (start == classEndMinusOne) {
+				start = member.getBeginIndex();
 			}
 			if (member instanceof FieldDeclaration) {
 				List<AnalyzedField> fields = analyze((FieldDeclaration) member);
@@ -163,17 +160,6 @@ public class ClassAnalyzer {
 				processClassDeclaration(innerClassDecl, innerClass);
 
 				element.addInnerClass(innerClass);
-			}
-		}
-		CodePoint end = null;
-
-		if (last != null) {
-			end = new CodePoint(last.getEndLine(), last.getEndColumn());
-		} else {
-			if (decl.getEndColumn() > 1) {
-				end = new CodePoint(decl.getEndLine(), decl.getEndColumn() - 1);
-			} else {
-				end = new CodePoint(decl.getEndLine() - 1, decl.getEndColumn());
 			}
 		}
 

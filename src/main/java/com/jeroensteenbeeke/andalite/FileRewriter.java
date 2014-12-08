@@ -27,13 +27,11 @@ import com.google.common.collect.TreeMultimap;
 import com.google.common.io.Files;
 
 public class FileRewriter {
-	private static final int FIRST_LINE = 1;
-
-	private static final int FIRST_COLUMN = 1;
+	private static final int FIRST_INDEX = 1;
 
 	private final File targetFile;
 
-	private final Multimap<CodePoint, String> insertions;
+	private final Multimap<Integer, String> insertions;
 
 	public FileRewriter(File targetFile) {
 		super();
@@ -42,14 +40,8 @@ public class FileRewriter {
 	}
 
 	@Nonnull
-	public FileRewriter insert(int line, int column, @Nonnull String code) {
-		return insert(new CodePoint(line, column), code);
-	}
-
-	@Nonnull
-	public FileRewriter insert(@Nonnull CodePoint codePoint,
-			@Nonnull String code) {
-		insertions.put(codePoint, code);
+	public FileRewriter insert(@Nonnull int index, @Nonnull String code) {
+		insertions.put(index, code);
 		return this;
 	}
 
@@ -59,29 +51,20 @@ public class FileRewriter {
 			final File temp = File.createTempFile("rewrite", ".java");
 			try (final FileInputStream in = new FileInputStream(targetFile);
 					final FileOutputStream out = new FileOutputStream(temp)) {
-
-				int line = FIRST_LINE;
-				int data = -1;
-				int column = FIRST_COLUMN;
+				int index = FIRST_INDEX;
+				int data;
 
 				while ((data = in.read()) != -1) {
 
-					final CodePoint here = new CodePoint(line, column);
-
-					if (insertions.containsKey(here)) {
-						for (String insert : insertions.get(here)) {
+					if (insertions.containsKey(index)) {
+						for (String insert : insertions.get(index)) {
 							out.write(insert.getBytes());
 						}
 					}
 
 					out.write(data);
 
-					column++;
-
-					if (data == '\n') {
-						line++;
-						column = FIRST_COLUMN;
-					}
+					index++;
 				}
 
 				out.flush();

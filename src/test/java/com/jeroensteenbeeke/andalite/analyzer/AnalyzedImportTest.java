@@ -19,9 +19,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.jeroensteenbeeke.andalite.CodePoint;
 import com.jeroensteenbeeke.andalite.Location;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedImport;
 
 public class AnalyzedImportTest {
 	private static final String ORG_JUNIT = "org.junit";
@@ -138,9 +136,6 @@ public class AnalyzedImportTest {
 	}
 
 	private Location loc() {
-		CodePoint start = new CodePoint(3, 1);
-		CodePoint end = new CodePoint(3, 23);
-
-		return new Location(start, end);
+		return new Location(15, 35);
 	}
 }
