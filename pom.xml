@@ -12,11 +12,6 @@
 	<inceptionYear>2014</inceptionYear>
 	<description>Library for Java Code Transformations</description>
 
-	<organization>
-		<name>Jeroen Steenbeeke</name>
-		<url>http://www.jeroensteenbeeke.nl/</url>
-	</organization>
-
 	<developers>
 		<developer>
 			<name>Jeroen Steenbeeke</name>
@@ -110,7 +105,7 @@
 			</testResource>
 			<testResource>
 				<filtering>false</filtering>
-				<directory>src/test/dummy</directory>
+				<directory>src/dummy/java</directory>
 				<includes>
 					<include>**/*.java</include>
 				</includes>

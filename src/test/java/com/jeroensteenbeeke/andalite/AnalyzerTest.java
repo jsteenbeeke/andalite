@@ -14,9 +14,11 @@
  */
 package com.jeroensteenbeeke.andalite;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
@@ -26,35 +28,8 @@ import com.jeroensteenbeeke.andalite.analyzer.annotation.AnnotationValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.ArrayValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.BaseValue;
 
-public class AnalyzerTest {
-	@Test
-	public void testRewriter() {
-		ClassAnalyzer classAnalyzer = new ClassAnalyzer(
-				new File(
-						"src/test/java/com/jeroensteenbeeke/andalite/RewriterTest.java"));
-		TypedActionResult<AnalyzedSourceFile> result = classAnalyzer.analyze();
-		assertTrue(result.isOk());
-
-		AnalyzedSourceFile source = result.getObject();
-
-		List<AnalyzedClass> classes = source.getClasses();
-		assertEquals(1, classes.size());
-		AnalyzedClass analyzedClass = classes.get(0);
-
-		assertEquals("com.jeroensteenbeeke.andalite",
-				analyzedClass.getPackageName());
-		assertEquals("RewriterTest", analyzedClass.getClassName());
-		assertTrue(analyzedClass.hasAnnotation("Ignore"));
-		AnalyzedAnnotation annotation = analyzedClass.getAnnotation("Ignore");
-		assertFalse(annotation == null);
-
-		List<AnalyzedMethod> methods = analyzedClass.getMethods();
-		assertEquals(1, methods.size());
-		AnalyzedMethod method = methods.get(0);
-		assertNotNull(method);
-
-		assertTrue(method.hasAnnotation("Test"));
-	}
+public class AnalyzerTest extends DummyAwareTest {
+	private static final String DUMMY_PACKAGE = "com.jeroensteenbeeke.andalite.dummy";
 
 	@Test
 	public void testAnalyzer() {
@@ -147,5 +122,95 @@ public class AnalyzerTest {
 
 		AnalyzedSourceFile source = result.getObject();
 		source.output(new PrintStreamCallback(System.out));
+	}
+
+	@Test
+	public void testEmptyJava() throws IOException {
+		ClassAnalyzer analyzer = analyzeDummy("Empty");
+		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+
+		assertTrue(result.isOk());
+
+		AnalyzedSourceFile file = result.getObject();
+
+		assertThat(file, notNullValue());
+
+		assertThat(file.getPackageName(), equalTo(DUMMY_PACKAGE));
+
+		assertThat(file.getClasses(), isEmpty());
+		assertThat(file.getImports(), isEmpty());
+	}
+
+	@Test
+	public void testBareJava() throws IOException {
+		ClassAnalyzer analyzer = analyzeDummy("BareClass");
+
+		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+
+		assertTrue(result.isOk());
+
+		AnalyzedSourceFile file = result.getObject();
+
+		assertThat(file, notNullValue());
+
+		assertThat(file.getPackageName(), equalTo(DUMMY_PACKAGE));
+
+		assertThat(file.getImports(), isEmpty());
+		assertThat(file.getClasses(), hasItem(any(AnalyzedClass.class)));
+
+		assertThat(file.getClasses().size(), is(1));
+		AnalyzedClass analyzedClass = file.getClasses().get(0);
+
+		assertThat(analyzedClass.getAccessModifier(), is(AccessModifier.PUBLIC));
+		assertThat(analyzedClass.getClassName(), equalTo("BareClass"));
+
+		assertThat(analyzedClass.getFields(), isEmpty());
+		assertThat(analyzedClass.getMethods(), isEmpty());
+		assertThat(analyzedClass.getConstructors(), isEmpty());
+		assertThat(analyzedClass.getInnerClasses(), isEmpty());
+		assertThat(analyzedClass.getInterfaces(), isEmpty());
+
+		assertThat(analyzedClass.getSuperClass(), nullValue());
+
+	}
+
+	@Test
+	public void testReverseIntComparator() throws IOException {
+		ClassAnalyzer analyzer = analyzeDummy("ReverseIntComparator");
+
+		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+
+		assertTrue(result.isOk());
+
+		AnalyzedSourceFile file = result.getObject();
+
+		assertThat(file, notNullValue());
+
+		assertThat(file.getPackageName(), equalTo(DUMMY_PACKAGE));
+
+		assertThat(file.getImports().size(), is(1));
+		AnalyzedImport analyzedImport = file.getImports().get(0);
+
+		assertTrue(analyzedImport.matchesClass("java.util.Comparator"));
+
+		assertThat(file.getClasses(), hasItem(any(AnalyzedClass.class)));
+
+		assertThat(file.getClasses().size(), is(1));
+		AnalyzedClass analyzedClass = file.getClasses().get(0);
+
+		assertThat(analyzedClass.getAccessModifier(), is(AccessModifier.PUBLIC));
+		assertThat(analyzedClass.getClassName(),
+				equalTo("ReverseIntComparator"));
+
+		assertThat(analyzedClass.getFields(), isEmpty());
+		assertThat(analyzedClass.getMethods().size(), is(1));
+		assertThat(analyzedClass.getConstructors(), isEmpty());
+		assertThat(analyzedClass.getInnerClasses(), isEmpty());
+		assertThat(analyzedClass.getInterfaces(),
+				hasItem(equalTo("Comparator")));
+		assertThat(analyzedClass.getInterfaces().size(), is(1));
+
+		assertThat(analyzedClass.getSuperClass(), nullValue());
+
 	}
 }
