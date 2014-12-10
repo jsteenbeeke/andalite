@@ -180,9 +180,6 @@
 						<includes>
 							<include>src/**/*.java</include>
 						</includes>
-						<mappings>
-							<java>SLASHSTAR_STYLE</java>
-						</mappings>
 					</configuration>
 				</plugin>
 				<plugin>
