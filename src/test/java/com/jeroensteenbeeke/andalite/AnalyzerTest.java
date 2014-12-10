@@ -14,6 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite;
 
+import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -59,7 +60,7 @@ public class AnalyzerTest extends DummyAwareTest {
 		assertEquals(1, classes.size());
 
 		AnalyzedClass lolcat = classes.get(0);
-		assertEquals("LolCat", lolcat.getClassName());
+		assertThat(lolcat, hasName("LolCat"));
 
 		assertTrue(lolcat.hasAnnotation("Entity"));
 		assertTrue(lolcat.hasAnnotation("Table"));
@@ -112,19 +113,6 @@ public class AnalyzerTest extends DummyAwareTest {
 	}
 
 	@Test
-	public void outputTest() {
-		ClassAnalyzer classAnalyzer = new ClassAnalyzer(
-				new File(
-						"src/test/java/com/jeroensteenbeeke/andalite/analyzer/LolCat.java"));
-
-		TypedActionResult<AnalyzedSourceFile> result = classAnalyzer.analyze();
-		assertTrue(result.isOk());
-
-		AnalyzedSourceFile source = result.getObject();
-		source.output(new PrintStreamCallback(System.out));
-	}
-
-	@Test
 	public void testEmptyJava() throws IOException {
 		ClassAnalyzer analyzer = analyzeDummy("Empty");
 		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
@@ -135,10 +123,10 @@ public class AnalyzerTest extends DummyAwareTest {
 
 		assertThat(file, notNullValue());
 
-		assertThat(file.getPackageName(), equalTo(DUMMY_PACKAGE));
+		assertThat(file, inPackage(DUMMY_PACKAGE));
 
-		assertThat(file.getClasses(), isEmpty());
-		assertThat(file.getImports(), isEmpty());
+		assertThat(file, hasNoClasses());
+		assertThat(file, hasNoImports());
 	}
 
 	@Test
@@ -153,16 +141,16 @@ public class AnalyzerTest extends DummyAwareTest {
 
 		assertThat(file, notNullValue());
 
-		assertThat(file.getPackageName(), equalTo(DUMMY_PACKAGE));
+		assertThat(file, inPackage(DUMMY_PACKAGE));
 
-		assertThat(file.getImports(), isEmpty());
-		assertThat(file.getClasses(), hasItem(any(AnalyzedClass.class)));
+		assertThat(file, hasNoImports());
+		assertThat(file, hasClasses());
 
 		assertThat(file.getClasses().size(), is(1));
 		AnalyzedClass analyzedClass = file.getClasses().get(0);
 
-		assertThat(analyzedClass.getAccessModifier(), is(AccessModifier.PUBLIC));
-		assertThat(analyzedClass.getClassName(), equalTo("BareClass"));
+		assertThat(analyzedClass, hasModifier(AccessModifier.PUBLIC));
+		assertThat(analyzedClass, hasName("BareClass"));
 
 		assertThat(analyzedClass.getFields(), isEmpty());
 		assertThat(analyzedClass.getMethods(), isEmpty());

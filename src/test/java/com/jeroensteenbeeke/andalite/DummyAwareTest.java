@@ -16,16 +16,17 @@ package com.jeroensteenbeeke.andalite;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.Set;
 
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
+import org.junit.After;
 
+import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import com.jeroensteenbeeke.andalite.analyzer.ClassAnalyzer;
 
 public abstract class DummyAwareTest {
+	private final Set<File> dummyFiles = Sets.newConcurrentHashSet();
+
 	protected final File getDummy(String className) throws IOException {
 		File original = new File(
 				"src/dummy/java/com/jeroensteenbeeke/andalite/dummy/",
@@ -35,6 +36,8 @@ public abstract class DummyAwareTest {
 
 		Files.copy(original, tempFile);
 
+		dummyFiles.add(tempFile);
+
 		return tempFile;
 	}
 
@@ -43,27 +46,12 @@ public abstract class DummyAwareTest {
 		return new ClassAnalyzer(getDummy(className));
 	}
 
-	protected final <C extends Collection<?>> Matcher<C> isEmpty() {
-		return new TypeSafeDiagnosingMatcher<C>() {
-
-			@Override
-			protected boolean matchesSafely(C item,
-					Description mismatchDescription) {
-				if (item.isEmpty()) {
-					return true;
-				}
-
-				mismatchDescription.appendText("is not empty");
-
-				return false;
-
+	@After
+	public void cleanUpDummies() {
+		if (!dummyFiles.isEmpty()) {
+			for (File file : dummyFiles) {
+				file.delete();
 			}
-
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("an empty collection ");
-			}
-
-		};
+		}
 	}
 }

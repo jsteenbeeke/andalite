@@ -52,6 +52,12 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+			<version>${hamcrest.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>javax</groupId>
@@ -114,9 +120,16 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>${maven.eclipse.plugin.version}</version>
+					<configuration>
+					</configuration>
+				</plugin>
+				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
+					<version>${maven.lifecycle.plugin.version}</version>
 					<configuration>
 						<lifecycleMappingMetadata>
 							<pluginExecutions>
@@ -168,7 +181,7 @@
 							<include>src/**/*.java</include>
 						</includes>
 						<mappings>
-							<java>JAVADOC_STYLE</java>
+							<java>COMMENT_STYLE</java>
 						</mappings>
 					</configuration>
 				</plugin>
@@ -216,6 +229,10 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+			</plugin>
+			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
 			</plugin>
@@ -225,6 +242,7 @@
 	<properties>
 		<!-- Dependency Versions -->
 		<guava.version>18.0</guava.version>
+		<hamcrest.version>1.3</hamcrest.version>
 		<javaee.version>7.0</javaee.version>
 		<jsr305.version>3.0.0</jsr305.version>
 		<junit.version>4.12</junit.version>
@@ -232,8 +250,10 @@
 
 		<!-- Plugin Versions -->
 		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
+		<maven.eclipse.plugin.version>2.9</maven.eclipse.plugin.version>
 		<maven.javadoc.plugin.version>2.10.1</maven.javadoc.plugin.version>
 		<maven.license.plugin.version>2.3</maven.license.plugin.version>
+		<maven.lifecycle.plugin.version>1.0.0</maven.lifecycle.plugin.version>
 		<maven.source.plugin.version>2.4</maven.source.plugin.version>
 
 		<!-- Other settings -->
