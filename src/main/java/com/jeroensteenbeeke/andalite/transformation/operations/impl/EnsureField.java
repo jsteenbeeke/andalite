@@ -19,6 +19,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
@@ -47,23 +48,33 @@ public class EnsureField implements ClassOperation {
 		if (input.hasField(name)) {
 			AnalyzedField field = input.getField(name);
 
-			if (!type.equals(field.getType())) {
-				throw new OperationException(String.format(
-						"Field %s should have type %s but instead has type %s",
-						name, type, field.getType()));
-			}
+			if (field != null) { // Findbugs, implied by input.hasField
+				if (!type.equals(field.getType())) {
+					throw new OperationException(
+							String.format(
+									"Field %s should have type %s but instead has type %s",
+									name, type, field.getType()));
+				}
 
-			if (!modifier.equals(field.getAccessModifier())) {
-				throw new OperationException(
-						String.format(
-								"Field %s should have access modifier %s but instead has access modifier %s",
-								name, modifier, field.getAccessModifier()));
+				if (!modifier.equals(field.getAccessModifier())) {
+					throw new OperationException(
+							String.format(
+									"Field %s should have access modifier %s but instead has access modifier %s",
+									name, modifier, field.getAccessModifier()));
+				}
 			}
 		}
 
-		return ImmutableList.of(Transformation.insertBefore(input
-				.getBodyLocation(), String.format("\n%s%s%s;\n\n",
-				modifier.getOutput(), type, name)));
+		Location bodyLocation = input.getBodyLocation();
+
+		if (bodyLocation == null) {
+			throw new OperationException(
+					"Cannot determine insertion point for new field");
+		}
+
+		return ImmutableList.of(Transformation
+				.insertBefore(bodyLocation, String.format("\n%s%s%s;\n\n",
+						modifier.getOutput(), type, name)));
 	}
 
 }

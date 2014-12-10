@@ -27,7 +27,9 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifiable;
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedImport;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 
 public final class AndaliteMatchers {
@@ -59,6 +61,10 @@ public final class AndaliteMatchers {
 		return new AccessMatcher(modifier);
 	}
 
+	public static Matcher<AnalyzedSourceFile> hasClasses() {
+		return CoreMatchers.not(hasNoClasses());
+	}
+
 	public static Matcher<AnalyzedSourceFile> hasNoClasses() {
 		Matcher<List<AnalyzedClass>> delegate = isEmpty();
 
@@ -82,10 +88,6 @@ public final class AndaliteMatchers {
 		return CoreMatchers.not(hasNoImports());
 	}
 
-	public static Matcher<AnalyzedSourceFile> hasClasses() {
-		return CoreMatchers.not(hasNoClasses());
-	}
-
 	public static Matcher<AnalyzedSourceFile> hasNoImports() {
 		Matcher<List<AnalyzedImport>> delegate = isEmpty();
 
@@ -100,6 +102,48 @@ public final class AndaliteMatchers {
 			@Override
 			protected String getProperty() {
 				return "imports";
+			}
+
+		};
+	}
+
+	public static Matcher<AnalyzedClass> hasFields() {
+		return CoreMatchers.not(hasNoFields());
+	}
+
+	public static Matcher<AnalyzedClass> hasNoFields() {
+		Matcher<List<AnalyzedField>> delegate = isEmpty();
+
+		return new ByPropertyMatcher<AnalyzedClass, List<AnalyzedField>>(
+				delegate) {
+
+			@Override
+			protected List<AnalyzedField> transform(AnalyzedClass item) {
+				return item.getFields();
+			}
+
+			@Override
+			protected String getProperty() {
+				return "fields";
+			}
+
+		};
+	}
+
+	public static Matcher<AnalyzedClass> hasNoMethods() {
+		Matcher<List<AnalyzedMethod>> delegate = isEmpty();
+
+		return new ByPropertyMatcher<AnalyzedClass, List<AnalyzedMethod>>(
+				delegate) {
+
+			@Override
+			protected List<AnalyzedMethod> transform(AnalyzedClass item) {
+				return item.getMethods();
+			}
+
+			@Override
+			protected String getProperty() {
+				return "methods";
 			}
 
 		};
