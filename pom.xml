@@ -181,7 +181,7 @@
 							<include>src/**/*.java</include>
 						</includes>
 						<mappings>
-							<java>COMMENT_STYLE</java>
+							<java>SLASHSTAR_STYLE</java>
 						</mappings>
 					</configuration>
 				</plugin>
