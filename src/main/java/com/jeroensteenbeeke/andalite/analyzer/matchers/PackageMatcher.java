@@ -17,11 +17,11 @@ package com.jeroensteenbeeke.andalite.analyzer.matchers;
 import javax.annotation.Nonnull;
 
 import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 
-class PackageMatcher extends TypeSafeMatcher<AnalyzedSourceFile> {
+class PackageMatcher extends TypeSafeDiagnosingMatcher<AnalyzedSourceFile> {
 	private final String expectedName;
 
 	public PackageMatcher(@Nonnull String expectedName) {
@@ -34,8 +34,16 @@ class PackageMatcher extends TypeSafeMatcher<AnalyzedSourceFile> {
 	}
 
 	@Override
-	protected boolean matchesSafely(AnalyzedSourceFile item) {
-		return expectedName.equals(item.getPackageName());
+	protected boolean matchesSafely(AnalyzedSourceFile item,
+			Description mismatchDescription) {
+		boolean match = expectedName.equals(item.getPackageName());
+
+		if (!match) {
+			mismatchDescription.appendText("in package ").appendText(
+					item.getPackageName());
+		}
+
+		return match;
 	}
 
 }

@@ -17,11 +17,11 @@ package com.jeroensteenbeeke.andalite.analyzer.matchers;
 import javax.annotation.Nonnull;
 
 import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 
-class ClassNameMatcher extends TypeSafeMatcher<AnalyzedClass> {
+class ClassNameMatcher extends TypeSafeDiagnosingMatcher<AnalyzedClass> {
 	private final String expectedName;
 
 	public ClassNameMatcher(@Nonnull String expectedName) {
@@ -34,8 +34,16 @@ class ClassNameMatcher extends TypeSafeMatcher<AnalyzedClass> {
 	}
 
 	@Override
-	protected boolean matchesSafely(AnalyzedClass item) {
-		return expectedName.equals(item.getClassName());
+	protected boolean matchesSafely(AnalyzedClass item,
+			Description mismatchDescription) {
+		boolean match = expectedName.equals(item.getClassName());
+
+		if (!match) {
+			mismatchDescription.appendText(" is not named ").appendText(
+					expectedName);
+		}
+
+		return match;
 	}
 
 }

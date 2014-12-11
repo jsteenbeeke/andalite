@@ -16,9 +16,9 @@ package com.jeroensteenbeeke.andalite.analyzer.matchers;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-abstract class ByPropertyMatcher<I, T> extends TypeSafeMatcher<I> {
+abstract class ByPropertyMatcher<I, T> extends TypeSafeDiagnosingMatcher<I> {
 	private final Matcher<T> delegateMatcher;
 
 	public ByPropertyMatcher(Matcher<T> delegateMatcher) {
@@ -29,14 +29,22 @@ abstract class ByPropertyMatcher<I, T> extends TypeSafeMatcher<I> {
 	@Override
 	public void describeTo(Description description) {
 		description.appendText(" has property ").appendText(getProperty())
-				.appendText(" which ");
+				.appendText(" which is ");
 		delegateMatcher.describeTo(description);
 	}
 
 	@Override
-	protected boolean matchesSafely(I item) {
+	protected boolean matchesSafely(I item, Description mismatchDescription) {
+		T delegateType = transform(item);
+		boolean matches = delegateMatcher.matches(delegateType);
 
-		return delegateMatcher.matches(transform(item));
+		// if (!matches) {
+		mismatchDescription.appendText(" has property ")
+				.appendText(getProperty()).appendText(" which ");
+		delegateMatcher.describeMismatch(delegateType, mismatchDescription);
+		// }
+
+		return matches;
 	}
 
 	protected abstract T transform(I item);

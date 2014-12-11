@@ -14,7 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.analyzer.matchers;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,7 +27,14 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import com.jeroensteenbeeke.andalite.analyzer.*;
+import com.jeroensteenbeeke.andalite.analyzer.AccessModifiable;
+import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedConstructor;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedImport;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 
 public final class AndaliteMatchers {
 	private AndaliteMatchers() {
@@ -114,43 +122,23 @@ public final class AndaliteMatchers {
 	public static Matcher<AnalyzedClass> hasNoFields() {
 		Matcher<List<AnalyzedField>> delegate = isEmpty();
 
-		return new ByPropertyMatcher<AnalyzedClass, List<AnalyzedField>>(
-				delegate) {
-
-			@Override
-			protected List<AnalyzedField> transform(AnalyzedClass item) {
-				return item.getFields();
-			}
-
-			@Override
-			protected String getProperty() {
-				return "fields";
-			}
-
-		};
+		return new ClassFieldsMatcher(delegate);
 	}
 
 	public static Matcher<AnalyzedClass> hasMethods() {
 		return CoreMatchers.not(hasNoMethods());
 	}
 
+	public static Matcher<AnalyzedClass> hasMethods(int expectedAmount) {
+		return new ClassMethodsMatcher(
+				new SizeMatcher<AnalyzedMethod, List<AnalyzedMethod>>(
+						expectedAmount));
+	}
+
 	public static Matcher<AnalyzedClass> hasNoMethods() {
 		Matcher<List<AnalyzedMethod>> delegate = isEmpty();
 
-		return new ByPropertyMatcher<AnalyzedClass, List<AnalyzedMethod>>(
-				delegate) {
-
-			@Override
-			protected List<AnalyzedMethod> transform(AnalyzedClass item) {
-				return item.getMethods();
-			}
-
-			@Override
-			protected String getProperty() {
-				return "methods";
-			}
-
-		};
+		return new ClassMethodsMatcher(delegate);
 	}
 
 	public static Matcher<AnalyzedClass> hasConstructors() {
@@ -160,43 +148,23 @@ public final class AndaliteMatchers {
 	public static Matcher<AnalyzedClass> hasNoConstructors() {
 		Matcher<List<AnalyzedConstructor>> delegate = isEmpty();
 
-		return new ByPropertyMatcher<AnalyzedClass, List<AnalyzedConstructor>>(
-				delegate) {
-
-			@Override
-			protected List<AnalyzedConstructor> transform(AnalyzedClass item) {
-				return item.getConstructors();
-			}
-
-			@Override
-			protected String getProperty() {
-				return "constructors";
-			}
-
-		};
+		return new ClassConstructorsMatchers(delegate);
 	}
 
 	public static Matcher<AnalyzedClass> hasInnerClasses() {
 		return CoreMatchers.not(hasNoInnerClasses());
 	}
 
+	public static Matcher<AnalyzedClass> hasInnerClasses(int expectedAmount) {
+		return new InnerClassesMatcher(
+				new SizeMatcher<AnalyzedClass, List<AnalyzedClass>>(
+						expectedAmount));
+	}
+
 	public static Matcher<AnalyzedClass> hasNoInnerClasses() {
 		Matcher<List<AnalyzedClass>> delegate = isEmpty();
 
-		return new ByPropertyMatcher<AnalyzedClass, List<AnalyzedClass>>(
-				delegate) {
-
-			@Override
-			protected List<AnalyzedClass> transform(AnalyzedClass item) {
-				return item.getInnerClasses();
-			}
-
-			@Override
-			protected String getProperty() {
-				return "inner classes";
-			}
-
-		};
+		return new InnerClassesMatcher(delegate);
 	}
 
 	public static Matcher<AnalyzedClass> hasInterfaces() {

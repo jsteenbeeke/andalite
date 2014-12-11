@@ -17,11 +17,11 @@ package com.jeroensteenbeeke.andalite.analyzer.matchers;
 import javax.annotation.Nonnull;
 
 import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 
-class InterfaceNameMatcher extends TypeSafeMatcher<AnalyzedClass> {
+class InterfaceNameMatcher extends TypeSafeDiagnosingMatcher<AnalyzedClass> {
 	private final String expectedName;
 
 	public InterfaceNameMatcher(@Nonnull String expectedName) {
@@ -35,8 +35,16 @@ class InterfaceNameMatcher extends TypeSafeMatcher<AnalyzedClass> {
 	}
 
 	@Override
-	protected boolean matchesSafely(AnalyzedClass item) {
-		return item.getInterfaces().contains(expectedName);
+	protected boolean matchesSafely(AnalyzedClass item,
+			Description mismatchDescription) {
+		boolean match = item.getInterfaces().contains(expectedName);
+
+		if (!match) {
+			mismatchDescription.appendText(" implements interfaces ")
+					.appendValueList("{ ", ", ", " }", item.getInterfaces());
+		}
+
+		return match;
 	}
 
 }

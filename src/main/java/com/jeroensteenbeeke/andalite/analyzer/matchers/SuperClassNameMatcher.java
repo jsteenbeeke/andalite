@@ -17,11 +17,11 @@ package com.jeroensteenbeeke.andalite.analyzer.matchers;
 import javax.annotation.Nonnull;
 
 import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 
-class SuperClassNameMatcher extends TypeSafeMatcher<AnalyzedClass> {
+class SuperClassNameMatcher extends TypeSafeDiagnosingMatcher<AnalyzedClass> {
 	private final String expectedName;
 
 	public SuperClassNameMatcher(@Nonnull String expectedName) {
@@ -34,8 +34,23 @@ class SuperClassNameMatcher extends TypeSafeMatcher<AnalyzedClass> {
 	}
 
 	@Override
-	protected boolean matchesSafely(AnalyzedClass item) {
-		return expectedName.equals(item.getSuperClass());
+	protected boolean matchesSafely(AnalyzedClass item,
+			Description mismatchDescription) {
+
+		String actualSuperclass = item.getSuperClass();
+		boolean match = expectedName.equals(actualSuperclass);
+
+		if (!match) {
+			if (actualSuperclass != null) {
+				mismatchDescription.appendText("has superclass ").appendText(
+						actualSuperclass);
+			} else {
+				mismatchDescription
+						.appendText("has no superclass (i.e. java.lang.Object)");
+			}
+		}
+
+		return match;
 	}
 
 }

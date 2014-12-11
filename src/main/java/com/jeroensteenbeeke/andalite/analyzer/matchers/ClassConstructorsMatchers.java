@@ -14,36 +14,27 @@
  */
 package com.jeroensteenbeeke.andalite.analyzer.matchers;
 
-import java.util.Collection;
+import java.util.List;
 
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
+import org.hamcrest.Matcher;
 
-class SizeMatcher<I, T extends Collection<I>> extends
-		TypeSafeDiagnosingMatcher<T> {
-	private final int expectedSize;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedConstructor;
 
-	public SizeMatcher(int expectedSize) {
-		super();
-		this.expectedSize = expectedSize;
+class ClassConstructorsMatchers extends
+		ByPropertyMatcher<AnalyzedClass, List<AnalyzedConstructor>> {
+	ClassConstructorsMatchers(
+			Matcher<List<AnalyzedConstructor>> delegateMatcher) {
+		super(delegateMatcher);
 	}
 
 	@Override
-	public void describeTo(Description description) {
-		description.appendText(" has size ").appendValue(expectedSize);
+	protected List<AnalyzedConstructor> transform(AnalyzedClass item) {
+		return item.getConstructors();
 	}
 
 	@Override
-	protected boolean matchesSafely(T item, Description mismatchDescription) {
-
-		boolean match = expectedSize == item.size();
-
-		if (!match) {
-			mismatchDescription.appendText("has size ")
-					.appendValue(item.size());
-		}
-
-		return match;
+	protected String getProperty() {
+		return "constructors";
 	}
-
 }

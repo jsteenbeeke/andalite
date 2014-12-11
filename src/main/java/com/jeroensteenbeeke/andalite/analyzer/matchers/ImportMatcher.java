@@ -15,11 +15,11 @@
 package com.jeroensteenbeeke.andalite.analyzer.matchers;
 
 import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedImport;
 
-class ImportMatcher extends TypeSafeMatcher<AnalyzedImport> {
+class ImportMatcher extends TypeSafeDiagnosingMatcher<AnalyzedImport> {
 	private final String expectedClassName;
 
 	public ImportMatcher(String expectedClassName) {
@@ -29,12 +29,19 @@ class ImportMatcher extends TypeSafeMatcher<AnalyzedImport> {
 
 	@Override
 	public void describeTo(Description description) {
-		description.appendText(" has import ").appendText(expectedClassName);
+		description.appendText("an import of ").appendText(expectedClassName);
 	}
 
 	@Override
-	protected boolean matchesSafely(AnalyzedImport item) {
-		// TODO Auto-generated method stub
-		return false;
+	protected boolean matchesSafely(AnalyzedImport item,
+			Description mismatchDescription) {
+		boolean match = item.matchesClass(expectedClassName);
+
+		if (!match) {
+			mismatchDescription.appendText("which imports ").appendText(
+					item.getStatement());
+		}
+
+		return match;
 	}
 }

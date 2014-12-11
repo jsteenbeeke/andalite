@@ -17,12 +17,12 @@ package com.jeroensteenbeeke.andalite.analyzer.matchers;
 import javax.annotation.Nonnull;
 
 import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifiable;
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 
-class AccessMatcher extends TypeSafeMatcher<AccessModifiable> {
+class AccessMatcher extends TypeSafeDiagnosingMatcher<AccessModifiable> {
 	private final AccessModifier expected;
 
 	public AccessMatcher(@Nonnull AccessModifier expected) {
@@ -37,7 +37,18 @@ class AccessMatcher extends TypeSafeMatcher<AccessModifiable> {
 	}
 
 	@Override
-	protected boolean matchesSafely(AccessModifiable item) {
-		return expected.equals(item.getAccessModifier());
+	protected boolean matchesSafely(AccessModifiable item,
+			Description mismatchDescription) {
+
+		boolean match = expected.equals(item.getAccessModifier());
+
+		if (!match) {
+			mismatchDescription
+					.appendText(item.getAccessModifier().getOutput())
+					.appendText(" does not equal ")
+					.appendText(expected.getOutput());
+		}
+
+		return match;
 	}
 }
