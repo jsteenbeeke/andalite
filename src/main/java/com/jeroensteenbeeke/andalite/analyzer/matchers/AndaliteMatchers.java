@@ -14,6 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.analyzer.matchers;
 
+import static org.hamcrest.CoreMatchers.*;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -24,13 +26,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import com.jeroensteenbeeke.andalite.analyzer.AccessModifiable;
-import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedImport;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.andalite.analyzer.*;
 
 public final class AndaliteMatchers {
 	private AndaliteMatchers() {
@@ -46,9 +42,19 @@ public final class AndaliteMatchers {
 		return new SuperClassNameMatcher(className);
 	}
 
+	public static Matcher<AnalyzedClass> hasNoSuperClass() {
+		Matcher<Object> nullValue = nullValue();
+		return matchSuperClass(nullValue);
+	}
+
 	public static Matcher<AnalyzedClass> implementsInterface(
 			@Nonnull final String interfaceName) {
 		return new InterfaceNameMatcher(interfaceName);
+	}
+
+	public static Matcher<AnalyzedClass> doesNotImplementInterface(
+			@Nonnull final String interfaceName) {
+		return not(implementsInterface(interfaceName));
 	}
 
 	public static Matcher<AnalyzedSourceFile> inPackage(
@@ -61,6 +67,12 @@ public final class AndaliteMatchers {
 		return new AccessMatcher(modifier);
 	}
 
+	public static Matcher<AnalyzedSourceFile> hasClasses(int expectedSize) {
+		return new FileClassesMatcher(
+				new SizeMatcher<AnalyzedClass, List<AnalyzedClass>>(
+						expectedSize));
+	}
+
 	public static Matcher<AnalyzedSourceFile> hasClasses() {
 		return CoreMatchers.not(hasNoClasses());
 	}
@@ -68,43 +80,31 @@ public final class AndaliteMatchers {
 	public static Matcher<AnalyzedSourceFile> hasNoClasses() {
 		Matcher<List<AnalyzedClass>> delegate = isEmpty();
 
-		return new ByPropertyMatcher<AnalyzedSourceFile, List<AnalyzedClass>>(
-				delegate) {
+		return new FileClassesMatcher(delegate);
+	}
 
-			@Override
-			protected List<AnalyzedClass> transform(AnalyzedSourceFile item) {
-				return item.getClasses();
-			}
+	public static Matcher<AnalyzedSourceFile> importsClass(
+			@Nonnull final String className) {
+		Matcher<AnalyzedImport> importMatcher = new ImportMatcher(className);
+		Matcher<List<AnalyzedImport>> hasItem = contains(importMatcher);
 
-			@Override
-			protected String getProperty() {
-				return "classes";
-			}
-
-		};
+		return new FileImportsMatcher(hasItem);
 	}
 
 	public static Matcher<AnalyzedSourceFile> hasImports() {
 		return CoreMatchers.not(hasNoImports());
 	}
 
+	public static Matcher<AnalyzedSourceFile> hasImports(int expectedAmount) {
+		return new FileImportsMatcher(
+				new SizeMatcher<AnalyzedImport, List<AnalyzedImport>>(
+						expectedAmount));
+	}
+
 	public static Matcher<AnalyzedSourceFile> hasNoImports() {
 		Matcher<List<AnalyzedImport>> delegate = isEmpty();
 
-		return new ByPropertyMatcher<AnalyzedSourceFile, List<AnalyzedImport>>(
-				delegate) {
-
-			@Override
-			protected List<AnalyzedImport> transform(AnalyzedSourceFile item) {
-				return item.getImports();
-			}
-
-			@Override
-			protected String getProperty() {
-				return "imports";
-			}
-
-		};
+		return new FileImportsMatcher(delegate);
 	}
 
 	public static Matcher<AnalyzedClass> hasFields() {
@@ -130,6 +130,10 @@ public final class AndaliteMatchers {
 		};
 	}
 
+	public static Matcher<AnalyzedClass> hasMethods() {
+		return CoreMatchers.not(hasNoMethods());
+	}
+
 	public static Matcher<AnalyzedClass> hasNoMethods() {
 		Matcher<List<AnalyzedMethod>> delegate = isEmpty();
 
@@ -147,6 +151,73 @@ public final class AndaliteMatchers {
 			}
 
 		};
+	}
+
+	public static Matcher<AnalyzedClass> hasConstructors() {
+		return CoreMatchers.not(hasNoConstructors());
+	}
+
+	public static Matcher<AnalyzedClass> hasNoConstructors() {
+		Matcher<List<AnalyzedConstructor>> delegate = isEmpty();
+
+		return new ByPropertyMatcher<AnalyzedClass, List<AnalyzedConstructor>>(
+				delegate) {
+
+			@Override
+			protected List<AnalyzedConstructor> transform(AnalyzedClass item) {
+				return item.getConstructors();
+			}
+
+			@Override
+			protected String getProperty() {
+				return "constructors";
+			}
+
+		};
+	}
+
+	public static Matcher<AnalyzedClass> hasInnerClasses() {
+		return CoreMatchers.not(hasNoInnerClasses());
+	}
+
+	public static Matcher<AnalyzedClass> hasNoInnerClasses() {
+		Matcher<List<AnalyzedClass>> delegate = isEmpty();
+
+		return new ByPropertyMatcher<AnalyzedClass, List<AnalyzedClass>>(
+				delegate) {
+
+			@Override
+			protected List<AnalyzedClass> transform(AnalyzedClass item) {
+				return item.getInnerClasses();
+			}
+
+			@Override
+			protected String getProperty() {
+				return "inner classes";
+			}
+
+		};
+	}
+
+	public static Matcher<AnalyzedClass> hasInterfaces() {
+		return CoreMatchers.not(hasNoInterfaces());
+	}
+
+	public static Matcher<AnalyzedClass> hasInterfaces(int expectedAmount) {
+		return new ClassInterfacesMatcher(
+				new SizeMatcher<String, List<String>>(expectedAmount));
+	}
+
+	public static Matcher<AnalyzedClass> hasNoInterfaces() {
+		Matcher<List<String>> delegate = isEmpty();
+
+		return new ClassInterfacesMatcher(delegate);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <I, C extends Collection<I>> Matcher<C> contains(
+			Matcher<I> item) {
+		return (Matcher<C>) CoreMatchers.hasItem(item);
 	}
 
 	public static <C extends Collection<?>> Matcher<C> isEmpty() {
@@ -170,6 +241,21 @@ public final class AndaliteMatchers {
 				description.appendText("an empty collection ");
 			}
 
+		};
+	}
+
+	private static ByPropertyMatcher<AnalyzedClass, Object> matchSuperClass(
+			Matcher<Object> matcher) {
+		return new ByPropertyMatcher<AnalyzedClass, Object>(matcher) {
+			@Override
+			protected String getProperty() {
+				return "superClass";
+			}
+
+			@Override
+			protected String transform(AnalyzedClass item) {
+				return item.getSuperClass();
+			}
 		};
 	}
 

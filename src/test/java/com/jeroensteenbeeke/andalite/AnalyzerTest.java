@@ -152,13 +152,13 @@ public class AnalyzerTest extends DummyAwareTest {
 		assertThat(analyzedClass, hasModifier(AccessModifier.PUBLIC));
 		assertThat(analyzedClass, hasName("BareClass"));
 
-		assertThat(analyzedClass.getFields(), isEmpty());
-		assertThat(analyzedClass.getMethods(), isEmpty());
-		assertThat(analyzedClass.getConstructors(), isEmpty());
-		assertThat(analyzedClass.getInnerClasses(), isEmpty());
-		assertThat(analyzedClass.getInterfaces(), isEmpty());
+		assertThat(analyzedClass, hasNoFields());
+		assertThat(analyzedClass, hasNoMethods());
+		assertThat(analyzedClass, hasNoConstructors());
+		assertThat(analyzedClass, hasNoInnerClasses());
+		assertThat(analyzedClass, hasNoInterfaces());
 
-		assertThat(analyzedClass.getSuperClass(), nullValue());
+		assertThat(analyzedClass, hasNoSuperClass());
 
 	}
 
@@ -174,29 +174,23 @@ public class AnalyzerTest extends DummyAwareTest {
 
 		assertThat(file, notNullValue());
 
-		assertThat(file.getPackageName(), equalTo(DUMMY_PACKAGE));
+		assertThat(file, inPackage(DUMMY_PACKAGE));
 
-		assertThat(file.getImports().size(), is(1));
-		AnalyzedImport analyzedImport = file.getImports().get(0);
+		assertThat(file, importsClass("java.util.Comparator"));
 
-		assertTrue(analyzedImport.matchesClass("java.util.Comparator"));
+		assertThat(file, hasClasses(1));
 
-		assertThat(file.getClasses(), hasItem(any(AnalyzedClass.class)));
-
-		assertThat(file.getClasses().size(), is(1));
 		AnalyzedClass analyzedClass = file.getClasses().get(0);
 
-		assertThat(analyzedClass.getAccessModifier(), is(AccessModifier.PUBLIC));
-		assertThat(analyzedClass.getClassName(),
-				equalTo("ReverseIntComparator"));
+		assertThat(analyzedClass, hasModifier(AccessModifier.PUBLIC));
+		assertThat(analyzedClass, hasName("ReverseIntComparator"));
 
-		assertThat(analyzedClass.getFields(), isEmpty());
-		assertThat(analyzedClass.getMethods().size(), is(1));
-		assertThat(analyzedClass.getConstructors(), isEmpty());
-		assertThat(analyzedClass.getInnerClasses(), isEmpty());
-		assertThat(analyzedClass.getInterfaces(),
-				hasItem(equalTo("Comparator")));
-		assertThat(analyzedClass.getInterfaces().size(), is(1));
+		assertThat(analyzedClass, hasNoFields());
+		assertThat(analyzedClass, hasMethods(1));
+		assertThat(analyzedClass, hasNoConstructors());
+		assertThat(analyzedClass, hasNoInnerClasses());
+		assertThat(analyzedClass, hasInterfaces(1));
+		assertThat(analyzedClass, implementsInterface("Comparator"));
 
 		assertThat(analyzedClass.getSuperClass(), nullValue());
 
