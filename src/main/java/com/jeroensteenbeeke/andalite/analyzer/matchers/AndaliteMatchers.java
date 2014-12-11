@@ -182,10 +182,9 @@ public final class AndaliteMatchers {
 		return new ClassInterfacesMatcher(delegate);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <I, C extends Collection<I>> Matcher<C> contains(
-			Matcher<I> item) {
-		return (Matcher<C>) CoreMatchers.hasItem(item);
+			Matcher<I> matcher) {
+		return new CollectionItemMatcher<I, C>(matcher);
 	}
 
 	public static <C extends Collection<?>> Matcher<C> isEmpty() {
