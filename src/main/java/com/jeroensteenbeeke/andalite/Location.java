@@ -42,6 +42,6 @@ public final class Location {
 
 	@Nonnull
 	public static Location from(@Nonnull Node node) {
-		return new Location(node.getBeginIndex(), node.getEndIndex());
+		return new Location(node.getBeginIndex(), node.getEndIndex() + 1);
 	}
 }

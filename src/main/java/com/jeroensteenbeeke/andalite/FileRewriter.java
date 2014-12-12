@@ -70,6 +70,7 @@ public class FileRewriter {
 				out.flush();
 
 				Files.copy(temp, targetFile);
+				temp.deleteOnExit();
 
 				return ActionResult.ok();
 			}

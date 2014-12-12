@@ -50,7 +50,7 @@ public abstract class DummyAwareTest {
 	public void cleanUpDummies() {
 		if (!dummyFiles.isEmpty()) {
 			for (File file : dummyFiles) {
-				file.delete();
+				// file.delete();
 			}
 		}
 	}

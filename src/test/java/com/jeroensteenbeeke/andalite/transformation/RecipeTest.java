@@ -15,16 +15,23 @@
 
 package com.jeroensteenbeeke.andalite.transformation;
 
+import static com.jeroensteenbeeke.andalite.ResultMatchers.*;
 import static com.jeroensteenbeeke.andalite.transformation.ClassLocator.*;
 import static com.jeroensteenbeeke.andalite.transformation.Operations.*;
+import static org.junit.Assert.*;
+
+import java.io.File;
+import java.io.IOException;
 
 import org.junit.Test;
 
+import com.jeroensteenbeeke.andalite.ActionResult;
+import com.jeroensteenbeeke.andalite.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 
-public class RecipeTest {
+public class RecipeTest extends DummyAwareTest {
 	@Test
-	public void testBuilder() {
+	public void testBuilder() throws IOException {
 		RecipeBuilder builder = new RecipeBuilder();
 
 		builder.atRoot().ensure(imports("javax.persistence.Entity"));
@@ -36,5 +43,13 @@ public class RecipeTest {
 						AccessModifier.PRIVATE));
 		builder.inClass(publicClass()).forField("foo")
 				.ensure(hasFieldAnnotation("Column"));
+
+		Recipe recipe = builder.build();
+
+		File bare = getDummy("BareClass");
+
+		ActionResult result = recipe.applyTo(bare);
+
+		assertThat(result, isOk());
 	}
 }

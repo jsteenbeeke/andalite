@@ -72,9 +72,9 @@ public class EnsureField implements ClassOperation {
 					"Cannot determine insertion point for new field");
 		}
 
-		return ImmutableList.of(Transformation
-				.insertBefore(bodyLocation, String.format("\n%s%s%s;\n\n",
-						modifier.getOutput(), type, name)));
+		return ImmutableList.of(Transformation.insertBefore(bodyLocation,
+				String.format("\n%s%s %s;\n\n", modifier.getOutput(), type,
+						name)));
 	}
 
 }

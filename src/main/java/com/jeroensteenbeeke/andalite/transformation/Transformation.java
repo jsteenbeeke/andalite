@@ -57,7 +57,7 @@ public class Transformation {
 	}
 
 	public static Transformation insertAfter(Location location, String code) {
-		return new Transformation(location.getEnd(), code);
+		return new Transformation(location.getEnd() + 1, code);
 	}
 
 }

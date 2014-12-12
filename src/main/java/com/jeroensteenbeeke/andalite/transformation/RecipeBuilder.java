@@ -43,4 +43,8 @@ public class RecipeBuilder implements StepCollector {
 		return new ClassScopeOperationBuilder(this, locator.getNavigation());
 	}
 
+	public Recipe build() {
+		return new Recipe(steps);
+	}
+
 }
