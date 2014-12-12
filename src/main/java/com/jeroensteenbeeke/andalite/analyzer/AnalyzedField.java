@@ -24,11 +24,22 @@ public final class AnalyzedField extends AccessModifiable {
 
 	private final String type;
 
+	private Location specificDeclarationLocation;
+
 	public AnalyzedField(@Nonnull Location location, int modifiers,
 			@Nonnull String name, @Nonnull String type) {
 		super(location, modifiers);
 		this.name = name;
 		this.type = type;
+		this.specificDeclarationLocation = location;
+	}
+
+	public Location getSpecificDeclarationLocation() {
+		return specificDeclarationLocation;
+	}
+
+	void setSpecificDeclarationLocation(Location specificDeclarationLocation) {
+		this.specificDeclarationLocation = specificDeclarationLocation;
 	}
 
 	@Nonnull

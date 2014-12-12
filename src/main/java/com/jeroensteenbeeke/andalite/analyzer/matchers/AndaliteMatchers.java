@@ -35,6 +35,7 @@ import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedImport;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.andalite.analyzer.Annotatable;
 
 public final class AndaliteMatchers {
 	private AndaliteMatchers() {
@@ -185,6 +186,11 @@ public final class AndaliteMatchers {
 	public static <I, C extends Collection<I>> Matcher<C> contains(
 			Matcher<I> matcher) {
 		return new CollectionItemMatcher<I, C>(matcher);
+	}
+
+	public static Matcher<Annotatable> hasAnnotation(
+			@Nonnull final String annotation) {
+		return new AnnotationMatcher(annotation);
 	}
 
 	public static <C extends Collection<?>> Matcher<C> isEmpty() {

@@ -235,8 +235,9 @@ public class ClassAnalyzer {
 		for (VariableDeclarator var : member.getVariables()) {
 			String name = var.getId().getName();
 
-			AnalyzedField analyzedField = new AnalyzedField(Location.from(var),
-					modifiers, name, type.toString());
+			AnalyzedField analyzedField = new AnalyzedField(
+					Location.from(member), modifiers, name, type.toString());
+			analyzedField.setSpecificDeclarationLocation(Location.from(var));
 			analyzedField.addAnnotations(annotations);
 
 			builder.add(analyzedField);

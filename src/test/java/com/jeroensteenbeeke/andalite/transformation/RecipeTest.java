@@ -16,6 +16,7 @@
 package com.jeroensteenbeeke.andalite.transformation;
 
 import static com.jeroensteenbeeke.andalite.ResultMatchers.*;
+import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.*;
 import static com.jeroensteenbeeke.andalite.transformation.ClassLocator.*;
 import static com.jeroensteenbeeke.andalite.transformation.Operations.*;
 import static org.junit.Assert.*;
@@ -27,7 +28,11 @@ import org.junit.Test;
 
 import com.jeroensteenbeeke.andalite.ActionResult;
 import com.jeroensteenbeeke.andalite.DummyAwareTest;
+import com.jeroensteenbeeke.andalite.TypedActionResult;
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.andalite.analyzer.ClassAnalyzer;
 
 public class RecipeTest extends DummyAwareTest {
 	@Test
@@ -51,5 +56,21 @@ public class RecipeTest extends DummyAwareTest {
 		ActionResult result = recipe.applyTo(bare);
 
 		assertThat(result, isOk());
+
+		ClassAnalyzer resultChecker = new ClassAnalyzer(bare);
+		TypedActionResult<AnalyzedSourceFile> analysisResult = resultChecker
+				.analyze();
+
+		assertThat(analysisResult, isOk());
+		AnalyzedSourceFile sourceFile = analysisResult.getObject();
+
+		assertThat(sourceFile, importsClass("javax.persistence.Entity"));
+		assertThat(sourceFile, importsClass("javax.persistence.Column"));
+		assertThat(sourceFile, hasClasses(1));
+
+		AnalyzedClass analyzedClass = sourceFile.getClasses().get(0);
+
+		assertThat(analyzedClass, hasAnnotation("Entity"));
+
 	}
 }
