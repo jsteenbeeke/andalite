@@ -73,7 +73,7 @@ public class EnsureField implements ClassOperation {
 		}
 
 		return ImmutableList.of(Transformation.insertBefore(bodyLocation,
-				String.format("\n%s%s %s;\n\n", modifier.getOutput(), type,
+				String.format("\n\t%s%s %s;\n\n", modifier.getOutput(), type,
 						name)));
 	}
 

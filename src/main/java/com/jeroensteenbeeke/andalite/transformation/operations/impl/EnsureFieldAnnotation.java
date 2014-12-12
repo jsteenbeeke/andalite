@@ -23,4 +23,8 @@ public class EnsureFieldAnnotation extends
 		super(type);
 	}
 
+	@Override
+	protected String getPrefix() {
+		return "\t";
+	}
 }

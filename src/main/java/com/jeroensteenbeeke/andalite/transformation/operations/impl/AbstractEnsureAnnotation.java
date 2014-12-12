@@ -35,10 +35,14 @@ public abstract class AbstractEnsureAnnotation<T extends Annotatable>
 	public final List<Transformation> perform(T input)
 			throws OperationException {
 		if (!input.hasAnnotation(type)) {
-			return ImmutableList.of(Transformation.insertBefore(input, "@"
-					.concat(type).concat("\n")));
+			return ImmutableList.of(Transformation.insertBefore(input,
+					String.format("\n%s@%s", getPrefix(), type)));
 		}
 
 		return ImmutableList.of();
+	}
+
+	protected String getPrefix() {
+		return "";
 	}
 }

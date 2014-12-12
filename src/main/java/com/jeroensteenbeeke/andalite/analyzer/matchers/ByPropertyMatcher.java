@@ -38,11 +38,11 @@ abstract class ByPropertyMatcher<I, T> extends TypeSafeDiagnosingMatcher<I> {
 		T delegateType = transform(item);
 		boolean matches = delegateMatcher.matches(delegateType);
 
-		// if (!matches) {
-		mismatchDescription.appendText(" has property ")
-				.appendText(getProperty()).appendText(" which ");
-		delegateMatcher.describeMismatch(delegateType, mismatchDescription);
-		// }
+		if (!matches) {
+			mismatchDescription.appendText(" has property ")
+					.appendText(getProperty()).appendText(" which ");
+			delegateMatcher.describeMismatch(delegateType, mismatchDescription);
+		}
 
 		return matches;
 	}

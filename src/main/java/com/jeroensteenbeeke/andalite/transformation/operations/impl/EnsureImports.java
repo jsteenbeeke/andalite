@@ -41,7 +41,7 @@ public class EnsureImports implements CompilationUnitOperation {
 
 		return ImmutableList.of(Transformation.insertAfter(
 				input.getPackageDefinitionLocation(),
-				String.format("import %s;\n", fqdn)));
+				String.format("\n\nimport %s;", fqdn)));
 	}
 
 }
