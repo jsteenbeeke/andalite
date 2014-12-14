@@ -18,14 +18,11 @@ package com.jeroensteenbeeke.andalite.transformation;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.transformation.operations.AnnotationOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.CompilationUnitOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.FieldOperation;
-import com.jeroensteenbeeke.andalite.transformation.operations.impl.EnsureClassAnnotation;
-import com.jeroensteenbeeke.andalite.transformation.operations.impl.EnsureField;
-import com.jeroensteenbeeke.andalite.transformation.operations.impl.EnsureFieldAnnotation;
-import com.jeroensteenbeeke.andalite.transformation.operations.impl.EnsureImports;
-import com.jeroensteenbeeke.andalite.transformation.operations.impl.EnsurePublicClass;
+import com.jeroensteenbeeke.andalite.transformation.operations.impl.*;
 
 public class Operations {
 
@@ -47,6 +44,11 @@ public class Operations {
 
 	public static FieldOperation hasFieldAnnotation(@Nonnull String annotation) {
 		return new EnsureFieldAnnotation(annotation);
+	}
+
+	public static AnnotationOperation hasBooleanValue(@Nonnull String name,
+			boolean value) {
+		return new EnsureAnnotationField(name, Boolean.toString(value));
 	}
 
 	public static HasFieldBuilderName hasField(@Nonnull String name) {
