@@ -15,12 +15,17 @@
 
 package com.jeroensteenbeeke.andalite.analyzer.annotation;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
 
 public class StringValue extends BaseValue<String> {
 
-	public StringValue(String name, String value) {
-		super(name, value);
+	public StringValue(@Nonnull Location location, @Nullable String name,
+			String value) {
+		super(location, name, value);
 	}
 
 	@Override
@@ -30,4 +35,9 @@ public class StringValue extends BaseValue<String> {
 		callback.write("\"");
 	}
 
+	@Override
+	public String toJava() {
+		// TODO Convert back to Java
+		return "";
+	}
 }

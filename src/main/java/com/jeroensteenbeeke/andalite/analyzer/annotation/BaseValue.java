@@ -19,15 +19,17 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.jeroensteenbeeke.andalite.analyzer.Outputable;
+import com.jeroensteenbeeke.andalite.Location;
+import com.jeroensteenbeeke.andalite.analyzer.Locatable;
 
-public abstract class BaseValue<T> implements Outputable {
+public abstract class BaseValue<T> extends Locatable {
 	private final String name;
 
 	private final T value;
 
-	public BaseValue(@Nullable String name, @Nonnull T value) {
-		super();
+	public BaseValue(@Nonnull Location location, @Nullable String name,
+			@Nonnull T value) {
+		super(location);
 		this.name = name;
 		this.value = value;
 	}
@@ -41,6 +43,8 @@ public abstract class BaseValue<T> implements Outputable {
 	public final T getValue() {
 		return value;
 	}
+
+	public abstract String toJava();
 
 	@Override
 	public int hashCode() {

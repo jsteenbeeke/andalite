@@ -20,30 +20,25 @@ import com.jeroensteenbeeke.andalite.transformation.navigation.InnerClassNavigat
 import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
 import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
 
-public class ClassScopeOperationBuilder implements
-		ScopedOperationBuilder<AnalyzedClass, ClassOperation> {
-
-	private final StepCollector collector;
-
-	private final Navigation<AnalyzedClass> navigation;
+public class ClassScopeOperationBuilder extends
+		AbstractOperationBuilder<AnalyzedClass, ClassOperation> {
 
 	ClassScopeOperationBuilder(StepCollector collector,
 			Navigation<AnalyzedClass> navigation) {
-		this.collector = collector;
-		this.navigation = navigation;
-	}
-
-	@Override
-	public void ensure(ClassOperation operation) {
-		collector.addStep(navigation, operation);
+		super(collector, navigation);
 	}
 
 	public FieldOperationBuilder forField(String name) {
-		return new FieldOperationBuilder(collector, navigation, name);
+		return new FieldOperationBuilder(getCollector(), getNavigation(), name);
 	}
 
 	public ClassScopeOperationBuilder forInnerClass(String name) {
-		return new ClassScopeOperationBuilder(collector,
-				new InnerClassNavigation(navigation, name));
+		return new ClassScopeOperationBuilder(getCollector(),
+				new InnerClassNavigation(getNavigation(), name));
+	}
+
+	public AnnotatableOperationBuilder<AnalyzedClass> forAnnotation(String type) {
+		return new AnnotatableOperationBuilder<AnalyzedClass>(getCollector(),
+				getNavigation(), type);
 	}
 }

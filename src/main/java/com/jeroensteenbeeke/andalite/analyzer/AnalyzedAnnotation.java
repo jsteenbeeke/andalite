@@ -30,10 +30,21 @@ public final class AnalyzedAnnotation extends Locatable {
 
 	private final Map<String, BaseValue<?>> annotationValues;
 
+	private Location parametersLocation;
+
 	public AnalyzedAnnotation(@Nonnull Location location, @Nonnull String type) {
 		super(location);
 		this.type = type;
 		this.annotationValues = Maps.newHashMap();
+	}
+
+	@CheckForNull
+	public Location getParametersLocation() {
+		return parametersLocation;
+	}
+
+	public void setParametersLocation(@Nonnull Location parametersLocation) {
+		this.parametersLocation = parametersLocation;
 	}
 
 	@Nonnull

@@ -14,22 +14,22 @@
  */
 package com.jeroensteenbeeke.andalite.transformation;
 
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
-import com.jeroensteenbeeke.andalite.transformation.navigation.FieldNavigation;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
+import com.jeroensteenbeeke.andalite.analyzer.Annotatable;
+import com.jeroensteenbeeke.andalite.transformation.navigation.AnnotationNavigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
-import com.jeroensteenbeeke.andalite.transformation.operations.FieldOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.AnnotationOperation;
 
-public class FieldOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedField, FieldOperation> {
-	FieldOperationBuilder(StepCollector collector,
-			Navigation<AnalyzedClass> parentNav, String fieldName) {
-		super(collector, new FieldNavigation(parentNav, fieldName));
+public class AnnotatableOperationBuilder<T extends Annotatable> extends
+		AbstractOperationBuilder<AnalyzedAnnotation, AnnotationOperation>
+		implements
+		AnnotationOperationBuilder<AnalyzedAnnotation, AnnotationOperation> {
+	AnnotatableOperationBuilder(StepCollector collector,
+			Navigation<T> parentNav, String annotationName) {
+		super(collector, new AnnotationNavigation<T>(parentNav, annotationName));
 	}
 
-	public AnnotatableOperationBuilder<AnalyzedField> forAnnotation(String type) {
-		return new AnnotatableOperationBuilder<AnalyzedField>(getCollector(),
-				getNavigation(), type);
-	}
-
+	// public BaseValueOperation forField(String name) {
+	// return null;
+	// }
 }

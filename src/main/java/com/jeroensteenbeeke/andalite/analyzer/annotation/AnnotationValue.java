@@ -15,17 +15,28 @@
 
 package com.jeroensteenbeeke.andalite.analyzer.annotation;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
 
 public class AnnotationValue extends BaseValue<AnalyzedAnnotation> {
 
-	public AnnotationValue(String name, AnalyzedAnnotation value) {
-		super(name, value);
+	public AnnotationValue(@Nonnull Location location, @Nullable String name,
+			@Nonnull AnalyzedAnnotation value) {
+		super(location, name, value);
 	}
 
 	@Override
 	public void output(OutputCallback callback) {
 		getValue().output(callback);
+	}
+
+	@Override
+	public String toJava() {
+		// TODO convert back to Java
+		return null;
 	}
 }

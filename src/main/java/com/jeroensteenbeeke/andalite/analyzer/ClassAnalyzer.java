@@ -299,15 +299,15 @@ public class ClassAnalyzer {
 			AnnotationExpr annot = (AnnotationExpr) expr;
 			AnalyzedAnnotation sub = analyze(annot);
 
-			return new AnnotationValue(name, sub);
+			return new AnnotationValue(Location.from(expr), name, sub);
 		} else if (expr instanceof BooleanLiteralExpr) {
 			BooleanLiteralExpr bool = (BooleanLiteralExpr) expr;
 
-			return new BooleanValue(name, bool.getValue());
+			return new BooleanValue(Location.from(expr), name, bool.getValue());
 		} else if (expr instanceof StringLiteralExpr) {
 			StringLiteralExpr str = (StringLiteralExpr) expr;
 
-			return new StringValue(name, str.getValue());
+			return new StringValue(Location.from(expr), name, str.getValue());
 		} else if (expr instanceof ArrayInitializerExpr) {
 			ArrayInitializerExpr array = (ArrayInitializerExpr) expr;
 
@@ -319,7 +319,7 @@ public class ClassAnalyzer {
 				}
 			}
 
-			return new ArrayValue(name, builder.build());
+			return new ArrayValue(Location.from(expr), name, builder.build());
 		}
 
 		return null;

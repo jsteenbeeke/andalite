@@ -14,22 +14,34 @@
  */
 package com.jeroensteenbeeke.andalite.transformation;
 
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
-import com.jeroensteenbeeke.andalite.transformation.navigation.FieldNavigation;
+import com.jeroensteenbeeke.andalite.analyzer.Locatable;
 import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
-import com.jeroensteenbeeke.andalite.transformation.operations.FieldOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.Operation;
 
-public class FieldOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedField, FieldOperation> {
-	FieldOperationBuilder(StepCollector collector,
-			Navigation<AnalyzedClass> parentNav, String fieldName) {
-		super(collector, new FieldNavigation(parentNav, fieldName));
+public class AbstractOperationBuilder<T extends Locatable, O extends Operation<T>>
+		implements ScopedOperationBuilder<T, O> {
+	private final StepCollector collector;
+
+	private final Navigation<T> navigation;
+
+	protected AbstractOperationBuilder(StepCollector collector,
+			Navigation<T> navigation) {
+		super();
+		this.collector = collector;
+		this.navigation = navigation;
 	}
 
-	public AnnotatableOperationBuilder<AnalyzedField> forAnnotation(String type) {
-		return new AnnotatableOperationBuilder<AnalyzedField>(getCollector(),
-				getNavigation(), type);
+	@Override
+	public final void ensure(O operation) {
+		collector.addStep(navigation, operation);
+	}
+
+	protected final StepCollector getCollector() {
+		return collector;
+	}
+
+	protected final Navigation<T> getNavigation() {
+		return navigation;
 	}
 
 }

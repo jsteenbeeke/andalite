@@ -18,13 +18,16 @@ package com.jeroensteenbeeke.andalite.analyzer.annotation;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
+import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
 
 public final class ArrayValue extends BaseValue<List<BaseValue<?>>> {
 
-	public ArrayValue(@Nonnull String name, @Nonnull List<BaseValue<?>> value) {
-		super(name, value);
+	public ArrayValue(@Nonnull Location location, @Nullable String name,
+			@Nonnull List<BaseValue<?>> value) {
+		super(location, name, value);
 	}
 
 	@Override
@@ -41,5 +44,11 @@ public final class ArrayValue extends BaseValue<List<BaseValue<?>>> {
 		}
 
 		callback.write(" }");
+	}
+
+	@Override
+	public String toJava() {
+		// TODO Convert back to Java
+		return "";
 	}
 }

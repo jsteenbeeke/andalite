@@ -12,31 +12,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.jeroensteenbeeke.andalite.transformation.operations;
 
-package com.jeroensteenbeeke.andalite.analyzer.annotation;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+public interface AnnotationOperation extends Operation<AnalyzedAnnotation> {
 
-import com.jeroensteenbeeke.andalite.Location;
-import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
-
-public final class BooleanValue extends BaseValue<Boolean> {
-
-	public BooleanValue(@Nonnull Location location, @Nullable String name,
-			boolean value) {
-		super(location, name, value);
-	}
-
-	@Override
-	public void output(OutputCallback callback) {
-		callback.write(Boolean.toString(getValue()));
-
-	}
-
-	@Override
-	public String toJava() {
-		// TODO Convert back to Java
-		return "";
-	}
 }
