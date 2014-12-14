@@ -19,7 +19,7 @@ import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.transformation.navigation.CompilationUnitNavigation;
 import com.jeroensteenbeeke.andalite.transformation.operations.CompilationUnitOperation;
 
-class CompilationUnitOperationBuilder implements
+public class CompilationUnitOperationBuilder implements
 		ScopedOperationBuilder<AnalyzedSourceFile, CompilationUnitOperation> {
 	private final StepCollector collector;
 
