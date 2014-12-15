@@ -44,4 +44,9 @@ public class EnsureImports implements CompilationUnitOperation {
 				String.format("\n\nimport %s;", fqdn)));
 	}
 
+	@Override
+	public String getDescription() {
+		return String.format("import of class %s", fqdn);
+	}
+
 }

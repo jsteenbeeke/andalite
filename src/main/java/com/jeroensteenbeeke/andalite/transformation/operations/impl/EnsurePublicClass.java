@@ -55,4 +55,8 @@ public class EnsurePublicClass implements CompilationUnitOperation {
 		return builder.toString();
 	}
 
+	@Override
+	public String getDescription() {
+		return "presence of a public class with name similar to compilation unit";
+	}
 }

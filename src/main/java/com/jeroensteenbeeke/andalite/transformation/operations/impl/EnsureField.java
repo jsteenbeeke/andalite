@@ -77,4 +77,10 @@ public class EnsureField implements ClassOperation {
 						name)));
 	}
 
+	@Override
+	public String getDescription() {
+		return String.format("presence of field: %s %s %s",
+				modifier.getOutput(), type, name);
+	}
+
 }

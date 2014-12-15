@@ -77,4 +77,10 @@ public abstract class EnsureAnnotationField<T> implements AnnotationOperation {
 
 	public abstract String format(T value);
 
+	@Override
+	public String getDescription() {
+		return String.format("presence of annotation field %s with value %s",
+				name, format(expectedValue));
+	}
+
 }

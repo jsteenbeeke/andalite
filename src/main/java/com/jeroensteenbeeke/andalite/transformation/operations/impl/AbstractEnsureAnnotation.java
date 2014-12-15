@@ -45,4 +45,9 @@ public abstract class AbstractEnsureAnnotation<T extends Annotatable>
 	protected String getPrefix() {
 		return "";
 	}
+
+	@Override
+	public String getDescription() {
+		return "annotation of type @".concat(type);
+	}
 }

@@ -12,16 +12,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.jeroensteenbeeke.andalite.transformation;
 
-package com.jeroensteenbeeke.andalite.transformation.operations;
+import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.impl.EnsureClassMethod;
 
-import java.util.List;
+public class EnsureMethodBuilder extends AbstractMethodBuilder<ClassOperation> {
+	EnsureMethodBuilder() {
+		super("void", AccessModifier.PUBLIC);
+	}
 
-import com.jeroensteenbeeke.andalite.analyzer.Outputable;
-import com.jeroensteenbeeke.andalite.transformation.Transformation;
-
-public interface Operation<T extends Outputable> {
-	List<Transformation> perform(T input) throws OperationException;
-
-	String getDescription();
+	@Override
+	public ClassOperation named(String name) {
+		return new EnsureClassMethod(name, getType(), getModifier(),
+				getDescriptors());
+	}
 }

@@ -65,4 +65,10 @@ public class RecipeStep<T extends Locatable> {
 					navigation.getDescription());
 		}
 	}
+
+	@Override
+	public String toString() {
+		return String.format("Go to %s and then ensure %s",
+				navigation.getDescription(), operation.getDescription());
+	}
 }

@@ -47,6 +47,10 @@ public class Operations {
 		return new EnsureFieldAnnotation(annotation);
 	}
 
+	public static EnsureMethodBuilder hasMethod() {
+		return new EnsureMethodBuilder();
+	}
+
 	public static AnnotationOperation hasBooleanValue(@Nonnull String name,
 			boolean value) {
 		return new EnsureAnnotationField<Boolean>(name, BooleanValue.class,

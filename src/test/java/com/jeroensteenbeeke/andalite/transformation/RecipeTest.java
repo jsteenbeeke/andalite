@@ -48,6 +48,12 @@ public class RecipeTest extends DummyAwareTest {
 						AccessModifier.PRIVATE));
 		builder.inClass(publicClass()).forField("foo")
 				.ensure(hasFieldAnnotation("Column"));
+		builder.inClass(publicClass()).ensure(
+				hasMethod().withParameter("foo").ofType("String")
+						.named("setFoo"));
+
+		builder.inClass(publicClass()).ensure(
+				hasMethod().withReturnType("String").named("getFoo"));
 
 		Recipe recipe = builder.build();
 

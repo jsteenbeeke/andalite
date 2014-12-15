@@ -12,16 +12,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.jeroensteenbeeke.andalite.transformation;
 
-package com.jeroensteenbeeke.andalite.transformation.operations;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
+import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
+import com.jeroensteenbeeke.andalite.transformation.operations.MethodOperation;
 
-import java.util.List;
+public class MethodOperationBuilder extends
+		AbstractOperationBuilder<AnalyzedMethod, MethodOperation> {
 
-import com.jeroensteenbeeke.andalite.analyzer.Outputable;
-import com.jeroensteenbeeke.andalite.transformation.Transformation;
+	MethodOperationBuilder(StepCollector collector,
+			Navigation<AnalyzedMethod> navigation) {
+		super(collector, navigation);
+	}
 
-public interface Operation<T extends Outputable> {
-	List<Transformation> perform(T input) throws OperationException;
-
-	String getDescription();
 }

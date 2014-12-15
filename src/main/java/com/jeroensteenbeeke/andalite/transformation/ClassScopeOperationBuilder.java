@@ -41,4 +41,8 @@ public class ClassScopeOperationBuilder extends
 		return new AnnotatableOperationBuilder<AnalyzedClass>(getCollector(),
 				getNavigation(), type);
 	}
+
+	public MethodLocator forMethod() {
+		return new MethodLocator(getCollector(), getNavigation());
+	}
 }

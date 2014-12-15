@@ -43,6 +43,14 @@ public final class AnalyzedMethod extends AccessModifiable {
 		return name;
 	}
 
+	public String getReturnType() {
+		return returnType;
+	}
+
+	void setReturnType(String returnType) {
+		this.returnType = returnType;
+	}
+
 	void addParameter(@Nonnull AnalyzedParameter analyzedParameter) {
 		this.parameters.add(analyzedParameter);
 	}
