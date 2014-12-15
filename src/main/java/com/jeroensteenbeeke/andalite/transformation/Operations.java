@@ -18,6 +18,7 @@ package com.jeroensteenbeeke.andalite.transformation;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.BooleanValue;
 import com.jeroensteenbeeke.andalite.transformation.operations.AnnotationOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.CompilationUnitOperation;
@@ -48,7 +49,13 @@ public class Operations {
 
 	public static AnnotationOperation hasBooleanValue(@Nonnull String name,
 			boolean value) {
-		return new EnsureAnnotationField(name, Boolean.toString(value));
+		return new EnsureAnnotationField<Boolean>(name, BooleanValue.class,
+				value) {
+			@Override
+			public String format(Boolean value) {
+				return Boolean.toString(value);
+			}
+		};
 	}
 
 	public static HasFieldBuilderName hasField(@Nonnull String name) {

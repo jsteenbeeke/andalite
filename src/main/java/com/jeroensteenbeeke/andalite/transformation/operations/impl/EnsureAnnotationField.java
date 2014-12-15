@@ -17,6 +17,8 @@ package com.jeroensteenbeeke.andalite.transformation.operations.impl;
 import java.util.List;
 import java.util.Objects;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
@@ -25,15 +27,19 @@ import com.jeroensteenbeeke.andalite.transformation.Transformation;
 import com.jeroensteenbeeke.andalite.transformation.operations.AnnotationOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.OperationException;
 
-public class EnsureAnnotationField<T extends BaseValue<T>> implements
-		AnnotationOperation {
+public abstract class EnsureAnnotationField<T> implements AnnotationOperation {
 	private final String name;
 
 	private final T expectedValue;
 
-	public EnsureAnnotationField(String name, T value) {
+	private final Class<? extends BaseValue<T>> expectedType;
+
+	public EnsureAnnotationField(@Nonnull String name,
+			@Nonnull Class<? extends BaseValue<T>> expectedType,
+			@Nonnull T value) {
 		super();
 		this.name = name;
+		this.expectedType = expectedType;
 		this.expectedValue = value;
 	}
 
@@ -42,12 +48,11 @@ public class EnsureAnnotationField<T extends BaseValue<T>> implements
 			throws OperationException {
 		final String actualName = name != null ? name : "value";
 
-		@SuppressWarnings("unchecked")
-		Class<T> expectedType = (Class<T>) expectedValue.getClass();
 		if (input.hasValueOfType(expectedType, name)) {
-			T value = input.getValue(expectedType, name);
+			BaseValue<T> value = input.getValue(expectedType, name);
 
-			if (!Objects.equals(value, expectedValue)) {
+			if (value != null
+					&& !Objects.equals(value.getValue(), expectedValue)) {
 				throw new OperationException(
 						"Annotation field already has value, but does not match expected value, and replacement not yet supported");
 			}
@@ -55,23 +60,23 @@ public class EnsureAnnotationField<T extends BaseValue<T>> implements
 			Location parametersLocation = input.getParametersLocation();
 
 			if (parametersLocation == null) {
-				return ImmutableList.of(Transformation.insertAfter(
-						input,
+				return ImmutableList.of(Transformation.insertAfter(input,
 						String.format("(%s=%s)", actualName,
-								expectedValue.toJava())));
+								format(expectedValue))));
 			} else {
 				// TODO determine if parameters exist
 				String postfix = ",";
 
 				// TODO fix location
 				return ImmutableList.of(Transformation.insertBefore(
-						parametersLocation,
-						String.format("%s=%s%s", actualName,
-								expectedValue.toJava(), postfix)));
+						parametersLocation, String.format("%s=%s%s",
+								actualName, format(expectedValue), postfix)));
 			}
 		}
 
 		return ImmutableList.of();
 	}
+
+	public abstract String format(T value);
 
 }
