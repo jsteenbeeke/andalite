@@ -25,39 +25,58 @@ import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.Locatable;
 
 public class Transformation {
-	private final int point;
+	private final int from;
+
+	private final int to;
 
 	private final String code;
 
 	private Transformation(int point, String code) {
+		this(point, point, code);
+	}
+
+	private Transformation(int from, int to, String code) {
 		super();
-		this.point = point;
+		this.from = from;
+		this.to = to;
 		this.code = code;
 	}
 
 	public ActionResult applyTo(@Nonnull File targetFile) {
 		FileRewriter rewriter = new FileRewriter(targetFile);
-		rewriter.insert(point, code);
+		rewriter.replace(from, to, code);
 		return rewriter.rewrite();
 	}
 
 	public static Transformation insertBefore(@Nonnull Locatable locatable,
-			String code) {
+			@Nonnull String code) {
 		return insertBefore(locatable.getLocation(), code);
 	}
 
 	public static Transformation insertBefore(@Nonnull Location location,
-			String code) {
+			@Nonnull String code) {
 		return new Transformation(location.getStart(), code);
 	}
 
 	public static Transformation insertAfter(@Nonnull Locatable locatable,
-			String code) {
+			@Nonnull String code) {
 		return insertAfter(locatable.getLocation(), code);
 	}
 
-	public static Transformation insertAfter(Location location, String code) {
+	public static Transformation insertAfter(@Nonnull Location location,
+			@Nonnull String code) {
 		return new Transformation(location.getEnd() + 1, code);
+	}
+
+	public static Transformation replace(@Nonnull Locatable locatable,
+			@Nonnull String code) {
+		return replace(locatable.getLocation(), code);
+	}
+
+	public static Transformation replace(@Nonnull Location location,
+			@Nonnull String code) {
+		return new Transformation(location.getStart(), location.getEnd() + 1,
+				code);
 	}
 
 }

@@ -31,17 +31,30 @@ public class FileRewriter {
 
 	private final File targetFile;
 
-	private final Multimap<Integer, String> insertions;
+	private final Multimap<Index, String> mutations;
+
+	private final Multimap<Integer, Index> pointIndexes;
 
 	public FileRewriter(File targetFile) {
 		super();
 		this.targetFile = targetFile;
-		this.insertions = TreeMultimap.create();
+		this.mutations = TreeMultimap.create();
+		this.pointIndexes = TreeMultimap.create();
 	}
 
 	@Nonnull
-	public FileRewriter insert(@Nonnull int index, @Nonnull String code) {
-		insertions.put(index, code);
+	public FileRewriter insert(int index, @Nonnull String code) {
+		Index location = Index.insertion(index);
+		mutations.put(location, code);
+		pointIndexes.put(index, location);
+		return this;
+	}
+
+	@Nonnull
+	public FileRewriter replace(int from, int to, @Nonnull String code) {
+		Index location = Index.replacement(from, to);
+		mutations.put(location, code);
+		pointIndexes.put(from, location);
 		return this;
 	}
 
@@ -51,20 +64,30 @@ public class FileRewriter {
 			final File temp = File.createTempFile("rewrite", ".java");
 			try (final FileInputStream in = new FileInputStream(targetFile);
 					final FileOutputStream out = new FileOutputStream(temp)) {
-				int index = FIRST_INDEX;
+				int point = FIRST_INDEX;
 				int data;
+				int threshold = FIRST_INDEX - 1;
 
 				while ((data = in.read()) != -1) {
 
-					if (insertions.containsKey(index)) {
-						for (String insert : insertions.get(index)) {
-							out.write(insert.getBytes());
+					if (pointIndexes.containsKey(point)) {
+						for (Index index : pointIndexes.get(point)) {
+							if (mutations.containsKey(index)) {
+								for (String insert : mutations.get(index)) {
+									out.write(insert.getBytes());
+
+									threshold = Math.max(index.getTo(),
+											threshold);
+								}
+							}
 						}
 					}
 
-					out.write(data);
+					if (point >= threshold) {
+						out.write(data);
+					}
 
-					index++;
+					point++;
 				}
 
 				out.flush();
@@ -76,6 +99,39 @@ public class FileRewriter {
 			}
 		} catch (IOException e) {
 			return ActionResult.error(e.getMessage());
+		}
+	}
+
+	private static class Index implements Comparable<Index> {
+		private final int from;
+
+		private final int to;
+
+		private Index(int from, int to) {
+			super();
+			this.from = from;
+			this.to = to;
+		}
+
+		public int getFrom() {
+			return from;
+		}
+
+		public int getTo() {
+			return to;
+		}
+
+		@Override
+		public int compareTo(Index o) {
+			return Integer.compare(from, o.getFrom());
+		}
+
+		public static Index insertion(int point) {
+			return new Index(point, point);
+		}
+
+		public static Index replacement(int from, int to) {
+			return new Index(from, to);
 		}
 	}
 }

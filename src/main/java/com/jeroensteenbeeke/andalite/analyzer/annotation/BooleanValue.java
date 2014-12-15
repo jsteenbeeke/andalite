@@ -33,10 +33,4 @@ public final class BooleanValue extends BaseValue<Boolean> {
 		callback.write(Boolean.toString(getValue()));
 
 	}
-
-	@Override
-	public String toJava() {
-		// TODO Convert back to Java
-		return "";
-	}
 }

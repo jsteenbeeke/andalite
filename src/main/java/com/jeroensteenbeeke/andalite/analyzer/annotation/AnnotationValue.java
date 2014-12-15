@@ -33,10 +33,4 @@ public class AnnotationValue extends BaseValue<AnalyzedAnnotation> {
 	public void output(OutputCallback callback) {
 		getValue().output(callback);
 	}
-
-	@Override
-	public String toJava() {
-		// TODO convert back to Java
-		return null;
-	}
 }

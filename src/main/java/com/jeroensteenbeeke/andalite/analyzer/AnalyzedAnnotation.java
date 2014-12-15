@@ -109,4 +109,8 @@ public final class AnalyzedAnnotation extends Locatable {
 		callback.write(" ");
 
 	}
+
+	public boolean hasValues() {
+		return !annotationValues.isEmpty();
+	}
 }

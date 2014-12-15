@@ -34,10 +34,4 @@ public class StringValue extends BaseValue<String> {
 		callback.write(getValue());
 		callback.write("\"");
 	}
-
-	@Override
-	public String toJava() {
-		// TODO Convert back to Java
-		return "";
-	}
 }

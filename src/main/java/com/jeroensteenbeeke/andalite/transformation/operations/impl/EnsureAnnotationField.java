@@ -53,8 +53,8 @@ public abstract class EnsureAnnotationField<T> implements AnnotationOperation {
 
 			if (value != null
 					&& !Objects.equals(value.getValue(), expectedValue)) {
-				throw new OperationException(
-						"Annotation field already has value, but does not match expected value, and replacement not yet supported");
+				return ImmutableList.of(Transformation.replace(value, String
+						.format("%s=%s", actualName, format(expectedValue))));
 			}
 		} else {
 			Location parametersLocation = input.getParametersLocation();
@@ -64,10 +64,8 @@ public abstract class EnsureAnnotationField<T> implements AnnotationOperation {
 						String.format("(%s=%s)", actualName,
 								format(expectedValue))));
 			} else {
-				// TODO determine if parameters exist
-				String postfix = ",";
+				String postfix = input.hasValues() ? "," : "";
 
-				// TODO fix location
 				return ImmutableList.of(Transformation.insertBefore(
 						parametersLocation, String.format("%s=%s%s",
 								actualName, format(expectedValue), postfix)));

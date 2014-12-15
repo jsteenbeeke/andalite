@@ -34,11 +34,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.TypedActionResult;
-import com.jeroensteenbeeke.andalite.analyzer.annotation.AnnotationValue;
-import com.jeroensteenbeeke.andalite.analyzer.annotation.ArrayValue;
-import com.jeroensteenbeeke.andalite.analyzer.annotation.BaseValue;
-import com.jeroensteenbeeke.andalite.analyzer.annotation.BooleanValue;
-import com.jeroensteenbeeke.andalite.analyzer.annotation.StringValue;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.*;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.ClassValue;
 
 public class ClassAnalyzer {
 	private final File targetFile;
@@ -304,10 +301,37 @@ public class ClassAnalyzer {
 			BooleanLiteralExpr bool = (BooleanLiteralExpr) expr;
 
 			return new BooleanValue(Location.from(expr), name, bool.getValue());
+		} else if (expr instanceof CharLiteralExpr) {
+			CharLiteralExpr charLit = (CharLiteralExpr) expr;
+
+			return new CharValue(Location.from(expr), name, charLit.getValue()
+					.charAt(0));
+
+		} else if (expr instanceof DoubleLiteralExpr) {
+			DoubleLiteralExpr doubLit = (DoubleLiteralExpr) expr;
+
+			return new DoubleValue(Location.from(expr), name,
+					Double.parseDouble(doubLit.getValue()));
+		} else if (expr instanceof IntegerLiteralExpr) {
+			IntegerLiteralExpr intLit = (IntegerLiteralExpr) expr;
+
+			return new IntegerValue(Location.from(expr), name,
+					Integer.parseInt(intLit.getValue()));
+		} else if (expr instanceof LongLiteralExpr) {
+			LongLiteralExpr longLit = (LongLiteralExpr) expr;
+
+			return new LongValue(Location.from(expr), name,
+					Long.parseLong(longLit.getValue()));
 		} else if (expr instanceof StringLiteralExpr) {
 			StringLiteralExpr str = (StringLiteralExpr) expr;
 
 			return new StringValue(Location.from(expr), name, str.getValue());
+		} else if (expr instanceof ClassExpr) {
+			ClassExpr classExpr = (ClassExpr) expr;
+
+			return new ClassValue(Location.from(expr), name, classExpr
+					.getType().toString());
+
 		} else if (expr instanceof ArrayInitializerExpr) {
 			ArrayInitializerExpr array = (ArrayInitializerExpr) expr;
 

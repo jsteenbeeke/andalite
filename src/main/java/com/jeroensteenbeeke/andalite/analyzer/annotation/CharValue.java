@@ -15,34 +15,22 @@
 
 package com.jeroensteenbeeke.andalite.analyzer.annotation;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
 
-public final class ArrayValue extends BaseValue<List<BaseValue<?>>> {
+public final class CharValue extends BaseValue<Character> {
 
-	public ArrayValue(@Nonnull Location location, @Nullable String name,
-			@Nonnull List<BaseValue<?>> value) {
+	public CharValue(@Nonnull Location location, @Nullable String name,
+			Character value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(OutputCallback callback) {
-		callback.write("{ ");
+		callback.write(Character.toString(getValue()));
 
-		int i = 0;
-		for (BaseValue<?> baseValue : getValue()) {
-			if (i++ > 0) {
-				callback.write(", ");
-			}
-
-			baseValue.output(callback);
-		}
-
-		callback.write(" }");
 	}
 }

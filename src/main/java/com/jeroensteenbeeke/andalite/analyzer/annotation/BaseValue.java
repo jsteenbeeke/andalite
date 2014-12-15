@@ -44,8 +44,6 @@ public abstract class BaseValue<T> extends Locatable {
 		return value;
 	}
 
-	public abstract String toJava();
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
