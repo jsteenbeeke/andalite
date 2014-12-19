@@ -14,27 +14,9 @@
  */
 package com.jeroensteenbeeke.andalite;
 
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasClasses;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasInterfaces;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasMethods;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasModifier;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasName;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasNoClasses;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasNoConstructors;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasNoFields;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasNoImports;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasNoInnerClasses;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasNoInterfaces;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasNoMethods;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.hasNoSuperClass;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.implementsInterface;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.importsClass;
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.inPackage;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,12 +24,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
-import com.jeroensteenbeeke.andalite.analyzer.ClassAnalyzer;
+import com.jeroensteenbeeke.andalite.analyzer.*;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.AnnotationValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.ArrayValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.BaseValue;
@@ -153,7 +130,7 @@ public class AnalyzerTest extends DummyAwareTest {
 	}
 
 	@Test
-	public void testBareJava() throws IOException {
+	public void testBareClass() throws IOException {
 		ClassAnalyzer analyzer = analyzeDummy("BareClass");
 
 		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
@@ -174,6 +151,53 @@ public class AnalyzerTest extends DummyAwareTest {
 		assertThat(analyzedClass, hasNoInnerClasses());
 		assertThat(analyzedClass, hasNoInterfaces());
 		assertThat(analyzedClass, hasNoSuperClass());
+
+	}
+
+	@Test
+	public void testBareInterface() throws IOException {
+		ClassAnalyzer analyzer = analyzeDummy("BareInterface");
+
+		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+		assertTrue(result.isOk());
+
+		AnalyzedSourceFile file = result.getObject();
+		assertThat(file, notNullValue());
+		assertThat(file, inPackage(DUMMY_PACKAGE));
+		assertThat(file, hasNoImports());
+		assertThat(file, hasClasses(0));
+
+		AnalyzedInterface analyzedInterface = file.getInterfaces().get(0);
+		assertThat(analyzedInterface, hasModifier(AccessModifier.PUBLIC));
+		assertThat(analyzedInterface, hasName("BareInterface"));
+		assertThat(analyzedInterface, hasNoFields());
+		assertThat(analyzedInterface, hasNoMethods());
+		assertThat(analyzedInterface, hasNoInnerClasses());
+		assertThat(analyzedInterface, hasNoInterfaces());
+
+	}
+
+	@Test
+	public void testBareEnum() throws IOException {
+		ClassAnalyzer analyzer = analyzeDummy("BareEnum");
+
+		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+		assertTrue(result.isOk());
+
+		AnalyzedSourceFile file = result.getObject();
+		assertThat(file, notNullValue());
+		assertThat(file, inPackage(DUMMY_PACKAGE));
+		assertThat(file, hasNoImports());
+		assertThat(file, hasClasses(0));
+
+		AnalyzedEnum analyzedEnum = file.getEnums().get(0);
+		assertThat(analyzedEnum, hasModifier(AccessModifier.PUBLIC));
+		assertThat(analyzedEnum, hasName("BareEnum"));
+		assertThat(analyzedEnum, hasNoFields());
+		assertThat(analyzedEnum, hasNoMethods());
+		assertThat(analyzedEnum, hasNoConstructors());
+		assertThat(analyzedEnum, hasNoInnerClasses());
+		assertThat(analyzedEnum, hasNoInterfaces());
 
 	}
 

@@ -18,17 +18,17 @@ import java.util.List;
 
 import org.hamcrest.Matcher;
 
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
+import com.jeroensteenbeeke.andalite.analyzer.ContainingDenomination;
 
-class ClassFieldsMatcher extends
-		ByPropertyMatcher<AnalyzedClass, List<AnalyzedField>> {
-	ClassFieldsMatcher(Matcher<List<AnalyzedField>> delegateMatcher) {
+class ContainingDenominationFieldsMatcher extends
+		ByPropertyMatcher<ContainingDenomination, List<AnalyzedField>> {
+	ContainingDenominationFieldsMatcher(Matcher<List<AnalyzedField>> delegateMatcher) {
 		super(delegateMatcher);
 	}
 
 	@Override
-	protected List<AnalyzedField> transform(AnalyzedClass item) {
+	protected List<AnalyzedField> transform(ContainingDenomination item) {
 		return item.getFields();
 	}
 

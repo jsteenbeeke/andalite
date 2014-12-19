@@ -18,23 +18,23 @@ import java.util.List;
 
 import org.hamcrest.Matcher;
 
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedConstructor;
+import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.analyzer.ContainingDenomination;
 
-class ClassConstructorsMatchers extends
-		ByPropertyMatcher<AnalyzedClass, List<AnalyzedConstructor>> {
-	ClassConstructorsMatchers(
-			Matcher<List<AnalyzedConstructor>> delegateMatcher) {
+class ContainingDenominationInterfacesMatcher extends
+		ByPropertyMatcher<ContainingDenomination, List<String>> {
+	ContainingDenominationInterfacesMatcher(
+			Matcher<List<String>> delegateMatcher) {
 		super(delegateMatcher);
 	}
 
 	@Override
-	protected List<AnalyzedConstructor> transform(AnalyzedClass item) {
-		return item.getConstructors();
+	protected List<String> transform(ContainingDenomination item) {
+		return ImmutableList.copyOf(item.getInterfaces());
 	}
 
 	@Override
 	protected String getProperty() {
-		return "constructors";
+		return "interfaces";
 	}
 }

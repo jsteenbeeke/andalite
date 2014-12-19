@@ -12,28 +12,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.analyzer.matchers;
+package com.jeroensteenbeeke.andalite.dummy;
 
-import java.util.List;
+public @interface BareAnnotation {
 
-import org.hamcrest.Matcher;
-
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.analyzer.ContainingDenomination;
-
-class InnerClassesMatcher extends
-		ByPropertyMatcher<ContainingDenomination, List<AnalyzedClass>> {
-	InnerClassesMatcher(Matcher<List<AnalyzedClass>> delegateMatcher) {
-		super(delegateMatcher);
-	}
-
-	@Override
-	protected List<AnalyzedClass> transform(ContainingDenomination item) {
-		return item.getInnerClasses();
-	}
-
-	@Override
-	protected String getProperty() {
-		return "inner classes";
-	}
 }

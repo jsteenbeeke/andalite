@@ -27,6 +27,12 @@ import com.jeroensteenbeeke.andalite.Location;
 public final class AnalyzedSourceFile extends Locatable {
 	private final List<AnalyzedClass> classes;
 
+	private final List<AnalyzedInterface> interfaces;
+
+	private final List<AnalyzedAnnotationType> annotations;
+
+	private final List<AnalyzedEnum> enums;
+
 	private final List<AnalyzedImport> imports;
 
 	private final String packageName;
@@ -43,6 +49,9 @@ public final class AnalyzedSourceFile extends Locatable {
 		this.packageName = packageName;
 		this.packageDefinitionLocation = packageDefinitionLocation;
 		this.classes = Lists.newArrayList();
+		this.interfaces = Lists.newArrayList();
+		this.enums = Lists.newArrayList();
+		this.annotations = Lists.newArrayList();
 		this.imports = Lists.newArrayList();
 	}
 
@@ -58,6 +67,18 @@ public final class AnalyzedSourceFile extends Locatable {
 	@Nonnull
 	public List<AnalyzedClass> getClasses() {
 		return ImmutableList.copyOf(classes);
+	}
+
+	public List<AnalyzedAnnotationType> getAnnotations() {
+		return ImmutableList.copyOf(annotations);
+	}
+
+	public List<AnalyzedEnum> getEnums() {
+		return ImmutableList.copyOf(enums);
+	}
+
+	public List<AnalyzedInterface> getInterfaces() {
+		return ImmutableList.copyOf(interfaces);
 	}
 
 	@Nonnull
@@ -77,6 +98,18 @@ public final class AnalyzedSourceFile extends Locatable {
 
 	void addClass(@Nonnull AnalyzedClass analyzedClass) {
 		this.classes.add(analyzedClass);
+	}
+
+	void addInterface(@Nonnull AnalyzedInterface analyzedInterface) {
+		this.interfaces.add(analyzedInterface);
+	}
+
+	void addEnum(@Nonnull AnalyzedEnum analyzedEnum) {
+		this.enums.add(analyzedEnum);
+	}
+
+	void addAnnotation(@Nonnull AnalyzedAnnotationType analyzedType) {
+		this.annotations.add(analyzedType);
 	}
 
 	void addImport(@Nonnull AnalyzedImport importStatement) {

@@ -12,28 +12,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.analyzer.matchers;
+package com.jeroensteenbeeke.andalite.dummy;
 
-import java.util.List;
+public enum BareEnum {
 
-import org.hamcrest.Matcher;
-
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
-
-class ClassMethodsMatcher extends
-		ByPropertyMatcher<AnalyzedClass, List<AnalyzedMethod>> {
-	ClassMethodsMatcher(Matcher<List<AnalyzedMethod>> delegateMatcher) {
-		super(delegateMatcher);
-	}
-
-	@Override
-	protected List<AnalyzedMethod> transform(AnalyzedClass item) {
-		return item.getMethods();
-	}
-
-	@Override
-	protected String getProperty() {
-		return "methods";
-	}
 }

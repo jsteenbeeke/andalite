@@ -27,7 +27,7 @@ public abstract class AccessModifiable extends Annotatable {
 
 	private final boolean modifierFinal;
 
-	private final boolean modifierAbstract;
+	private boolean modifierAbstract;
 
 	private final boolean modifierSynchronized;
 
@@ -86,6 +86,10 @@ public abstract class AccessModifiable extends Annotatable {
 
 	public boolean isVolatile() {
 		return modifierVolatile;
+	}
+
+	protected void setAbstract(boolean modifierAbstract) {
+		this.modifierAbstract = modifierAbstract;
 	}
 
 	@Override

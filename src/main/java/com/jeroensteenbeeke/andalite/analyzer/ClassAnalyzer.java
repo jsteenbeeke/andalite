@@ -86,7 +86,13 @@ public class ClassAnalyzer {
 			ClassOrInterfaceDeclaration decl = (ClassOrInterfaceDeclaration) typeDeclaration;
 
 			if (decl.isInterface()) {
+				AnalyzedInterface element = new AnalyzedInterface(
+						Location.from(decl), decl.getModifiers(), packageName,
+						decl.getName());
 
+				processInterfaceDeclaration(decl, element);
+
+				sourceFile.addInterface(element);
 			} else {
 				AnalyzedClass element = new AnalyzedClass(Location.from(decl),
 						decl.getModifiers(), packageName, decl.getName());
@@ -95,8 +101,178 @@ public class ClassAnalyzer {
 
 				sourceFile.addClass(element);
 			}
+		} else if (typeDeclaration instanceof EnumDeclaration) {
+			EnumDeclaration decl = (EnumDeclaration) typeDeclaration;
+
+			AnalyzedEnum element = new AnalyzedEnum(Location.from(decl),
+					decl.getModifiers(), packageName, decl.getName());
+
+			processEnumDeclaration(decl, element);
+
+			sourceFile.addEnum(element);
+		} else if (typeDeclaration instanceof AnnotationDeclaration) {
+			AnnotationDeclaration decl = (AnnotationDeclaration) typeDeclaration;
+
+			AnalyzedAnnotationType element = new AnalyzedAnnotationType(
+					Location.from(decl), decl.getModifiers(), packageName,
+					decl.getName());
+
+			processAnnotationDeclaration(decl, element);
+
+			sourceFile.addAnnotation(element);
 		}
 
+	}
+
+	private void processAnnotationDeclaration(AnnotationDeclaration decl,
+			AnalyzedAnnotationType element) {
+		for (AnnotationExpr expr : decl.getAnnotations()) {
+			AnalyzedAnnotation annotation = analyze(expr);
+			if (annotation != null) {
+				element.addAnnotation(annotation);
+			}
+		}
+
+	}
+
+	private void processEnumDeclaration(EnumDeclaration decl,
+			AnalyzedEnum element) {
+		for (AnnotationExpr expr : decl.getAnnotations()) {
+			AnalyzedAnnotation annotation = analyze(expr);
+			if (annotation != null) {
+				element.addAnnotation(annotation);
+			}
+		}
+
+		List<ClassOrInterfaceType> implementedInterfaces = decl.getImplements();
+		if (implementedInterfaces != null) {
+			for (ClassOrInterfaceType type : implementedInterfaces) {
+				element.addInterface(type.getName());
+				element.setLastImplementsLocation(Location.from(type));
+			}
+		}
+
+		final int classEndMinusOne = decl.getEndIndex() - 1;
+		int start = classEndMinusOne;
+		final int end = classEndMinusOne;
+
+		List<BodyDeclaration> members = decl.getMembers();
+
+		if (members != null) {
+			for (BodyDeclaration member : members) {
+				if (start == classEndMinusOne) {
+					start = member.getBeginIndex();
+				}
+				analyzeBodyElement(decl.getName(), element, member);
+			}
+		}
+
+		element.setBodyLocation(new Location(start, end));
+	}
+
+	private void processEnumConstantDeclaration(EnumConstantDeclaration decl,
+			AnalyzedEnumConstant element) {
+		for (AnnotationExpr expr : decl.getAnnotations()) {
+			AnalyzedAnnotation annotation = analyze(expr);
+			if (annotation != null) {
+				element.addAnnotation(annotation);
+			}
+		}
+
+		final int classEndMinusOne = decl.getEndIndex() - 1;
+		int start = classEndMinusOne;
+		final int end = classEndMinusOne;
+
+		List<BodyDeclaration> members = decl.getClassBody();
+
+		if (members != null) {
+			for (BodyDeclaration member : members) {
+				if (start == classEndMinusOne) {
+					start = member.getBeginIndex();
+				}
+				analyzeBodyElement(null, element, member);
+			}
+		}
+
+		element.setBodyLocation(new Location(start, end));
+	}
+
+	private void analyzeBodyElement(String typeName,
+			ContainingDenomination element, BodyDeclaration member) {
+		if (member instanceof FieldDeclaration) {
+			List<AnalyzedField> fields = analyze((FieldDeclaration) member);
+			for (AnalyzedField field : fields) {
+				element.addField(field);
+			}
+		} else if (member instanceof MethodDeclaration) {
+			AnalyzedMethod method = analyze((MethodDeclaration) member);
+
+			if (method != null) {
+				if (element.isAutoAbstractMethods()) {
+					method.setAbstract(true);
+				}
+
+				element.addMethod(method);
+			}
+		} else if (member instanceof EnumConstantDeclaration) {
+			if (element instanceof AnalyzedEnum) {
+				EnumConstantDeclaration enumDecl = (EnumConstantDeclaration) member;
+
+				AnalyzedEnumConstant constant = new AnalyzedEnumConstant(
+						Location.from(enumDecl), ModifierSet.PUBLIC,
+						String.format("%s.%s", element.getPackageName(),
+								element.getDenominationName()),
+						enumDecl.getName());
+
+				processEnumConstantDeclaration(enumDecl, constant);
+
+				((AnalyzedEnum) element).addConstant(constant);
+			}
+
+		} else if (member instanceof ConstructorDeclaration) {
+			AnalyzedConstructor constr = analyze(typeName,
+					(ConstructorDeclaration) member);
+			if (constr != null) {
+				addConstructor(element, constr);
+			}
+		} else if (member instanceof ClassOrInterfaceDeclaration) {
+			ClassOrInterfaceDeclaration innerClassDecl = (ClassOrInterfaceDeclaration) member;
+
+			if (innerClassDecl.isInterface()) {
+				AnalyzedInterface innerInterface = new AnalyzedInterface(
+						Location.from(innerClassDecl),
+						innerClassDecl.getModifiers(), String.format("%s.%s",
+								element.getPackageName(),
+								element.getDenominationName()),
+						innerClassDecl.getName());
+
+				processInterfaceDeclaration(innerClassDecl, innerInterface);
+
+				element.addInnerDenomination(innerInterface);
+
+			} else {
+				AnalyzedClass innerClass = new AnalyzedClass(
+						Location.from(innerClassDecl),
+						innerClassDecl.getModifiers(), String.format("%s.%s",
+								element.getPackageName(),
+								element.getDenominationName()),
+						innerClassDecl.getName());
+
+				processClassDeclaration(innerClassDecl, innerClass);
+
+				element.addInnerDenomination(innerClass);
+			}
+
+		}
+	}
+
+	private void addConstructor(ContainingDenomination element,
+			AnalyzedConstructor constr) {
+		if (element instanceof ConstructableDenomination) {
+			ConstructableDenomination constructable = (ConstructableDenomination) element;
+
+			constructable.addConstructor(constr);
+		}
 	}
 
 	private void processClassDeclaration(ClassOrInterfaceDeclaration decl,
@@ -130,40 +306,45 @@ public class ClassAnalyzer {
 			}
 		}
 
+		List<BodyDeclaration> members = decl.getMembers();
+		if (members != null) {
+			for (BodyDeclaration member : members) {
+				if (start == classEndMinusOne) {
+					start = member.getBeginIndex();
+				}
+				analyzeBodyElement(decl.getName(), element, member);
+			}
+		}
+
+		element.setBodyLocation(new Location(start, end));
+	}
+
+	private void processInterfaceDeclaration(ClassOrInterfaceDeclaration decl,
+			AnalyzedInterface element) {
+		for (AnnotationExpr expr : decl.getAnnotations()) {
+			AnalyzedAnnotation annotation = analyze(expr);
+			if (annotation != null) {
+				element.addAnnotation(annotation);
+			}
+		}
+
+		final int classEndMinusOne = decl.getEndIndex() - 1;
+		int start = classEndMinusOne;
+		final int end = classEndMinusOne;
+
+		List<ClassOrInterfaceType> extendedClasses = decl.getExtends();
+		if (extendedClasses != null) {
+			for (ClassOrInterfaceType type : extendedClasses) {
+				element.addInterface(type.getName());
+				element.setLastImplementsLocation(Location.from(type));
+			}
+		}
+
 		for (BodyDeclaration member : decl.getMembers()) {
 			if (start == classEndMinusOne) {
 				start = member.getBeginIndex();
 			}
-			if (member instanceof FieldDeclaration) {
-				List<AnalyzedField> fields = analyze((FieldDeclaration) member);
-				for (AnalyzedField field : fields) {
-					element.addField(field);
-				}
-			} else if (member instanceof MethodDeclaration) {
-				AnalyzedMethod method = analyze((MethodDeclaration) member);
-				if (method != null) {
-					element.addMethod(method);
-				}
-			} else if (member instanceof ConstructorDeclaration) {
-				AnalyzedConstructor constr = analyze(decl.getName(),
-						(ConstructorDeclaration) member);
-				if (constr != null) {
-					element.addConstructor(constr);
-				}
-			} else if (member instanceof ClassOrInterfaceDeclaration) {
-				ClassOrInterfaceDeclaration innerClassDecl = (ClassOrInterfaceDeclaration) member;
-
-				AnalyzedClass innerClass = new AnalyzedClass(
-						Location.from(innerClassDecl),
-						innerClassDecl.getModifiers(), String.format("%s.%s",
-								element.getPackageName(),
-								element.getClassName()),
-						innerClassDecl.getName());
-
-				processClassDeclaration(innerClassDecl, innerClass);
-
-				element.addInnerClass(innerClass);
-			}
+			analyzeBodyElement(decl.getName(), element, member);
 		}
 
 		element.setBodyLocation(new Location(start, end));

@@ -18,22 +18,23 @@ import java.util.List;
 
 import org.hamcrest.Matcher;
 
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.analyzer.ContainingDenomination;
 
-class InnerClassesMatcher extends
-		ByPropertyMatcher<ContainingDenomination, List<AnalyzedClass>> {
-	InnerClassesMatcher(Matcher<List<AnalyzedClass>> delegateMatcher) {
+class ContainingDenominationMethodsMatcher extends
+		ByPropertyMatcher<ContainingDenomination, List<AnalyzedMethod>> {
+	ContainingDenominationMethodsMatcher(
+			Matcher<List<AnalyzedMethod>> delegateMatcher) {
 		super(delegateMatcher);
 	}
 
 	@Override
-	protected List<AnalyzedClass> transform(ContainingDenomination item) {
-		return item.getInnerClasses();
+	protected List<AnalyzedMethod> transform(ContainingDenomination item) {
+		return item.getMethods();
 	}
 
 	@Override
 	protected String getProperty() {
-		return "inner classes";
+		return "methods";
 	}
 }

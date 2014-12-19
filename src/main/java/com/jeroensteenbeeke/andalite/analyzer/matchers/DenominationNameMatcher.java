@@ -19,12 +19,12 @@ import javax.annotation.Nonnull;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.analyzer.Denomination;
 
-class ClassNameMatcher extends TypeSafeDiagnosingMatcher<AnalyzedClass> {
+class DenominationNameMatcher extends TypeSafeDiagnosingMatcher<Denomination> {
 	private final String expectedName;
 
-	public ClassNameMatcher(@Nonnull String expectedName) {
+	public DenominationNameMatcher(@Nonnull String expectedName) {
 		this.expectedName = expectedName;
 	}
 
@@ -34,13 +34,14 @@ class ClassNameMatcher extends TypeSafeDiagnosingMatcher<AnalyzedClass> {
 	}
 
 	@Override
-	protected boolean matchesSafely(AnalyzedClass item,
+	protected boolean matchesSafely(Denomination item,
 			Description mismatchDescription) {
-		boolean match = expectedName.equals(item.getClassName());
+		boolean match = expectedName.equals(item.getDenominationName());
 
 		if (!match) {
-			mismatchDescription.appendText(" is not named ").appendText(
-					expectedName);
+			mismatchDescription.appendText(" is not named ")
+					.appendText(expectedName).appendText(", but rather ")
+					.appendText(item.getDenominationName());
 		}
 
 		return match;

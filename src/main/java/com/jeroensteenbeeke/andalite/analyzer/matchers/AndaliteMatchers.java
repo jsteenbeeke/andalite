@@ -14,8 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.analyzer.matchers;
 
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,23 +26,15 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import com.jeroensteenbeeke.andalite.analyzer.AccessModifiable;
-import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedConstructor;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedImport;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
-import com.jeroensteenbeeke.andalite.analyzer.Annotatable;
+import com.jeroensteenbeeke.andalite.analyzer.*;
 
 public final class AndaliteMatchers {
 	private AndaliteMatchers() {
 
 	}
 
-	public static Matcher<AnalyzedClass> hasName(@Nonnull final String className) {
-		return new ClassNameMatcher(className);
+	public static Matcher<Denomination> hasName(@Nonnull final String className) {
+		return new DenominationNameMatcher(className);
 	}
 
 	public static Matcher<AnalyzedClass> extendsClass(
@@ -116,71 +107,73 @@ public final class AndaliteMatchers {
 		return new FileImportsMatcher(delegate);
 	}
 
-	public static Matcher<AnalyzedClass> hasFields() {
+	public static Matcher<ContainingDenomination> hasFields() {
 		return CoreMatchers.not(hasNoFields());
 	}
 
-	public static Matcher<AnalyzedClass> hasNoFields() {
+	public static Matcher<ContainingDenomination> hasNoFields() {
 		Matcher<List<AnalyzedField>> delegate = isEmpty();
 
-		return new ClassFieldsMatcher(delegate);
+		return new ContainingDenominationFieldsMatcher(delegate);
 	}
 
-	public static Matcher<AnalyzedClass> hasMethods() {
+	public static Matcher<ContainingDenomination> hasMethods() {
 		return CoreMatchers.not(hasNoMethods());
 	}
 
-	public static Matcher<AnalyzedClass> hasMethods(int expectedAmount) {
-		return new ClassMethodsMatcher(
+	public static Matcher<ContainingDenomination> hasMethods(int expectedAmount) {
+		return new ContainingDenominationMethodsMatcher(
 				new SizeMatcher<AnalyzedMethod, List<AnalyzedMethod>>(
 						expectedAmount));
 	}
 
-	public static Matcher<AnalyzedClass> hasNoMethods() {
+	public static Matcher<ContainingDenomination> hasNoMethods() {
 		Matcher<List<AnalyzedMethod>> delegate = isEmpty();
 
-		return new ClassMethodsMatcher(delegate);
+		return new ContainingDenominationMethodsMatcher(delegate);
 	}
 
-	public static Matcher<AnalyzedClass> hasConstructors() {
+	public static Matcher<ConstructableDenomination> hasConstructors() {
 		return CoreMatchers.not(hasNoConstructors());
 	}
 
-	public static Matcher<AnalyzedClass> hasNoConstructors() {
+	public static Matcher<ConstructableDenomination> hasNoConstructors() {
 		Matcher<List<AnalyzedConstructor>> delegate = isEmpty();
 
-		return new ClassConstructorsMatchers(delegate);
+		return new ConstructableDenominationConstructorsMatchers(delegate);
 	}
 
-	public static Matcher<AnalyzedClass> hasInnerClasses() {
+	public static Matcher<ContainingDenomination> hasInnerClasses() {
 		return CoreMatchers.not(hasNoInnerClasses());
 	}
 
-	public static Matcher<AnalyzedClass> hasInnerClasses(int expectedAmount) {
+	public static Matcher<ContainingDenomination> hasInnerClasses(
+			int expectedAmount) {
 		return new InnerClassesMatcher(
 				new SizeMatcher<AnalyzedClass, List<AnalyzedClass>>(
 						expectedAmount));
 	}
 
-	public static Matcher<AnalyzedClass> hasNoInnerClasses() {
+	public static Matcher<ContainingDenomination> hasNoInnerClasses() {
 		Matcher<List<AnalyzedClass>> delegate = isEmpty();
 
 		return new InnerClassesMatcher(delegate);
 	}
 
-	public static Matcher<AnalyzedClass> hasInterfaces() {
+	public static Matcher<ContainingDenomination> hasInterfaces() {
 		return CoreMatchers.not(hasNoInterfaces());
 	}
 
-	public static Matcher<AnalyzedClass> hasInterfaces(int expectedAmount) {
-		return new ClassInterfacesMatcher(
+	public static Matcher<ContainingDenomination> hasInterfaces(
+			int expectedAmount) {
+		return new ContainingDenominationInterfacesMatcher(
 				new SizeMatcher<String, List<String>>(expectedAmount));
 	}
 
-	public static Matcher<AnalyzedClass> hasNoInterfaces() {
+	public static Matcher<ContainingDenomination> hasNoInterfaces() {
 		Matcher<List<String>> delegate = isEmpty();
 
-		return new ClassInterfacesMatcher(delegate);
+		return new ContainingDenominationInterfacesMatcher(delegate);
 	}
 
 	public static <I, C extends Collection<I>> Matcher<C> contains(
