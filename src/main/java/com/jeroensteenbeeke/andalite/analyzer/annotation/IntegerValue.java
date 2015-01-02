@@ -24,13 +24,13 @@ import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
 public final class IntegerValue extends BaseValue<Integer> {
 
 	public IntegerValue(@Nonnull Location location, @Nullable String name,
-			Integer value) {
+			@Nullable Integer value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(OutputCallback callback) {
-		callback.write(Integer.toString(getValue()));
-
+		Integer value = getValue();
+		callback.write(value != null ? Integer.toString(value) : null);
 	}
 }

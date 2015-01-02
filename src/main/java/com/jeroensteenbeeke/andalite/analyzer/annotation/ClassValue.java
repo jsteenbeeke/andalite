@@ -24,13 +24,18 @@ import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
 public class ClassValue extends BaseValue<String> {
 
 	public ClassValue(@Nonnull Location location, @Nullable String name,
-			String value) {
+			@Nullable String value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(OutputCallback callback) {
-		callback.write(getValue());
-		callback.write(".class");
+		String value = getValue();
+		if (value != null) {
+			callback.write(value);
+			callback.write(".class");
+		} else {
+			callback.write(null);
+		}
 	}
 }

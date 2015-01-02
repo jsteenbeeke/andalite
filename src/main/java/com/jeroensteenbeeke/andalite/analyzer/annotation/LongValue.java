@@ -24,13 +24,13 @@ import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
 public final class LongValue extends BaseValue<Long> {
 
 	public LongValue(@Nonnull Location location, @Nullable String name,
-			Long value) {
+			@Nullable Long value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(OutputCallback callback) {
-		callback.write(Long.toString(getValue()));
-
+		Long value = getValue();
+		callback.write(value != null ? Long.toString(value) : null);
 	}
 }

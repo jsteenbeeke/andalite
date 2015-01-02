@@ -29,7 +29,9 @@ public class AnnotatableOperationBuilder<T extends Annotatable> extends
 		super(collector, new AnnotationNavigation<T>(parentNav, annotationName));
 	}
 
-	// public BaseValueOperation forField(String name) {
-	// return null;
-	// }
+	public AnnotationFieldOperationBuilderBuilder forAnnotationField(String name) {
+
+		return new AnnotationFieldOperationBuilderBuilder(getCollector(),
+				getNavigation(), name);
+	}
 }

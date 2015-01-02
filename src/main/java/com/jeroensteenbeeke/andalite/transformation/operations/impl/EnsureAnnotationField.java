@@ -22,6 +22,7 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.ArrayValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.BaseValue;
 import com.jeroensteenbeeke.andalite.transformation.Transformation;
 import com.jeroensteenbeeke.andalite.transformation.operations.AnnotationOperation;
@@ -55,6 +56,29 @@ public abstract class EnsureAnnotationField<T> implements AnnotationOperation {
 					&& !Objects.equals(value.getValue(), expectedValue)) {
 				return ImmutableList.of(Transformation.replace(value, String
 						.format("%s=%s", actualName, format(expectedValue))));
+			}
+		} else if (input.hasValueOfType(ArrayValue.class, name)) {
+			ArrayValue value = input.getValue(ArrayValue.class, name);
+
+			boolean present = false;
+
+			BaseValue<?> last = null;
+
+			for (BaseValue<?> baseValue : value.getValue()) {
+				if (Objects.equals(baseValue.getValue(), expectedValue)) {
+					present = true;
+				}
+				last = baseValue;
+			}
+
+			if (!present) {
+				if (last != null) {
+					return ImmutableList.of(Transformation.insertAfter(last,
+							String.format(", %s", format(expectedValue))));
+				} else {
+					return ImmutableList.of(Transformation.replace(value,
+							String.format("{%s}", format(expectedValue))));
+				}
 			}
 		} else {
 			Location parametersLocation = input.getParametersLocation();

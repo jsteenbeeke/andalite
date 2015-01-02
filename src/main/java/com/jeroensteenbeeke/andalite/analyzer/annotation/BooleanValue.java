@@ -24,13 +24,14 @@ import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
 public final class BooleanValue extends BaseValue<Boolean> {
 
 	public BooleanValue(@Nonnull Location location, @Nullable String name,
-			boolean value) {
+			@Nullable boolean value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(OutputCallback callback) {
-		callback.write(Boolean.toString(getValue()));
+		Boolean value = getValue();
+		callback.write(value != null ? Boolean.toString(value) : null);
 
 	}
 }

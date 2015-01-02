@@ -19,6 +19,9 @@ import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.BooleanValue;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.CharValue;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.IntegerValue;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.transformation.operations.AnnotationOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.CompilationUnitOperation;
@@ -26,6 +29,8 @@ import com.jeroensteenbeeke.andalite.transformation.operations.FieldOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.impl.*;
 
 public class Operations {
+
+	private static final String NULL = "null";
 
 	private Operations() {
 
@@ -57,9 +62,46 @@ public class Operations {
 				value) {
 			@Override
 			public String format(Boolean value) {
-				return Boolean.toString(value);
+				return value != null ? Boolean.toString(value) : NULL;
 			}
 		};
+	}
+
+	public static AnnotationOperation hasStringValue(@Nonnull String name,
+			String value) {
+		return new EnsureAnnotationField<String>(name, StringValue.class, value) {
+			@Override
+			public String format(String value) {
+				return value != null ? String.format("\"%s\"", value) : NULL;
+			}
+		};
+	}
+
+	public static AnnotationOperation hasIntegerValue(@Nonnull String name,
+			Integer value) {
+		return new EnsureAnnotationField<Integer>(name, IntegerValue.class,
+				value) {
+			@Override
+			public String format(Integer value) {
+				return value != null ? Integer.toString(value) : NULL;
+			}
+		};
+	}
+
+	public static AnnotationOperation hasCharValue(@Nonnull String name,
+			Character value) {
+		return new EnsureAnnotationField<Character>(name, CharValue.class,
+				value) {
+			@Override
+			public String format(Character value) {
+				return value != null ? String.format("'%c'", value) : NULL;
+			}
+		};
+	}
+
+	public static EnsureInnerAnnotationField hasAnnotationValue(
+			@Nonnull String name, @Nonnull String type) {
+		return new EnsureInnerAnnotationField(name, type);
 	}
 
 	public static HasFieldBuilderName hasField(@Nonnull String name) {

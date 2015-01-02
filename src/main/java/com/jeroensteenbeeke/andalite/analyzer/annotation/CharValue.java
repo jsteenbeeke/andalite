@@ -24,13 +24,13 @@ import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
 public final class CharValue extends BaseValue<Character> {
 
 	public CharValue(@Nonnull Location location, @Nullable String name,
-			Character value) {
+			@Nullable Character value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(OutputCallback callback) {
-		callback.write(Character.toString(getValue()));
-
+		Character value = getValue();
+		callback.write(value != null ? Character.toString(value) : null);
 	}
 }

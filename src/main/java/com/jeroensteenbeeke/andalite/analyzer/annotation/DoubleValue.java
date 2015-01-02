@@ -24,13 +24,14 @@ import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
 public final class DoubleValue extends BaseValue<Double> {
 
 	public DoubleValue(@Nonnull Location location, @Nullable String name,
-			Double value) {
+			@Nullable Double value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(OutputCallback callback) {
-		callback.write(Double.toString(getValue()));
+		Double value = getValue();
+		callback.write(value != null ? Double.toString(value) : null);
 
 	}
 }

@@ -28,7 +28,7 @@ public abstract class BaseValue<T> extends Locatable {
 	private final T value;
 
 	public BaseValue(@Nonnull Location location, @Nullable String name,
-			@Nonnull T value) {
+			@Nullable T value) {
 		super(location);
 		this.name = name;
 		this.value = value;
@@ -39,7 +39,7 @@ public abstract class BaseValue<T> extends Locatable {
 		return name;
 	}
 
-	@Nonnull
+	@CheckForNull
 	public final T getValue() {
 		return value;
 	}

@@ -40,9 +40,23 @@ public class RecipeTest extends DummyAwareTest {
 		RecipeBuilder builder = new RecipeBuilder();
 
 		builder.atRoot().ensure(imports("javax.persistence.Entity"));
+		builder.atRoot().ensure(imports("javax.persistence.Table"));
+		builder.atRoot().ensure(imports("javax.persistence.UniqueConstraint"));
 		builder.atRoot().ensure(imports("javax.persistence.Column"));
+		builder.atRoot().ensure(imports("javax.persistence.ManyToOne"));
 		builder.atRoot().ensure(hasPublicClass());
 		builder.inClass(publicClass()).ensure(hasClassAnnotation("Entity"));
+		builder.inClass(publicClass()).ensure(hasClassAnnotation("Table"));
+		builder.inClass(publicClass())
+				.forAnnotation("Table")
+				.ensure(hasAnnotationValue("uniqueConstraints",
+						"UniqueConstraint").whichCouldBeAnArray().satisfying()
+						.value("name", "U_BARE_FOO")
+						.arrayValue("columnNames", "foo").done());
+		builder.inClass(publicClass()).forAnnotation("Table")
+				.forAnnotationField("uniqueConstraints").ifNotAnArray()
+				.ensure(hasStringValue("name", "U_BARE_FOO"));
+
 		builder.inClass(publicClass()).ensure(
 				hasField("foo").typed("String").withAccess(
 						AccessModifier.PRIVATE));
@@ -71,12 +85,17 @@ public class RecipeTest extends DummyAwareTest {
 		AnalyzedSourceFile sourceFile = analysisResult.getObject();
 
 		assertThat(sourceFile, importsClass("javax.persistence.Entity"));
+		assertThat(sourceFile,
+				importsClass("javax.persistence.UniqueConstraint"));
+		assertThat(sourceFile, importsClass("javax.persistence.Table"));
 		assertThat(sourceFile, importsClass("javax.persistence.Column"));
 		assertThat(sourceFile, hasClasses(1));
 
 		AnalyzedClass analyzedClass = sourceFile.getClasses().get(0);
 
 		assertThat(analyzedClass, hasAnnotation("Entity"));
+		assertThat(analyzedClass, hasAnnotation("Table"));
 
 	}
+
 }
