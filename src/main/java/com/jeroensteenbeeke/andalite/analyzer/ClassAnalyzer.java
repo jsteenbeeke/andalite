@@ -449,17 +449,41 @@ public class ClassAnalyzer {
 			Expression memberValue = annot.getMemberValue();
 
 			assignValue(annotation, "value", memberValue);
+
+			annotation.setParametersLocation(Location.from(memberValue));
 		} else if (expr instanceof NormalAnnotationExpr) {
 			NormalAnnotationExpr annot = (NormalAnnotationExpr) expr;
 			List<MemberValuePair> pairs = annot.getPairs();
+
+			int start = annot.getEndIndex() + 1;
+			int end = annot.getEndIndex() + 1;
+
 			if (pairs != null) {
+				boolean first = true;
+
 				for (MemberValuePair mvp : pairs) {
+					if (first) {
+						first = false;
+						start = mvp.getBeginIndex();
+					}
+
 					String name = mvp.getName();
 					Expression memberValue = mvp.getValue();
 
 					assignValue(annotation, name, memberValue);
+
+					end = mvp.getEndIndex();
 				}
+			} else {
+				annotation.setHasParentheses(false);
 			}
+
+			annotation.setParametersLocation(new Location(start, end));
+
+		} else if (expr instanceof MarkerAnnotationExpr) {
+			annotation.setHasParentheses(false);
+		} else {
+			System.err.println();
 		}
 
 		return annotation;

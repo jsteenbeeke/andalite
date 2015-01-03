@@ -83,16 +83,25 @@ public abstract class EnsureAnnotationField<T> implements AnnotationOperation {
 		} else {
 			Location parametersLocation = input.getParametersLocation();
 
-			if (parametersLocation == null) {
-				return ImmutableList.of(Transformation.insertAt(input
-						.getLocation().getEnd() + 2, String.format("(%s=%s)",
-						actualName, format(expectedValue))));
-			} else {
-				String postfix = input.hasValues() ? "," : "";
+			final String openParen = !input.hasValues()
+					&& !input.hasParentheses() ? "(" : "";
+			final String closeParen = !input.hasValues()
+					&& !input.hasParentheses() ? ")" : "";
 
-				return ImmutableList.of(Transformation.insertBefore(
-						parametersLocation, String.format("%s=%s%s",
-								actualName, format(expectedValue), postfix)));
+			if (parametersLocation == null) {
+
+				return ImmutableList.of(Transformation.insertAfter(input,
+						String.format("%s%s=%s%s", openParen, actualName,
+								format(expectedValue), closeParen)));
+			} else {
+				String postfix = input.hasValues() ? ", " : "";
+
+				final int start = !input.hasValues() && !input.hasParentheses() ? parametersLocation
+						.getStart() : parametersLocation.getStart() + 1;
+
+				return ImmutableList.of(Transformation.insertAt(start, String
+						.format("%s%s=%s%s%s", openParen, actualName,
+								format(expectedValue), postfix, closeParen)));
 			}
 		}
 

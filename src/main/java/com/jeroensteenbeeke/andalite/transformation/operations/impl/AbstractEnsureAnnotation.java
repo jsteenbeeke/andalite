@@ -36,7 +36,7 @@ public abstract class AbstractEnsureAnnotation<T extends Annotatable>
 	public final List<Transformation> perform(T input)
 			throws OperationException {
 		if (!input.hasAnnotation(type)) {
-			final String code = String.format("\n%s@%s()", getPrefix(), type);
+			final String code = String.format("\n%s@%s", getPrefix(), type);
 
 			if (!input.getAnnotations().isEmpty()) {
 				AnalyzedAnnotation last = input.getAnnotations().get(

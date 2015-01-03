@@ -96,17 +96,22 @@ public class EnsureInnerAnnotationField implements AnnotationOperation {
 		} else {
 			Location parametersLocation = input.getParametersLocation();
 
+			final String openParen = !input.hasValues()
+					&& !input.hasParentheses() ? "(" : "";
+			final String closeParen = !input.hasValues()
+					&& !input.hasParentheses() ? ")" : "";
+
 			if (parametersLocation == null) {
-				return ImmutableList.of(Transformation.insertAt(input
-						.getLocation().getEnd(), String.format("%s=@%s()",
-						actualName, type)));
+				return ImmutableList.of(Transformation.insertAfter(input,
+						String.format("%s%s=@%s()%s", openParen, actualName,
+								type, closeParen)));
 			} else {
 				String postfix = input.hasValues() ? "," : "";
 
-				return ImmutableList
-						.of(Transformation.insertBefore(parametersLocation,
-								String.format("%s=@%s()%s", actualName, type,
-										postfix)));
+				return ImmutableList.of(Transformation.insertBefore(
+						parametersLocation, String.format("%s%s=@%s()%s%s",
+								openParen, actualName, type, postfix,
+								closeParen)));
 			}
 		}
 

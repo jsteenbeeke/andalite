@@ -32,6 +32,8 @@ public final class AnalyzedAnnotation extends Locatable {
 
 	private Location parametersLocation;
 
+	private boolean hasParentheses = true;
+
 	public AnalyzedAnnotation(@Nonnull Location location, @Nonnull String type) {
 		super(location);
 		this.type = type;
@@ -43,7 +45,7 @@ public final class AnalyzedAnnotation extends Locatable {
 		return parametersLocation;
 	}
 
-	public void setParametersLocation(@Nonnull Location parametersLocation) {
+	void setParametersLocation(@Nonnull Location parametersLocation) {
 		this.parametersLocation = parametersLocation;
 	}
 
@@ -112,5 +114,13 @@ public final class AnalyzedAnnotation extends Locatable {
 
 	public boolean hasValues() {
 		return !annotationValues.isEmpty();
+	}
+
+	public boolean hasParentheses() {
+		return hasParentheses;
+	}
+
+	void setHasParentheses(boolean hasParentheses) {
+		this.hasParentheses = hasParentheses;
 	}
 }
