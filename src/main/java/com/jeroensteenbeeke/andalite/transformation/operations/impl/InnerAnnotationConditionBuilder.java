@@ -108,6 +108,13 @@ public abstract class InnerAnnotationConditionBuilder<T extends InnerAnnotationC
 
 	@SuppressWarnings("unchecked")
 	@Nonnull
+	public T noValue(@Nonnull final String name) {
+		conditions.add(new NoValueCondition(name));
+		return (T) this;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Nonnull
 	public T arrayValue(@Nonnull final String name,
 			@Nonnull final Boolean... values) {
 		conditions.add(new BooleanArrayValueCondition(name, values));
@@ -179,6 +186,10 @@ public abstract class InnerAnnotationConditionBuilder<T extends InnerAnnotationC
 	public T defaultArrayValue(@Nonnull final String... values) {
 		conditions.add(new StringArrayValueCondition(null, values));
 		return (T) this;
+	}
+
+	public R then() {
+		return done();
 	}
 
 	@Nonnull

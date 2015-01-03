@@ -43,7 +43,8 @@ public final class ResultMatchers {
 				boolean matches = item.isOk();
 
 				if (!matches) {
-					mismatchDescription.appendText("is not ok");
+					mismatchDescription.appendText("is not ok: ");
+					mismatchDescription.appendText(item.getMessage());
 				}
 
 				return matches;

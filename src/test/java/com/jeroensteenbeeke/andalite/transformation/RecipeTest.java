@@ -50,15 +50,35 @@ public class RecipeTest extends DummyAwareTest {
 		builder.inClass(publicClass())
 				.forAnnotation("Table")
 				.ensure(hasAnnotationValue("uniqueConstraints",
-						"UniqueConstraint").whichCouldBeAnArray().satisfying()
-						.value("name", "U_BARE_FOO")
+						"UniqueConstraint").whichCouldBeAnArray()
+						.ifNotAlreadyPresentWith().value("name", "U_BARE_FOO")
 						.arrayValue("columnNames", "foo").done());
 		builder.inClass(publicClass()).forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").ifNotAnArray()
 				.ensure(hasStringValue("name", "U_BARE_FOO"));
+		builder.inClass(publicClass()).forAnnotation("Table")
+				.forAnnotationField("uniqueConstraints").ifNotAnArray()
+				.ensure(hasStringValue("columnNames", "foo"));
+		builder.inClass(publicClass())
+				.forAnnotation("Table")
+				.ensure(hasAnnotationValue("uniqueConstraints",
+						"UniqueConstraint").whichCouldBeAnArray()
+						.ifNotAlreadyPresentWith().value("name", "U_BARE_BAR")
+						.arrayValue("columnNames", "bar").done());
+		builder.inClass(publicClass()).forAnnotation("Table")
+				.forAnnotationField("uniqueConstraints").inArray()
+				.noValue("name").then()
+				.ensure(hasStringValue("name", "U_BARE_BAR"));
+		builder.inClass(publicClass()).forAnnotation("Table")
+				.forAnnotationField("uniqueConstraints").inArray()
+				.value("name", "U_BARE_BAR").then()
+				.ensure(hasStringValue("columnNames", "foo"));
 
 		builder.inClass(publicClass()).ensure(
 				hasField("foo").typed("String").withAccess(
+						AccessModifier.PRIVATE));
+		builder.inClass(publicClass()).ensure(
+				hasField("bar").typed("String").withAccess(
 						AccessModifier.PRIVATE));
 		builder.inClass(publicClass()).forField("foo")
 				.ensure(hasFieldAnnotation("Column"));

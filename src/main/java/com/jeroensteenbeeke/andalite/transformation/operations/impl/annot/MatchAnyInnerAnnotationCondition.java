@@ -24,4 +24,9 @@ public final class MatchAnyInnerAnnotationCondition implements
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "any";
+	}
+
 }

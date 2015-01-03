@@ -475,7 +475,14 @@ public class ClassAnalyzer {
 					end = mvp.getEndIndex();
 				}
 			} else {
-				annotation.setHasParentheses(false);
+				boolean hasParentheses = expr.toString().length() - 1 > expr
+						.getName().toString().length();
+
+				if (hasParentheses) {
+					start = end - 1;
+				}
+
+				annotation.setHasParentheses(hasParentheses);
 			}
 
 			annotation.setParametersLocation(new Location(start, end));

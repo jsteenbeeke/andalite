@@ -45,7 +45,7 @@ public class EnsureInnerAnnotationField implements AnnotationOperation {
 		this.type = type;
 	}
 
-	public EnsureInnerAnnotationConditionBuilder satisfying() {
+	public EnsureInnerAnnotationConditionBuilder ifNotAlreadyPresentWith() {
 		return new EnsureInnerAnnotationConditionBuilder(this);
 	}
 

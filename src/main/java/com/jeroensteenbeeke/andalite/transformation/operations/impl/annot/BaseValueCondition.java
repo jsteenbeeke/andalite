@@ -55,4 +55,9 @@ public abstract class BaseValueCondition<T> implements InnerAnnotationCondition 
 		return false;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("%s has value %s", name, expectedValue);
+	}
+
 }

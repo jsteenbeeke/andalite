@@ -96,8 +96,8 @@ public abstract class EnsureAnnotationField<T> implements AnnotationOperation {
 			} else {
 				String postfix = input.hasValues() ? ", " : "";
 
-				final int start = !input.hasValues() && !input.hasParentheses() ? parametersLocation
-						.getStart() : parametersLocation.getStart() + 1;
+				final int start = parametersLocation.getStart()
+						+ Math.max(1, openParen.length());
 
 				return ImmutableList.of(Transformation.insertAt(start, String
 						.format("%s%s=%s%s%s", openParen, actualName,

@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.transformation.operations.impl.annot;
 
 import java.util.Set;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.AnnotationValue;
@@ -62,5 +63,11 @@ public abstract class ArrayValueCondition<T> implements
 		}
 
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s has values: %s", name,
+				Joiner.on(", ").join(expectedValue));
 	}
 }

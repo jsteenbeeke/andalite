@@ -65,8 +65,8 @@ public class AnnotationFieldNavigation extends
 		}
 
 		throw new NavigationException(
-				"Could not find annotation field named %s that satisfies specified conditions",
-				fieldName != null ? fieldName : null);
+				"Could not find annotation field named %s that satisfies specified conditions: %s",
+				fieldName != null ? fieldName : null, condition.toString());
 	}
 
 	@Override

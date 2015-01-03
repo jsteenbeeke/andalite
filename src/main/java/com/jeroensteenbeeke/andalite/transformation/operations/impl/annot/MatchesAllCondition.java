@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.transformation.operations.impl.annot;
 
 import java.util.List;
 
+import com.google.common.base.Joiner;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.AnnotationValue;
 
 public class MatchesAllCondition implements InnerAnnotationCondition {
@@ -35,6 +36,11 @@ public class MatchesAllCondition implements InnerAnnotationCondition {
 		}
 
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("All of {%s}", Joiner.on(", ").join(conditions));
 	}
 
 }

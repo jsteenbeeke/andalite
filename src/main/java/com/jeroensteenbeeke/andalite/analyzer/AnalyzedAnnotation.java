@@ -123,4 +123,8 @@ public final class AnalyzedAnnotation extends Locatable {
 	void setHasParentheses(boolean hasParentheses) {
 		this.hasParentheses = hasParentheses;
 	}
+
+	public boolean hasValueNamed(@Nonnull final String name) {
+		return annotationValues.containsKey(name);
+	}
 }
