@@ -451,11 +451,14 @@ public class ClassAnalyzer {
 			assignValue(annotation, "value", memberValue);
 		} else if (expr instanceof NormalAnnotationExpr) {
 			NormalAnnotationExpr annot = (NormalAnnotationExpr) expr;
-			for (MemberValuePair mvp : annot.getPairs()) {
-				String name = mvp.getName();
-				Expression memberValue = mvp.getValue();
+			List<MemberValuePair> pairs = annot.getPairs();
+			if (pairs != null) {
+				for (MemberValuePair mvp : pairs) {
+					String name = mvp.getName();
+					Expression memberValue = mvp.getValue();
 
-				assignValue(annotation, name, memberValue);
+					assignValue(annotation, name, memberValue);
+				}
 			}
 		}
 

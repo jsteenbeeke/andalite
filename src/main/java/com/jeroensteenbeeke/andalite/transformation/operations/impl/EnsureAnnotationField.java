@@ -84,9 +84,9 @@ public abstract class EnsureAnnotationField<T> implements AnnotationOperation {
 			Location parametersLocation = input.getParametersLocation();
 
 			if (parametersLocation == null) {
-				return ImmutableList.of(Transformation.insertAfter(input,
-						String.format("(%s=%s)", actualName,
-								format(expectedValue))));
+				return ImmutableList.of(Transformation.insertAt(input
+						.getLocation().getEnd() + 2, String.format("(%s=%s)",
+						actualName, format(expectedValue))));
 			} else {
 				String postfix = input.hasValues() ? "," : "";
 

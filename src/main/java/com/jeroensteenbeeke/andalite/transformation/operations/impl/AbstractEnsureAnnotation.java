@@ -17,6 +17,7 @@ package com.jeroensteenbeeke.andalite.transformation.operations.impl;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.analyzer.Annotatable;
 import com.jeroensteenbeeke.andalite.transformation.Transformation;
 import com.jeroensteenbeeke.andalite.transformation.operations.Operation;
@@ -35,8 +36,16 @@ public abstract class AbstractEnsureAnnotation<T extends Annotatable>
 	public final List<Transformation> perform(T input)
 			throws OperationException {
 		if (!input.hasAnnotation(type)) {
-			return ImmutableList.of(Transformation.insertBefore(input,
-					String.format("\n%s@%s", getPrefix(), type)));
+			final String code = String.format("\n%s@%s()", getPrefix(), type);
+
+			if (!input.getAnnotations().isEmpty()) {
+				AnalyzedAnnotation last = input.getAnnotations().get(
+						input.getAnnotations().size() - 1);
+
+				return ImmutableList.of(Transformation.insertAfter(last, code));
+			}
+
+			return ImmutableList.of(Transformation.insertBefore(input, code));
 		}
 
 		return ImmutableList.of();

@@ -97,8 +97,9 @@ public class EnsureInnerAnnotationField implements AnnotationOperation {
 			Location parametersLocation = input.getParametersLocation();
 
 			if (parametersLocation == null) {
-				return ImmutableList.of(Transformation.insertAfter(input,
-						String.format("(%s=@%s())", actualName, type)));
+				return ImmutableList.of(Transformation.insertAt(input
+						.getLocation().getEnd(), String.format("%s=@%s()",
+						actualName, type)));
 			} else {
 				String postfix = input.hasValues() ? "," : "";
 

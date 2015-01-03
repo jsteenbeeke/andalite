@@ -58,6 +58,10 @@ public class Transformation {
 		return new Transformation(location.getStart(), code);
 	}
 
+	public static Transformation insertAt(int index, @Nonnull String code) {
+		return new Transformation(index, code);
+	}
+
 	public static Transformation insertAfter(@Nonnull Locatable locatable,
 			@Nonnull String code) {
 		return insertAfter(locatable.getLocation(), code);
