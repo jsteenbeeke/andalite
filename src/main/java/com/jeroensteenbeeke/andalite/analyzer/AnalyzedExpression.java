@@ -16,6 +16,10 @@ package com.jeroensteenbeeke.andalite.analyzer;
 
 import com.jeroensteenbeeke.andalite.Location;
 
-public interface ILocatable extends IOutputable {
-	Location getLocation();
+public abstract class AnalyzedExpression extends Locatable {
+
+	protected AnalyzedExpression(Location location) {
+		super(location);
+	}
+
 }

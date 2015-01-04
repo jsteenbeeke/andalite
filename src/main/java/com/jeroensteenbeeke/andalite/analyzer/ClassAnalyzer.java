@@ -28,16 +28,28 @@ import com.github.antlrjavaparser.api.ImportDeclaration;
 import com.github.antlrjavaparser.api.PackageDeclaration;
 import com.github.antlrjavaparser.api.body.*;
 import com.github.antlrjavaparser.api.expr.*;
+import com.github.antlrjavaparser.api.stmt.BlockStmt;
+import com.github.antlrjavaparser.api.stmt.ReturnStmt;
+import com.github.antlrjavaparser.api.stmt.Statement;
 import com.github.antlrjavaparser.api.type.ClassOrInterfaceType;
+import com.github.antlrjavaparser.api.type.PrimitiveType;
+import com.github.antlrjavaparser.api.type.ReferenceType;
 import com.github.antlrjavaparser.api.type.Type;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.TypedActionResult;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.*;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.ClassValue;
+import com.jeroensteenbeeke.andalite.analyzer.expression.*;
+import com.jeroensteenbeeke.andalite.analyzer.statements.ReturnStatement;
+import com.jeroensteenbeeke.andalite.analyzer.types.ClassOrInterface;
+import com.jeroensteenbeeke.andalite.analyzer.types.Primitive;
+import com.jeroensteenbeeke.andalite.util.AnalyzeUtil;
 
 public class ClassAnalyzer {
+
 	private final File targetFile;
 
 	public ClassAnalyzer(@Nonnull File targetFile) {
@@ -385,6 +397,17 @@ public class ClassAnalyzer {
 			}
 		}
 
+		BlockStmt body = member.getBody();
+		if (body != null) {
+			analyzeBodyDeclaration(body, new IStatementAssigner() {
+				@Override
+				public void assignStatement(AnalyzedStatement statement) {
+					// TODO Auto-generated method stub
+
+				}
+			});
+		}
+
 		return method;
 	}
 
@@ -565,7 +588,152 @@ public class ClassAnalyzer {
 	}
 
 	private String determinePackageName(PackageDeclaration pkg) {
-		NameExpr name = pkg.getName();
-		return name.toString();
+		return AnalyzeUtil.getQualifiedName(pkg.getName());
 	}
+
+	private void analyzeBodyDeclaration(@Nonnull final BlockStmt body,
+			@Nonnull final IStatementAssigner assigner) {
+		List<Statement> statements = body.getStmts();
+		if (statements != null) {
+			for (Statement statement : statements) {
+				if (statement instanceof ReturnStmt) {
+					ReturnStmt returnStmt = (ReturnStmt) statement;
+
+					AnalyzedExpression returnExpression = analyzeExpression(returnStmt
+							.getExpr());
+
+					assigner.assignStatement(new ReturnStatement(Location
+							.from(statement), returnExpression));
+				}
+			}
+		}
+
+	}
+
+	@Nonnull
+	private AnalyzedExpression analyzeExpression(Expression expr) {
+		final Location location = Location.from(expr);
+
+		if (expr instanceof NullLiteralExpr) {
+			return new NullExpression(location);
+
+		}
+		if (expr instanceof BooleanLiteralExpr) {
+			BooleanLiteralExpr bool = (BooleanLiteralExpr) expr;
+
+			return new BooleanLiteralExpression(location, bool.getValue());
+		}
+		if (expr instanceof CharLiteralExpr) {
+			CharLiteralExpr charLit = (CharLiteralExpr) expr;
+
+			return new CharLiteralExpression(location, charLit.getValue()
+					.charAt(0));
+		}
+		if (expr instanceof DoubleLiteralExpr) {
+			DoubleLiteralExpr doubLit = (DoubleLiteralExpr) expr;
+
+			return new DoubleLiteralExpression(location,
+					Double.parseDouble(doubLit.getValue()));
+		}
+		if (expr instanceof IntegerLiteralExpr) {
+			IntegerLiteralExpr intLit = (IntegerLiteralExpr) expr;
+
+			return new IntegerLiteralExpression(location,
+					Integer.parseInt(intLit.getValue()));
+		}
+		if (expr instanceof LongLiteralExpr) {
+			LongLiteralExpr longLit = (LongLiteralExpr) expr;
+
+			return new LongLiteralExpression(location, Long.parseLong(longLit
+					.getValue()));
+		}
+		if (expr instanceof StringLiteralExpr) {
+			StringLiteralExpr lit = (StringLiteralExpr) expr;
+
+			return new StringLiteralExpression(location, lit.getValue());
+		}
+		if (expr instanceof NameExpr) {
+			NameExpr name = (NameExpr) expr;
+
+			return new NameReferenceExpression(location,
+					AnalyzeUtil.getQualifiedName(name));
+		}
+		if (expr instanceof MethodCallExpr) {
+			MethodCallExpr methodCall = (MethodCallExpr) expr;
+
+			List<AnalyzedType> analyzedTypeArguments = Lists.newArrayList();
+			List<Type> typeArgs = methodCall.getTypeArgs();
+			if (typeArgs != null) {
+				for (Type type : typeArgs) {
+					AnalyzedType at = analyzeType(type);
+
+					analyzedTypeArguments.add(at);
+				}
+			}
+
+			List<AnalyzedExpression> analyzedArguments = Lists.newArrayList();
+			List<Expression> args = methodCall.getArgs();
+			if (args != null) {
+				for (Expression expression : args) {
+					AnalyzedExpression ae = analyzeExpression(expression);
+					if (ae != null) {
+						analyzedArguments.add(ae);
+					}
+				}
+			}
+
+			return new MethodCallExpression(location, methodCall.getName(),
+					analyzedTypeArguments, analyzedArguments);
+
+		}
+		// TODO: More expression types
+
+		return new NullExpression(location);
+	}
+
+	private AnalyzedType analyzeType(Type type) {
+		if (type instanceof ClassOrInterfaceType) {
+			ClassOrInterfaceType classOrInterface = (ClassOrInterfaceType) type;
+
+			return analyzeClassOrInterface(classOrInterface);
+		}
+		if (type instanceof PrimitiveType) {
+			PrimitiveType prim = (PrimitiveType) type;
+
+			return new Primitive(Location.from(type),
+					Primitive.PrimitiveType.fromParserType(prim.getType()));
+		}
+		if (type instanceof ReferenceType) {
+			ReferenceType ref = (ReferenceType) type;
+
+		}
+
+		// TODO: Void and wildcard types
+
+		return null;
+	}
+
+	private ClassOrInterface analyzeClassOrInterface(
+			ClassOrInterfaceType classOrInterface) {
+		ClassOrInterface scope = analyzeClassOrInterface(classOrInterface
+				.getScope());
+
+		List<AnalyzedType> analyzedTypeArguments = Lists.newArrayList();
+		List<Type> typeArgs = classOrInterface.getTypeArgs();
+		if (typeArgs != null) {
+			for (Type subtype : typeArgs) {
+				AnalyzedType at = analyzeType(subtype);
+
+				analyzedTypeArguments.add(at);
+			}
+		}
+
+		return new ClassOrInterface(Location.from(classOrInterface),
+				classOrInterface.getName(), scope, analyzedTypeArguments);
+	}
+
+	public interface IStatementAssigner {
+		void assignStatement(@Nonnull AnalyzedStatement statement);
+	}
+
 }

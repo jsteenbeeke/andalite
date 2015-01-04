@@ -12,12 +12,30 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.analyzer;
+package com.jeroensteenbeeke.andalite.analyzer.statements;
+
+import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.Location;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedStatement;
+import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
-public abstract class AnalyzedStatement extends Locatable {
-	protected AnalyzedStatement(Location location) {
+public class ReturnStatement extends AnalyzedStatement {
+	private final AnalyzedExpression returnExpression;
+
+	public ReturnStatement(@Nonnull final Location location,
+			@Nonnull final AnalyzedExpression returnExpression) {
 		super(location);
+		this.returnExpression = returnExpression;
 	}
+
+	@Override
+	public void output(IOutputCallback callback) {
+		callback.write("return ");
+		returnExpression.output(callback);
+		callback.write(";\n");
+
+	}
+
 }

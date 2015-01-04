@@ -18,6 +18,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import com.github.antlrjavaparser.api.expr.NameExpr;
+import com.github.antlrjavaparser.api.expr.QualifiedNameExpr;
 import com.google.common.base.Joiner;
 import com.google.common.collect.FluentIterable;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
@@ -27,6 +29,17 @@ import com.jeroensteenbeeke.andalite.transformation.ParameterDescriptor;
 public final class AnalyzeUtil {
 	private AnalyzeUtil() {
 
+	}
+
+	public static String getQualifiedName(NameExpr expr) {
+		if (expr instanceof QualifiedNameExpr) {
+			QualifiedNameExpr qualExpr = (QualifiedNameExpr) expr;
+
+			return String.format("%s.%s",
+					getQualifiedName(qualExpr.getQualifier()), expr.getName());
+		}
+
+		return expr.getName();
 	}
 
 	public static boolean matchesSignature(

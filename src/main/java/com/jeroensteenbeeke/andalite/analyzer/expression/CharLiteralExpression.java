@@ -12,10 +12,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.analyzer;
+package com.jeroensteenbeeke.andalite.analyzer.expression;
+
+import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.Location;
+import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
-public interface ILocatable extends IOutputable {
-	Location getLocation();
+public class CharLiteralExpression extends LiteralExpression<Character> {
+
+	public CharLiteralExpression(@Nonnull final Location location,
+			@Nonnull final Character value) {
+		super(location, value);
+	}
+
+	@Override
+	public void output(IOutputCallback callback) {
+		// TODO Auto-generated method stub
+
+	}
+
 }
