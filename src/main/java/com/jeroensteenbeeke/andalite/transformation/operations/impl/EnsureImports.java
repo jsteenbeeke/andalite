@@ -21,9 +21,9 @@ import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedImport;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.transformation.Transformation;
-import com.jeroensteenbeeke.andalite.transformation.operations.CompilationUnitOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.ICompilationUnitOperation;
 
-public class EnsureImports implements CompilationUnitOperation {
+public class EnsureImports implements ICompilationUnitOperation {
 	private final String fqdn;
 
 	public EnsureImports(String fqdn) {

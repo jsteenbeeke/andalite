@@ -24,7 +24,7 @@ public class FieldNavigation extends
 		ChainedNavigation<AnalyzedClass, AnalyzedField> {
 	private final String fieldName;
 
-	public FieldNavigation(@Nonnull Navigation<AnalyzedClass> chained,
+	public FieldNavigation(@Nonnull INavigation<AnalyzedClass> chained,
 			@Nonnull String fieldName) {
 		super(chained);
 		this.fieldName = fieldName;

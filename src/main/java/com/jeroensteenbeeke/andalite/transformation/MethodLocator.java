@@ -18,17 +18,17 @@ import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.transformation.navigation.MethodNavigation;
-import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
 
 public class MethodLocator extends
 		AbstractMethodBuilder<MethodOperationBuilder> {
 
-	private final StepCollector collector;
+	private final IStepCollector collector;
 
-	private final Navigation<AnalyzedClass> parentNavigation;
+	private final INavigation<AnalyzedClass> parentNavigation;
 
-	MethodLocator(StepCollector collector,
-			Navigation<AnalyzedClass> parentNavigation) {
+	MethodLocator(IStepCollector collector,
+			INavigation<AnalyzedClass> parentNavigation) {
 		super(null, null);
 		this.collector = collector;
 		this.parentNavigation = parentNavigation;

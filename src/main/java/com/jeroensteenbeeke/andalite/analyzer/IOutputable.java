@@ -13,18 +13,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jeroensteenbeeke.andalite.transformation.navigation;
+package com.jeroensteenbeeke.andalite.analyzer;
 
-import javax.annotation.Nonnull;
-
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
-import com.jeroensteenbeeke.andalite.analyzer.Locatable;
-
-public interface Navigation<T extends Locatable> {
-	@Nonnull
-	T navigate(@Nonnull AnalyzedSourceFile file) throws NavigationException;
-
-	@Nonnull
-	String getDescription();
-
+public interface IOutputable {
+	void output(IOutputCallback callback);
 }

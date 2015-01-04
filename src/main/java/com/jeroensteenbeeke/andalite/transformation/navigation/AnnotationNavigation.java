@@ -21,7 +21,7 @@ public class AnnotationNavigation<T extends Annotatable> extends
 		ChainedNavigation<T, AnalyzedAnnotation> {
 	private final String annotationType;
 
-	public AnnotationNavigation(Navigation<T> chained, String annotationType) {
+	public AnnotationNavigation(INavigation<T> chained, String annotationType) {
 		super(chained);
 		this.annotationType = annotationType;
 	}

@@ -13,8 +13,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jeroensteenbeeke.andalite.analyzer;
+package com.jeroensteenbeeke.andalite.transformation;
 
-public interface Outputable {
-	void output(OutputCallback callback);
+import java.io.File;
+
+import com.jeroensteenbeeke.andalite.ActionResult;
+
+public interface IOperationContext {
+
+	ActionResult inFile(File file);
 }

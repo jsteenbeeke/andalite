@@ -14,18 +14,18 @@
  */
 package com.jeroensteenbeeke.andalite.transformation;
 
-import com.jeroensteenbeeke.andalite.analyzer.Locatable;
-import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
-import com.jeroensteenbeeke.andalite.transformation.operations.Operation;
+import com.jeroensteenbeeke.andalite.analyzer.ILocatable;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IOperation;
 
-public class AbstractOperationBuilder<T extends Locatable, O extends Operation<T>>
-		implements ScopedOperationBuilder<T, O> {
-	private final StepCollector collector;
+public class AbstractOperationBuilder<T extends ILocatable, O extends IOperation<T>>
+		implements IScopedOperationBuilder<T, O> {
+	private final IStepCollector collector;
 
-	private final Navigation<T> navigation;
+	private final INavigation<T> navigation;
 
-	protected AbstractOperationBuilder(StepCollector collector,
-			Navigation<T> navigation) {
+	protected AbstractOperationBuilder(IStepCollector collector,
+			INavigation<T> navigation) {
 		super();
 		this.collector = collector;
 		this.navigation = navigation;
@@ -36,11 +36,11 @@ public class AbstractOperationBuilder<T extends Locatable, O extends Operation<T
 		collector.addStep(navigation, operation);
 	}
 
-	protected final StepCollector getCollector() {
+	protected final IStepCollector getCollector() {
 		return collector;
 	}
 
-	protected final Navigation<T> getNavigation() {
+	protected final INavigation<T> getNavigation() {
 		return navigation;
 	}
 

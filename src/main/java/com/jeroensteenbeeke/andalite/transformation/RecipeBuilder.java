@@ -18,11 +18,11 @@ package com.jeroensteenbeeke.andalite.transformation;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import com.jeroensteenbeeke.andalite.analyzer.Locatable;
-import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
-import com.jeroensteenbeeke.andalite.transformation.operations.Operation;
+import com.jeroensteenbeeke.andalite.analyzer.ILocatable;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IOperation;
 
-public class RecipeBuilder implements StepCollector {
+public class RecipeBuilder implements IStepCollector {
 	private final List<RecipeStep<?>> steps;
 
 	public RecipeBuilder() {
@@ -30,8 +30,8 @@ public class RecipeBuilder implements StepCollector {
 	}
 
 	@Override
-	public <T extends Locatable> void addStep(Navigation<T> nav,
-			Operation<T> oper) {
+	public <T extends ILocatable> void addStep(INavigation<T> nav,
+			IOperation<T> oper) {
 		this.steps.add(new RecipeStep<T>(nav, oper));
 	}
 

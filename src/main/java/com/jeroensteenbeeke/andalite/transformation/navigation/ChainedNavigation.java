@@ -16,13 +16,13 @@
 package com.jeroensteenbeeke.andalite.transformation.navigation;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
-import com.jeroensteenbeeke.andalite.analyzer.Locatable;
+import com.jeroensteenbeeke.andalite.analyzer.ILocatable;
 
-public abstract class ChainedNavigation<From extends Locatable, To extends Locatable>
-		implements Navigation<To> {
-	private final Navigation<From> chained;
+public abstract class ChainedNavigation<From extends ILocatable, To extends ILocatable>
+		implements INavigation<To> {
+	private final INavigation<From> chained;
 
-	protected ChainedNavigation(Navigation<From> chained) {
+	protected ChainedNavigation(INavigation<From> chained) {
 		super();
 		this.chained = chained;
 	}

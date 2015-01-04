@@ -12,10 +12,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.transformation.operations;
 
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
+package com.jeroensteenbeeke.andalite.transformation.navigation;
 
-public interface AnnotationOperation extends Operation<AnalyzedAnnotation> {
+import javax.annotation.Nonnull;
+
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.andalite.analyzer.ILocatable;
+
+public interface INavigation<T extends ILocatable> {
+	@Nonnull
+	T navigate(@Nonnull AnalyzedSourceFile file) throws NavigationException;
+
+	@Nonnull
+	String getDescription();
 
 }

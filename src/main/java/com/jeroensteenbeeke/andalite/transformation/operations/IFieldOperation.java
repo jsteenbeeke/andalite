@@ -12,14 +12,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.jeroensteenbeeke.andalite.transformation.operations;
 
-package com.jeroensteenbeeke.andalite.transformation;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
 
-import java.io.File;
+public interface IFieldOperation extends IOperation<AnalyzedField> {
 
-import com.jeroensteenbeeke.andalite.ActionResult;
-
-public interface OperationContext {
-
-	ActionResult inFile(File file);
 }

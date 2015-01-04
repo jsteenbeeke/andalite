@@ -21,7 +21,7 @@ import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 
-public class PackageClassNavigation implements Navigation<AnalyzedClass> {
+public class PackageClassNavigation implements INavigation<AnalyzedClass> {
 	private final String name;
 
 	public PackageClassNavigation(@Nonnull String name) {

@@ -19,7 +19,7 @@ import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 
-public class PublicClassNavigation implements Navigation<AnalyzedClass> {
+public class PublicClassNavigation implements INavigation<AnalyzedClass> {
 
 	@Override
 	public AnalyzedClass navigate(AnalyzedSourceFile file)

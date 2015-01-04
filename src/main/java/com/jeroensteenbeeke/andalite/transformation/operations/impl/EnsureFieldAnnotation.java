@@ -15,10 +15,10 @@
 package com.jeroensteenbeeke.andalite.transformation.operations.impl;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
-import com.jeroensteenbeeke.andalite.transformation.operations.FieldOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IFieldOperation;
 
 public class EnsureFieldAnnotation extends
-		AbstractEnsureAnnotation<AnalyzedField> implements FieldOperation {
+		AbstractEnsureAnnotation<AnalyzedField> implements IFieldOperation {
 	public EnsureFieldAnnotation(String type) {
 		super(type);
 	}

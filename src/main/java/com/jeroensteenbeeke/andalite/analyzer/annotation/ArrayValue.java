@@ -21,7 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.Location;
-import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
+import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
 public final class ArrayValue extends BaseValue<List<BaseValue<?>>> {
 
@@ -31,7 +31,7 @@ public final class ArrayValue extends BaseValue<List<BaseValue<?>>> {
 	}
 
 	@Override
-	public void output(OutputCallback callback) {
+	public void output(IOutputCallback callback) {
 		callback.write("{ ");
 
 		int i = 0;

@@ -83,7 +83,7 @@ public final class AnalyzedAnnotation extends Locatable {
 	}
 
 	@Override
-	public void output(OutputCallback callback) {
+	public void output(IOutputCallback callback) {
 		callback.write("@");
 		callback.write(type);
 		if (!annotationValues.isEmpty()) {

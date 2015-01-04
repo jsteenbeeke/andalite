@@ -34,7 +34,7 @@ public class AnalyzedEnum extends ConstructableDenomination {
 	}
 
 	@Override
-	public void onModifierOutputted(OutputCallback callback) {
+	public void onModifierOutputted(IOutputCallback callback) {
 		callback.write("enum ");
 		callback.write(getEnumName());
 		outputInterfaces(callback);

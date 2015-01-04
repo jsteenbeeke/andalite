@@ -178,7 +178,7 @@ public abstract class ContainingDenomination extends Denomination {
 		this.bodyLocation = bodyLocation;
 	}
 
-	protected void outputInterfaces(OutputCallback callback) {
+	protected void outputInterfaces(IOutputCallback callback) {
 		if (!interfaces.isEmpty()) {
 			callback.write(" implements ");
 			callback.write(Joiner.on(", ").join(interfaces));

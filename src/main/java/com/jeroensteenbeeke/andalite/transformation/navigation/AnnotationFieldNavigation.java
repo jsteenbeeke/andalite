@@ -31,7 +31,7 @@ public class AnnotationFieldNavigation extends
 	private final InnerAnnotationCondition condition;
 
 	public AnnotationFieldNavigation(
-			@Nonnull Navigation<AnalyzedAnnotation> chained,
+			@Nonnull INavigation<AnalyzedAnnotation> chained,
 			@Nullable String fieldName,
 			@Nullable InnerAnnotationCondition condition) {
 		super(chained);

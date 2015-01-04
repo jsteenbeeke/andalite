@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.analyzer;
 
 import java.io.PrintStream;
 
-public class PrintStreamCallback implements OutputCallback {
+public class PrintStreamCallback implements IOutputCallback {
 	private final PrintStream stream;
 
 	private int indentation = 0;

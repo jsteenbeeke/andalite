@@ -20,7 +20,7 @@ public class InnerClassNavigation extends
 		ChainedNavigation<AnalyzedClass, AnalyzedClass> {
 	private final String className;
 
-	public InnerClassNavigation(Navigation<AnalyzedClass> chained,
+	public InnerClassNavigation(INavigation<AnalyzedClass> chained,
 			String className) {
 		super(chained);
 		this.className = className;

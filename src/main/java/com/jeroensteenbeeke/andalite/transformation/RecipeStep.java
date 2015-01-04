@@ -19,18 +19,18 @@ import java.util.List;
 
 import com.jeroensteenbeeke.andalite.ActionResult;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
-import com.jeroensteenbeeke.andalite.analyzer.Locatable;
-import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
+import com.jeroensteenbeeke.andalite.analyzer.ILocatable;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.NavigationException;
-import com.jeroensteenbeeke.andalite.transformation.operations.Operation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.OperationException;
 
-public class RecipeStep<T extends Locatable> {
-	private final Navigation<T> navigation;
+public class RecipeStep<T extends ILocatable> {
+	private final INavigation<T> navigation;
 
-	private final Operation<T> operation;
+	private final IOperation<T> operation;
 
-	RecipeStep(Navigation<T> navigation, Operation<T> operation) {
+	RecipeStep(INavigation<T> navigation, IOperation<T> operation) {
 		super();
 		this.navigation = navigation;
 		this.operation = operation;

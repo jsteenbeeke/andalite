@@ -17,14 +17,14 @@ package com.jeroensteenbeeke.andalite.transformation;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.transformation.navigation.InnerClassNavigation;
-import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
-import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IClassOperation;
 
 public class ClassScopeOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedClass, ClassOperation> {
+		AbstractOperationBuilder<AnalyzedClass, IClassOperation> {
 
-	ClassScopeOperationBuilder(StepCollector collector,
-			Navigation<AnalyzedClass> navigation) {
+	ClassScopeOperationBuilder(IStepCollector collector,
+			INavigation<AnalyzedClass> navigation) {
 		super(collector, navigation);
 	}
 

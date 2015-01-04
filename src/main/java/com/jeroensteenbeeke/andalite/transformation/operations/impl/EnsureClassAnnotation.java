@@ -15,10 +15,10 @@
 package com.jeroensteenbeeke.andalite.transformation.operations.impl;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IClassOperation;
 
 public class EnsureClassAnnotation extends
-		AbstractEnsureAnnotation<AnalyzedClass> implements ClassOperation {
+		AbstractEnsureAnnotation<AnalyzedClass> implements IClassOperation {
 	public EnsureClassAnnotation(String type) {
 		super(type);
 

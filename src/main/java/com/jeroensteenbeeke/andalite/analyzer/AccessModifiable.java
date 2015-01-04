@@ -93,7 +93,7 @@ public abstract class AccessModifiable extends Annotatable {
 	}
 
 	@Override
-	public final void onOutput(OutputCallback callback) {
+	public final void onOutput(IOutputCallback callback) {
 		callback.write(modifier.getOutput());
 
 		if (modifierAbstract) {
@@ -124,6 +124,6 @@ public abstract class AccessModifiable extends Annotatable {
 		onModifierOutputted(callback);
 	}
 
-	public abstract void onModifierOutputted(OutputCallback callback);
+	public abstract void onModifierOutputted(IOutputCallback callback);
 
 }

@@ -17,11 +17,11 @@ package com.jeroensteenbeeke.andalite.transformation;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.transformation.navigation.CompilationUnitNavigation;
-import com.jeroensteenbeeke.andalite.transformation.operations.CompilationUnitOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.ICompilationUnitOperation;
 
 public class CompilationUnitOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedSourceFile, CompilationUnitOperation> {
-	CompilationUnitOperationBuilder(StepCollector collector) {
+		AbstractOperationBuilder<AnalyzedSourceFile, ICompilationUnitOperation> {
+	CompilationUnitOperationBuilder(IStepCollector collector) {
 		super(collector, CompilationUnitNavigation.getInstance());
 	}
 }

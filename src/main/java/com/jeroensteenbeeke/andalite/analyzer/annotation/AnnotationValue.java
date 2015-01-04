@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
-import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
+import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
 public class AnnotationValue extends BaseValue<AnalyzedAnnotation> {
 
@@ -30,7 +30,7 @@ public class AnnotationValue extends BaseValue<AnalyzedAnnotation> {
 	}
 
 	@Override
-	public void output(OutputCallback callback) {
+	public void output(IOutputCallback callback) {
 		getValue().output(callback);
 	}
 }

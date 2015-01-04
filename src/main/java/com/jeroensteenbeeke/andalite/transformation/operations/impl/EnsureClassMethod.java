@@ -23,11 +23,11 @@ import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.transformation.Transformation;
-import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IClassOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.OperationException;
 import com.jeroensteenbeeke.andalite.util.AnalyzeUtil;
 
-public class EnsureClassMethod implements ClassOperation {
+public class EnsureClassMethod implements IClassOperation {
 	private final String name;
 
 	private final String type;

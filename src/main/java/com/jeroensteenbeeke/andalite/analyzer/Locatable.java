@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.Location;
 
-public abstract class Locatable implements Outputable {
+public abstract class Locatable implements ILocatable {
 	private final Location location;
 
 	public Locatable(@Nonnull Location location) {
@@ -28,6 +28,7 @@ public abstract class Locatable implements Outputable {
 	}
 
 	@Nonnull
+	@Override
 	public final Location getLocation() {
 		return location;
 	}

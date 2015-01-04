@@ -23,12 +23,15 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.Location;
 
-public final class AnalyzedMethod extends AccessModifiable {
+public final class AnalyzedMethod extends AccessModifiable implements
+		IBodyContainer {
 	private final String name;
 
 	private String returnType;
 
 	private final List<AnalyzedParameter> parameters;
+
+	private final List<AnalyzedStatement> statements;
 
 	public AnalyzedMethod(@Nonnull Location location, int modifiers,
 			@Nonnull String name) {
@@ -36,6 +39,7 @@ public final class AnalyzedMethod extends AccessModifiable {
 		this.name = name;
 		this.returnType = "void";
 		this.parameters = Lists.newArrayList();
+		this.statements = Lists.newArrayList();
 	}
 
 	@Nonnull
@@ -61,7 +65,17 @@ public final class AnalyzedMethod extends AccessModifiable {
 	}
 
 	@Override
-	public void onModifierOutputted(OutputCallback callback) {
+	@Nonnull
+	public final List<AnalyzedStatement> getStatements() {
+		return statements;
+	}
+
+	void addStatement(AnalyzedStatement statement) {
+		this.statements.add(statement);
+	}
+
+	@Override
+	public void onModifierOutputted(IOutputCallback callback) {
 		callback.write(returnType);
 		callback.write(" ");
 		callback.write(name);

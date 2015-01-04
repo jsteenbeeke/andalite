@@ -150,7 +150,7 @@ public final class AnalyzedImport extends Locatable {
 	}
 
 	@Override
-	public void output(OutputCallback callback) {
+	public void output(IOutputCallback callback) {
 		callback.write(toString());
 		callback.newline();
 	}

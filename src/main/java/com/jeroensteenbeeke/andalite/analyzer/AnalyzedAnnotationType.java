@@ -28,7 +28,7 @@ public class AnalyzedAnnotationType extends Denomination {
 	}
 
 	@Override
-	public void onModifierOutputted(OutputCallback callback) {
+	public void onModifierOutputted(IOutputCallback callback) {
 		callback.write("@interface ");
 		callback.write(getAnnotationName());
 		callback.write(" {");

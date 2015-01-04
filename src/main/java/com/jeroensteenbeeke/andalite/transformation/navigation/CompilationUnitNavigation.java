@@ -18,7 +18,7 @@ package com.jeroensteenbeeke.andalite.transformation.navigation;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 
 public class CompilationUnitNavigation implements
-		Navigation<AnalyzedSourceFile> {
+		INavigation<AnalyzedSourceFile> {
 	private static final CompilationUnitNavigation instance = new CompilationUnitNavigation();
 
 	private CompilationUnitNavigation() {

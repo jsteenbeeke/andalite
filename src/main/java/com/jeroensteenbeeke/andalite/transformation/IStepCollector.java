@@ -12,11 +12,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.jeroensteenbeeke.andalite.transformation;
 
-package com.jeroensteenbeeke.andalite.transformation.operations;
+import com.jeroensteenbeeke.andalite.analyzer.ILocatable;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IOperation;
 
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
-
-public interface CompilationUnitOperation extends Operation<AnalyzedSourceFile> {
-
+public interface IStepCollector {
+	<T extends ILocatable> void addStep(INavigation<T> navigation,
+			IOperation<T> operation);
 }

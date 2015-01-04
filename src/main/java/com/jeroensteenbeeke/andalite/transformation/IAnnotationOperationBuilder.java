@@ -12,12 +12,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package com.jeroensteenbeeke.andalite.transformation;
 
-import com.jeroensteenbeeke.andalite.analyzer.Locatable;
-import com.jeroensteenbeeke.andalite.transformation.operations.Operation;
+import com.jeroensteenbeeke.andalite.analyzer.ILocatable;
+import com.jeroensteenbeeke.andalite.transformation.operations.IOperation;
 
-public interface ScopedOperationBuilder<T extends Locatable, O extends Operation<T>> {
-	public void ensure(O operation);
+public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IOperation<T>>
+		extends IScopedOperationBuilder<T, O> {
+
 }

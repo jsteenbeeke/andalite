@@ -12,10 +12,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.transformation.operations;
 
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
+package com.jeroensteenbeeke.andalite.analyzer;
 
-public interface MethodOperation extends Operation<AnalyzedMethod> {
+public interface IOutputCallback {
+	void increaseIndentationLevel();
 
+	void write(String data);
+
+	void newline();
+
+	void decreaseIndentationLevel();
 }

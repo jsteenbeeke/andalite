@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.Location;
-import com.jeroensteenbeeke.andalite.analyzer.OutputCallback;
+import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
 public final class IntegerValue extends BaseValue<Integer> {
 
@@ -29,7 +29,7 @@ public final class IntegerValue extends BaseValue<Integer> {
 	}
 
 	@Override
-	public void output(OutputCallback callback) {
+	public void output(IOutputCallback callback) {
 		Integer value = getValue();
 		callback.write(value != null ? Integer.toString(value) : null);
 	}

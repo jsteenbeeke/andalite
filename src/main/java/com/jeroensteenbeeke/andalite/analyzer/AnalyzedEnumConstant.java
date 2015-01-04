@@ -24,7 +24,7 @@ public class AnalyzedEnumConstant extends ContainingDenomination {
 	}
 
 	@Override
-	public void onModifierOutputted(OutputCallback callback) {
+	public void onModifierOutputted(IOutputCallback callback) {
 		outputInterfaces(callback);
 		callback.write(" {");
 		callback.increaseIndentationLevel();

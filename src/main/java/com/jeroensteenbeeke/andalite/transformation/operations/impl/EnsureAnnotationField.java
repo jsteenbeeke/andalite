@@ -25,10 +25,10 @@ import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.ArrayValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.BaseValue;
 import com.jeroensteenbeeke.andalite.transformation.Transformation;
-import com.jeroensteenbeeke.andalite.transformation.operations.AnnotationOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IAnnotationOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.OperationException;
 
-public abstract class EnsureAnnotationField<T> implements AnnotationOperation {
+public abstract class EnsureAnnotationField<T> implements IAnnotationOperation {
 	private final String name;
 
 	private final T expectedValue;

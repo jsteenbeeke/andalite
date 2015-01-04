@@ -15,16 +15,16 @@
 package com.jeroensteenbeeke.andalite.transformation;
 
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IClassOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.impl.EnsureClassMethod;
 
-public class EnsureMethodBuilder extends AbstractMethodBuilder<ClassOperation> {
+public class EnsureMethodBuilder extends AbstractMethodBuilder<IClassOperation> {
 	EnsureMethodBuilder() {
 		super("void", AccessModifier.PUBLIC);
 	}
 
 	@Override
-	public ClassOperation named(String name) {
+	public IClassOperation named(String name) {
 		return new EnsureClassMethod(name, getType(), getModifier(),
 				getDescriptors());
 	}

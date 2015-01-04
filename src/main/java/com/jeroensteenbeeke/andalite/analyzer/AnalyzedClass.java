@@ -54,7 +54,7 @@ public final class AnalyzedClass extends ConstructableDenomination {
 	}
 
 	@Override
-	public void onModifierOutputted(OutputCallback callback) {
+	public void onModifierOutputted(IOutputCallback callback) {
 		callback.write("class ");
 		callback.write(getClassName());
 		if (superClass != null) {

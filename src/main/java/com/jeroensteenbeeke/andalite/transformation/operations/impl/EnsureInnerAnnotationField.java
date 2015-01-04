@@ -25,12 +25,12 @@ import com.jeroensteenbeeke.andalite.analyzer.annotation.AnnotationValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.ArrayValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.BaseValue;
 import com.jeroensteenbeeke.andalite.transformation.Transformation;
-import com.jeroensteenbeeke.andalite.transformation.operations.AnnotationOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IAnnotationOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.OperationException;
 import com.jeroensteenbeeke.andalite.transformation.operations.impl.annot.InnerAnnotationCondition;
 import com.jeroensteenbeeke.andalite.transformation.operations.impl.annot.MatchAnyInnerAnnotationCondition;
 
-public class EnsureInnerAnnotationField implements AnnotationOperation {
+public class EnsureInnerAnnotationField implements IAnnotationOperation {
 	private final String name;
 
 	private final String type;

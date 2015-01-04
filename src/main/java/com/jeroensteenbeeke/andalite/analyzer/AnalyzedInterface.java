@@ -33,7 +33,7 @@ public class AnalyzedInterface extends ContainingDenomination {
 	}
 
 	@Override
-	public void onModifierOutputted(OutputCallback callback) {
+	public void onModifierOutputted(IOutputCallback callback) {
 		callback.write("interface ");
 		callback.write(getInterfaceName());
 		callback.write(" {");

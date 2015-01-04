@@ -13,14 +13,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jeroensteenbeeke.andalite.analyzer;
+package com.jeroensteenbeeke.andalite.transformation.operations;
 
-public interface OutputCallback {
-	void increaseIndentationLevel();
+import java.util.List;
 
-	void write(String data);
+import com.jeroensteenbeeke.andalite.analyzer.IOutputable;
+import com.jeroensteenbeeke.andalite.transformation.Transformation;
 
-	void newline();
+public interface IOperation<T extends IOutputable> {
+	List<Transformation> perform(T input) throws OperationException;
 
-	void decreaseIndentationLevel();
+	String getDescription();
 }

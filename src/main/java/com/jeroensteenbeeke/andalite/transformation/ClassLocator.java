@@ -18,19 +18,19 @@ package com.jeroensteenbeeke.andalite.transformation;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.PackageClassNavigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.PublicClassNavigation;
 
 public class ClassLocator {
-	private final Navigation<AnalyzedClass> navigation;
+	private final INavigation<AnalyzedClass> navigation;
 
-	private ClassLocator(@Nonnull Navigation<AnalyzedClass> navigation) {
+	private ClassLocator(@Nonnull INavigation<AnalyzedClass> navigation) {
 		this.navigation = navigation;
 	}
 
 	@Nonnull
-	Navigation<AnalyzedClass> getNavigation() {
+	INavigation<AnalyzedClass> getNavigation() {
 		return navigation;
 	}
 

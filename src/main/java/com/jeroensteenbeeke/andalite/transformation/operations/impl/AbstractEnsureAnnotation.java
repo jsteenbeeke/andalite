@@ -20,11 +20,11 @@ import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.analyzer.Annotatable;
 import com.jeroensteenbeeke.andalite.transformation.Transformation;
-import com.jeroensteenbeeke.andalite.transformation.operations.Operation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.OperationException;
 
 public abstract class AbstractEnsureAnnotation<T extends Annotatable>
-		implements Operation<T> {
+		implements IOperation<T> {
 	private final String type;
 
 	public AbstractEnsureAnnotation(String type) {

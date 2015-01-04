@@ -45,7 +45,7 @@ public class AnalyzedParameter extends Annotatable {
 	}
 
 	@Override
-	public void onOutput(OutputCallback callback) {
+	public void onOutput(IOutputCallback callback) {
 		callback.write(type);
 		callback.write(" ");
 		callback.write(name);

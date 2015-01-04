@@ -24,10 +24,10 @@ import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.transformation.Transformation;
-import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IClassOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.OperationException;
 
-public class EnsureField implements ClassOperation {
+public class EnsureField implements IClassOperation {
 	private final String name;
 
 	private final String type;

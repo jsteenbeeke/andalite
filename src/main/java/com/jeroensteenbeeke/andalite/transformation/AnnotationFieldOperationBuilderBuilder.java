@@ -16,19 +16,19 @@ package com.jeroensteenbeeke.andalite.transformation;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.AnnotationFieldNavigation;
-import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
 import com.jeroensteenbeeke.andalite.transformation.operations.impl.annot.InnerAnnotationCondition;
 
 public class AnnotationFieldOperationBuilderBuilder {
 
-	final StepCollector collector;
+	final IStepCollector collector;
 
-	final Navigation<AnalyzedAnnotation> navigation;
+	final INavigation<AnalyzedAnnotation> navigation;
 
 	final String name;
 
-	public AnnotationFieldOperationBuilderBuilder(StepCollector collector,
-			Navigation<AnalyzedAnnotation> navigation, String name) {
+	public AnnotationFieldOperationBuilderBuilder(IStepCollector collector,
+			INavigation<AnalyzedAnnotation> navigation, String name) {
 		this.collector = collector;
 		this.navigation = navigation;
 		this.name = name;

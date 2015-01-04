@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import com.jeroensteenbeeke.andalite.ActionResult;
 import com.jeroensteenbeeke.andalite.FileRewriter;
 import com.jeroensteenbeeke.andalite.Location;
-import com.jeroensteenbeeke.andalite.analyzer.Locatable;
+import com.jeroensteenbeeke.andalite.analyzer.ILocatable;
 
 public class Transformation {
 	private final int from;
@@ -48,7 +48,7 @@ public class Transformation {
 		return rewriter.rewrite();
 	}
 
-	public static Transformation insertBefore(@Nonnull Locatable locatable,
+	public static Transformation insertBefore(@Nonnull ILocatable locatable,
 			@Nonnull String code) {
 		return insertBefore(locatable.getLocation(), code);
 	}
@@ -62,7 +62,7 @@ public class Transformation {
 		return new Transformation(index, code);
 	}
 
-	public static Transformation insertAfter(@Nonnull Locatable locatable,
+	public static Transformation insertAfter(@Nonnull ILocatable locatable,
 			@Nonnull String code) {
 		return insertAfter(locatable.getLocation(), code);
 	}
@@ -72,7 +72,7 @@ public class Transformation {
 		return new Transformation(location.getEnd() + 1, code);
 	}
 
-	public static Transformation replace(@Nonnull Locatable locatable,
+	public static Transformation replace(@Nonnull ILocatable locatable,
 			@Nonnull String code) {
 		return replace(locatable.getLocation(), code);
 	}

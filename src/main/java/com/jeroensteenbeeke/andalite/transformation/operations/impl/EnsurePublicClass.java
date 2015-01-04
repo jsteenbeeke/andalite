@@ -24,9 +24,9 @@ import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.transformation.Transformation;
-import com.jeroensteenbeeke.andalite.transformation.operations.CompilationUnitOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.ICompilationUnitOperation;
 
-public class EnsurePublicClass implements CompilationUnitOperation {
+public class EnsurePublicClass implements ICompilationUnitOperation {
 
 	@Override
 	public List<Transformation> perform(AnalyzedSourceFile input) {

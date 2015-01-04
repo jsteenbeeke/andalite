@@ -17,13 +17,13 @@ package com.jeroensteenbeeke.andalite.transformation;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.transformation.navigation.FieldNavigation;
-import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
-import com.jeroensteenbeeke.andalite.transformation.operations.FieldOperation;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IFieldOperation;
 
 public class FieldOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedField, FieldOperation> {
-	FieldOperationBuilder(StepCollector collector,
-			Navigation<AnalyzedClass> parentNav, String fieldName) {
+		AbstractOperationBuilder<AnalyzedField, IFieldOperation> {
+	FieldOperationBuilder(IStepCollector collector,
+			INavigation<AnalyzedClass> parentNav, String fieldName) {
 		super(collector, new FieldNavigation(parentNav, fieldName));
 	}
 

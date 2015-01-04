@@ -117,7 +117,7 @@ public final class AnalyzedSourceFile extends Locatable {
 	}
 
 	@Override
-	public void output(OutputCallback callback) {
+	public void output(IOutputCallback callback) {
 		callback.write("package ");
 		callback.write(packageName);
 		callback.write(";");

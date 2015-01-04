@@ -35,7 +35,7 @@ public class MethodNavigation extends
 
 	private final List<ParameterDescriptor> descriptors;
 
-	public MethodNavigation(@Nonnull Navigation<AnalyzedClass> classNavigation,
+	public MethodNavigation(@Nonnull INavigation<AnalyzedClass> classNavigation,
 			@Nonnull String name, @Nullable String type,
 			@Nullable AccessModifier modifier,
 			@Nonnull List<ParameterDescriptor> descriptors) {

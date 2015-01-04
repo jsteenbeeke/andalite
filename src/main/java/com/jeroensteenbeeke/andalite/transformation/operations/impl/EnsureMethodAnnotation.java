@@ -15,10 +15,10 @@
 package com.jeroensteenbeeke.andalite.transformation.operations.impl;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
-import com.jeroensteenbeeke.andalite.transformation.operations.MethodOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IMethodOperation;
 
 public class EnsureMethodAnnotation extends
-		AbstractEnsureAnnotation<AnalyzedMethod> implements MethodOperation {
+		AbstractEnsureAnnotation<AnalyzedMethod> implements IMethodOperation {
 	public EnsureMethodAnnotation(String type) {
 		super(type);
 	}

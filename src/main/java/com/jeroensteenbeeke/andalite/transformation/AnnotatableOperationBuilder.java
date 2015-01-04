@@ -17,15 +17,15 @@ package com.jeroensteenbeeke.andalite.transformation;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.analyzer.Annotatable;
 import com.jeroensteenbeeke.andalite.transformation.navigation.AnnotationNavigation;
-import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
-import com.jeroensteenbeeke.andalite.transformation.operations.AnnotationOperation;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IAnnotationOperation;
 
 public class AnnotatableOperationBuilder<T extends Annotatable> extends
-		AbstractOperationBuilder<AnalyzedAnnotation, AnnotationOperation>
+		AbstractOperationBuilder<AnalyzedAnnotation, IAnnotationOperation>
 		implements
-		AnnotationOperationBuilder<AnalyzedAnnotation, AnnotationOperation> {
-	AnnotatableOperationBuilder(StepCollector collector,
-			Navigation<T> parentNav, String annotationName) {
+		IAnnotationOperationBuilder<AnalyzedAnnotation, IAnnotationOperation> {
+	AnnotatableOperationBuilder(IStepCollector collector,
+			INavigation<T> parentNav, String annotationName) {
 		super(collector, new AnnotationNavigation<T>(parentNav, annotationName));
 	}
 

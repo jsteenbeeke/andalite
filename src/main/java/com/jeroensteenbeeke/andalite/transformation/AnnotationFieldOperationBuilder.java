@@ -15,13 +15,13 @@
 package com.jeroensteenbeeke.andalite.transformation;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
-import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
-import com.jeroensteenbeeke.andalite.transformation.operations.AnnotationOperation;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IAnnotationOperation;
 
 public class AnnotationFieldOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedAnnotation, AnnotationOperation> {
-	public AnnotationFieldOperationBuilder(StepCollector collector,
-			Navigation<AnalyzedAnnotation> navigation) {
+		AbstractOperationBuilder<AnalyzedAnnotation, IAnnotationOperation> {
+	public AnnotationFieldOperationBuilder(IStepCollector collector,
+			INavigation<AnalyzedAnnotation> navigation) {
 		super(collector, navigation);
 	}
 

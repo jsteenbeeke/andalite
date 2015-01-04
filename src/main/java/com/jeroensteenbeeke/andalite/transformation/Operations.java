@@ -22,10 +22,10 @@ import com.jeroensteenbeeke.andalite.analyzer.annotation.BooleanValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.CharValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.IntegerValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.StringValue;
-import com.jeroensteenbeeke.andalite.transformation.operations.AnnotationOperation;
-import com.jeroensteenbeeke.andalite.transformation.operations.ClassOperation;
-import com.jeroensteenbeeke.andalite.transformation.operations.CompilationUnitOperation;
-import com.jeroensteenbeeke.andalite.transformation.operations.FieldOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IAnnotationOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IClassOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.ICompilationUnitOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IFieldOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.impl.*;
 
 public class Operations {
@@ -36,19 +36,19 @@ public class Operations {
 
 	}
 
-	public static CompilationUnitOperation hasPublicClass() {
+	public static ICompilationUnitOperation hasPublicClass() {
 		return new EnsurePublicClass();
 	}
 
-	public static CompilationUnitOperation imports(@Nonnull String fqdn) {
+	public static ICompilationUnitOperation imports(@Nonnull String fqdn) {
 		return new EnsureImports(fqdn);
 	}
 
-	public static ClassOperation hasClassAnnotation(@Nonnull String annotation) {
+	public static IClassOperation hasClassAnnotation(@Nonnull String annotation) {
 		return new EnsureClassAnnotation(annotation);
 	}
 
-	public static FieldOperation hasFieldAnnotation(@Nonnull String annotation) {
+	public static IFieldOperation hasFieldAnnotation(@Nonnull String annotation) {
 		return new EnsureFieldAnnotation(annotation);
 	}
 
@@ -56,7 +56,7 @@ public class Operations {
 		return new EnsureMethodBuilder();
 	}
 
-	public static AnnotationOperation hasBooleanValue(@Nonnull String name,
+	public static IAnnotationOperation hasBooleanValue(@Nonnull String name,
 			boolean value) {
 		return new EnsureAnnotationField<Boolean>(name, BooleanValue.class,
 				value) {
@@ -67,7 +67,7 @@ public class Operations {
 		};
 	}
 
-	public static AnnotationOperation hasStringValue(@Nonnull String name,
+	public static IAnnotationOperation hasStringValue(@Nonnull String name,
 			String value) {
 		return new EnsureAnnotationField<String>(name, StringValue.class, value) {
 			@Override
@@ -77,7 +77,7 @@ public class Operations {
 		};
 	}
 
-	public static AnnotationOperation hasIntegerValue(@Nonnull String name,
+	public static IAnnotationOperation hasIntegerValue(@Nonnull String name,
 			Integer value) {
 		return new EnsureAnnotationField<Integer>(name, IntegerValue.class,
 				value) {
@@ -88,7 +88,7 @@ public class Operations {
 		};
 	}
 
-	public static AnnotationOperation hasCharValue(@Nonnull String name,
+	public static IAnnotationOperation hasCharValue(@Nonnull String name,
 			Character value) {
 		return new EnsureAnnotationField<Character>(name, CharValue.class,
 				value) {
@@ -133,7 +133,7 @@ public class Operations {
 			this.type = type;
 		}
 
-		public ClassOperation withAccess(@Nonnull AccessModifier modifier) {
+		public IClassOperation withAccess(@Nonnull AccessModifier modifier) {
 			return new EnsureField(name, type, modifier);
 		}
 	}

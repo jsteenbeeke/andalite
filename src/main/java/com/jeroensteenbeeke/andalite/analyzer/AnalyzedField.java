@@ -53,7 +53,7 @@ public final class AnalyzedField extends AccessModifiable {
 	}
 
 	@Override
-	public void onModifierOutputted(OutputCallback callback) {
+	public void onModifierOutputted(IOutputCallback callback) {
 		callback.write(type);
 		callback.write(" ");
 		callback.write(name);

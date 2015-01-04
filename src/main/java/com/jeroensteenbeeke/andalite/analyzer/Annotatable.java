@@ -25,7 +25,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.jeroensteenbeeke.andalite.Location;
 
-public abstract class Annotatable extends Locatable {
+public abstract class Annotatable extends Locatable implements
+		IAnnotatable {
 	private final Map<String, AnalyzedAnnotation> annotations;
 
 	protected Annotatable(Location location) {
@@ -62,7 +63,7 @@ public abstract class Annotatable extends Locatable {
 	}
 
 	@Override
-	public void output(OutputCallback callback) {
+	public void output(IOutputCallback callback) {
 		for (AnalyzedAnnotation analyzedAnnotation : getAnnotations()) {
 			analyzedAnnotation.output(callback);
 			if (isPrintNewlineAfterAnnotation()) {
@@ -73,5 +74,5 @@ public abstract class Annotatable extends Locatable {
 		onOutput(callback);
 	}
 
-	public abstract void onOutput(OutputCallback callback);
+	public abstract void onOutput(IOutputCallback callback);
 }

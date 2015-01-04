@@ -15,14 +15,14 @@
 package com.jeroensteenbeeke.andalite.transformation;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
-import com.jeroensteenbeeke.andalite.transformation.navigation.Navigation;
-import com.jeroensteenbeeke.andalite.transformation.operations.MethodOperation;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IMethodOperation;
 
 public class MethodOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedMethod, MethodOperation> {
+		AbstractOperationBuilder<AnalyzedMethod, IMethodOperation> {
 
-	MethodOperationBuilder(StepCollector collector,
-			Navigation<AnalyzedMethod> navigation) {
+	MethodOperationBuilder(IStepCollector collector,
+			INavigation<AnalyzedMethod> navigation) {
 		super(collector, navigation);
 	}
 
