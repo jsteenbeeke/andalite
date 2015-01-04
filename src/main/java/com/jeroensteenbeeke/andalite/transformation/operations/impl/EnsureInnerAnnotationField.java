@@ -63,8 +63,15 @@ public class EnsureInnerAnnotationField implements AnnotationOperation {
 			AnnotationValue value = input.getValue(AnnotationValue.class, name);
 
 			if (value != null && !condition.isSatisfiedBy(value)) {
-				return ImmutableList.of(Transformation.replace(value,
-						String.format("%s=@%s()", actualName, type)));
+				if (allowArray) {
+					return ImmutableList.of(Transformation.insertAt(value
+							.getLocation().getStart() + 1, "{"), Transformation
+							.insertAt(value.getLocation().getEnd() + 2,
+									String.format(", @%s()}", type)));
+				} else {
+					return ImmutableList.of(Transformation.replace(value,
+							String.format("%s=@%s()", actualName, type)));
+				}
 			}
 		} else if (allowArray && input.hasValueOfType(ArrayValue.class, name)) {
 			ArrayValue value = input.getValue(ArrayValue.class, name);

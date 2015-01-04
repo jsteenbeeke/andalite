@@ -127,4 +127,13 @@ public final class AnalyzedAnnotation extends Locatable {
 	public boolean hasValueNamed(@Nonnull final String name) {
 		return annotationValues.containsKey(name);
 	}
+
+	@CheckForNull
+	public String getValueType(@Nonnull final String name) {
+		if (hasValueNamed(name)) {
+			return annotationValues.get(name).getClass().getName();
+		}
+
+		return null;
+	}
 }

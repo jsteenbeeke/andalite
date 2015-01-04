@@ -27,10 +27,17 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com.jeroensteenbeeke.andalite.analyzer.*;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.BaseValue;
 
 public final class AndaliteMatchers {
 	private AndaliteMatchers() {
 
+	}
+
+	public static Matcher<AnalyzedAnnotation> hasValue(
+			@Nonnull final String name,
+			@Nonnull final Class<? extends BaseValue<?>> valueClass) {
+		return new AnnotationFieldPresenceMatcher(name, valueClass);
 	}
 
 	public static Matcher<Denomination> hasName(@Nonnull final String className) {

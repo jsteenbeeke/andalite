@@ -19,10 +19,12 @@ import static com.jeroensteenbeeke.andalite.ResultMatchers.*;
 import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.*;
 import static com.jeroensteenbeeke.andalite.transformation.ClassLocator.*;
 import static com.jeroensteenbeeke.andalite.transformation.Operations.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Test;
 
@@ -30,9 +32,14 @@ import com.jeroensteenbeeke.andalite.ActionResult;
 import com.jeroensteenbeeke.andalite.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.TypedActionResult;
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.analyzer.ClassAnalyzer;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.AnnotationValue;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.ArrayValue;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.BaseValue;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.StringValue;
 
 public class RecipeTest extends DummyAwareTest {
 	@Test
@@ -52,7 +59,7 @@ public class RecipeTest extends DummyAwareTest {
 				.ensure(hasAnnotationValue("uniqueConstraints",
 						"UniqueConstraint").whichCouldBeAnArray()
 						.ifNotAlreadyPresentWith().value("name", "U_BARE_FOO")
-						.arrayValue("columnNames", "foo").done());
+						.arrayValue("columnNames", "foo").get());
 		builder.inClass(publicClass()).forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").ifNotAnArray()
 				.ensure(hasStringValue("name", "U_BARE_FOO"));
@@ -64,7 +71,7 @@ public class RecipeTest extends DummyAwareTest {
 				.ensure(hasAnnotationValue("uniqueConstraints",
 						"UniqueConstraint").whichCouldBeAnArray()
 						.ifNotAlreadyPresentWith().value("name", "U_BARE_BAR")
-						.arrayValue("columnNames", "bar").done());
+						.arrayValue("columnNames", "bar").get());
 		builder.inClass(publicClass()).forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").inArray()
 				.noValue("name").then()
@@ -72,7 +79,7 @@ public class RecipeTest extends DummyAwareTest {
 		builder.inClass(publicClass()).forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").inArray()
 				.value("name", "U_BARE_BAR").then()
-				.ensure(hasStringValue("columnNames", "foo"));
+				.ensure(hasStringValue("columnNames", "bar"));
 
 		builder.inClass(publicClass()).ensure(
 				hasField("foo").typed("String").withAccess(
@@ -116,6 +123,54 @@ public class RecipeTest extends DummyAwareTest {
 		assertThat(analyzedClass, hasAnnotation("Entity"));
 		assertThat(analyzedClass, hasAnnotation("Table"));
 
+		AnalyzedAnnotation tableAnnotation = analyzedClass
+				.getAnnotation("Table");
+
+		assertThat(tableAnnotation,
+				hasValue("uniqueConstraints", ArrayValue.class));
+
+		ArrayValue uniqueConstraints = tableAnnotation.getValue(
+				ArrayValue.class, "uniqueConstraints");
+
+		List<BaseValue<?>> values = uniqueConstraints.getValue();
+
+		assertThat(values.size(), equalTo(2));
+
+		BaseValue<?> firstConstraintBase = values.get(0);
+		BaseValue<?> secondConstraintBase = values.get(1);
+
+		assertThat(firstConstraintBase, instanceOf(AnnotationValue.class));
+		assertThat(secondConstraintBase, instanceOf(AnnotationValue.class));
+
+		AnalyzedAnnotation firstConstraint = ((AnnotationValue) firstConstraintBase)
+				.getValue();
+		AnalyzedAnnotation secondConstraint = ((AnnotationValue) secondConstraintBase)
+				.getValue();
+
+		assertThat(firstConstraint.getType(), equalTo("UniqueConstraint"));
+		assertThat(secondConstraint.getType(), equalTo("UniqueConstraint"));
+
+		assertThat(firstConstraint, hasValue("name", StringValue.class));
+		assertThat(firstConstraint, hasValue("columnNames", StringValue.class));
+
+		StringValue firstConstraintName = firstConstraint.getValue(
+				StringValue.class, "name");
+		StringValue firstConstraintColumnNames = firstConstraint.getValue(
+				StringValue.class, "columnNames");
+
+		assertThat(firstConstraintName.getValue(), equalTo("U_BARE_FOO"));
+		assertThat(firstConstraintColumnNames.getValue(), equalTo("foo"));
+
+		assertThat(secondConstraint, hasValue("name", StringValue.class));
+		assertThat(secondConstraint, hasValue("columnNames", StringValue.class));
+
+		StringValue secondConstraintName = secondConstraint.getValue(
+				StringValue.class, "name");
+		StringValue secondConstraintColumnNames = secondConstraint.getValue(
+				StringValue.class, "columnNames");
+
+		assertThat(secondConstraintName.getValue(), equalTo("U_BARE_BAR"));
+		assertThat(secondConstraintColumnNames.getValue(), equalTo("bar"));
 	}
 
 }

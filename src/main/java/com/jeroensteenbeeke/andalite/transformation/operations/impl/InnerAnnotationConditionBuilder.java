@@ -189,11 +189,11 @@ public abstract class InnerAnnotationConditionBuilder<T extends InnerAnnotationC
 	}
 
 	public R then() {
-		return done();
+		return get();
 	}
 
 	@Nonnull
-	public R done() {
+	public R get() {
 		List<InnerAnnotationCondition> list = conditions.build();
 
 		if (list.size() == 1) {
@@ -203,6 +203,6 @@ public abstract class InnerAnnotationConditionBuilder<T extends InnerAnnotationC
 		}
 	}
 
-	public abstract R getReturnObject(InnerAnnotationCondition finalCondition);
+	protected abstract R getReturnObject(InnerAnnotationCondition finalCondition);
 
 }

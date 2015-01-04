@@ -28,7 +28,7 @@ public class EnsureInnerAnnotationConditionBuilder
 	}
 
 	@Override
-	public EnsureInnerAnnotationField getReturnObject(
+	protected EnsureInnerAnnotationField getReturnObject(
 			InnerAnnotationCondition finalCondition) {
 		return returnObject.setCondition(finalCondition);
 	}

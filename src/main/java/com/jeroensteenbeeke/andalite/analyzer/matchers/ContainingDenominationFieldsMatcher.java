@@ -23,7 +23,8 @@ import com.jeroensteenbeeke.andalite.analyzer.ContainingDenomination;
 
 class ContainingDenominationFieldsMatcher extends
 		ByPropertyMatcher<ContainingDenomination, List<AnalyzedField>> {
-	ContainingDenominationFieldsMatcher(Matcher<List<AnalyzedField>> delegateMatcher) {
+	ContainingDenominationFieldsMatcher(
+			Matcher<List<AnalyzedField>> delegateMatcher) {
 		super(delegateMatcher);
 	}
 

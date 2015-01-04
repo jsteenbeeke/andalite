@@ -30,7 +30,7 @@ public class NavigateToInnerAnnotationConditionBuilder
 	}
 
 	@Override
-	public AnnotationFieldOperationBuilder getReturnObject(
+	protected AnnotationFieldOperationBuilder getReturnObject(
 			InnerAnnotationCondition finalCondition) {
 		return parent.getBuilderForCondition(finalCondition);
 	}
