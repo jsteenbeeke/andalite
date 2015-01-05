@@ -16,6 +16,8 @@ package com.jeroensteenbeeke.andalite.analyzer;
 
 import java.util.List;
 
-public interface IBodyContainer {
+public interface IBodyContainer extends ILocatable {
 	List<AnalyzedStatement> getStatements();
+
+	boolean isAbstract();
 }

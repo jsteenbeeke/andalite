@@ -27,17 +27,18 @@ public final class AnalyzedMethod extends AccessModifiable implements
 		IBodyContainer {
 	private final String name;
 
-	private String returnType;
+	private final AnalyzedType returnType;
 
 	private final List<AnalyzedParameter> parameters;
 
 	private final List<AnalyzedStatement> statements;
 
-	public AnalyzedMethod(@Nonnull Location location, int modifiers,
+	public AnalyzedMethod(@Nonnull Location location,
+			@Nonnull AnalyzedType returnType, int modifiers,
 			@Nonnull String name) {
 		super(location, modifiers);
 		this.name = name;
-		this.returnType = "void";
+		this.returnType = returnType;
 		this.parameters = Lists.newArrayList();
 		this.statements = Lists.newArrayList();
 	}
@@ -47,12 +48,8 @@ public final class AnalyzedMethod extends AccessModifiable implements
 		return name;
 	}
 
-	public String getReturnType() {
+	public AnalyzedType getReturnType() {
 		return returnType;
-	}
-
-	void setReturnType(String returnType) {
-		this.returnType = returnType;
 	}
 
 	void addParameter(@Nonnull AnalyzedParameter analyzedParameter) {
@@ -76,7 +73,7 @@ public final class AnalyzedMethod extends AccessModifiable implements
 
 	@Override
 	public void onModifierOutputted(IOutputCallback callback) {
-		callback.write(returnType);
+		returnType.output(callback);
 		callback.write(" ");
 		callback.write(name);
 		callback.write("(");

@@ -19,7 +19,6 @@ import javax.annotation.Nonnull;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedStatement;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
 public class ReturnStatement extends AnalyzedStatement {
 	private final AnalyzedExpression returnExpression;
@@ -30,12 +29,13 @@ public class ReturnStatement extends AnalyzedStatement {
 		this.returnExpression = returnExpression;
 	}
 
-	@Override
-	public void output(IOutputCallback callback) {
-		callback.write("return ");
-		returnExpression.output(callback);
-		callback.write(";\n");
+	public AnalyzedExpression getReturnExpression() {
+		return returnExpression;
+	}
 
+	@Override
+	public String toJavaString() {
+		return String.format("return %s", returnExpression.toJavaString());
 	}
 
 }

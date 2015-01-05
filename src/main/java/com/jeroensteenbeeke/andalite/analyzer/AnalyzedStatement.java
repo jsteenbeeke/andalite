@@ -20,4 +20,12 @@ public abstract class AnalyzedStatement extends Locatable {
 	protected AnalyzedStatement(Location location) {
 		super(location);
 	}
+
+	public abstract String toJavaString();
+
+	@Override
+	public void output(IOutputCallback callback) {
+		callback.write(toJavaString());
+		callback.write(";\n");
+	}
 }

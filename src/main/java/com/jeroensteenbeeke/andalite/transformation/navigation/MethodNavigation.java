@@ -35,7 +35,8 @@ public class MethodNavigation extends
 
 	private final List<ParameterDescriptor> descriptors;
 
-	public MethodNavigation(@Nonnull INavigation<AnalyzedClass> classNavigation,
+	public MethodNavigation(
+			@Nonnull INavigation<AnalyzedClass> classNavigation,
 			@Nonnull String name, @Nullable String type,
 			@Nullable AccessModifier modifier,
 			@Nonnull List<ParameterDescriptor> descriptors) {
@@ -59,12 +60,13 @@ public class MethodNavigation extends
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
 					if (type != null
-							&& !type.equals(analyzedMethod.getReturnType())) {
+							&& !type.equals(analyzedMethod.getReturnType()
+									.toJavaString())) {
 						throw new NavigationException(
 								"Method %s found, but has incorrect return type %s (expected %s)",
 								AnalyzeUtil.getMethodSignature(name,
 										descriptors), analyzedMethod
-										.getReturnType(), type);
+										.getReturnType().toJavaString(), type);
 					}
 
 					if (modifier != null

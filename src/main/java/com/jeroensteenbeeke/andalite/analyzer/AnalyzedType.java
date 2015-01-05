@@ -21,4 +21,11 @@ public abstract class AnalyzedType extends Locatable {
 	public AnalyzedType(Location location) {
 		super(location);
 	}
+
+	public abstract String toJavaString();
+
+	@Override
+	public final void output(IOutputCallback callback) {
+		callback.write(toJavaString());
+	}
 }

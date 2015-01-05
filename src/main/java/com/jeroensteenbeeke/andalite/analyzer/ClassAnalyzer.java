@@ -19,7 +19,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.github.antlrjavaparser.JavaParser;
 import com.github.antlrjavaparser.ParseException;
@@ -35,6 +37,7 @@ import com.github.antlrjavaparser.api.type.ClassOrInterfaceType;
 import com.github.antlrjavaparser.api.type.PrimitiveType;
 import com.github.antlrjavaparser.api.type.ReferenceType;
 import com.github.antlrjavaparser.api.type.Type;
+import com.github.antlrjavaparser.api.type.WildcardType;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
@@ -46,6 +49,9 @@ import com.jeroensteenbeeke.andalite.analyzer.expression.*;
 import com.jeroensteenbeeke.andalite.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.analyzer.types.ClassOrInterface;
 import com.jeroensteenbeeke.andalite.analyzer.types.Primitive;
+import com.jeroensteenbeeke.andalite.analyzer.types.Reference;
+import com.jeroensteenbeeke.andalite.analyzer.types.TypeVoid;
+import com.jeroensteenbeeke.andalite.analyzer.types.Wildcard;
 import com.jeroensteenbeeke.andalite.util.AnalyzeUtil;
 
 public class ClassAnalyzer {
@@ -382,8 +388,9 @@ public class ClassAnalyzer {
 	}
 
 	private AnalyzedMethod analyze(MethodDeclaration member) {
-		AnalyzedMethod method = new AnalyzedMethod(Location.from(member),
-				member.getModifiers(), member.getName());
+		final AnalyzedMethod method = new AnalyzedMethod(Location.from(member),
+				analyzeType(member.getType()), member.getModifiers(),
+				member.getName());
 
 		method.addAnnotations(determineAnnotations(member));
 
@@ -402,8 +409,7 @@ public class ClassAnalyzer {
 			analyzeBodyDeclaration(body, new IStatementAssigner() {
 				@Override
 				public void assignStatement(AnalyzedStatement statement) {
-					// TODO Auto-generated method stub
-
+					method.addStatement(statement);
 				}
 			});
 		}
@@ -692,29 +698,59 @@ public class ClassAnalyzer {
 	}
 
 	private AnalyzedType analyzeType(Type type) {
+		final Location location = Location.from(type);
+
 		if (type instanceof ClassOrInterfaceType) {
 			ClassOrInterfaceType classOrInterface = (ClassOrInterfaceType) type;
 
 			return analyzeClassOrInterface(classOrInterface);
 		}
+
 		if (type instanceof PrimitiveType) {
 			PrimitiveType prim = (PrimitiveType) type;
 
-			return new Primitive(Location.from(type),
+			return new Primitive(location,
 					Primitive.PrimitiveType.fromParserType(prim.getType()));
 		}
 		if (type instanceof ReferenceType) {
 			ReferenceType ref = (ReferenceType) type;
 
+			Reference rt = processReferenceType(location, ref);
+			if (rt != null) {
+				return rt;
+			}
+		}
+		if (type instanceof WildcardType) {
+			WildcardType wildcard = (WildcardType) type;
+
+			Reference superRef = processReferenceType(
+					Location.from(wildcard.getSuper()), wildcard.getSuper());
+			Reference extendsRef = processReferenceType(
+					Location.from(wildcard.getExtends()), wildcard.getExtends());
+
+			return new Wildcard(location, superRef, extendsRef);
 		}
 
-		// TODO: Void and wildcard types
+		return new TypeVoid(location);
+	}
+
+	private Reference processReferenceType(final Location location,
+			ReferenceType ref) {
+		AnalyzedType refType = analyzeType(ref.getType());
+
+		if (refType != null) {
+			return new Reference(location, refType, ref.getArrayCount());
+		}
 
 		return null;
 	}
 
+	@CheckForNull
 	private ClassOrInterface analyzeClassOrInterface(
-			ClassOrInterfaceType classOrInterface) {
+			@Nullable ClassOrInterfaceType classOrInterface) {
+		if (classOrInterface == null)
+			return null;
+
 		ClassOrInterface scope = analyzeClassOrInterface(classOrInterface
 				.getScope());
 

@@ -16,7 +16,6 @@ package com.jeroensteenbeeke.andalite.analyzer.expression;
 
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
 public class NullExpression extends AnalyzedExpression {
 
@@ -25,8 +24,8 @@ public class NullExpression extends AnalyzedExpression {
 	}
 
 	@Override
-	public void output(IOutputCallback callback) {
-		callback.write("null");
+	public String toJavaString() {
+		return "null";
 	}
 
 }

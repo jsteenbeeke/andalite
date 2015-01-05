@@ -17,7 +17,6 @@ package com.jeroensteenbeeke.andalite.analyzer.expression;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.Location;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
 public class DoubleLiteralExpression extends LiteralExpression<Double> {
 
@@ -27,8 +26,8 @@ public class DoubleLiteralExpression extends LiteralExpression<Double> {
 	}
 
 	@Override
-	public void output(IOutputCallback callback) {
-		callback.write(Double.toString(getValue()));
+	public String toJavaString() {
+		return Double.toString(getValue());
 	}
 
 }

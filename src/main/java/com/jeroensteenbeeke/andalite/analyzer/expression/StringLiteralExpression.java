@@ -17,7 +17,6 @@ package com.jeroensteenbeeke.andalite.analyzer.expression;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.Location;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
 public class StringLiteralExpression extends LiteralExpression<String> {
 
@@ -27,11 +26,8 @@ public class StringLiteralExpression extends LiteralExpression<String> {
 	}
 
 	@Override
-	public void output(IOutputCallback callback) {
-		callback.write("\"");
-		callback.write(getValue());
-		callback.write("\"");
+	public String toJavaString() {
 
+		return String.format("\"%s\"", getValue());
 	}
-
 }

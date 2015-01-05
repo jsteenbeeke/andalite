@@ -16,7 +16,6 @@ package com.jeroensteenbeeke.andalite.analyzer.expression;
 
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
 public class NameReferenceExpression extends AnalyzedExpression {
 
@@ -32,9 +31,7 @@ public class NameReferenceExpression extends AnalyzedExpression {
 	}
 
 	@Override
-	public void output(IOutputCallback callback) {
-		callback.write(name);
-
+	public String toJavaString() {
+		return name;
 	}
-
 }

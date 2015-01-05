@@ -17,7 +17,6 @@ package com.jeroensteenbeeke.andalite.analyzer.expression;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.Location;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
 public class CharLiteralExpression extends LiteralExpression<Character> {
 
@@ -27,9 +26,8 @@ public class CharLiteralExpression extends LiteralExpression<Character> {
 	}
 
 	@Override
-	public void output(IOutputCallback callback) {
-		// TODO Auto-generated method stub
-
+	public String toJavaString() {
+		return String.format("'%c'", getValue());
 	}
 
 }

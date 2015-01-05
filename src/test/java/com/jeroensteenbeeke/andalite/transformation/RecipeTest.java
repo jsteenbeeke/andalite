@@ -96,6 +96,14 @@ public class RecipeTest extends DummyAwareTest {
 		builder.inClass(publicClass()).ensure(
 				hasMethod().withReturnType("String").named("getFoo"));
 
+		builder.inClass(publicClass()).forMethod()
+				.withModifier(AccessModifier.PUBLIC).withReturnType("String")
+				.named("getFoo").inBody().ensure(returnsAsLastStatement("foo"));
+
+		builder.inClass(publicClass()).forMethod()
+				.withModifier(AccessModifier.PUBLIC).withReturnType("String")
+				.named("getFoo").inBody().ensure(hasStatement("return foo;"));
+
 		Recipe recipe = builder.build();
 
 		File bare = getDummy("BareClass");

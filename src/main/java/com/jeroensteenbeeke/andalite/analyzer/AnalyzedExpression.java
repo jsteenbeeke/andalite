@@ -22,4 +22,11 @@ public abstract class AnalyzedExpression extends Locatable {
 		super(location);
 	}
 
+	public abstract String toJavaString();
+
+	@Override
+	public final void output(IOutputCallback callback) {
+		callback.write(toJavaString());
+	}
+
 }

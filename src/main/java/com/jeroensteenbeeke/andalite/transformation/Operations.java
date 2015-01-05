@@ -23,6 +23,7 @@ import com.jeroensteenbeeke.andalite.analyzer.annotation.CharValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.IntegerValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.transformation.operations.IAnnotationOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IBodyContainerOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.IClassOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.ICompilationUnitOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.IFieldOperation;
@@ -34,6 +35,15 @@ public class Operations {
 
 	private Operations() {
 
+	}
+
+	public static IBodyContainerOperation returnsAsLastStatement(
+			@Nonnull String returnValue) {
+		return new EnsureEndReturnStatement(returnValue);
+	}
+
+	public static IBodyContainerOperation hasStatement(@Nonnull String statement) {
+		return new EnsureStatement(statement);
 	}
 
 	public static ICompilationUnitOperation hasPublicClass() {

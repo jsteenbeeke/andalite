@@ -21,7 +21,6 @@ import javax.annotation.Nonnull;
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedType;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
 public class ClassOrInterface extends AnalyzedType {
 	private final String name;
@@ -52,9 +51,26 @@ public class ClassOrInterface extends AnalyzedType {
 	}
 
 	@Override
-	public void output(IOutputCallback callback) {
-		// TODO Auto-generated method stub
+	public String toJavaString() {
+		StringBuilder sb = new StringBuilder();
 
+		if (scope != null) {
+			sb.append(scope.toJavaString());
+			sb.append(".");
+		}
+
+		sb.append(name);
+
+		if (!typeArguments.isEmpty()) {
+			sb.append("<");
+			for (AnalyzedType analyzedType : typeArguments) {
+				sb.append(analyzedType.toJavaString());
+			}
+
+			sb.append(">");
+		}
+
+		return sb.toString();
 	}
 
 }

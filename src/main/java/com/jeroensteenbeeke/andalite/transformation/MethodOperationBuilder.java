@@ -15,6 +15,7 @@
 package com.jeroensteenbeeke.andalite.transformation;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
+import com.jeroensteenbeeke.andalite.transformation.navigation.BodyContainerNavigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
 import com.jeroensteenbeeke.andalite.transformation.operations.IMethodOperation;
 
@@ -26,4 +27,8 @@ public class MethodOperationBuilder extends
 		super(collector, navigation);
 	}
 
+	public BodyContainerOperationBuilder inBody() {
+		return new BodyContainerOperationBuilder(getCollector(),
+				new BodyContainerNavigation<AnalyzedMethod>(getNavigation()));
+	}
 }

@@ -18,7 +18,6 @@ import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedType;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
 public class Primitive extends AnalyzedType {
 	private final PrimitiveType type;
@@ -34,8 +33,8 @@ public class Primitive extends AnalyzedType {
 	}
 
 	@Override
-	public void output(IOutputCallback callback) {
-		callback.write(type.name());
+	public String toJavaString() {
+		return type.name().toLowerCase();
 	}
 
 	public static enum PrimitiveType {

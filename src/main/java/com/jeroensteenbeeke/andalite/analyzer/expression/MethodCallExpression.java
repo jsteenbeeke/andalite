@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedType;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
 public class MethodCallExpression extends AnalyzedExpression {
 	private final String name;
@@ -54,26 +53,28 @@ public class MethodCallExpression extends AnalyzedExpression {
 	}
 
 	@Override
-	public void output(IOutputCallback callback) {
+	public String toJavaString() {
+		StringBuilder sb = new StringBuilder();
+
 		if (!typeArguments.isEmpty()) {
 			boolean first = true;
 
-			callback.write("<");
+			sb.append("<");
 			for (AnalyzedType type : typeArguments) {
 				if (first) {
 					first = false;
 				} else {
-					callback.write(", ");
+					sb.append(", ");
 				}
 
-				type.output(callback);
+				sb.append(type.toJavaString());
 			}
 
-			callback.write(">");
+			sb.append(">");
 		}
 
-		callback.write(name);
-		callback.write("(");
+		sb.append(name);
+		sb.append("(");
 
 		if (!arguments.isEmpty()) {
 			boolean first = true;
@@ -82,14 +83,15 @@ public class MethodCallExpression extends AnalyzedExpression {
 				if (first) {
 					first = false;
 				} else {
-					callback.write(", ");
+					sb.append(", ");
 				}
 
-				analyzedExpression.output(callback);
+				sb.append(analyzedExpression.toJavaString());
 			}
 		}
 
-		callback.write(");");
-	}
+		sb.append(");");
 
+		return sb.toString();
+	}
 }
