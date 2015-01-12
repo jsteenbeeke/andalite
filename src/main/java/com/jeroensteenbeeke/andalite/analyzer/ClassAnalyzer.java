@@ -31,6 +31,7 @@ import com.github.antlrjavaparser.api.PackageDeclaration;
 import com.github.antlrjavaparser.api.body.*;
 import com.github.antlrjavaparser.api.expr.*;
 import com.github.antlrjavaparser.api.stmt.BlockStmt;
+import com.github.antlrjavaparser.api.stmt.IfStmt;
 import com.github.antlrjavaparser.api.stmt.ReturnStmt;
 import com.github.antlrjavaparser.api.stmt.Statement;
 import com.github.antlrjavaparser.api.type.ClassOrInterfaceType;
@@ -46,6 +47,7 @@ import com.jeroensteenbeeke.andalite.TypedActionResult;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.*;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.ClassValue;
 import com.jeroensteenbeeke.andalite.analyzer.expression.*;
+import com.jeroensteenbeeke.andalite.analyzer.statements.IfStatement;
 import com.jeroensteenbeeke.andalite.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.analyzer.types.ClassOrInterface;
 import com.jeroensteenbeeke.andalite.analyzer.types.Primitive;
@@ -602,18 +604,45 @@ public class ClassAnalyzer {
 		List<Statement> statements = body.getStmts();
 		if (statements != null) {
 			for (Statement statement : statements) {
-				if (statement instanceof ReturnStmt) {
-					ReturnStmt returnStmt = (ReturnStmt) statement;
-
-					AnalyzedExpression returnExpression = analyzeExpression(returnStmt
-							.getExpr());
-
-					assigner.assignStatement(new ReturnStatement(Location
-							.from(statement), returnExpression));
-				}
+				assigner.assignStatement(analyzeStatement(statement));
 			}
 		}
 
+	}
+
+	@CheckForNull
+	private AnalyzedStatement analyzeStatement(Statement statement) {
+		if (statement == null) {
+			return null;
+		}
+
+		Location location = Location.from(statement);
+		if (statement instanceof ReturnStmt) {
+			ReturnStmt returnStmt = (ReturnStmt) statement;
+
+			AnalyzedExpression returnExpression = analyzeExpression(returnStmt
+					.getExpr());
+
+			return new ReturnStatement(location, returnExpression);
+		} else if (statement instanceof IfStmt) {
+			IfStmt ifStmt = (IfStmt) statement;
+
+			AnalyzedExpression condition = analyzeExpression(ifStmt
+					.getCondition());
+			AnalyzedStatement thenStatement = analyzeStatement(ifStmt
+					.getThenStmt());
+
+			IfStatement ifStatement = new IfStatement(location, condition,
+					thenStatement);
+
+			ifStatement
+					.setElseStatement(analyzeStatement(ifStmt.getElseStmt()));
+
+			return ifStatement;
+
+		}
+
+		return null;
 	}
 
 	@Nonnull
