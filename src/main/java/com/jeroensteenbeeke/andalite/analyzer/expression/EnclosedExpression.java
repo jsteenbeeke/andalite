@@ -14,15 +14,23 @@
  */
 package com.jeroensteenbeeke.andalite.analyzer.expression;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
 
 public class EnclosedExpression extends AnalyzedExpression {
 	private final AnalyzedExpression enclosed;
 
-	public EnclosedExpression(Location location, AnalyzedExpression enclosed) {
+	public EnclosedExpression(@Nonnull Location location,
+			@Nonnull AnalyzedExpression enclosed) {
 		super(location);
 		this.enclosed = enclosed;
+	}
+
+	@Nonnull
+	public AnalyzedExpression getEnclosed() {
+		return enclosed;
 	}
 
 	@Override
