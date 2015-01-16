@@ -30,10 +30,7 @@ import com.github.antlrjavaparser.api.ImportDeclaration;
 import com.github.antlrjavaparser.api.PackageDeclaration;
 import com.github.antlrjavaparser.api.body.*;
 import com.github.antlrjavaparser.api.expr.*;
-import com.github.antlrjavaparser.api.stmt.BlockStmt;
-import com.github.antlrjavaparser.api.stmt.IfStmt;
-import com.github.antlrjavaparser.api.stmt.ReturnStmt;
-import com.github.antlrjavaparser.api.stmt.Statement;
+import com.github.antlrjavaparser.api.stmt.*;
 import com.github.antlrjavaparser.api.type.ClassOrInterfaceType;
 import com.github.antlrjavaparser.api.type.PrimitiveType;
 import com.github.antlrjavaparser.api.type.ReferenceType;
@@ -640,8 +637,44 @@ public class ClassAnalyzer {
 
 			return ifStatement;
 
+		} else if (statement instanceof AssertStmt) {
+			// TODO
+		} else if (statement instanceof BlockStmt) {
+			// TODO
+		} else if (statement instanceof BreakStmt) {
+			// TODO
+		} else if (statement instanceof ContinueStmt) {
+			// TODO
+		} else if (statement instanceof DoStmt) {
+			// TODO
+		} else if (statement instanceof EmptyStmt) {
+			// TODO
+		} else if (statement instanceof ExplicitConstructorInvocationStmt) {
+			// TODO
+		} else if (statement instanceof ExpressionStmt) {
+			// TODO
+		} else if (statement instanceof ForeachStmt) {
+			// TODO
+		} else if (statement instanceof ForStmt) {
+			// TODO
+		} else if (statement instanceof LabeledStmt) {
+			// TODO
+		} else if (statement instanceof SwitchEntryStmt) {
+			// TODO
+		} else if (statement instanceof SynchronizedStmt) {
+			// TODO
+		} else if (statement instanceof ThrowStmt) {
+			// TODO
+		} else if (statement instanceof TryStmt) {
+			// TODO
+		} else if (statement instanceof TypeDeclarationStmt) {
+			// TODO
+		} else if (statement instanceof WhileStmt) {
+			// TODO
+
 		}
 
+		// TODO default. Empty statement? Exception? Unknown statement
 		return null;
 	}
 
@@ -721,9 +754,149 @@ public class ClassAnalyzer {
 					analyzedTypeArguments, analyzedArguments);
 
 		}
-		// TODO: More expression types
+		if (expr instanceof AnnotationExpr) {
+			AnnotationExpr annotationExpr = (AnnotationExpr) expr;
+
+			return new AnnotationExpression(location,
+					AnalyzeUtil.getQualifiedName(annotationExpr.getName()));
+		}
+		if (expr instanceof ArrayAccessExpr) {
+			ArrayAccessExpr arrayAccessExpr = (ArrayAccessExpr) expr;
+
+			AnalyzedExpression index = analyzeExpression(arrayAccessExpr
+					.getIndex());
+			AnalyzedExpression name = analyzeExpression(arrayAccessExpr
+					.getName());
+
+			return new ArrayAccessExpression(location, name, index);
+		}
+		if (expr instanceof ArrayCreationExpr) {
+			ArrayCreationExpr arrayCreationExpr = (ArrayCreationExpr) expr;
+
+			ArrayInitializerExpression initializer = parseInitializer(arrayCreationExpr
+					.getInitializer());
+			AnalyzedType type = analyzeType(arrayCreationExpr.getType());
+
+			ArrayCreationExpression creationExpression = new ArrayCreationExpression(
+					location, type, initializer);
+
+			for (Expression expression : arrayCreationExpr.getDimensions()) {
+				creationExpression.addDimension(analyzeExpression(expression));
+			}
+
+			return creationExpression;
+		}
+		if (expr instanceof ArrayInitializerExpr) {
+			ArrayInitializerExpr arrayInitializerExpr = (ArrayInitializerExpr) expr;
+
+			return parseInitializer(arrayInitializerExpr);
+		}
+		if (expr instanceof AssignExpr) {
+			AssignExpr assignExpr = (AssignExpr) expr;
+
+			AnalyzedExpression value = analyzeExpression(assignExpr.getValue());
+			AnalyzedExpression target = analyzeExpression(assignExpr
+					.getTarget());
+			AssignExpression.Operator operator = AssignExpression.Operator
+					.values()[assignExpr.getOperator().ordinal()];
+
+			return new AssignExpression(location, target, operator, value);
+		}
+		if (expr instanceof BinaryExpr) {
+			BinaryExpr binaryExpr = (BinaryExpr) expr;
+
+			AnalyzedExpression left = analyzeExpression(binaryExpr.getLeft());
+			AnalyzedExpression right = analyzeExpression(binaryExpr.getRight());
+			BinaryExpression.Operator operator = BinaryExpression.Operator
+					.values()[binaryExpr.getOperator().ordinal()];
+
+			return new BinaryExpression(location, left, operator, right);
+		}
+		if (expr instanceof CastExpr) {
+			CastExpr castExpr = (CastExpr) expr;
+
+			AnalyzedExpression expression = analyzeExpression(castExpr
+					.getExpr());
+			AnalyzedType type = analyzeType(castExpr.getType());
+
+			return new CastExpression(location, type, expression);
+
+		}
+		if (expr instanceof ClassExpr) {
+			ClassExpr classExpr = (ClassExpr) expr;
+
+			return new ClassExpression(location,
+					analyzeType(classExpr.getType()));
+		}
+		if (expr instanceof ConditionalExpr) {
+			ConditionalExpr conditionalExpr = (ConditionalExpr) expr;
+
+			conditionalExpr.getCondition();
+			conditionalExpr.getThenExpr();
+			conditionalExpr.getElseExpr();
+
+			// TODO
+		}
+		if (expr instanceof EnclosedExpr) {
+			EnclosedExpr enclosedExpr = (EnclosedExpr) expr;
+			// TODO
+		}
+		if (expr instanceof FieldAccessExpr) {
+			FieldAccessExpr fieldAccessExpr = (FieldAccessExpr) expr;
+			// TODO
+		}
+		if (expr instanceof InstanceOfExpr) {
+			InstanceOfExpr instanceOfExpr = (InstanceOfExpr) expr;
+			// TODO
+		}
+		if (expr instanceof LambdaExpr) {
+			LambdaExpr lambdaExpr = (LambdaExpr) expr;
+			// TODO
+		}
+		if (expr instanceof MethodReferenceExpr) {
+			MethodReferenceExpr methodReferenceExpr = (MethodReferenceExpr) expr;
+			// TODO
+		}
+		if (expr instanceof ObjectCreationExpr) {
+			ObjectCreationExpr objectCreationExpr = (ObjectCreationExpr) expr;
+			// TODO
+		}
+		if (expr instanceof SuperExpr) {
+			SuperExpr ouperExpr = (SuperExpr) expr;
+			// TODO
+		}
+		if (expr instanceof ThisExpr) {
+			ThisExpr thisExpr = (ThisExpr) expr;
+
+			// TODO
+		}
+		if (expr instanceof UnaryExpr) {
+			UnaryExpr unaryExpr = (UnaryExpr) expr;
+			// TODO
+		}
+		if (expr instanceof VariableDeclarationExpr) {
+			VariableDeclarationExpr variableDeclarationExpr = (VariableDeclarationExpr) expr;
+			// TODO
+		}
 
 		return new NullExpression(location);
+	}
+
+	@CheckForNull
+	private ArrayInitializerExpression parseInitializer(
+			@Nullable ArrayInitializerExpr initializer) {
+		if (initializer != null) {
+			ArrayInitializerExpression expression = new ArrayInitializerExpression(
+					Location.from(initializer));
+
+			for (Expression expr : initializer.getValues()) {
+				expression.addValue(analyzeExpression(expr));
+			}
+
+			return expression;
+		}
+
+		return null;
 	}
 
 	private AnalyzedType analyzeType(Type type) {

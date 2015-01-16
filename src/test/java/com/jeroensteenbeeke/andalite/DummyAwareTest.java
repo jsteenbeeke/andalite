@@ -48,9 +48,11 @@ public abstract class DummyAwareTest {
 
 	@After
 	public void cleanUpDummies() {
-		if (!dummyFiles.isEmpty()) {
-			for (File file : dummyFiles) {
-				file.delete();
+		if (System.getProperty("dummies.retain") == null) {
+			if (!dummyFiles.isEmpty()) {
+				for (File file : dummyFiles) {
+					file.delete();
+				}
 			}
 		}
 	}

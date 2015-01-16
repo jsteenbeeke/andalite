@@ -78,7 +78,7 @@ public class EnsureClassMethod implements IClassOperation {
 		code.append("(");
 		code.append(Joiner.on(", ").join(descriptors));
 		code.append(") {\n");
-		code.append("\t}\n");
+		code.append("\t}\n\n");
 
 		return ImmutableList.of(Transformation.insertBefore(
 				input.getBodyLocation(), code.toString()));

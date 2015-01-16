@@ -33,15 +33,24 @@ public class EnsureImports implements ICompilationUnitOperation {
 
 	@Override
 	public List<Transformation> perform(AnalyzedSourceFile input) {
+		AnalyzedImport last = null;
+
 		for (AnalyzedImport analyzedImport : input.getImports()) {
 			if (analyzedImport.matchesClass(fqdn)) {
 				return ImmutableList.of();
 			}
+
+			last = analyzedImport;
 		}
 
-		return ImmutableList.of(Transformation.insertAfter(
-				input.getPackageDefinitionLocation(),
-				String.format("\n\nimport %s;", fqdn)));
+		if (last != null) {
+			return ImmutableList.of(Transformation.insertAfter(last,
+					String.format("\nimport %s;", fqdn)));
+		} else {
+			return ImmutableList.of(Transformation.insertAfter(
+					input.getPackageDefinitionLocation(),
+					String.format("\n\nimport %s;", fqdn)));
+		}
 	}
 
 	@Override

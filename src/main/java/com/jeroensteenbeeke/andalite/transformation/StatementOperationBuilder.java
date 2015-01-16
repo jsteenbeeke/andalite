@@ -14,18 +14,22 @@
  */
 package com.jeroensteenbeeke.andalite.transformation;
 
-import com.jeroensteenbeeke.andalite.analyzer.IBodyContainer;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
-import com.jeroensteenbeeke.andalite.transformation.operations.IBodyContainerOperation;
+import com.jeroensteenbeeke.andalite.transformation.navigation.StatementAsBodyNavigation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IStatementOperation;
 
-public class BodyContainerOperationBuilder extends
-		AbstractOperationBuilder<IBodyContainer, IBodyContainerOperation> {
-	BodyContainerOperationBuilder(IStepCollector collector,
-			INavigation<IBodyContainer> navigation) {
+public class StatementOperationBuilder extends
+		AbstractOperationBuilder<AnalyzedStatement, IStatementOperation> {
+
+	public StatementOperationBuilder(IStepCollector collector,
+			INavigation<AnalyzedStatement> navigation) {
 		super(collector, navigation);
 	}
 
-	public IfStatementLocator inIfExpression() {
-		return new IfStatementLocator(this);
+	public BodyContainerOperationBuilder body() {
+		return new BodyContainerOperationBuilder(getCollector(),
+				new StatementAsBodyNavigation(getNavigation()));
 	}
+
 }

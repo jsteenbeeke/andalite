@@ -89,12 +89,18 @@ public class RecipeTest extends DummyAwareTest {
 						AccessModifier.PRIVATE));
 		builder.inClass(publicClass()).forField("foo")
 				.ensure(hasFieldAnnotation("Column"));
+		builder.inClass(publicClass()).forField("bar")
+				.ensure(hasFieldAnnotation("Column"));
 		builder.inClass(publicClass()).ensure(
 				hasMethod().withParameter("foo").ofType("String")
 						.named("setFoo"));
-
+		builder.inClass(publicClass()).ensure(
+				hasMethod().withParameter("bar").ofType("String")
+						.named("setBar"));
 		builder.inClass(publicClass()).ensure(
 				hasMethod().withReturnType("String").named("getFoo"));
+		builder.inClass(publicClass()).ensure(
+				hasMethod().withReturnType("String").named("getBar"));
 
 		builder.inClass(publicClass()).forMethod()
 				.withModifier(AccessModifier.PUBLIC).withReturnType("String")
@@ -102,7 +108,17 @@ public class RecipeTest extends DummyAwareTest {
 
 		builder.inClass(publicClass()).forMethod()
 				.withModifier(AccessModifier.PUBLIC).withReturnType("String")
-				.named("getFoo").inBody().ensure(hasStatement("return foo;"));
+				.named("getBar").inBody().ensure(hasStatement("return bar;"));
+
+		builder.inClass(publicClass()).forMethod()
+				.withModifier(AccessModifier.PUBLIC).withReturnType("void")
+				.withParameter("foo").ofType("String").named("setFoo").inBody()
+				.ensure(hasStatement("this.foo = foo;"));
+
+		builder.inClass(publicClass()).forMethod()
+				.withModifier(AccessModifier.PUBLIC).withReturnType("void")
+				.withParameter("bar").ofType("String").named("setBar").inBody()
+				.ensure(hasStatement("this.bar = bar;"));
 
 		Recipe recipe = builder.build();
 

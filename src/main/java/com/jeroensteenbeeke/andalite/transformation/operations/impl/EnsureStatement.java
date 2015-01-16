@@ -52,19 +52,22 @@ public class EnsureStatement implements IBodyContainerOperation {
 			last = analyzedStatement;
 		}
 
-		final String code = String.format("%s\n", statement);
+		final String code = String.format("\t\t%s", statement);
 
 		Transformation t;
 
 		if (last == null) {
-			t = Transformation.insertAt(input.getLocation().getEnd() - 1, code);
+			t = Transformation.insertAt(input.getLocation().getEnd() - 1,
+					String.format("%s\n", code));
 		} else {
 			if (last instanceof ReturnStatement) {
 				// insert before last
-				t = Transformation.insertBefore(last, code);
+				t = Transformation.insertBefore(last,
+						String.format("%s\n", code));
 			} else {
 
-				t = Transformation.insertAfter(last, code);
+				t = Transformation.insertAfter(last,
+						String.format("\n%s", code));
 			}
 		}
 

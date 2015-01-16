@@ -32,11 +32,23 @@ public abstract class AbstractEnsureAnnotation<T extends Annotatable>
 		this.type = type;
 	}
 
+	protected boolean isNewlineBefore() {
+		return true;
+	}
+
+	protected boolean isNewlineAfter() {
+		return false;
+	}
+
 	@Override
 	public final List<Transformation> perform(T input)
 			throws OperationException {
 		if (!input.hasAnnotation(type)) {
-			final String code = String.format("\n%s@%s", getPrefix(), type);
+			final String before = isNewlineBefore() ? "\n" : " ";
+			final String suffix = isNewlineAfter() ? "\n" : " ";
+
+			final String code = String.format("%s%s@%s%s", before, getPrefix(),
+					type, suffix);
 
 			if (!input.getAnnotations().isEmpty()) {
 				AnalyzedAnnotation last = input.getAnnotations().get(

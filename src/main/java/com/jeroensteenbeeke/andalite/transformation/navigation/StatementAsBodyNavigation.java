@@ -12,20 +12,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.transformation;
+package com.jeroensteenbeeke.andalite.transformation.navigation;
 
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.analyzer.IBodyContainer;
-import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
-import com.jeroensteenbeeke.andalite.transformation.operations.IBodyContainerOperation;
 
-public class BodyContainerOperationBuilder extends
-		AbstractOperationBuilder<IBodyContainer, IBodyContainerOperation> {
-	BodyContainerOperationBuilder(IStepCollector collector,
-			INavigation<IBodyContainer> navigation) {
-		super(collector, navigation);
+public class StatementAsBodyNavigation extends
+		ChainedNavigation<AnalyzedStatement, IBodyContainer> {
+	public StatementAsBodyNavigation(INavigation<AnalyzedStatement> chained) {
+		super(chained);
 	}
 
-	public IfStatementLocator inIfExpression() {
-		return new IfStatementLocator(this);
+	@Override
+	public String getDescription() {
+		return "Treat statement as body container";
 	}
+
+	public IBodyContainer navigate(AnalyzedStatement chainedTarget)
+			throws NavigationException {
+		if (chainedTarget instanceof IBodyContainer) {
+			return (IBodyContainer) chainedTarget;
+		}
+
+		throw new NavigationException("Statement is not a body container");
+	}
+
 }

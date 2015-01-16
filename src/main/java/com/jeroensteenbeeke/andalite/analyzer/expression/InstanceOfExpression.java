@@ -12,30 +12,37 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.analyzer;
+package com.jeroensteenbeeke.andalite.analyzer.expression;
 
-import com.google.common.base.Function;
 import com.jeroensteenbeeke.andalite.Location;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedType;
 
-public abstract class AnalyzedExpression extends Locatable {
+public class InstanceOfExpression extends AnalyzedExpression {
 
-	protected AnalyzedExpression(Location location) {
+	private final AnalyzedExpression target;
+
+	private final AnalyzedType type;
+
+	public InstanceOfExpression(Location location, AnalyzedExpression target,
+			AnalyzedType type) {
 		super(location);
+		this.target = target;
+		this.type = type;
 	}
 
-	public abstract String toJavaString();
+	public AnalyzedExpression getTarget() {
+		return target;
+	}
+
+	public AnalyzedType getType() {
+		return type;
+	}
 
 	@Override
-	public final void output(IOutputCallback callback) {
-		callback.write(toJavaString());
+	public String toJavaString() {
+		return String.format("%s instanceof %s", target.toJavaString(),
+				type.toJavaString());
 	}
 
-	public static Function<AnalyzedExpression, String> toJavaStringFunction() {
-		return new Function<AnalyzedExpression, String>() {
-			@Override
-			public String apply(AnalyzedExpression input) {
-				return input.toJavaString();
-			}
-		};
-	}
 }

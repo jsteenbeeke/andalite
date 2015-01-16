@@ -27,4 +27,14 @@ public class EnsureFieldAnnotation extends
 	protected String getPrefix() {
 		return "\t";
 	}
+
+	@Override
+	protected boolean isNewlineBefore() {
+		return false;
+	}
+
+	@Override
+	protected boolean isNewlineAfter() {
+		return true;
+	}
 }

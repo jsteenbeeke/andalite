@@ -12,30 +12,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.analyzer;
+package com.jeroensteenbeeke.andalite.transformation.operations;
 
-import com.google.common.base.Function;
-import com.jeroensteenbeeke.andalite.Location;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedStatement;
 
-public abstract class AnalyzedExpression extends Locatable {
+public interface IStatementOperation extends IOperation<AnalyzedStatement> {
 
-	protected AnalyzedExpression(Location location) {
-		super(location);
-	}
-
-	public abstract String toJavaString();
-
-	@Override
-	public final void output(IOutputCallback callback) {
-		callback.write(toJavaString());
-	}
-
-	public static Function<AnalyzedExpression, String> toJavaStringFunction() {
-		return new Function<AnalyzedExpression, String>() {
-			@Override
-			public String apply(AnalyzedExpression input) {
-				return input.toJavaString();
-			}
-		};
-	}
 }

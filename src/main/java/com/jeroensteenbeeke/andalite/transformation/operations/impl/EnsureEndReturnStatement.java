@@ -49,7 +49,8 @@ public class EnsureEndReturnStatement implements IBodyContainerOperation {
 		if (last == null) {
 			// No statements
 			return ImmutableList.of(Transformation.insertAt(input.getLocation()
-					.getEnd() - 1, String.format("return %s;", returnValue)));
+					.getEnd() - 1, String.format("\t\treturn %s;\n",
+					returnValue)));
 		} else {
 			// One or more statements
 			if (last instanceof ReturnStatement) {
@@ -65,7 +66,7 @@ public class EnsureEndReturnStatement implements IBodyContainerOperation {
 			} else {
 				// Insert return statement after
 				return ImmutableList.of(Transformation.insertAfter(last,
-						String.format("return %s;", returnValue)));
+						String.format("\t\treturn %s;", returnValue)));
 			}
 		}
 
