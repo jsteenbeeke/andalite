@@ -864,7 +864,8 @@ public class ClassAnalyzer {
 			InstanceOfExpr instanceOfExpr = (InstanceOfExpr) expr;
 
 			AnalyzedType target = analyzeType(instanceOfExpr.getType());
-			AnalyzedExpression expression = analyzeExpression(expr);
+			AnalyzedExpression expression = analyzeExpression(instanceOfExpr
+					.getExpr());
 
 			return new InstanceOfExpression(Location.from(instanceOfExpr),
 					expression, target);
