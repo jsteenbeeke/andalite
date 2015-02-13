@@ -76,7 +76,7 @@ public class EnsureStatement implements IBodyContainerOperation {
 
 	@Override
 	public String getDescription() {
-		return String.format("Body container has statement: %s", statement);
+		return String.format("it has statement: %s", statement);
 	}
 
 }

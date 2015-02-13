@@ -49,7 +49,7 @@ public class MethodNavigation extends
 
 	@Override
 	public String getStepDescription() {
-		return String.format("Method %s",
+		return String.format("go to method %s",
 				AnalyzeUtil.getMethodSignature(name, descriptors));
 	}
 
