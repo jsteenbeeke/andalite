@@ -14,6 +14,9 @@
  */
 package com.jeroensteenbeeke.andalite.transformation.navigation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.analyzer.IBodyContainer;
@@ -21,6 +24,9 @@ import com.jeroensteenbeeke.andalite.analyzer.statements.IfStatement;
 
 public class ByExpressionIfStatementNavigation extends
 		ChainedNavigation<IBodyContainer, IfStatement> {
+	private static final Logger logger = LoggerFactory
+			.getLogger(ByExpressionIfStatementNavigation.class);
+
 	private final String expression;
 
 	public ByExpressionIfStatementNavigation(
@@ -36,7 +42,12 @@ public class ByExpressionIfStatementNavigation extends
 				.getStatements()) {
 			if (analyzedStatement instanceof IfStatement) {
 				IfStatement stmt = (IfStatement) analyzedStatement;
+
 				AnalyzedExpression condition = stmt.getCondition();
+
+				logger.debug("found if-statement with condition {}",
+						condition != null ? condition.toJavaString() : "null");
+
 				if (condition != null
 						&& expression.equals(condition.toJavaString())) {
 					return stmt;

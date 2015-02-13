@@ -16,6 +16,9 @@ package com.jeroensteenbeeke.andalite.transformation.operations.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.analyzer.IBodyContainer;
@@ -26,6 +29,9 @@ import com.jeroensteenbeeke.andalite.transformation.operations.IBodyContainerOpe
 import com.jeroensteenbeeke.andalite.transformation.operations.OperationException;
 
 public class HasIfStatementOperation implements IBodyContainerOperation {
+	private static final Logger logger = LoggerFactory
+			.getLogger(HasIfStatementOperation.class);
+
 	private final String condition;
 
 	public HasIfStatementOperation(String condition) {
@@ -47,7 +53,12 @@ public class HasIfStatementOperation implements IBodyContainerOperation {
 			if (analyzedStatement instanceof IfStatement) {
 				IfStatement stmt = (IfStatement) analyzedStatement;
 
-				if (stmt.getCondition().toJavaString().equals(condition)) {
+				final String conditionAsJavaString = stmt.getCondition()
+						.toJavaString();
+				logger.debug("found if-statement with condition {}",
+						conditionAsJavaString);
+
+				if (conditionAsJavaString.equals(condition)) {
 					return ImmutableList.of();
 				}
 			}

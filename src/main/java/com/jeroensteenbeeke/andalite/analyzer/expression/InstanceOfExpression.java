@@ -41,8 +41,9 @@ public class InstanceOfExpression extends AnalyzedExpression {
 
 	@Override
 	public String toJavaString() {
-		return String.format("%s instanceof %s", target.toJavaString(),
-				type.toJavaString());
+		final String expression = String.format("%s instanceof %s",
+				target.toJavaString(), type.toJavaString());
+		return expression;
 	}
 
 }
