@@ -53,11 +53,13 @@ public class EnsureClassMethod implements IClassOperation {
 		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
-					if (!type.equals(analyzedMethod.getReturnType())) {
+					final String returnType = analyzedMethod.getReturnType()
+							.toJavaString();
+					if (!type.equals(returnType)) {
 						throw new OperationException(
 								String.format(
 										"Method with expected signature exists, but has incorrect return type %s (expected %s)",
-										analyzedMethod.getReturnType(), type));
+										returnType, type));
 					}
 
 					if (!modifier.equals(analyzedMethod.getAccessModifier())) {

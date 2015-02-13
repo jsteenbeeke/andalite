@@ -59,14 +59,14 @@ public class MethodNavigation extends
 		for (AnalyzedMethod analyzedMethod : chainedTarget.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
-					if (type != null
-							&& !type.equals(analyzedMethod.getReturnType()
-									.toJavaString())) {
+					final String returnTypeJavaString = analyzedMethod
+							.getReturnType().toJavaString();
+					if (type != null && !type.equals(returnTypeJavaString)) {
 						throw new NavigationException(
 								"Method %s found, but has incorrect return type %s (expected %s)",
 								AnalyzeUtil.getMethodSignature(name,
-										descriptors), analyzedMethod
-										.getReturnType().toJavaString(), type);
+										descriptors), returnTypeJavaString,
+								type);
 					}
 
 					if (modifier != null
