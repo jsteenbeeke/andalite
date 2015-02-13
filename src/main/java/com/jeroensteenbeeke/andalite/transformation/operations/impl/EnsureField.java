@@ -63,6 +63,8 @@ public class EnsureField implements IClassOperation {
 									name, modifier, field.getAccessModifier()));
 				}
 			}
+
+			return ImmutableList.of();
 		}
 
 		Location location = input.getBodyLocation();
