@@ -17,6 +17,9 @@ package com.jeroensteenbeeke.andalite.transformation;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jeroensteenbeeke.andalite.ActionResult;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.analyzer.ILocatable;
@@ -26,6 +29,8 @@ import com.jeroensteenbeeke.andalite.transformation.operations.IOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.OperationException;
 
 public class RecipeStep<T extends ILocatable> {
+	private final Logger logger = LoggerFactory.getLogger(RecipeStep.class);
+
 	private final INavigation<T> navigation;
 
 	private final IOperation<T> operation;
@@ -41,6 +46,7 @@ public class RecipeStep<T extends ILocatable> {
 		try {
 			target = navigation.navigate(file);
 		} catch (NavigationException e) {
+			logger.error(e.getMessage(), e);
 			return ActionResult.error(String.format(
 					"Navigation (%s) failed: %s", navigation.getDescription(),
 					e.getMessage()));
@@ -50,6 +56,7 @@ public class RecipeStep<T extends ILocatable> {
 			try {
 				transformations = operation.perform(target);
 			} catch (OperationException e) {
+				logger.error(e.getMessage(), e);
 				return ActionResult.error("Operation cannot be performed: %s",
 						e.getMessage());
 			}
