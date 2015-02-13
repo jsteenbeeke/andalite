@@ -157,7 +157,7 @@ public class Operations {
 		}
 	}
 
-	public static IFieldOperation hasInitialization(String expression) {
+	public static IFieldOperation hasInitialization(@Nonnull String expression) {
 		return new EnsureFieldInitialization(expression);
 	}
 
@@ -166,8 +166,14 @@ public class Operations {
 		return new EnsureMethodAnnotation(annotation);
 	}
 
-	public static IBodyContainerOperation hasIfStatement(String filterCondition) {
+	public static IBodyContainerOperation hasIfStatement(
+			@Nonnull String filterCondition) {
 		return new HasIfStatementOperation(filterCondition);
+	}
+
+	public static ICompilationUnitOperation hasPackageClass(
+			@Nonnull String packageClassName) {
+		return new EnsurePackageClass(packageClassName);
 	}
 
 }
