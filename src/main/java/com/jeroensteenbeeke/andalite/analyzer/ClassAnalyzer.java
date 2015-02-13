@@ -862,7 +862,13 @@ public class ClassAnalyzer {
 		}
 		if (expr instanceof InstanceOfExpr) {
 			InstanceOfExpr instanceOfExpr = (InstanceOfExpr) expr;
-			// TODO
+
+			AnalyzedType target = analyzeType(instanceOfExpr.getType());
+			AnalyzedExpression expression = analyzeExpression(expr);
+
+			return new InstanceOfExpression(Location.from(instanceOfExpr),
+					expression, target);
+
 		}
 		if (expr instanceof LambdaExpr) {
 			LambdaExpr lambdaExpr = (LambdaExpr) expr;
