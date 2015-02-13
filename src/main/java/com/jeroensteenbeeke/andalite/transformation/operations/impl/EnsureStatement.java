@@ -43,6 +43,9 @@ public class EnsureStatement implements IBodyContainerOperation {
 		AnalyzedStatement last = null;
 
 		for (AnalyzedStatement analyzedStatement : input.getStatements()) {
+			if (analyzedStatement == null)
+				continue;
+
 			final String asJava = String.format("%s;",
 					analyzedStatement.toJavaString());
 			if (asJava.equals(statement)) {
