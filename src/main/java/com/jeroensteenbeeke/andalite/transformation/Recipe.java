@@ -17,12 +17,17 @@ package com.jeroensteenbeeke.andalite.transformation;
 import java.io.File;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jeroensteenbeeke.andalite.ActionResult;
 import com.jeroensteenbeeke.andalite.TypedActionResult;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.analyzer.ClassAnalyzer;
 
 public class Recipe {
+	private static final Logger logger = LoggerFactory.getLogger(Recipe.class);
+
 	private final List<RecipeStep<?>> steps;
 
 	Recipe(List<RecipeStep<?>> steps) {
@@ -31,21 +36,33 @@ public class Recipe {
 	}
 
 	public ActionResult applyTo(File file) {
+		logger.info("Applying transformation ({} steps) to {}", steps.size(),
+				file.getName());
+
 		for (RecipeStep<?> step : steps) {
+
 			TypedActionResult<AnalyzedSourceFile> result = new ClassAnalyzer(
 					file).analyze();
 
 			if (!result.isOk()) {
+				logger.error("ERROR, could not read file: {}",
+						result.getMessage());
+
 				return ActionResult.error(result.getMessage());
+
 			}
 
 			ActionResult stepResult = step.perform(result.getObject());
 
 			if (!stepResult.isOk()) {
+				logger.error("ERROR: {} {}", result.getMessage(),
+						step.toString());
 				return stepResult;
+			} else {
+				logger.info("OK: {}", step.toString());
 			}
 		}
 
-		return ActionResult.ok();
+		return new ClassAnalyzer(file).analyze();
 	}
 }
