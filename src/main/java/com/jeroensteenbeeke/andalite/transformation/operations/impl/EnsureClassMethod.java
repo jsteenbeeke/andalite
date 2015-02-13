@@ -18,6 +18,7 @@ import java.util.List;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
@@ -47,6 +48,8 @@ public class EnsureClassMethod implements IClassOperation {
 	@Override
 	public List<Transformation> perform(AnalyzedClass input)
 			throws OperationException {
+		Location last = input.getBodyLocation();
+
 		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
@@ -68,6 +71,8 @@ public class EnsureClassMethod implements IClassOperation {
 					return ImmutableList.of();
 				}
 			}
+
+			last = analyzedMethod.getLocation();
 		}
 		StringBuilder code = new StringBuilder();
 		code.append("\t");
@@ -80,8 +85,8 @@ public class EnsureClassMethod implements IClassOperation {
 		code.append(") {\n");
 		code.append("\t}\n\n");
 
-		return ImmutableList.of(Transformation.insertBefore(
-				input.getBodyLocation(), code.toString()));
+		return ImmutableList.of(Transformation.insertBefore(last,
+				code.toString()));
 	}
 
 	@Override
