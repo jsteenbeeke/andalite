@@ -610,7 +610,7 @@ public class ClassAnalyzer {
 	}
 
 	private String determinePackageName(PackageDeclaration pkg) {
-		return AnalyzeUtil.getQualifiedName(pkg.getName());
+		return pkg != null ? AnalyzeUtil.getQualifiedName(pkg.getName()) : "";
 	}
 
 	private void analyzeBodyDeclaration(@Nonnull final BlockStmt body,
