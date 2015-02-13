@@ -22,6 +22,7 @@ import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.transformation.Transformation;
 import com.jeroensteenbeeke.andalite.transformation.operations.IClassOperation;
@@ -53,13 +54,15 @@ public class EnsureClassMethod implements IClassOperation {
 		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
-					final String returnType = analyzedMethod.getReturnType()
-							.toJavaString();
-					if (!type.equals(returnType)) {
+					AnalyzedType returnType = analyzedMethod.getReturnType();
+					final String returnTypeAsString = returnType != null ? returnType
+							.toJavaString() : "void";
+
+					if (!type.equals(returnTypeAsString)) {
 						throw new OperationException(
 								String.format(
 										"Method with expected signature exists, but has incorrect return type %s (expected %s)",
-										returnType, type));
+										returnTypeAsString, type));
 					}
 
 					if (!modifier.equals(analyzedMethod.getAccessModifier())) {

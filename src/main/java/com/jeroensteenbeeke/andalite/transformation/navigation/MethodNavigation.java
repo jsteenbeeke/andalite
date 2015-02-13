@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.util.AnalyzeUtil;
 
@@ -59,14 +60,15 @@ public class MethodNavigation extends
 		for (AnalyzedMethod analyzedMethod : chainedTarget.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
-					final String returnTypeJavaString = analyzedMethod
-							.getReturnType().toJavaString();
-					if (type != null && !type.equals(returnTypeJavaString)) {
+					AnalyzedType returnType = analyzedMethod.getReturnType();
+					final String returnTypeAsString = returnType != null ? returnType
+							.toJavaString() : "void";
+
+					if (type != null && !type.equals(returnTypeAsString)) {
 						throw new NavigationException(
 								"Method %s found, but has incorrect return type %s (expected %s)",
 								AnalyzeUtil.getMethodSignature(name,
-										descriptors), returnTypeJavaString,
-								type);
+										descriptors), returnTypeAsString, type);
 					}
 
 					if (modifier != null
