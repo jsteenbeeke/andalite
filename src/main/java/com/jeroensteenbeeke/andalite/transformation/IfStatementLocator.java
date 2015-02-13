@@ -14,8 +14,11 @@
  */
 package com.jeroensteenbeeke.andalite.transformation;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.analyzer.statements.IfStatement;
 import com.jeroensteenbeeke.andalite.transformation.IfStatementLocator.IfStatementLocatorTerminator;
+import com.jeroensteenbeeke.andalite.transformation.navigation.ByExpressionIfStatementNavigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.ElseStatementNavigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.ThenStatementNavigation;
@@ -27,6 +30,12 @@ public class IfStatementLocator extends
 
 	public IfStatementLocator(BodyContainerOperationBuilder body) {
 		this.body = body;
+	}
+
+	public IfStatementLocatorTerminator withExpression(
+			@Nonnull String expression) {
+		return nextInChain(new ByExpressionIfStatementNavigation(
+				body.getNavigation(), expression));
 	}
 
 	@Override

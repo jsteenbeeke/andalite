@@ -446,6 +446,12 @@ public class ClassAnalyzer {
 			analyzedField.setSpecificDeclarationLocation(Location.from(var));
 			analyzedField.addAnnotations(annotations);
 
+			Expression init = var.getInit();
+			if (init != null) {
+				analyzedField
+						.setInitializationExpression(analyzeExpression(init));
+			}
+
 			builder.add(analyzedField);
 
 		}
@@ -587,6 +593,17 @@ public class ClassAnalyzer {
 			}
 
 			return new ArrayValue(Location.from(expr), name, builder.build());
+		} else if (expr instanceof FieldAccessExpr) {
+			// Enum field reference or similar, just turn it into a big string,
+			// ignore type params (shouldn't be there in enums)
+			FieldAccessExpr fieldAccess = (FieldAccessExpr) expr;
+
+			final String scope = analyzeExpression(fieldAccess.getScope())
+					.toJavaString();
+			final String field = fieldAccess.getField();
+
+			return new FieldAccessValue(Location.from(expr), name, scope, field);
+
 		}
 
 		return null;

@@ -15,6 +15,7 @@
 
 package com.jeroensteenbeeke.andalite.analyzer;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.Location;
@@ -26,12 +27,15 @@ public final class AnalyzedField extends AccessModifiable {
 
 	private Location specificDeclarationLocation;
 
+	private AnalyzedExpression initializationExpression;
+
 	public AnalyzedField(@Nonnull Location location, int modifiers,
 			@Nonnull String name, @Nonnull String type) {
 		super(location, modifiers);
 		this.name = name;
 		this.type = type;
 		this.specificDeclarationLocation = location;
+		this.initializationExpression = null;
 	}
 
 	public Location getSpecificDeclarationLocation() {
@@ -42,6 +46,10 @@ public final class AnalyzedField extends AccessModifiable {
 		this.specificDeclarationLocation = specificDeclarationLocation;
 	}
 
+	void setInitializationExpression(AnalyzedExpression initializationExpression) {
+		this.initializationExpression = initializationExpression;
+	}
+
 	@Nonnull
 	public String getName() {
 		return name;
@@ -50,6 +58,11 @@ public final class AnalyzedField extends AccessModifiable {
 	@Nonnull
 	public String getType() {
 		return type;
+	}
+
+	@CheckForNull
+	public AnalyzedExpression getInitializationExpression() {
+		return initializationExpression;
 	}
 
 	@Override

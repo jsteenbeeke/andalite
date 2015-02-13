@@ -20,13 +20,10 @@ import javax.annotation.Nonnull;
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.BooleanValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.CharValue;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.FieldAccessValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.IntegerValue;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.StringValue;
-import com.jeroensteenbeeke.andalite.transformation.operations.IAnnotationOperation;
-import com.jeroensteenbeeke.andalite.transformation.operations.IBodyContainerOperation;
-import com.jeroensteenbeeke.andalite.transformation.operations.IClassOperation;
-import com.jeroensteenbeeke.andalite.transformation.operations.ICompilationUnitOperation;
-import com.jeroensteenbeeke.andalite.transformation.operations.IFieldOperation;
+import com.jeroensteenbeeke.andalite.transformation.operations.*;
 import com.jeroensteenbeeke.andalite.transformation.operations.impl.*;
 
 public class Operations {
@@ -75,6 +72,18 @@ public class Operations {
 				return value != null ? Boolean.toString(value) : NULL;
 			}
 		};
+	}
+
+	public static IAnnotationOperation hasFieldAccessValue(
+			@Nonnull String name, @Nonnull String fieldAccess) {
+		return new EnsureAnnotationField<String>(name, FieldAccessValue.class,
+				fieldAccess) {
+			@Override
+			public String format(String value) {
+				return value;
+			}
+		};
+
 	}
 
 	public static IAnnotationOperation hasStringValue(@Nonnull String name,
@@ -147,4 +156,18 @@ public class Operations {
 			return new EnsureField(name, type, modifier);
 		}
 	}
+
+	public static IFieldOperation hasInitialization(String expression) {
+		return new EnsureFieldInitialization(expression);
+	}
+
+	public static IMethodOperation hasMethodAnnotation(
+			@Nonnull String annotation) {
+		return new EnsureMethodAnnotation(annotation);
+	}
+
+	public static IBodyContainerOperation hasIfStatement(String filterCondition) {
+		return new HasIfStatementOperation(filterCondition);
+	}
+
 }

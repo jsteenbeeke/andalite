@@ -31,7 +31,7 @@ public class LolCat {
 	@Column(nullable = false)
 	private String code;
 
-	@ManyToOne(optional = true)
+	@ManyToOne(optional = true, fetch = FetchType.LAZY)
 	private LolCat canHaz;
 
 	public LolCat() {
