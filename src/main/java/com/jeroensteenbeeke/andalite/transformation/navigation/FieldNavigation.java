@@ -47,7 +47,7 @@ public class FieldNavigation extends
 
 	@Nonnull
 	@Override
-	public String getDescription() {
+	public String getStepDescription() {
 		return String.format("Field named %s", fieldName);
 	}
 }

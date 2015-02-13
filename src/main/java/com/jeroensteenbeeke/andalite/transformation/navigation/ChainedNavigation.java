@@ -36,4 +36,12 @@ public abstract class ChainedNavigation<From extends ILocatable, To extends ILoc
 	}
 
 	public abstract To navigate(From chainedTarget) throws NavigationException;
+
+	@Override
+	public final String getDescription() {
+		return String.format("%s, then %s", chained.getDescription(),
+				getStepDescription());
+	}
+
+	public abstract String getStepDescription();
 }

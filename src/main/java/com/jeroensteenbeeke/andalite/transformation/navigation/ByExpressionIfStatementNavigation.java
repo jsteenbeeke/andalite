@@ -50,8 +50,7 @@ public class ByExpressionIfStatementNavigation extends
 	}
 
 	@Override
-	public String getDescription() {
-		// TODO Auto-generated method stub
+	public String getStepDescription() {
 		return String.format("if-statement with expression %s", expression);
 	}
 

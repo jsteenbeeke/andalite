@@ -42,7 +42,7 @@ public class AnnotationNavigation<T extends Annotatable> extends
 	}
 
 	@Override
-	public String getDescription() {
+	public String getStepDescription() {
 		return String.format("Annotation of type %s", annotationType);
 	}
 }

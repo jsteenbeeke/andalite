@@ -41,7 +41,9 @@ public class RecipeStep<T extends ILocatable> {
 		try {
 			target = navigation.navigate(file);
 		} catch (NavigationException e) {
-			return ActionResult.error(e.getMessage());
+			return ActionResult.error(String.format(
+					"Navigation (%s) failed: %s", navigation.getDescription(),
+					e.getMessage()));
 		}
 		if (target != null) {
 			List<Transformation> transformations;

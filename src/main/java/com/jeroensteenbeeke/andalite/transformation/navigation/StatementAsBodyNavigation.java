@@ -24,7 +24,7 @@ public class StatementAsBodyNavigation extends
 	}
 
 	@Override
-	public String getDescription() {
+	public String getStepDescription() {
 		return "Treat statement as body container";
 	}
 

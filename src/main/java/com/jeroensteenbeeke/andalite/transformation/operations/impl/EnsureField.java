@@ -65,16 +65,19 @@ public class EnsureField implements IClassOperation {
 			}
 		}
 
-		Location bodyLocation = input.getBodyLocation();
+		Location location = input.getBodyLocation();
 
-		if (bodyLocation == null) {
+		for (AnalyzedField field : input.getFields()) {
+			location = field.getLocation();
+		}
+
+		if (location == null) {
 			throw new OperationException(
 					"Cannot determine insertion point for new field");
 		}
 
-		return ImmutableList.of(Transformation.insertBefore(bodyLocation,
-				String.format("\n\t%s%s %s;\n\n", modifier.getOutput(), type,
-						name)));
+		return ImmutableList.of(Transformation.insertAfter(location, String
+				.format("\n\t%s%s %s;\n\n", modifier.getOutput(), type, name)));
 	}
 
 	@Override

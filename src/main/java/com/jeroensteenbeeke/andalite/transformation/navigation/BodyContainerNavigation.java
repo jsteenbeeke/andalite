@@ -30,7 +30,7 @@ public class BodyContainerNavigation<T extends IBodyContainer> extends
 	}
 
 	@Override
-	public String getDescription() {
+	public String getStepDescription() {
 
 		return "body";
 	}

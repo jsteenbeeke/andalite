@@ -39,7 +39,7 @@ public class InnerClassNavigation extends
 	}
 
 	@Override
-	public String getDescription() {
+	public String getStepDescription() {
 
 		return String.format("Go to inner class %s", className);
 	}

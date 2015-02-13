@@ -70,7 +70,7 @@ public class AnnotationFieldNavigation extends
 	}
 
 	@Override
-	public String getDescription() {
+	public String getStepDescription() {
 		return String.format("Annotation field named %s",
 				fieldName != null ? fieldName : "value");
 	}
