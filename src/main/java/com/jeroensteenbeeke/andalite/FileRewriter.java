@@ -22,11 +22,17 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.io.Files;
 
 public class FileRewriter {
+	private static final Logger logger = LoggerFactory
+			.getLogger(FileRewriter.class);
+
 	private static final int FIRST_INDEX = 1;
 
 	private final File targetFile;
@@ -98,6 +104,7 @@ public class FileRewriter {
 				return ActionResult.ok();
 			}
 		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
 			return ActionResult.error(e.getMessage());
 		}
 	}
