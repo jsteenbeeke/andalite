@@ -21,8 +21,19 @@ import com.jeroensteenbeeke.andalite.Location;
 public class LongLiteralExpression extends LiteralExpression<Long> {
 
 	public LongLiteralExpression(@Nonnull final Location location,
-			@Nonnull final Long value) {
-		super(location, value);
+			@Nonnull final String value) {
+		super(location, toLong(value));
+	}
+
+	private static Long toLong(String value) {
+		StringBuilder parseable = new StringBuilder();
+		for (char c : value.toCharArray()) {
+			if (!Character.isLetter(c)) {
+				parseable.append(c);
+			}
+		}
+
+		return Long.parseLong(parseable.toString());
 	}
 
 	@Override

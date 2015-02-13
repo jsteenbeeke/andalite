@@ -21,8 +21,19 @@ import com.jeroensteenbeeke.andalite.Location;
 public class DoubleLiteralExpression extends LiteralExpression<Double> {
 
 	public DoubleLiteralExpression(@Nonnull final Location location,
-			@Nonnull final Double value) {
-		super(location, value);
+			@Nonnull final String value) {
+		super(location, toDouble(value));
+	}
+
+	private static Double toDouble(String value) {
+		StringBuilder parseable = new StringBuilder();
+		for (char c : value.toCharArray()) {
+			if (!Character.isLetter(c)) {
+				parseable.append(c);
+			}
+		}
+
+		return Double.parseDouble(parseable.toString());
 	}
 
 	@Override

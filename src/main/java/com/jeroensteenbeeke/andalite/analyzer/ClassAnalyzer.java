@@ -717,8 +717,7 @@ public class ClassAnalyzer {
 		if (expr instanceof DoubleLiteralExpr) {
 			DoubleLiteralExpr doubLit = (DoubleLiteralExpr) expr;
 
-			return new DoubleLiteralExpression(location,
-					Double.parseDouble(doubLit.getValue()));
+			return new DoubleLiteralExpression(location, doubLit.getValue());
 		}
 		if (expr instanceof IntegerLiteralExpr) {
 			IntegerLiteralExpr intLit = (IntegerLiteralExpr) expr;
@@ -729,8 +728,7 @@ public class ClassAnalyzer {
 		if (expr instanceof LongLiteralExpr) {
 			LongLiteralExpr longLit = (LongLiteralExpr) expr;
 
-			return new LongLiteralExpression(location, Long.parseLong(longLit
-					.getValue()));
+			return new LongLiteralExpression(location, longLit.getValue());
 		}
 		if (expr instanceof StringLiteralExpr) {
 			StringLiteralExpr lit = (StringLiteralExpr) expr;
