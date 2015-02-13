@@ -44,6 +44,9 @@ import com.jeroensteenbeeke.andalite.TypedActionResult;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.*;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.ClassValue;
 import com.jeroensteenbeeke.andalite.analyzer.expression.*;
+import com.jeroensteenbeeke.andalite.analyzer.statements.BlockStatement;
+import com.jeroensteenbeeke.andalite.analyzer.statements.EmptyStatement;
+import com.jeroensteenbeeke.andalite.analyzer.statements.ExpressionStatement;
 import com.jeroensteenbeeke.andalite.analyzer.statements.IfStatement;
 import com.jeroensteenbeeke.andalite.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.analyzer.types.ClassOrInterface;
@@ -657,7 +660,18 @@ public class ClassAnalyzer {
 		} else if (statement instanceof AssertStmt) {
 			// TODO
 		} else if (statement instanceof BlockStmt) {
-			// TODO
+			BlockStmt blockStmt = (BlockStmt) statement;
+
+			BlockStatement block = new BlockStatement(Location.from(blockStmt));
+			for (Statement s : blockStmt.getStmts()) {
+				AnalyzedStatement analyzedStatement = analyzeStatement(s);
+				if (analyzedStatement != null) {
+					block.addStatement(analyzedStatement);
+				}
+			}
+
+			return block;
+
 		} else if (statement instanceof BreakStmt) {
 			// TODO
 		} else if (statement instanceof ContinueStmt) {
@@ -665,11 +679,17 @@ public class ClassAnalyzer {
 		} else if (statement instanceof DoStmt) {
 			// TODO
 		} else if (statement instanceof EmptyStmt) {
+			return new EmptyStatement(Location.from(statement));
+
 			// TODO
 		} else if (statement instanceof ExplicitConstructorInvocationStmt) {
 			// TODO
 		} else if (statement instanceof ExpressionStmt) {
-			// TODO
+			ExpressionStmt expr = (ExpressionStmt) statement;
+			AnalyzedExpression e = analyzeExpression(expr.getExpression());
+
+			return new ExpressionStatement(Location.from(expr), e);
+
 		} else if (statement instanceof ForeachStmt) {
 			// TODO
 		} else if (statement instanceof ForStmt) {
