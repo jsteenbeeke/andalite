@@ -35,7 +35,13 @@ public class FieldAccessValue extends BaseValue<String> {
 		} else {
 			callback.write(null);
 		}
+	}
 
+	@Override
+	public String toJavaString() {
+		String value = getValue();
+
+		return value != null ? value : "null";
 	}
 
 	private static String createValue(@Nullable String scope,

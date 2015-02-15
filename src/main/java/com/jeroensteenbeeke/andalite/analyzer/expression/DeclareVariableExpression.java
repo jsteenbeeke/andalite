@@ -12,30 +12,34 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package com.jeroensteenbeeke.andalite.analyzer.annotation;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+package com.jeroensteenbeeke.andalite.analyzer.expression;
 
 import com.jeroensteenbeeke.andalite.Location;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
 
-public final class BooleanValue extends BaseValue<Boolean> {
+public class DeclareVariableExpression extends AnalyzedExpression {
+	private final String name;
 
-	public BooleanValue(@Nonnull Location location, @Nullable String name,
-			@Nullable boolean value) {
-		super(location, name, value);
+	private final AnalyzedExpression initializationExpression;
+
+	public DeclareVariableExpression(Location location, String name,
+			AnalyzedExpression initializationExpression) {
+		super(location);
+		this.name = name;
+		this.initializationExpression = initializationExpression;
 	}
 
-	@Override
-	public void output(IOutputCallback callback) {
-		Boolean value = getValue();
-		callback.write(value != null ? Boolean.toString(value) : null);
+	public AnalyzedExpression getInitializationExpression() {
+		return initializationExpression;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	@Override
 	public String toJavaString() {
-		return Boolean.toString(getValue());
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

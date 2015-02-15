@@ -12,40 +12,35 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package com.jeroensteenbeeke.andalite.analyzer.annotation;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+package com.jeroensteenbeeke.andalite.analyzer.statements;
 
 import com.jeroensteenbeeke.andalite.Location;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedStatement;
 
-public class ClassValue extends BaseValue<String> {
+public class WhileStatement extends AnalyzedStatement {
+	private final AnalyzedExpression condition;
 
-	public ClassValue(@Nonnull Location location, @Nullable String name,
-			@Nullable String value) {
-		super(location, name, value);
+	private final AnalyzedStatement body;
+
+	public WhileStatement(Location location, AnalyzedExpression condition,
+			AnalyzedStatement body) {
+		super(location);
+		this.condition = condition;
+		this.body = body;
 	}
 
-	@Override
-	public void output(IOutputCallback callback) {
-		String value = getValue();
-		if (value != null) {
-			callback.write(value);
-			callback.write(".class");
-		} else {
-			callback.write(null);
-		}
+	public AnalyzedExpression getCondition() {
+		return condition;
+	}
+
+	public AnalyzedStatement getBody() {
+		return body;
 	}
 
 	@Override
 	public String toJavaString() {
-		String value = getValue();
-		if (value != null) {
-			return String.format("%s.class", value);
-		} else {
-			return "null";
-		}
+		return String.format("while (%s) %s", condition.toJavaString(),
+				body.toJavaString());
 	}
 }

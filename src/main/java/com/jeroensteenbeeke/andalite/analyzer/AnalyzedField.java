@@ -23,14 +23,14 @@ import com.jeroensteenbeeke.andalite.Location;
 public final class AnalyzedField extends AccessModifiable {
 	private final String name;
 
-	private final String type;
+	private final AnalyzedType type;
 
 	private Location specificDeclarationLocation;
 
 	private AnalyzedExpression initializationExpression;
 
 	public AnalyzedField(@Nonnull Location location, int modifiers,
-			@Nonnull String name, @Nonnull String type) {
+			@Nonnull String name, @Nonnull AnalyzedType type) {
 		super(location, modifiers);
 		this.name = name;
 		this.type = type;
@@ -56,7 +56,7 @@ public final class AnalyzedField extends AccessModifiable {
 	}
 
 	@Nonnull
-	public String getType() {
+	public AnalyzedType getType() {
 		return type;
 	}
 
@@ -67,7 +67,7 @@ public final class AnalyzedField extends AccessModifiable {
 
 	@Override
 	public void onModifierOutputted(IOutputCallback callback) {
-		callback.write(type);
+		callback.write(type.toJavaString());
 		callback.write(" ");
 		callback.write(name);
 		callback.write(";");

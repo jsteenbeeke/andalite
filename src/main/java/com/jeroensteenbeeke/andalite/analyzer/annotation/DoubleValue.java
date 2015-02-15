@@ -34,4 +34,10 @@ public final class DoubleValue extends BaseValue<Double> {
 		callback.write(value != null ? Double.toString(value) : null);
 
 	}
+
+	@Override
+	public String toJavaString() {
+		Double value = getValue();
+		return value != null ? Double.toString(value) : null;
+	}
 }

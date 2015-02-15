@@ -50,6 +50,7 @@ public abstract class AccessModifiable extends Annotatable {
 		this.modifierNative = ModifierSet.isNative(modifiers);
 		this.modifierVolatile = ModifierSet.isVolatile(modifiers);
 		this.modifierTransient = ModifierSet.isTransient(modifiers);
+		;
 	}
 
 	public AccessModifier getAccessModifier() {

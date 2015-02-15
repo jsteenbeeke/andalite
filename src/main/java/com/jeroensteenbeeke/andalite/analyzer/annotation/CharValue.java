@@ -33,4 +33,9 @@ public final class CharValue extends BaseValue<Character> {
 		Character value = getValue();
 		callback.write(value != null ? Character.toString(value) : null);
 	}
+
+	@Override
+	public String toJavaString() {
+		return Character.toString(getValue());
+	}
 }

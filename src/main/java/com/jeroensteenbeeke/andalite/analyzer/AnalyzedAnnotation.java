@@ -15,12 +15,16 @@
 
 package com.jeroensteenbeeke.andalite.analyzer;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Maps;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.BaseValue;
@@ -37,7 +41,7 @@ public final class AnalyzedAnnotation extends Locatable {
 	public AnalyzedAnnotation(@Nonnull Location location, @Nonnull String type) {
 		super(location);
 		this.type = type;
-		this.annotationValues = Maps.newHashMap();
+		this.annotationValues = Maps.newLinkedHashMap();
 	}
 
 	@CheckForNull
@@ -135,5 +139,51 @@ public final class AnalyzedAnnotation extends Locatable {
 		}
 
 		return null;
+	}
+
+	public String toJavaString() {
+		StringBuilder java = new StringBuilder();
+
+		java.append("@");
+		java.append(type);
+		if (!annotationValues.isEmpty()) {
+			java.append("(");
+			Joiner.on(", ").appendTo(
+					java,
+					FluentIterable.from(annotationValues.entrySet()).transform(
+							ENTRY_TO_JAVASTRING_FUNCTION));
+			java.append(")");
+		}
+
+		return java.toString();
+	}
+
+	public static Function<AnalyzedAnnotation, String> toJavaStringFunction() {
+		return TO_JAVASTRING_FUNCTION;
+	}
+
+	private static final Function<AnalyzedAnnotation, String> TO_JAVASTRING_FUNCTION = new ToJavaStringFunction();
+
+	private static final Function<Entry<String, BaseValue<?>>, String> ENTRY_TO_JAVASTRING_FUNCTION = new EntryToString();
+
+	private static final class ToJavaStringFunction implements
+			Function<AnalyzedAnnotation, String>, Serializable {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public String apply(AnalyzedAnnotation input) {
+			return input.toJavaString();
+		}
+	}
+
+	private static final class EntryToString implements
+			Function<Entry<String, BaseValue<?>>, String>, Serializable {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public String apply(Entry<String, BaseValue<?>> input) {
+			return String.format("%s=%s", input.getKey(), input.getValue()
+					.toJavaString());
+		}
 	}
 }

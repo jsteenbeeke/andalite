@@ -12,30 +12,38 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package com.jeroensteenbeeke.andalite.analyzer;
 
-package com.jeroensteenbeeke.andalite.analyzer.annotation;
+public class StringBuilderCallback implements IOutputCallback {
+	private final StringBuilder builder;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+	private int indentation = 0;
 
-import com.jeroensteenbeeke.andalite.Location;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
-
-public final class BooleanValue extends BaseValue<Boolean> {
-
-	public BooleanValue(@Nonnull Location location, @Nullable String name,
-			@Nullable boolean value) {
-		super(location, name, value);
+	public StringBuilderCallback(StringBuilder builder) {
+		super();
+		this.builder = builder;
 	}
 
 	@Override
-	public void output(IOutputCallback callback) {
-		Boolean value = getValue();
-		callback.write(value != null ? Boolean.toString(value) : null);
+	public void increaseIndentationLevel() {
+		indentation++;
 	}
 
 	@Override
-	public String toJavaString() {
-		return Boolean.toString(getValue());
+	public void write(String data) {
+		builder.append(data);
+	}
+
+	@Override
+	public void newline() {
+		builder.append(System.getProperty("line.separator"));
+		for (int i = 0; i < indentation; i++) {
+			builder.append("\t");
+		}
+	}
+
+	@Override
+	public void decreaseIndentationLevel() {
+		indentation--;
 	}
 }

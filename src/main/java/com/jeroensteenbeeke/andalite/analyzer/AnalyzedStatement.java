@@ -14,6 +14,9 @@
  */
 package com.jeroensteenbeeke.andalite.analyzer;
 
+import java.io.Serializable;
+
+import com.google.common.base.Function;
 import com.jeroensteenbeeke.andalite.Location;
 
 public abstract class AnalyzedStatement extends Locatable {
@@ -27,5 +30,21 @@ public abstract class AnalyzedStatement extends Locatable {
 	public void output(IOutputCallback callback) {
 		callback.write(toJavaString());
 		callback.write(";\n");
+	}
+
+	public static Function<AnalyzedStatement, String> toJavaStringFunction() {
+		return TO_JAVASTRING_FUNCTION;
+	}
+
+	private static final Function<AnalyzedStatement, String> TO_JAVASTRING_FUNCTION = new ToJavaStringFunction();
+
+	private static final class ToJavaStringFunction implements
+			Function<AnalyzedStatement, String>, Serializable {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public String apply(AnalyzedStatement input) {
+			return input.toJavaString();
+		}
 	}
 }

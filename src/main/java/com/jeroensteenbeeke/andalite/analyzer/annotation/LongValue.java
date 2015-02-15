@@ -33,4 +33,10 @@ public final class LongValue extends BaseValue<Long> {
 		Long value = getValue();
 		callback.write(value != null ? Long.toString(value) : null);
 	}
+
+	@Override
+	public String toJavaString() {
+		Long value = getValue();
+		return value != null ? Long.toString(value) : "null";
+	}
 }

@@ -40,4 +40,15 @@ public class StringValue extends BaseValue<String> {
 			callback.write(null);
 		}
 	}
+
+	@Override
+	public String toJavaString() {
+		String value = getValue();
+
+		if (value != null) {
+			return String.format("\"%s\"", value);
+		} else {
+			return "null";
+		}
+	}
 }

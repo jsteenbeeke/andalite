@@ -20,6 +20,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
 
@@ -44,5 +46,14 @@ public final class ArrayValue extends BaseValue<List<BaseValue<?>>> {
 		}
 
 		callback.write(" }");
+	}
+
+	@Override
+	public String toJavaString() {
+		return String.format(
+				"{%s}",
+				Joiner.on(", ").join(
+						FluentIterable.from(getValue()).transform(
+								BaseValue.toJavaStringFunction())));
 	}
 }

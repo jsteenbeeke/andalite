@@ -78,7 +78,7 @@ public class BlockStatement extends AnalyzedStatement implements IBodyContainer 
 	 */
 	@Override
 	@Nonnull
-	public String toJavaString() {
+	public final String toJavaString() {
 		StringBuilder block = new StringBuilder();
 
 		block.append("{\n");

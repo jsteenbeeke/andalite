@@ -44,11 +44,8 @@ import com.jeroensteenbeeke.andalite.TypedActionResult;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.*;
 import com.jeroensteenbeeke.andalite.analyzer.annotation.ClassValue;
 import com.jeroensteenbeeke.andalite.analyzer.expression.*;
-import com.jeroensteenbeeke.andalite.analyzer.statements.BlockStatement;
-import com.jeroensteenbeeke.andalite.analyzer.statements.EmptyStatement;
-import com.jeroensteenbeeke.andalite.analyzer.statements.ExpressionStatement;
-import com.jeroensteenbeeke.andalite.analyzer.statements.IfStatement;
-import com.jeroensteenbeeke.andalite.analyzer.statements.ReturnStatement;
+import com.jeroensteenbeeke.andalite.analyzer.statements.*;
+import com.jeroensteenbeeke.andalite.analyzer.statements.ConstructorInvocationStatement.InvocationType;
 import com.jeroensteenbeeke.andalite.analyzer.types.ClassOrInterface;
 import com.jeroensteenbeeke.andalite.analyzer.types.Primitive;
 import com.jeroensteenbeeke.andalite.analyzer.types.Reference;
@@ -74,6 +71,8 @@ public class ClassAnalyzer {
 
 			final String packageName = determinePackageName(packageDefinition);
 
+			AnalyzerContext context = new AnalyzerContext(packageName, null);
+
 			AnalyzedSourceFile sourceFile = new AnalyzedSourceFile(
 					Location.from(compilationUnit), targetFile, packageName,
 					Location.from(packageDefinition));
@@ -90,7 +89,7 @@ public class ClassAnalyzer {
 			}
 
 			for (TypeDeclaration typeDeclaration : compilationUnit.getTypes()) {
-				analyze(sourceFile, packageName, typeDeclaration);
+				analyze(sourceFile, context, typeDeclaration);
 			}
 
 			return TypedActionResult.ok(sourceFile);
@@ -99,49 +98,69 @@ public class ClassAnalyzer {
 		}
 	}
 
-	private void analyze(@Nonnull AnalyzedSourceFile sourceFile,
-			@Nonnull String packageName,
+	private Denomination analyze(@CheckForNull AnalyzedSourceFile sourceFile,
+			@Nonnull AnalyzerContext context,
 			@Nonnull TypeDeclaration typeDeclaration) {
 		if (typeDeclaration instanceof ClassOrInterfaceDeclaration) {
 			ClassOrInterfaceDeclaration decl = (ClassOrInterfaceDeclaration) typeDeclaration;
 
 			if (decl.isInterface()) {
 				AnalyzedInterface element = new AnalyzedInterface(
-						Location.from(decl), decl.getModifiers(), packageName,
-						decl.getName());
+						Location.from(decl), decl.getModifiers(),
+						context.getScope(), decl.getName());
 
-				processInterfaceDeclaration(decl, element);
+				processInterfaceDeclaration(decl,
+						context.innerDeclaration(decl.getName()), element);
 
-				sourceFile.addInterface(element);
+				if (sourceFile != null) {
+					sourceFile.addInterface(element);
+				}
+
+				return element;
 			} else {
 				AnalyzedClass element = new AnalyzedClass(Location.from(decl),
-						decl.getModifiers(), packageName, decl.getName());
+						decl.getModifiers(), context.getScope(), decl.getName());
 
-				processClassDeclaration(decl, element);
+				processClassDeclaration(decl,
+						context.innerDeclaration(decl.getName()), element);
 
-				sourceFile.addClass(element);
+				if (sourceFile != null) {
+					sourceFile.addClass(element);
+				}
+
+				return element;
 			}
 		} else if (typeDeclaration instanceof EnumDeclaration) {
 			EnumDeclaration decl = (EnumDeclaration) typeDeclaration;
 
 			AnalyzedEnum element = new AnalyzedEnum(Location.from(decl),
-					decl.getModifiers(), packageName, decl.getName());
+					decl.getModifiers(), context.getScope(), decl.getName());
 
-			processEnumDeclaration(decl, element);
+			processEnumDeclaration(decl,
+					context.innerDeclaration(decl.getName()), element);
 
-			sourceFile.addEnum(element);
+			if (sourceFile != null) {
+				sourceFile.addEnum(element);
+			}
+
+			return element;
 		} else if (typeDeclaration instanceof AnnotationDeclaration) {
 			AnnotationDeclaration decl = (AnnotationDeclaration) typeDeclaration;
 
 			AnalyzedAnnotationType element = new AnalyzedAnnotationType(
-					Location.from(decl), decl.getModifiers(), packageName,
-					decl.getName());
+					Location.from(decl), decl.getModifiers(),
+					context.getScope(), decl.getName());
 
 			processAnnotationDeclaration(decl, element);
 
-			sourceFile.addAnnotation(element);
+			if (sourceFile != null) {
+				sourceFile.addAnnotation(element);
+			}
+
+			return element;
 		}
 
+		return null;
 	}
 
 	private void processAnnotationDeclaration(AnnotationDeclaration decl,
@@ -156,7 +175,7 @@ public class ClassAnalyzer {
 	}
 
 	private void processEnumDeclaration(EnumDeclaration decl,
-			AnalyzedEnum element) {
+			AnalyzerContext analyzerContext, AnalyzedEnum element) {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
 			AnalyzedAnnotation annotation = analyze(expr);
 			if (annotation != null) {
@@ -183,7 +202,8 @@ public class ClassAnalyzer {
 				if (start == classEndMinusOne) {
 					start = member.getBeginIndex();
 				}
-				analyzeBodyElement(decl.getName(), element, member);
+				analyzeBodyElement(decl.getName(), element, analyzerContext,
+						member);
 			}
 		}
 
@@ -191,7 +211,7 @@ public class ClassAnalyzer {
 	}
 
 	private void processEnumConstantDeclaration(EnumConstantDeclaration decl,
-			AnalyzedEnumConstant element) {
+			AnalyzerContext analyzerContext, AnalyzedEnumConstant element) {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
 			AnalyzedAnnotation annotation = analyze(expr);
 			if (annotation != null) {
@@ -210,7 +230,7 @@ public class ClassAnalyzer {
 				if (start == classEndMinusOne) {
 					start = member.getBeginIndex();
 				}
-				analyzeBodyElement(null, element, member);
+				analyzeBodyElement(null, element, analyzerContext, member);
 			}
 		}
 
@@ -218,14 +238,16 @@ public class ClassAnalyzer {
 	}
 
 	private void analyzeBodyElement(String typeName,
-			ContainingDenomination element, BodyDeclaration member) {
+			ContainingDenomination element, AnalyzerContext analyzerContext,
+			BodyDeclaration member) {
 		if (member instanceof FieldDeclaration) {
 			List<AnalyzedField> fields = analyze((FieldDeclaration) member);
 			for (AnalyzedField field : fields) {
 				element.addField(field);
 			}
 		} else if (member instanceof MethodDeclaration) {
-			AnalyzedMethod method = analyze((MethodDeclaration) member);
+			AnalyzedMethod method = analyze((MethodDeclaration) member,
+					analyzerContext);
 
 			if (method != null) {
 				if (element.isAutoAbstractMethods()) {
@@ -244,7 +266,8 @@ public class ClassAnalyzer {
 								element.getDenominationName()),
 						enumDecl.getName());
 
-				processEnumConstantDeclaration(enumDecl, constant);
+				processEnumConstantDeclaration(enumDecl, analyzerContext,
+						constant);
 
 				((AnalyzedEnum) element).addConstant(constant);
 			}
@@ -266,7 +289,9 @@ public class ClassAnalyzer {
 								element.getDenominationName()),
 						innerClassDecl.getName());
 
-				processInterfaceDeclaration(innerClassDecl, innerInterface);
+				processInterfaceDeclaration(innerClassDecl,
+						analyzerContext.innerDeclaration(innerClassDecl
+								.getName()), innerInterface);
 
 				element.addInnerDenomination(innerInterface);
 
@@ -278,11 +303,34 @@ public class ClassAnalyzer {
 								element.getDenominationName()),
 						innerClassDecl.getName());
 
-				processClassDeclaration(innerClassDecl, innerClass);
+				processClassDeclaration(innerClassDecl,
+						analyzerContext.innerDeclaration(innerClassDecl
+								.getName()), innerClass);
 
 				element.addInnerDenomination(innerClass);
 			}
 
+		} else if (member instanceof EnumDeclaration) {
+			EnumDeclaration decl = (EnumDeclaration) member;
+
+			AnalyzedEnum elem = new AnalyzedEnum(Location.from(decl),
+					decl.getModifiers(), analyzerContext.getScope(),
+					decl.getName());
+
+			processEnumDeclaration(decl,
+					analyzerContext.innerDeclaration(decl.getName()), elem);
+
+			element.addInnerDenomination(elem);
+		} else if (member instanceof AnnotationDeclaration) {
+			AnnotationDeclaration decl = (AnnotationDeclaration) member;
+
+			AnalyzedAnnotationType elem = new AnalyzedAnnotationType(
+					Location.from(decl), decl.getModifiers(),
+					analyzerContext.getScope(), decl.getName());
+
+			processAnnotationDeclaration(decl, elem);
+
+			element.addInnerDenomination(elem);
 		}
 	}
 
@@ -296,7 +344,7 @@ public class ClassAnalyzer {
 	}
 
 	private void processClassDeclaration(ClassOrInterfaceDeclaration decl,
-			AnalyzedClass element) {
+			AnalyzerContext analyzerContext, AnalyzedClass element) {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
 			AnalyzedAnnotation annotation = analyze(expr);
 			if (annotation != null) {
@@ -332,7 +380,8 @@ public class ClassAnalyzer {
 				if (start == classEndMinusOne) {
 					start = member.getBeginIndex();
 				}
-				analyzeBodyElement(decl.getName(), element, member);
+				analyzeBodyElement(decl.getName(), element, analyzerContext,
+						member);
 			}
 		}
 
@@ -340,7 +389,7 @@ public class ClassAnalyzer {
 	}
 
 	private void processInterfaceDeclaration(ClassOrInterfaceDeclaration decl,
-			AnalyzedInterface element) {
+			AnalyzerContext analyzerContext, AnalyzedInterface element) {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
 			AnalyzedAnnotation annotation = analyze(expr);
 			if (annotation != null) {
@@ -364,7 +413,7 @@ public class ClassAnalyzer {
 			if (start == classEndMinusOne) {
 				start = member.getBeginIndex();
 			}
-			analyzeBodyElement(decl.getName(), element, member);
+			analyzeBodyElement(decl.getName(), element, analyzerContext, member);
 		}
 
 		element.setBodyLocation(new Location(start, end));
@@ -389,7 +438,8 @@ public class ClassAnalyzer {
 		return constructor;
 	}
 
-	private AnalyzedMethod analyze(MethodDeclaration member) {
+	private AnalyzedMethod analyze(MethodDeclaration member,
+			@Nonnull AnalyzerContext analyzerContext) {
 		final AnalyzedMethod method = new AnalyzedMethod(Location.from(member),
 				analyzeType(member.getType()), member.getModifiers(),
 				member.getName());
@@ -413,7 +463,7 @@ public class ClassAnalyzer {
 				public void assignStatement(AnalyzedStatement statement) {
 					method.addStatement(statement);
 				}
-			});
+			}, analyzerContext);
 		}
 
 		return method;
@@ -435,7 +485,7 @@ public class ClassAnalyzer {
 	}
 
 	private List<AnalyzedField> analyze(FieldDeclaration member) {
-		final Type type = member.getType();
+		final AnalyzedType type = analyzeType(member.getType());
 		final int modifiers = member.getModifiers();
 
 		Builder<AnalyzedField> builder = ImmutableList.builder();
@@ -445,7 +495,7 @@ public class ClassAnalyzer {
 			String name = var.getId().getName();
 
 			AnalyzedField analyzedField = new AnalyzedField(
-					Location.from(member), modifiers, name, type.toString());
+					Location.from(member), modifiers, name, type);
 			analyzedField.setSpecificDeclarationLocation(Location.from(var));
 			analyzedField.addAnnotations(annotations);
 
@@ -617,18 +667,21 @@ public class ClassAnalyzer {
 	}
 
 	private void analyzeBodyDeclaration(@Nonnull final BlockStmt body,
-			@Nonnull final IStatementAssigner assigner) {
+			@Nonnull final IStatementAssigner assigner,
+			AnalyzerContext analyzerContext) {
 		List<Statement> statements = body.getStmts();
 		if (statements != null) {
 			for (Statement statement : statements) {
-				assigner.assignStatement(analyzeStatement(statement));
+				assigner.assignStatement(analyzeStatement(statement,
+						analyzerContext));
 			}
 		}
 
 	}
 
 	@CheckForNull
-	private AnalyzedStatement analyzeStatement(Statement statement) {
+	private AnalyzedStatement analyzeStatement(Statement statement,
+			AnalyzerContext analyzerContext) {
 		if (statement == null) {
 			return null;
 		}
@@ -646,44 +699,91 @@ public class ClassAnalyzer {
 
 			AnalyzedExpression condition = analyzeExpression(ifStmt
 					.getCondition());
-			AnalyzedStatement thenStatement = analyzeStatement(ifStmt
-					.getThenStmt());
+			AnalyzedStatement thenStatement = analyzeStatement(
+					ifStmt.getThenStmt(), analyzerContext);
 
 			IfStatement ifStatement = new IfStatement(location, condition,
 					thenStatement);
 
-			ifStatement
-					.setElseStatement(analyzeStatement(ifStmt.getElseStmt()));
+			ifStatement.setElseStatement(analyzeStatement(ifStmt.getElseStmt(),
+					analyzerContext));
 
 			return ifStatement;
 
 		} else if (statement instanceof AssertStmt) {
-			// TODO
+			AssertStmt assertStmt = (AssertStmt) statement;
+
+			return new AssertStatement(Location.from(statement),
+					analyzeExpression(assertStmt.getCheck()));
 		} else if (statement instanceof BlockStmt) {
 			BlockStmt blockStmt = (BlockStmt) statement;
 
-			BlockStatement block = new BlockStatement(Location.from(blockStmt));
-			for (Statement s : blockStmt.getStmts()) {
-				AnalyzedStatement analyzedStatement = analyzeStatement(s);
-				if (analyzedStatement != null) {
-					block.addStatement(analyzedStatement);
+			return analyzeBlockStatement(blockStmt, analyzerContext);
+
+		} else if (statement instanceof BreakStmt) {
+			BreakStmt breakStmt = (BreakStmt) statement;
+
+			return new BreakStatement(Location.from(breakStmt),
+					breakStmt.getId());
+
+		} else if (statement instanceof ContinueStmt) {
+			ContinueStmt continueStmt = (ContinueStmt) statement;
+
+			return new ContinueStatement(Location.from(continueStmt),
+					continueStmt.getId());
+		} else if (statement instanceof DoStmt) {
+			DoStmt doStmt = (DoStmt) statement;
+
+			AnalyzedExpression condition = analyzeExpression(doStmt
+					.getCondition());
+			AnalyzedStatement body = analyzeStatement(doStmt.getBody(),
+					analyzerContext);
+
+			return new DoStatement(Location.from(doStmt), condition, body);
+		} else if (statement instanceof EmptyStmt) {
+			return new EmptyStatement(Location.from(statement));
+		} else if (statement instanceof ExplicitConstructorInvocationStmt) {
+			ExplicitConstructorInvocationStmt explicitConstructorInvocationStmt = (ExplicitConstructorInvocationStmt) statement;
+
+			InvocationType invocationType = explicitConstructorInvocationStmt
+					.isThis() ? InvocationType.THIS : InvocationType.SUPER;
+
+			ConstructorInvocationStatement invocation = new ConstructorInvocationStatement(
+					Location.from(explicitConstructorInvocationStmt),
+					invocationType);
+
+			Expression expr = explicitConstructorInvocationStmt.getExpr();
+			if (expr != null) {
+				AnalyzedExpression scopeExpression = analyzeExpression(expr);
+				invocation.setScope(scopeExpression);
+			}
+
+			List<Type> typeArgs = explicitConstructorInvocationStmt
+					.getTypeArgs();
+			if (typeArgs != null) {
+				for (Type type : typeArgs) {
+					if (type != null) {
+						AnalyzedType analyzedType = analyzeType(type);
+						if (analyzedType != null) {
+							invocation.addTypeArgument(analyzedType);
+						}
+					}
 				}
 			}
 
-			return block;
+			List<Expression> args = explicitConstructorInvocationStmt.getArgs();
+			if (args != null) {
+				for (Expression expression : args) {
+					if (expression != null) {
+						AnalyzedExpression analyzedExpression = analyzeExpression(expression);
+						if (analyzedExpression != null) {
+							invocation.addArgument(analyzedExpression);
+						}
+					}
+				}
+			}
 
-		} else if (statement instanceof BreakStmt) {
-			// TODO
-		} else if (statement instanceof ContinueStmt) {
-			// TODO
-		} else if (statement instanceof DoStmt) {
-			// TODO
-		} else if (statement instanceof EmptyStmt) {
-			return new EmptyStatement(Location.from(statement));
-
-			// TODO
-		} else if (statement instanceof ExplicitConstructorInvocationStmt) {
-			// TODO
+			return invocation;
 		} else if (statement instanceof ExpressionStmt) {
 			ExpressionStmt expr = (ExpressionStmt) statement;
 			AnalyzedExpression e = analyzeExpression(expr.getExpression());
@@ -691,28 +791,230 @@ public class ClassAnalyzer {
 			return new ExpressionStatement(Location.from(expr), e);
 
 		} else if (statement instanceof ForeachStmt) {
-			// TODO
-		} else if (statement instanceof ForStmt) {
-			// TODO
-		} else if (statement instanceof LabeledStmt) {
-			// TODO
-		} else if (statement instanceof SwitchEntryStmt) {
-			// TODO
-		} else if (statement instanceof SynchronizedStmt) {
-			// TODO
-		} else if (statement instanceof ThrowStmt) {
-			// TODO
-		} else if (statement instanceof TryStmt) {
-			// TODO
-		} else if (statement instanceof TypeDeclarationStmt) {
-			// TODO
-		} else if (statement instanceof WhileStmt) {
-			// TODO
+			ForeachStmt foreachStmt = (ForeachStmt) statement;
 
+			AnalyzedStatement body = analyzeStatement(foreachStmt.getBody(),
+					analyzerContext);
+			VariableDeclarationExpression declareExpression = analyzeVariableDeclarationExpression(foreachStmt
+					.getVariable());
+			AnalyzedExpression iterable = analyzeExpression(foreachStmt
+					.getIterable());
+
+			return new ForEachStatement(Location.from(foreachStmt),
+					declareExpression, iterable, body);
+		} else if (statement instanceof ForStmt) {
+			ForStmt forStmt = (ForStmt) statement;
+
+			Expression compareExpr = forStmt.getCompare();
+			AnalyzedExpression compare = compareExpr != null ? analyzeExpression(compareExpr)
+					: null;
+			AnalyzedStatement body = analyzeStatement(forStmt.getBody(),
+					analyzerContext);
+
+			ForStatement forStatement = new ForStatement(
+					Location.from(forStmt), body, compare);
+
+			List<Expression> init = forStmt.getInit();
+			if (init != null) {
+				for (Expression expression : init) {
+					AnalyzedExpression e = analyzeExpression(expression);
+					if (e != null) {
+						forStatement.addInitializerExpression(e);
+					}
+				}
+			}
+
+			List<Expression> update = forStmt.getUpdate();
+			if (update != null) {
+				for (Expression expression : update) {
+					AnalyzedExpression e = analyzeExpression(expression);
+					if (e != null) {
+						forStatement.addUpdateExpression(e);
+					}
+				}
+			}
+
+			return forStatement;
+		} else if (statement instanceof LabeledStmt) {
+			LabeledStmt labeledStmt = (LabeledStmt) statement;
+
+			String label = labeledStmt.getLabel();
+			AnalyzedStatement analyzedStatement = analyzeStatement(
+					labeledStmt.getStmt(), analyzerContext);
+
+			return new LabeledStatement(Location.from(labeledStmt), label,
+					analyzedStatement);
+		} else if (statement instanceof SwitchStmt) {
+			SwitchStmt switchStmt = (SwitchStmt) statement;
+
+			SwitchStatement switchStatement = new SwitchStatement(
+					Location.from(switchStmt),
+					analyzeExpression(switchStmt.getSelector()));
+
+			List<SwitchEntryStmt> entries = switchStmt.getEntries();
+			if (entries != null) {
+				for (SwitchEntryStmt entryStmt : entries) {
+					switchStatement.addStatement(analyzeSwitchEntry(entryStmt,
+							analyzerContext));
+				}
+			}
+
+			return switchStatement;
+		} else if (statement instanceof SwitchEntryStmt) {
+			SwitchEntryStmt switchEntryStmt = (SwitchEntryStmt) statement;
+
+			return analyzeSwitchEntry(switchEntryStmt, analyzerContext);
+
+		} else if (statement instanceof SynchronizedStmt) {
+			SynchronizedStmt synchronizedStmt = (SynchronizedStmt) statement;
+
+			AnalyzedStatement block = analyzeStatement(
+					synchronizedStmt.getBlock(), analyzerContext);
+			AnalyzedExpression syncExpression = analyzeExpression(synchronizedStmt
+					.getExpr());
+
+			return new SynchronizedStatement(Location.from(synchronizedStmt),
+					syncExpression, block);
+		} else if (statement instanceof ThrowStmt) {
+			ThrowStmt throwStmt = (ThrowStmt) statement;
+
+			return new ThrowStatement(Location.from(throwStmt),
+					analyzeExpression(throwStmt.getExpr()));
+		} else if (statement instanceof TryStmt) {
+			TryStmt tryStmt = (TryStmt) statement;
+
+			BlockStmt finallyBlockStmt = tryStmt.getFinallyBlock();
+			BlockStatement finallyBlock = finallyBlockStmt != null ? analyzeBlockStatement(
+					finallyBlockStmt, analyzerContext) : null;
+			BlockStatement tryBlock = analyzeBlockStatement(
+					tryStmt.getTryBlock(), analyzerContext);
+
+			TryStatement tryStatement = new TryStatement(
+					Location.from(tryStmt), tryBlock, finallyBlock);
+
+			List<Resource> resources = tryStmt.getResources();
+			if (resources != null) {
+				for (Resource resource : resources) {
+					AnalyzedType type = analyzeType(resource.getType());
+					Expression initExpr = resource.getExpression();
+
+					String resourceId = resource.getId().getName();
+					ResourceStatement resourceStatement = new ResourceStatement(
+							Location.from(resource), type, resourceId,
+							ModifierSet.isFinal(resource.getModifiers()));
+
+					if (initExpr != null) {
+						AnalyzedExpression initializer = analyzeExpression(initExpr);
+						resourceStatement.setInitializer(initializer);
+					}
+
+					List<AnnotationExpr> annotations = resource
+							.getAnnotations();
+					if (annotations != null) {
+						for (AnnotationExpr annotationExpr : annotations) {
+							AnalyzedAnnotation annotation = analyze(annotationExpr);
+							if (annotation != null) {
+								resourceStatement.addAnnotation(annotation);
+							}
+						}
+					}
+
+					tryStatement.addResourceStatement(resourceStatement);
+				}
+			}
+			List<CatchClause> catchs = tryStmt.getCatchs();
+			if (catchs != null) {
+				for (CatchClause catchClause : catchs) {
+
+					BlockStatement blockStatement = analyzeBlockStatement(
+							catchClause.getCatchBlock(), analyzerContext);
+					CatchParameter except = catchClause.getExcept();
+
+					CatchStatement catchStatement = new CatchStatement(
+							Location.from(catchClause), blockStatement, except
+									.getId().getName());
+
+					List<AnnotationExpr> annotations = except.getAnnotations();
+					if (annotations != null) {
+						for (AnnotationExpr annotationExpr : annotations) {
+							AnalyzedAnnotation annotation = analyze(annotationExpr);
+							if (annotation != null) {
+								catchStatement.addAnnotation(annotation);
+							}
+						}
+					}
+
+					List<Type> typeList = except.getTypeList();
+					if (typeList != null) {
+						for (Type type : typeList) {
+							AnalyzedType analyzedType = analyzeType(type);
+
+							if (analyzedType != null) {
+								catchStatement.addExceptionType(analyzedType);
+							}
+						}
+					}
+
+					tryStatement.addCatchClause(catchStatement);
+
+				}
+			}
+
+			return tryStatement;
+		} else if (statement instanceof TypeDeclarationStmt) {
+			TypeDeclarationStmt typeDeclarationStmt = (TypeDeclarationStmt) statement;
+
+			return new TypeDeclarationStatement(
+					Location.from(typeDeclarationStmt), analyze(null,
+							analyzerContext.anonymousInnerClass(),
+							typeDeclarationStmt.getTypeDeclaration()));
+		} else if (statement instanceof WhileStmt) {
+			WhileStmt whileStmt = (WhileStmt) statement;
+
+			AnalyzedExpression condition = analyzeExpression(whileStmt
+					.getCondition());
+			AnalyzedStatement body = analyzeStatement(whileStmt.getBody(),
+					analyzerContext);
+
+			return new WhileStatement(Location.from(whileStmt), condition, body);
 		}
 
-		// TODO default. Empty statement? Exception? Unknown statement
-		return null;
+		throw new IllegalStateException(
+				"Unhandled statement type! Go slap the andalite developers!");
+	}
+
+	private BlockStatement analyzeBlockStatement(BlockStmt blockStmt,
+			AnalyzerContext analyzerContext) {
+		BlockStatement block = new BlockStatement(Location.from(blockStmt));
+		for (Statement s : blockStmt.getStmts()) {
+			AnalyzedStatement analyzedStatement = analyzeStatement(s,
+					analyzerContext);
+			if (analyzedStatement != null) {
+				block.addStatement(analyzedStatement);
+			}
+		}
+
+		return block;
+	}
+
+	private SwitchEntryStatement analyzeSwitchEntry(
+			SwitchEntryStmt switchEntryStmt, AnalyzerContext analyzerContext) {
+		AnalyzedExpression value = analyzeExpression(switchEntryStmt.getLabel());
+
+		SwitchEntryStatement switchEntry = new SwitchEntryStatement(
+				Location.from(switchEntryStmt), value);
+
+		List<Statement> stmts = switchEntryStmt.getStmts();
+		if (stmts != null) {
+			for (Statement stmt : stmts) {
+				AnalyzedStatement analyzed = analyzeStatement(stmt,
+						analyzerContext);
+
+				switchEntry.addStatement(analyzed);
+			}
+		}
+
+		return switchEntry;
 	}
 
 	@Nonnull
@@ -917,11 +1219,43 @@ public class ClassAnalyzer {
 			// TODO
 		}
 		if (expr instanceof VariableDeclarationExpr) {
-			VariableDeclarationExpr variableDeclarationExpr = (VariableDeclarationExpr) expr;
-			// TODO
+			return analyzeVariableDeclarationExpression((VariableDeclarationExpr) expr);
 		}
 
 		return new NullExpression(location);
+	}
+
+	private VariableDeclarationExpression analyzeVariableDeclarationExpression(
+			VariableDeclarationExpr variable) {
+
+		final int modifiers = variable.getModifiers();
+		final AnalyzedType type = analyzeType(variable.getType());
+
+		VariableDeclarationExpression expression = new VariableDeclarationExpression(
+				Location.from(variable), modifiers, type);
+
+		List<AnnotationExpr> annotations = variable.getAnnotations();
+		if (annotations != null) {
+			for (AnnotationExpr annotationExpr : annotations) {
+				AnalyzedAnnotation annotation = analyze(annotationExpr);
+
+				expression.addAnnotation(annotation);
+			}
+		}
+
+		List<VariableDeclarator> vars = variable.getVars();
+		if (vars != null) {
+			for (VariableDeclarator var : vars) {
+				Expression initExpr = var.getInit();
+				AnalyzedExpression init = initExpr != null ? analyzeExpression(initExpr)
+						: null;
+
+				expression.addDeclareVariable(new DeclareVariableExpression(
+						Location.from(var), var.getId().getName(), init));
+			}
+		}
+
+		return expression;
 	}
 
 	@CheckForNull
@@ -1016,4 +1350,35 @@ public class ClassAnalyzer {
 		void assignStatement(@Nonnull AnalyzedStatement statement);
 	}
 
+	private static class AnalyzerContext {
+		private int anonymousInnerClassCounter = 0;
+
+		private final String currentScope;
+
+		private final AnalyzerContext parent;
+
+		private AnalyzerContext(String currentScope, AnalyzerContext parent) {
+			super();
+			this.currentScope = currentScope;
+			this.parent = parent;
+		}
+
+		public String getScope() {
+			if (parent == null) {
+				return currentScope;
+			}
+
+			return String.format("%s.%s", parent.getScope(), currentScope);
+		}
+
+		public AnalyzerContext anonymousInnerClass() {
+			return new AnalyzerContext(String.format("$%d",
+					++anonymousInnerClassCounter), this);
+		}
+
+		public AnalyzerContext innerDeclaration(String className) {
+			return new AnalyzerContext(className, this);
+		}
+
+	}
 }

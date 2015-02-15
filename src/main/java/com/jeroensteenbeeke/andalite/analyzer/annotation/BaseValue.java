@@ -15,10 +15,13 @@
 
 package com.jeroensteenbeeke.andalite.analyzer.annotation;
 
+import java.io.Serializable;
+
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.common.base.Function;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.Locatable;
 
@@ -73,6 +76,24 @@ public abstract class BaseValue<T> extends Locatable {
 		} else if (!value.equals(other.value))
 			return false;
 		return true;
+	}
+
+	public abstract String toJavaString();
+
+	public static Function<BaseValue<?>, String> toJavaStringFunction() {
+		return TO_JAVASTRING_FUNCTION;
+	}
+
+	private static final Function<BaseValue<?>, String> TO_JAVASTRING_FUNCTION = new ToJavaStringFunction();
+
+	private static final class ToJavaStringFunction implements
+			Function<BaseValue<?>, String>, Serializable {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public String apply(BaseValue<?> input) {
+			return input.toJavaString();
+		}
 	}
 
 }

@@ -12,30 +12,36 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package com.jeroensteenbeeke.andalite.analyzer.annotation;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+package com.jeroensteenbeeke.andalite.analyzer.statements;
 
 import com.jeroensteenbeeke.andalite.Location;
-import com.jeroensteenbeeke.andalite.analyzer.IOutputCallback;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedStatement;
 
-public final class BooleanValue extends BaseValue<Boolean> {
+public class LabeledStatement extends AnalyzedStatement {
 
-	public BooleanValue(@Nonnull Location location, @Nullable String name,
-			@Nullable boolean value) {
-		super(location, name, value);
+	private final String label;
+
+	private final AnalyzedStatement statement;
+
+	public LabeledStatement(Location from, String label,
+			AnalyzedStatement statement) {
+		super(from);
+		this.label = label;
+		this.statement = statement;
 	}
 
-	@Override
-	public void output(IOutputCallback callback) {
-		Boolean value = getValue();
-		callback.write(value != null ? Boolean.toString(value) : null);
+	public String getLabel() {
+		return label;
+	}
+
+	public AnalyzedStatement getStatement() {
+		return statement;
 	}
 
 	@Override
 	public String toJavaString() {
-		return Boolean.toString(getValue());
+		return String.format("%s: %s", getLabel(), getStatement()
+				.toJavaString());
 	}
+
 }

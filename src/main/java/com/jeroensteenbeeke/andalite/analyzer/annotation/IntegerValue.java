@@ -33,4 +33,10 @@ public final class IntegerValue extends BaseValue<Integer> {
 		Integer value = getValue();
 		callback.write(value != null ? Integer.toString(value) : null);
 	}
+
+	@Override
+	public String toJavaString() {
+		Integer value = getValue();
+		return value != null ? Integer.toString(value) : "null";
+	}
 }
