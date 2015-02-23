@@ -140,6 +140,10 @@ public final class AndaliteMatchers {
 		return new ContainingDenominationMethodsMatcher(delegate);
 	}
 
+	public static GetMethodBuilder hasMethod() {
+		return new GetMethodBuilder();
+	}
+
 	public static Matcher<ConstructableDenomination> hasConstructors() {
 		return CoreMatchers.not(hasNoConstructors());
 	}

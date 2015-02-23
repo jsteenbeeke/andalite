@@ -145,6 +145,10 @@ public abstract class ContainingDenomination extends Denomination {
 		return ImmutableList.copyOf(methods.values());
 	}
 
+	public GetMethodBuilder getMethod() {
+		return new GetMethodBuilder(this);
+	}
+
 	@Nonnull
 	public List<AnalyzedClass> getInnerClasses() {
 		return ImmutableList.copyOf(Iterables.filter(

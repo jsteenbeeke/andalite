@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.transformation;
 
 import java.util.List;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
@@ -63,6 +64,7 @@ public abstract class AbstractMethodBuilder<T> {
 		return this;
 	}
 
+	@CheckForNull
 	public abstract T named(@Nonnull String name);
 
 	public static class ParameterDescriber<T> {

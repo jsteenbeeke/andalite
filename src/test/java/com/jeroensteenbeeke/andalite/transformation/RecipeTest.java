@@ -92,15 +92,17 @@ public class RecipeTest extends DummyAwareTest {
 		builder.inClass(publicClass()).forField("bar")
 				.ensure(hasFieldAnnotation("Column"));
 		builder.inClass(publicClass()).ensure(
-				hasMethod().withParameter("foo").ofType("String")
+				Operations.hasMethod().withParameter("foo").ofType("String")
 						.named("setFoo"));
 		builder.inClass(publicClass()).ensure(
-				hasMethod().withParameter("bar").ofType("String")
+				Operations.hasMethod().withParameter("bar").ofType("String")
 						.named("setBar"));
-		builder.inClass(publicClass()).ensure(
-				hasMethod().withReturnType("String").named("getFoo"));
-		builder.inClass(publicClass()).ensure(
-				hasMethod().withReturnType("String").named("getBar"));
+		builder.inClass(publicClass())
+				.ensure(Operations.hasMethod().withReturnType("String")
+						.named("getFoo"));
+		builder.inClass(publicClass())
+				.ensure(Operations.hasMethod().withReturnType("String")
+						.named("getBar"));
 
 		builder.inClass(publicClass()).forMethod()
 				.withModifier(AccessModifier.PUBLIC).withReturnType("String")

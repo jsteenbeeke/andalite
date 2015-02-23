@@ -82,6 +82,10 @@ public class ParameterDescriptor {
 		return new GetTypeFunction();
 	}
 
+	public static Function<ParameterDescriptor, String> toStringFunction() {
+		return new ToStringFunction();
+	}
+
 	public static class GetTypeFunction implements
 			Function<ParameterDescriptor, String>, Serializable {
 		private static final long serialVersionUID = 1L;
@@ -89,6 +93,16 @@ public class ParameterDescriptor {
 		@Override
 		public String apply(ParameterDescriptor input) {
 			return input.getType();
+		}
+	}
+
+	public static class ToStringFunction implements
+			Function<ParameterDescriptor, String>, Serializable {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public String apply(ParameterDescriptor input) {
+			return input.toString();
 		}
 	}
 }
