@@ -32,6 +32,6 @@ public class BodyContainerNavigation<T extends IBodyContainer> extends
 	@Override
 	public String getStepDescription() {
 
-		return "body";
+		return "into the body";
 	}
 }

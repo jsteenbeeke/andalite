@@ -986,11 +986,15 @@ public class ClassAnalyzer {
 	private BlockStatement analyzeBlockStatement(BlockStmt blockStmt,
 			AnalyzerContext analyzerContext) {
 		BlockStatement block = new BlockStatement(Location.from(blockStmt));
-		for (Statement s : blockStmt.getStmts()) {
-			AnalyzedStatement analyzedStatement = analyzeStatement(s,
-					analyzerContext);
-			if (analyzedStatement != null) {
-				block.addStatement(analyzedStatement);
+
+		List<Statement> stmts = blockStmt.getStmts();
+		if (stmts != null) {
+			for (Statement s : stmts) {
+				AnalyzedStatement analyzedStatement = analyzeStatement(s,
+						analyzerContext);
+				if (analyzedStatement != null) {
+					block.addStatement(analyzedStatement);
+				}
 			}
 		}
 
@@ -1301,10 +1305,12 @@ public class ClassAnalyzer {
 		if (type instanceof WildcardType) {
 			WildcardType wildcard = (WildcardType) type;
 
-			Reference superRef = processReferenceType(
-					Location.from(wildcard.getSuper()), wildcard.getSuper());
-			Reference extendsRef = processReferenceType(
-					Location.from(wildcard.getExtends()), wildcard.getExtends());
+			ReferenceType superType = wildcard.getSuper();
+			Reference superRef = superType != null ? processReferenceType(
+					Location.from(superType), superType) : null;
+			ReferenceType extendsType = wildcard.getExtends();
+			Reference extendsRef = extendsType != null ? processReferenceType(
+					Location.from(extendsType), extendsType) : null;
 
 			return new Wildcard(location, superRef, extendsRef);
 		}

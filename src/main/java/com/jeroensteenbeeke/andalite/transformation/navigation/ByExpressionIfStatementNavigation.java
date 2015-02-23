@@ -62,7 +62,8 @@ public class ByExpressionIfStatementNavigation extends
 
 	@Override
 	public String getStepDescription() {
-		return String.format("if-statement with expression %s", expression);
+		return String.format("to the first if-statement with expression %s",
+				expression);
 	}
 
 }

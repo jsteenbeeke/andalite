@@ -25,7 +25,7 @@ public class StatementAsBodyNavigation extends
 
 	@Override
 	public String getStepDescription() {
-		return "Treat statement as body container";
+		return "assume it is a body statement";
 	}
 
 	public IBodyContainer navigate(AnalyzedStatement chainedTarget)

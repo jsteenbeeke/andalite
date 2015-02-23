@@ -26,7 +26,7 @@ public class ThenStatementNavigation extends
 
 	@Override
 	public String getStepDescription() {
-		return "then statement";
+		return "to the primary statement";
 	}
 
 	@Override

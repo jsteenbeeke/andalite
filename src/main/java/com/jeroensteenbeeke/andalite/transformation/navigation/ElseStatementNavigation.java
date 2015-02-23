@@ -26,7 +26,7 @@ public class ElseStatementNavigation extends
 
 	@Override
 	public String getStepDescription() {
-		return "else statement";
+		return "to the alternate statement";
 	}
 
 	@Override

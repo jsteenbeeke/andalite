@@ -23,6 +23,7 @@ import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedField;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.transformation.Transformation;
 import com.jeroensteenbeeke.andalite.transformation.operations.IClassOperation;
 import com.jeroensteenbeeke.andalite.transformation.operations.OperationException;
@@ -49,11 +50,13 @@ public class EnsureField implements IClassOperation {
 			AnalyzedField field = input.getField(name);
 
 			if (field != null) { // Findbugs, implied by input.hasField
-				if (!type.equals(field.getType())) {
+				AnalyzedType analyzedType = field.getType();
+				if (analyzedType != null
+						&& !type.equals(analyzedType.toJavaString())) {
 					throw new OperationException(
 							String.format(
 									"Field %s should have type %s but instead has type %s",
-									name, type, field.getType()));
+									name, type, analyzedType));
 				}
 
 				if (!modifier.equals(field.getAccessModifier())) {

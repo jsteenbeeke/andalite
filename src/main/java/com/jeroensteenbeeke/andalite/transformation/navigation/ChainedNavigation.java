@@ -39,7 +39,7 @@ public abstract class ChainedNavigation<From extends ILocatable, To extends ILoc
 
 	@Override
 	public final String getDescription() {
-		return String.format("%s, then %s", chained.getDescription(),
+		return String.format("%s,\n\tthen %s", chained.getDescription(),
 				getStepDescription());
 	}
 
