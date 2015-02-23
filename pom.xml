@@ -52,7 +52,7 @@
 			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
@@ -86,14 +86,14 @@
 			<artifactId>jsr305</artifactId>
 			<version>${jsr305.version}</version>
 		</dependency>
-		
+
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.api.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
@@ -221,6 +221,18 @@
 							</goals>
 						</execution>
 					</executions>
+
+					<configuration>
+						<tags>
+							<tag>
+								<name>nonpublic</name>
+								<!-- Indicates that the method is not part of the public API -->
+								<placement>m</placement>
+								<head>THIS METHOD IS NOT PART OF THE PUBLIC API. USAGE IS NOT
+									RECOMMENDED AND RESULTS ARE UNDEFINED</head>
+							</tag>
+						</tags>
+					</configuration>
 				</plugin>
 
 			</plugins>

@@ -14,20 +14,76 @@
  */
 package com.jeroensteenbeeke.andalite.analyzer.expression;
 
+import java.util.List;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedType;
 
 public class FieldAccessExpression extends AnalyzedExpression {
 
-	public FieldAccessExpression(Location location) {
+	private final AnalyzedExpression scope;
+
+	private final String field;
+
+	private final List<AnalyzedType> typeArguments;
+
+	public FieldAccessExpression(Location location,
+			@Nullable AnalyzedExpression scope, @Nonnull String field) {
 		super(location);
-		// TODO Auto-generated constructor stub
+		this.scope = scope;
+		this.field = field;
+		this.typeArguments = Lists.newArrayList();
+	}
+
+	@Nonnull
+	public String getField() {
+		return field;
+	}
+
+	@CheckForNull
+	public AnalyzedExpression getScope() {
+		return scope;
+	}
+
+	@Nonnull
+	public List<AnalyzedType> getTypeArguments() {
+		return ImmutableList.copyOf(typeArguments);
+	}
+
+	/**
+	 * @nonpublic
+	 */
+	public void addTypeArgument(@Nonnull AnalyzedType type) {
+		this.typeArguments.add(type);
 	}
 
 	@Override
 	public String toJavaString() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder java = new StringBuilder();
+		if (scope != null) {
+			java.append(scope.toJavaString());
+			java.append(".");
+		}
+		if (!typeArguments.isEmpty()) {
+			java.append("<");
+			Joiner.on(",").appendTo(
+					java,
+					FluentIterable.from(typeArguments).transform(
+							AnalyzedType.toJavaStringFunction()));
+			java.append(">");
+		}
+		java.append(field);
+
+		return java.toString();
 	}
 
 }

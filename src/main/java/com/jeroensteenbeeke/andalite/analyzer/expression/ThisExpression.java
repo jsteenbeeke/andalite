@@ -14,20 +14,35 @@
  */
 package com.jeroensteenbeeke.andalite.analyzer.expression;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
 
 public class ThisExpression extends AnalyzedExpression {
 
-	public ThisExpression(Location location) {
+	private final AnalyzedExpression classExpression;
+
+	public ThisExpression(@Nonnull Location location,
+			@Nullable AnalyzedExpression classExpression) {
 		super(location);
-		// TODO Auto-generated constructor stub
+		this.classExpression = classExpression;
+	}
+
+	@CheckForNull
+	public AnalyzedExpression getClassExpression() {
+		return classExpression;
 	}
 
 	@Override
 	public String toJavaString() {
-		// TODO Auto-generated method stub
-		return null;
+		if (classExpression != null) {
+			return String.format("%s.this", classExpression.toJavaString());
+		}
+
+		return "this";
 	}
 
 }

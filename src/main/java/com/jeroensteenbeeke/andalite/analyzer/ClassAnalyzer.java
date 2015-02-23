@@ -1172,19 +1172,46 @@ public class ClassAnalyzer {
 		if (expr instanceof ConditionalExpr) {
 			ConditionalExpr conditionalExpr = (ConditionalExpr) expr;
 
-			conditionalExpr.getCondition();
-			conditionalExpr.getThenExpr();
-			conditionalExpr.getElseExpr();
+			AnalyzedExpression condition = analyzeExpression(conditionalExpr
+					.getCondition());
+			AnalyzedExpression primary = analyzeExpression(conditionalExpr
+					.getThenExpr());
+			AnalyzedExpression alternate = analyzeExpression(conditionalExpr
+					.getElseExpr());
 
-			// TODO
+			return new ConditionalExpression(Location.from(conditionalExpr),
+					condition, primary, alternate);
 		}
 		if (expr instanceof EnclosedExpr) {
 			EnclosedExpr enclosedExpr = (EnclosedExpr) expr;
-			// TODO
+
+			AnalyzedExpression inner = analyzeExpression(enclosedExpr
+					.getInner());
+
+			return new EnclosedExpression(Location.from(enclosedExpr), inner);
 		}
 		if (expr instanceof FieldAccessExpr) {
 			FieldAccessExpr fieldAccessExpr = (FieldAccessExpr) expr;
-			// TODO
+
+			String fieldName = fieldAccessExpr.getField();
+			Expression scopeExpr = fieldAccessExpr.getScope();
+			AnalyzedExpression scope = scopeExpr != null ? analyzeExpression(scopeExpr)
+					: null;
+
+			FieldAccessExpression fieldAccessExpression = new FieldAccessExpression(
+					Location.from(fieldAccessExpr), scope, fieldName);
+
+			List<Type> typeArgs = fieldAccessExpr.getTypeArgs();
+			if (typeArgs != null) {
+				for (Type type : typeArgs) {
+					AnalyzedType at = analyzeType(type);
+					if (at != null) {
+						fieldAccessExpression.addTypeArgument(at);
+					}
+				}
+			}
+
+			return fieldAccessExpression;
 		}
 		if (expr instanceof InstanceOfExpr) {
 			InstanceOfExpr instanceOfExpr = (InstanceOfExpr) expr;
@@ -1199,24 +1226,45 @@ public class ClassAnalyzer {
 		}
 		if (expr instanceof LambdaExpr) {
 			LambdaExpr lambdaExpr = (LambdaExpr) expr;
-			// TODO
+
+			// TODO: antlr-java-parser parses these correctly, but does not pass
+			// them
+
+			return new LambdaExpression(Location.from(lambdaExpr));
+
 		}
 		if (expr instanceof MethodReferenceExpr) {
 			MethodReferenceExpr methodReferenceExpr = (MethodReferenceExpr) expr;
-			// TODO
+
+			// TODO: antlr-java-parser parses these correctly, but does not pass
+			// them
+
+			return new MethodReferenceExpression(
+					Location.from(methodReferenceExpr));
 		}
 		if (expr instanceof ObjectCreationExpr) {
 			ObjectCreationExpr objectCreationExpr = (ObjectCreationExpr) expr;
 			// TODO
+
 		}
 		if (expr instanceof SuperExpr) {
-			SuperExpr ouperExpr = (SuperExpr) expr;
-			// TODO
+			SuperExpr superExpr = (SuperExpr) expr;
+
+			Expression classExpr = superExpr.getClassExpr();
+			AnalyzedExpression classExpression = classExpr != null ? analyzeExpression(classExpr)
+					: null;
+
+			return new SuperExpression(Location.from(superExpr),
+					classExpression);
 		}
 		if (expr instanceof ThisExpr) {
 			ThisExpr thisExpr = (ThisExpr) expr;
 
-			// TODO
+			Expression classExpr = thisExpr.getClassExpr();
+			AnalyzedExpression classExpression = classExpr != null ? analyzeExpression(classExpr)
+					: null;
+
+			return new ThisExpression(Location.from(thisExpr), classExpression);
 		}
 		if (expr instanceof UnaryExpr) {
 			UnaryExpr unaryExpr = (UnaryExpr) expr;
