@@ -14,20 +14,129 @@
  */
 package com.jeroensteenbeeke.andalite.analyzer.expression;
 
+import java.util.List;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.Location;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedType;
+import com.jeroensteenbeeke.andalite.analyzer.types.ClassOrInterface;
 
 public class ObjectCreationExpression extends AnalyzedExpression {
+	private final ClassOrInterface type;
 
-	public ObjectCreationExpression(Location location) {
+	private AnalyzedExpression scope;
+
+	private List<AnalyzedExpression> arguments;
+
+	private List<AnalyzedType> typeArguments;
+
+	private AnalyzedClass declaredAnonymousClass;
+
+	public ObjectCreationExpression(@Nonnull Location location,
+			@Nonnull ClassOrInterface type) {
 		super(location);
-		// TODO Auto-generated constructor stub
+		this.type = type;
+		this.arguments = Lists.newArrayList();
+	}
+
+	@CheckForNull
+	public AnalyzedClass getDeclaredAnonymousClass() {
+		return declaredAnonymousClass;
+	}
+
+	@Nonnull
+	public ClassOrInterface getType() {
+		return type;
+	}
+
+	@CheckForNull
+	public AnalyzedExpression getScope() {
+		return scope;
+	}
+
+	/**
+	 * @param scope
+	 *            The class scope of the created object
+	 * @nonpublic
+	 */
+	public void setScope(AnalyzedExpression scope) {
+		this.scope = scope;
+	}
+
+	@Nonnull
+	public List<AnalyzedExpression> getArguments() {
+		return ImmutableList.copyOf(arguments);
+	}
+
+	/**
+	 * @param declaredAnonymousClass
+	 *            The class to set as anonymous inner class
+	 * @nonpublic
+	 */
+	public void setDeclaredAnonymousClass(
+			@Nonnull AnalyzedClass declaredAnonymousClass) {
+		this.declaredAnonymousClass = declaredAnonymousClass;
+	}
+
+	/**
+	 * @param expression
+	 *            The expression to add as constructor argument
+	 * @nonpublic
+	 */
+	public void addArgument(@Nonnull AnalyzedExpression expression) {
+		arguments.add(expression);
+	}
+
+	@Nonnull
+	public List<AnalyzedType> getTypeArguments() {
+		return ImmutableList.copyOf(typeArguments);
+	}
+
+	/**
+	 * @param type
+	 *            The type argument to add to the list
+	 * @nonpublic
+	 */
+	public void addTypeArgument(@Nonnull AnalyzedType type) {
+		typeArguments.add(type);
 	}
 
 	@Override
 	public String toJavaString() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder java = new StringBuilder();
+
+		java.append("new ");
+		if (scope != null) {
+			java.append(scope.toJavaString());
+			java.append(".");
+		}
+		java.append(type.toJavaString());
+		if (!typeArguments.isEmpty()) {
+			java.append("<");
+			Joiner.on(",").appendTo(
+					java,
+					FluentIterable.from(typeArguments).transform(
+							AnalyzedType.toJavaStringFunction()));
+			java.append(">");
+		}
+		java.append("(");
+		if (!arguments.isEmpty()) {
+			Joiner.on(",").appendTo(
+					java,
+					FluentIterable.from(arguments).transform(
+							AnalyzedExpression.toJavaStringFunction()));
+		}
+		java.append(")");
+
+		return java.toString();
 	}
 
 }

@@ -16,7 +16,7 @@ package com.jeroensteenbeeke.andalite.analyzer;
 
 import com.jeroensteenbeeke.andalite.Location;
 
-public class AnalyzedAnnotationType extends Denomination {
+public class AnalyzedAnnotationType extends ContainingDenomination {
 
 	protected AnalyzedAnnotationType(Location location, int modifiers,
 			String packageName, String denominationName) {

@@ -60,6 +60,8 @@ public class FieldAccessExpression extends AnalyzedExpression {
 	}
 
 	/**
+	 * @param type
+	 *            The type argument to add to the list
 	 * @nonpublic
 	 */
 	public void addTypeArgument(@Nonnull AnalyzedType type) {

@@ -70,7 +70,7 @@ public class RecipeStep<T extends ILocatable> {
 
 			return ActionResult.ok();
 		} else {
-			return ActionResult.error("Could not locate %s",
+			return ActionResult.error("Could not navigate to %s",
 					navigation.getDescription());
 		}
 	}

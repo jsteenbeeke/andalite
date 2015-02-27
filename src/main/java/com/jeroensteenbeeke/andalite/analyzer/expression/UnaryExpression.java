@@ -14,20 +14,54 @@
  */
 package com.jeroensteenbeeke.andalite.analyzer.expression;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedExpression;
 
 public class UnaryExpression extends AnalyzedExpression {
+	public static enum Operator {
+		POSITIVE("+%s"), // +
+		NEGATIVE("-%s"), // -
+		PRE_INCREMENT("++%s"), // ++
+		PRE_DECREMENT("--%s"), // --
+		NOT("!%s"), // !
+		INVERSE("~%s"), // ~
+		POST_INCREMENT("%s++"), // ++
+		POST_DECREMENT("%s--"); // --
+		private final String format;
 
-	public UnaryExpression(Location location) {
+		private Operator(String format) {
+			this.format = format;
+		}
+
+		public String toJavaString(AnalyzedExpression expression) {
+			return String.format(format, expression.toJavaString());
+		}
+	}
+
+	private final Operator operator;
+
+	private final AnalyzedExpression expression;
+
+	public UnaryExpression(@Nonnull Location location,
+			@Nonnull Operator operator, @Nonnull AnalyzedExpression expression) {
 		super(location);
-		// TODO Auto-generated constructor stub
+		this.operator = operator;
+		this.expression = expression;
+	}
+
+	public AnalyzedExpression getExpression() {
+		return expression;
+	}
+
+	public Operator getOperator() {
+		return operator;
 	}
 
 	@Override
 	public String toJavaString() {
-		// TODO Auto-generated method stub
-		return null;
+		return operator.toJavaString(expression);
 	}
 
 }

@@ -166,7 +166,8 @@ public class ClassAnalyzer {
 	private void processAnnotationDeclaration(AnnotationDeclaration decl,
 			AnalyzedAnnotationType element) {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
-			AnalyzedAnnotation annotation = analyze(expr);
+			AnalyzedAnnotation annotation = analyze(expr, element,
+					new AnalyzerContext(element.getAnnotationName(), null));
 			if (annotation != null) {
 				element.addAnnotation(annotation);
 			}
@@ -177,7 +178,8 @@ public class ClassAnalyzer {
 	private void processEnumDeclaration(EnumDeclaration decl,
 			AnalyzerContext analyzerContext, AnalyzedEnum element) {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
-			AnalyzedAnnotation annotation = analyze(expr);
+			AnalyzedAnnotation annotation = analyze(expr, element,
+					analyzerContext);
 			if (annotation != null) {
 				element.addAnnotation(annotation);
 			}
@@ -213,7 +215,8 @@ public class ClassAnalyzer {
 	private void processEnumConstantDeclaration(EnumConstantDeclaration decl,
 			AnalyzerContext analyzerContext, AnalyzedEnumConstant element) {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
-			AnalyzedAnnotation annotation = analyze(expr);
+			AnalyzedAnnotation annotation = analyze(expr, element,
+					analyzerContext);
 			if (annotation != null) {
 				element.addAnnotation(annotation);
 			}
@@ -241,13 +244,14 @@ public class ClassAnalyzer {
 			ContainingDenomination element, AnalyzerContext analyzerContext,
 			BodyDeclaration member) {
 		if (member instanceof FieldDeclaration) {
-			List<AnalyzedField> fields = analyze((FieldDeclaration) member);
+			List<AnalyzedField> fields = analyze((FieldDeclaration) member,
+					element, analyzerContext);
 			for (AnalyzedField field : fields) {
 				element.addField(field);
 			}
 		} else if (member instanceof MethodDeclaration) {
 			AnalyzedMethod method = analyze((MethodDeclaration) member,
-					analyzerContext);
+					element, analyzerContext);
 
 			if (method != null) {
 				if (element.isAutoAbstractMethods()) {
@@ -274,7 +278,7 @@ public class ClassAnalyzer {
 
 		} else if (member instanceof ConstructorDeclaration) {
 			AnalyzedConstructor constr = analyze(typeName,
-					(ConstructorDeclaration) member);
+					(ConstructorDeclaration) member, element, analyzerContext);
 			if (constr != null) {
 				addConstructor(element, constr);
 			}
@@ -346,7 +350,8 @@ public class ClassAnalyzer {
 	private void processClassDeclaration(ClassOrInterfaceDeclaration decl,
 			AnalyzerContext analyzerContext, AnalyzedClass element) {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
-			AnalyzedAnnotation annotation = analyze(expr);
+			AnalyzedAnnotation annotation = analyze(expr, element,
+					analyzerContext);
 			if (annotation != null) {
 				element.addAnnotation(annotation);
 			}
@@ -391,7 +396,8 @@ public class ClassAnalyzer {
 	private void processInterfaceDeclaration(ClassOrInterfaceDeclaration decl,
 			AnalyzerContext analyzerContext, AnalyzedInterface element) {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
-			AnalyzedAnnotation annotation = analyze(expr);
+			AnalyzedAnnotation annotation = analyze(expr, element,
+					analyzerContext);
 			if (annotation != null) {
 				element.addAnnotation(annotation);
 			}
@@ -420,16 +426,20 @@ public class ClassAnalyzer {
 	}
 
 	private AnalyzedConstructor analyze(String className,
-			ConstructorDeclaration member) {
+			ConstructorDeclaration member,
+			@Nonnull ContainingDenomination containingDenomination,
+			@Nonnull AnalyzerContext analyzerContext) {
 		AnalyzedConstructor constructor = new AnalyzedConstructor(
 				Location.from(member), className, member.getModifiers());
 
-		constructor.addAnnotations(determineAnnotations(member));
+		constructor.addAnnotations(determineAnnotations(member,
+				containingDenomination, analyzerContext));
 
 		List<Parameter> parameters = member.getParameters();
 		if (parameters != null) {
 			for (Parameter parameter : parameters) {
-				AnalyzedParameter analyzedParameter = analyze(parameter);
+				AnalyzedParameter analyzedParameter = analyze(parameter,
+						containingDenomination, analyzerContext);
 				if (analyzedParameter != null) {
 					constructor.addParameter(analyzedParameter);
 				}
@@ -439,17 +449,20 @@ public class ClassAnalyzer {
 	}
 
 	private AnalyzedMethod analyze(MethodDeclaration member,
+			@Nonnull ContainingDenomination containingDenomination,
 			@Nonnull AnalyzerContext analyzerContext) {
 		final AnalyzedMethod method = new AnalyzedMethod(Location.from(member),
 				analyzeType(member.getType()), member.getModifiers(),
 				member.getName());
 
-		method.addAnnotations(determineAnnotations(member));
+		method.addAnnotations(determineAnnotations(member,
+				containingDenomination, analyzerContext));
 
 		List<Parameter> parameters = member.getParameters();
 		if (parameters != null) {
 			for (Parameter parameter : parameters) {
-				AnalyzedParameter analyzedParameter = analyze(parameter);
+				AnalyzedParameter analyzedParameter = analyze(parameter,
+						containingDenomination, analyzerContext);
 				if (analyzedParameter != null) {
 					method.addParameter(analyzedParameter);
 				}
@@ -463,19 +476,22 @@ public class ClassAnalyzer {
 				public void assignStatement(AnalyzedStatement statement) {
 					method.addStatement(statement);
 				}
-			}, analyzerContext);
+			}, containingDenomination, analyzerContext);
 		}
 
 		return method;
 	}
 
-	private AnalyzedParameter analyze(Parameter parameter) {
+	private AnalyzedParameter analyze(Parameter parameter,
+			@Nonnull ContainingDenomination containingDenomination,
+			@Nonnull AnalyzerContext analyzerContext) {
 		AnalyzedParameter param = new AnalyzedParameter(
 				Location.from(parameter), parameter.getType().toString(),
 				parameter.getId().getName());
 
 		for (AnnotationExpr annotationExpr : parameter.getAnnotations()) {
-			AnalyzedAnnotation annot = analyze(annotationExpr);
+			AnalyzedAnnotation annot = analyze(annotationExpr,
+					containingDenomination, analyzerContext);
 			if (annot != null) {
 				param.addAnnotation(annot);
 			}
@@ -484,12 +500,15 @@ public class ClassAnalyzer {
 		return param;
 	}
 
-	private List<AnalyzedField> analyze(FieldDeclaration member) {
+	private List<AnalyzedField> analyze(FieldDeclaration member,
+			@Nonnull ContainingDenomination containingDenomination,
+			@Nonnull AnalyzerContext analyzerContext) {
 		final AnalyzedType type = analyzeType(member.getType());
 		final int modifiers = member.getModifiers();
 
 		Builder<AnalyzedField> builder = ImmutableList.builder();
-		List<AnalyzedAnnotation> annotations = determineAnnotations(member);
+		List<AnalyzedAnnotation> annotations = determineAnnotations(member,
+				containingDenomination, analyzerContext);
 
 		for (VariableDeclarator var : member.getVariables()) {
 			String name = var.getId().getName();
@@ -501,8 +520,8 @@ public class ClassAnalyzer {
 
 			Expression init = var.getInit();
 			if (init != null) {
-				analyzedField
-						.setInitializationExpression(analyzeExpression(init));
+				analyzedField.setInitializationExpression(analyzeExpression(
+						init, containingDenomination, analyzerContext));
 			}
 
 			builder.add(analyzedField);
@@ -512,11 +531,15 @@ public class ClassAnalyzer {
 		return builder.build();
 	}
 
-	private List<AnalyzedAnnotation> determineAnnotations(BodyDeclaration member) {
+	private List<AnalyzedAnnotation> determineAnnotations(
+			BodyDeclaration member,
+			@Nonnull ContainingDenomination containingDenomination,
+			@Nonnull AnalyzerContext analyzerContext) {
 		Builder<AnalyzedAnnotation> annot = ImmutableList.builder();
 
 		for (AnnotationExpr annotExpr : member.getAnnotations()) {
-			AnalyzedAnnotation analyzedAnnotation = analyze(annotExpr);
+			AnalyzedAnnotation analyzedAnnotation = analyze(annotExpr,
+					containingDenomination, analyzerContext);
 			if (analyzedAnnotation != null) {
 				annot.add(analyzedAnnotation);
 			}
@@ -526,7 +549,9 @@ public class ClassAnalyzer {
 		return annotations;
 	}
 
-	private AnalyzedAnnotation analyze(AnnotationExpr expr) {
+	private AnalyzedAnnotation analyze(AnnotationExpr expr,
+			ContainingDenomination containingDenomination,
+			AnalyzerContext analyzerContext) {
 		AnalyzedAnnotation annotation = new AnalyzedAnnotation(
 				Location.from(expr), expr.getName().toString());
 
@@ -535,7 +560,8 @@ public class ClassAnalyzer {
 
 			Expression memberValue = annot.getMemberValue();
 
-			assignValue(annotation, "value", memberValue);
+			assignValue(annotation, "value", memberValue,
+					containingDenomination, analyzerContext);
 
 			annotation.setParametersLocation(Location.from(memberValue));
 		} else if (expr instanceof NormalAnnotationExpr) {
@@ -557,7 +583,8 @@ public class ClassAnalyzer {
 					String name = mvp.getName();
 					Expression memberValue = mvp.getValue();
 
-					assignValue(annotation, name, memberValue);
+					assignValue(annotation, name, memberValue,
+							containingDenomination, analyzerContext);
 
 					end = mvp.getEndIndex();
 				}
@@ -584,8 +611,10 @@ public class ClassAnalyzer {
 	}
 
 	private void assignValue(AnalyzedAnnotation annotation, String name,
-			Expression expr) {
-		BaseValue<?> value = translateExpression(name, expr);
+			Expression expr, ContainingDenomination containingDenomination,
+			AnalyzerContext analyzerContext) {
+		BaseValue<?> value = translateExpression(name, expr,
+				containingDenomination, analyzerContext);
 
 		if (value != null) {
 			annotation.addAnnotation(value);
@@ -593,10 +622,13 @@ public class ClassAnalyzer {
 
 	}
 
-	private BaseValue<?> translateExpression(String name, Expression expr) {
+	private BaseValue<?> translateExpression(String name, Expression expr,
+			ContainingDenomination containingDenomination,
+			AnalyzerContext analyzerContext) {
 		if (expr instanceof AnnotationExpr) {
 			AnnotationExpr annot = (AnnotationExpr) expr;
-			AnalyzedAnnotation sub = analyze(annot);
+			AnalyzedAnnotation sub = analyze(annot, containingDenomination,
+					analyzerContext);
 
 			return new AnnotationValue(Location.from(expr), name, sub);
 		} else if (expr instanceof BooleanLiteralExpr) {
@@ -639,7 +671,8 @@ public class ClassAnalyzer {
 
 			Builder<BaseValue<?>> builder = ImmutableList.builder();
 			for (Expression expression : array.getValues()) {
-				BaseValue<?> val = translateExpression(null, expression);
+				BaseValue<?> val = translateExpression(null, expression,
+						containingDenomination, analyzerContext);
 				if (val != null) {
 					builder.add(val);
 				}
@@ -651,8 +684,8 @@ public class ClassAnalyzer {
 			// ignore type params (shouldn't be there in enums)
 			FieldAccessExpr fieldAccess = (FieldAccessExpr) expr;
 
-			final String scope = analyzeExpression(fieldAccess.getScope())
-					.toJavaString();
+			final String scope = analyzeExpression(fieldAccess.getScope(),
+					containingDenomination, analyzerContext).toJavaString();
 			final String field = fieldAccess.getField();
 
 			return new FieldAccessValue(Location.from(expr), name, scope, field);
@@ -668,12 +701,13 @@ public class ClassAnalyzer {
 
 	private void analyzeBodyDeclaration(@Nonnull final BlockStmt body,
 			@Nonnull final IStatementAssigner assigner,
+			ContainingDenomination containingDenomination,
 			AnalyzerContext analyzerContext) {
 		List<Statement> statements = body.getStmts();
 		if (statements != null) {
 			for (Statement statement : statements) {
 				assigner.assignStatement(analyzeStatement(statement,
-						analyzerContext));
+						containingDenomination, analyzerContext));
 			}
 		}
 
@@ -681,6 +715,7 @@ public class ClassAnalyzer {
 
 	@CheckForNull
 	private AnalyzedStatement analyzeStatement(Statement statement,
+			ContainingDenomination containingDenomination,
 			AnalyzerContext analyzerContext) {
 		if (statement == null) {
 			return null;
@@ -690,23 +725,26 @@ public class ClassAnalyzer {
 		if (statement instanceof ReturnStmt) {
 			ReturnStmt returnStmt = (ReturnStmt) statement;
 
-			AnalyzedExpression returnExpression = analyzeExpression(returnStmt
-					.getExpr());
+			AnalyzedExpression returnExpression = analyzeExpression(
+					returnStmt.getExpr(), containingDenomination,
+					analyzerContext);
 
 			return new ReturnStatement(location, returnExpression);
 		} else if (statement instanceof IfStmt) {
 			IfStmt ifStmt = (IfStmt) statement;
 
-			AnalyzedExpression condition = analyzeExpression(ifStmt
-					.getCondition());
+			AnalyzedExpression condition = analyzeExpression(
+					ifStmt.getCondition(), containingDenomination,
+					analyzerContext);
 			AnalyzedStatement thenStatement = analyzeStatement(
-					ifStmt.getThenStmt(), analyzerContext);
+					ifStmt.getThenStmt(), containingDenomination,
+					analyzerContext);
 
 			IfStatement ifStatement = new IfStatement(location, condition,
 					thenStatement);
 
 			ifStatement.setElseStatement(analyzeStatement(ifStmt.getElseStmt(),
-					analyzerContext));
+					containingDenomination, analyzerContext));
 
 			return ifStatement;
 
@@ -714,11 +752,13 @@ public class ClassAnalyzer {
 			AssertStmt assertStmt = (AssertStmt) statement;
 
 			return new AssertStatement(Location.from(statement),
-					analyzeExpression(assertStmt.getCheck()));
+					analyzeExpression(assertStmt.getCheck(),
+							containingDenomination, analyzerContext));
 		} else if (statement instanceof BlockStmt) {
 			BlockStmt blockStmt = (BlockStmt) statement;
 
-			return analyzeBlockStatement(blockStmt, analyzerContext);
+			return analyzeBlockStatement(blockStmt, containingDenomination,
+					analyzerContext);
 
 		} else if (statement instanceof BreakStmt) {
 			BreakStmt breakStmt = (BreakStmt) statement;
@@ -734,10 +774,11 @@ public class ClassAnalyzer {
 		} else if (statement instanceof DoStmt) {
 			DoStmt doStmt = (DoStmt) statement;
 
-			AnalyzedExpression condition = analyzeExpression(doStmt
-					.getCondition());
-			AnalyzedStatement body = analyzeStatement(doStmt.getBody(),
+			AnalyzedExpression condition = analyzeExpression(
+					doStmt.getCondition(), containingDenomination,
 					analyzerContext);
+			AnalyzedStatement body = analyzeStatement(doStmt.getBody(),
+					containingDenomination, analyzerContext);
 
 			return new DoStatement(Location.from(doStmt), condition, body);
 		} else if (statement instanceof EmptyStmt) {
@@ -754,7 +795,8 @@ public class ClassAnalyzer {
 
 			Expression expr = explicitConstructorInvocationStmt.getExpr();
 			if (expr != null) {
-				AnalyzedExpression scopeExpression = analyzeExpression(expr);
+				AnalyzedExpression scopeExpression = analyzeExpression(expr,
+						containingDenomination, analyzerContext);
 				invocation.setScope(scopeExpression);
 			}
 
@@ -775,7 +817,9 @@ public class ClassAnalyzer {
 			if (args != null) {
 				for (Expression expression : args) {
 					if (expression != null) {
-						AnalyzedExpression analyzedExpression = analyzeExpression(expression);
+						AnalyzedExpression analyzedExpression = analyzeExpression(
+								expression, containingDenomination,
+								analyzerContext);
 						if (analyzedExpression != null) {
 							invocation.addArgument(analyzedExpression);
 						}
@@ -786,7 +830,8 @@ public class ClassAnalyzer {
 			return invocation;
 		} else if (statement instanceof ExpressionStmt) {
 			ExpressionStmt expr = (ExpressionStmt) statement;
-			AnalyzedExpression e = analyzeExpression(expr.getExpression());
+			AnalyzedExpression e = analyzeExpression(expr.getExpression(),
+					containingDenomination, analyzerContext);
 
 			return new ExpressionStatement(Location.from(expr), e);
 
@@ -794,11 +839,13 @@ public class ClassAnalyzer {
 			ForeachStmt foreachStmt = (ForeachStmt) statement;
 
 			AnalyzedStatement body = analyzeStatement(foreachStmt.getBody(),
+					containingDenomination, analyzerContext);
+			VariableDeclarationExpression declareExpression = analyzeVariableDeclarationExpression(
+					foreachStmt.getVariable(), containingDenomination,
 					analyzerContext);
-			VariableDeclarationExpression declareExpression = analyzeVariableDeclarationExpression(foreachStmt
-					.getVariable());
-			AnalyzedExpression iterable = analyzeExpression(foreachStmt
-					.getIterable());
+			AnalyzedExpression iterable = analyzeExpression(
+					foreachStmt.getIterable(), containingDenomination,
+					analyzerContext);
 
 			return new ForEachStatement(Location.from(foreachStmt),
 					declareExpression, iterable, body);
@@ -806,10 +853,11 @@ public class ClassAnalyzer {
 			ForStmt forStmt = (ForStmt) statement;
 
 			Expression compareExpr = forStmt.getCompare();
-			AnalyzedExpression compare = compareExpr != null ? analyzeExpression(compareExpr)
+			AnalyzedExpression compare = compareExpr != null ? analyzeExpression(
+					compareExpr, containingDenomination, analyzerContext)
 					: null;
 			AnalyzedStatement body = analyzeStatement(forStmt.getBody(),
-					analyzerContext);
+					containingDenomination, analyzerContext);
 
 			ForStatement forStatement = new ForStatement(
 					Location.from(forStmt), body, compare);
@@ -817,7 +865,8 @@ public class ClassAnalyzer {
 			List<Expression> init = forStmt.getInit();
 			if (init != null) {
 				for (Expression expression : init) {
-					AnalyzedExpression e = analyzeExpression(expression);
+					AnalyzedExpression e = analyzeExpression(expression,
+							containingDenomination, analyzerContext);
 					if (e != null) {
 						forStatement.addInitializerExpression(e);
 					}
@@ -827,7 +876,8 @@ public class ClassAnalyzer {
 			List<Expression> update = forStmt.getUpdate();
 			if (update != null) {
 				for (Expression expression : update) {
-					AnalyzedExpression e = analyzeExpression(expression);
+					AnalyzedExpression e = analyzeExpression(expression,
+							containingDenomination, analyzerContext);
 					if (e != null) {
 						forStatement.addUpdateExpression(e);
 					}
@@ -840,7 +890,8 @@ public class ClassAnalyzer {
 
 			String label = labeledStmt.getLabel();
 			AnalyzedStatement analyzedStatement = analyzeStatement(
-					labeledStmt.getStmt(), analyzerContext);
+					labeledStmt.getStmt(), containingDenomination,
+					analyzerContext);
 
 			return new LabeledStatement(Location.from(labeledStmt), label,
 					analyzedStatement);
@@ -848,14 +899,15 @@ public class ClassAnalyzer {
 			SwitchStmt switchStmt = (SwitchStmt) statement;
 
 			SwitchStatement switchStatement = new SwitchStatement(
-					Location.from(switchStmt),
-					analyzeExpression(switchStmt.getSelector()));
+					Location.from(switchStmt), analyzeExpression(
+							switchStmt.getSelector(), containingDenomination,
+							analyzerContext));
 
 			List<SwitchEntryStmt> entries = switchStmt.getEntries();
 			if (entries != null) {
 				for (SwitchEntryStmt entryStmt : entries) {
 					switchStatement.addStatement(analyzeSwitchEntry(entryStmt,
-							analyzerContext));
+							containingDenomination, analyzerContext));
 				}
 			}
 
@@ -863,15 +915,18 @@ public class ClassAnalyzer {
 		} else if (statement instanceof SwitchEntryStmt) {
 			SwitchEntryStmt switchEntryStmt = (SwitchEntryStmt) statement;
 
-			return analyzeSwitchEntry(switchEntryStmt, analyzerContext);
+			return analyzeSwitchEntry(switchEntryStmt, containingDenomination,
+					analyzerContext);
 
 		} else if (statement instanceof SynchronizedStmt) {
 			SynchronizedStmt synchronizedStmt = (SynchronizedStmt) statement;
 
 			AnalyzedStatement block = analyzeStatement(
-					synchronizedStmt.getBlock(), analyzerContext);
-			AnalyzedExpression syncExpression = analyzeExpression(synchronizedStmt
-					.getExpr());
+					synchronizedStmt.getBlock(), containingDenomination,
+					analyzerContext);
+			AnalyzedExpression syncExpression = analyzeExpression(
+					synchronizedStmt.getExpr(), containingDenomination,
+					analyzerContext);
 
 			return new SynchronizedStatement(Location.from(synchronizedStmt),
 					syncExpression, block);
@@ -879,15 +934,18 @@ public class ClassAnalyzer {
 			ThrowStmt throwStmt = (ThrowStmt) statement;
 
 			return new ThrowStatement(Location.from(throwStmt),
-					analyzeExpression(throwStmt.getExpr()));
+					analyzeExpression(throwStmt.getExpr(),
+							containingDenomination, analyzerContext));
 		} else if (statement instanceof TryStmt) {
 			TryStmt tryStmt = (TryStmt) statement;
 
 			BlockStmt finallyBlockStmt = tryStmt.getFinallyBlock();
 			BlockStatement finallyBlock = finallyBlockStmt != null ? analyzeBlockStatement(
-					finallyBlockStmt, analyzerContext) : null;
+					finallyBlockStmt, containingDenomination, analyzerContext)
+					: null;
 			BlockStatement tryBlock = analyzeBlockStatement(
-					tryStmt.getTryBlock(), analyzerContext);
+					tryStmt.getTryBlock(), containingDenomination,
+					analyzerContext);
 
 			TryStatement tryStatement = new TryStatement(
 					Location.from(tryStmt), tryBlock, finallyBlock);
@@ -904,7 +962,9 @@ public class ClassAnalyzer {
 							ModifierSet.isFinal(resource.getModifiers()));
 
 					if (initExpr != null) {
-						AnalyzedExpression initializer = analyzeExpression(initExpr);
+						AnalyzedExpression initializer = analyzeExpression(
+								initExpr, containingDenomination,
+								analyzerContext);
 						resourceStatement.setInitializer(initializer);
 					}
 
@@ -912,7 +972,9 @@ public class ClassAnalyzer {
 							.getAnnotations();
 					if (annotations != null) {
 						for (AnnotationExpr annotationExpr : annotations) {
-							AnalyzedAnnotation annotation = analyze(annotationExpr);
+							AnalyzedAnnotation annotation = analyze(
+									annotationExpr, containingDenomination,
+									analyzerContext);
 							if (annotation != null) {
 								resourceStatement.addAnnotation(annotation);
 							}
@@ -927,7 +989,8 @@ public class ClassAnalyzer {
 				for (CatchClause catchClause : catchs) {
 
 					BlockStatement blockStatement = analyzeBlockStatement(
-							catchClause.getCatchBlock(), analyzerContext);
+							catchClause.getCatchBlock(),
+							containingDenomination, analyzerContext);
 					CatchParameter except = catchClause.getExcept();
 
 					CatchStatement catchStatement = new CatchStatement(
@@ -937,7 +1000,9 @@ public class ClassAnalyzer {
 					List<AnnotationExpr> annotations = except.getAnnotations();
 					if (annotations != null) {
 						for (AnnotationExpr annotationExpr : annotations) {
-							AnalyzedAnnotation annotation = analyze(annotationExpr);
+							AnalyzedAnnotation annotation = analyze(
+									annotationExpr, containingDenomination,
+									analyzerContext);
 							if (annotation != null) {
 								catchStatement.addAnnotation(annotation);
 							}
@@ -971,10 +1036,11 @@ public class ClassAnalyzer {
 		} else if (statement instanceof WhileStmt) {
 			WhileStmt whileStmt = (WhileStmt) statement;
 
-			AnalyzedExpression condition = analyzeExpression(whileStmt
-					.getCondition());
-			AnalyzedStatement body = analyzeStatement(whileStmt.getBody(),
+			AnalyzedExpression condition = analyzeExpression(
+					whileStmt.getCondition(), containingDenomination,
 					analyzerContext);
+			AnalyzedStatement body = analyzeStatement(whileStmt.getBody(),
+					containingDenomination, analyzerContext);
 
 			return new WhileStatement(Location.from(whileStmt), condition, body);
 		}
@@ -984,6 +1050,7 @@ public class ClassAnalyzer {
 	}
 
 	private BlockStatement analyzeBlockStatement(BlockStmt blockStmt,
+			ContainingDenomination containingDenomination,
 			AnalyzerContext analyzerContext) {
 		BlockStatement block = new BlockStatement(Location.from(blockStmt));
 
@@ -991,7 +1058,7 @@ public class ClassAnalyzer {
 		if (stmts != null) {
 			for (Statement s : stmts) {
 				AnalyzedStatement analyzedStatement = analyzeStatement(s,
-						analyzerContext);
+						containingDenomination, analyzerContext);
 				if (analyzedStatement != null) {
 					block.addStatement(analyzedStatement);
 				}
@@ -1002,8 +1069,12 @@ public class ClassAnalyzer {
 	}
 
 	private SwitchEntryStatement analyzeSwitchEntry(
-			SwitchEntryStmt switchEntryStmt, AnalyzerContext analyzerContext) {
-		AnalyzedExpression value = analyzeExpression(switchEntryStmt.getLabel());
+			SwitchEntryStmt switchEntryStmt,
+			ContainingDenomination containingDenomination,
+			AnalyzerContext analyzerContext) {
+		AnalyzedExpression value = analyzeExpression(
+				switchEntryStmt.getLabel(), containingDenomination,
+				analyzerContext);
 
 		SwitchEntryStatement switchEntry = new SwitchEntryStatement(
 				Location.from(switchEntryStmt), value);
@@ -1012,7 +1083,7 @@ public class ClassAnalyzer {
 		if (stmts != null) {
 			for (Statement stmt : stmts) {
 				AnalyzedStatement analyzed = analyzeStatement(stmt,
-						analyzerContext);
+						containingDenomination, analyzerContext);
 
 				switchEntry.addStatement(analyzed);
 			}
@@ -1022,7 +1093,9 @@ public class ClassAnalyzer {
 	}
 
 	@Nonnull
-	private AnalyzedExpression analyzeExpression(Expression expr) {
+	private AnalyzedExpression analyzeExpression(Expression expr,
+			ContainingDenomination containingDenomination,
+			AnalyzerContext analyzerContext) {
 		final Location location = Location.from(expr);
 
 		if (expr instanceof NullLiteralExpr) {
@@ -1084,7 +1157,8 @@ public class ClassAnalyzer {
 			List<Expression> args = methodCall.getArgs();
 			if (args != null) {
 				for (Expression expression : args) {
-					AnalyzedExpression ae = analyzeExpression(expression);
+					AnalyzedExpression ae = analyzeExpression(expression,
+							containingDenomination, analyzerContext);
 					if (ae != null) {
 						analyzedArguments.add(ae);
 					}
@@ -1104,25 +1178,29 @@ public class ClassAnalyzer {
 		if (expr instanceof ArrayAccessExpr) {
 			ArrayAccessExpr arrayAccessExpr = (ArrayAccessExpr) expr;
 
-			AnalyzedExpression index = analyzeExpression(arrayAccessExpr
-					.getIndex());
-			AnalyzedExpression name = analyzeExpression(arrayAccessExpr
-					.getName());
+			AnalyzedExpression index = analyzeExpression(
+					arrayAccessExpr.getIndex(), containingDenomination,
+					analyzerContext);
+			AnalyzedExpression name = analyzeExpression(
+					arrayAccessExpr.getName(), containingDenomination,
+					analyzerContext);
 
 			return new ArrayAccessExpression(location, name, index);
 		}
 		if (expr instanceof ArrayCreationExpr) {
 			ArrayCreationExpr arrayCreationExpr = (ArrayCreationExpr) expr;
 
-			ArrayInitializerExpression initializer = parseInitializer(arrayCreationExpr
-					.getInitializer());
+			ArrayInitializerExpression initializer = parseInitializer(
+					arrayCreationExpr.getInitializer(), containingDenomination,
+					analyzerContext);
 			AnalyzedType type = analyzeType(arrayCreationExpr.getType());
 
 			ArrayCreationExpression creationExpression = new ArrayCreationExpression(
 					location, type, initializer);
 
 			for (Expression expression : arrayCreationExpr.getDimensions()) {
-				creationExpression.addDimension(analyzeExpression(expression));
+				creationExpression.addDimension(analyzeExpression(expression,
+						containingDenomination, analyzerContext));
 			}
 
 			return creationExpression;
@@ -1130,14 +1208,17 @@ public class ClassAnalyzer {
 		if (expr instanceof ArrayInitializerExpr) {
 			ArrayInitializerExpr arrayInitializerExpr = (ArrayInitializerExpr) expr;
 
-			return parseInitializer(arrayInitializerExpr);
+			return parseInitializer(arrayInitializerExpr,
+					containingDenomination, analyzerContext);
 		}
 		if (expr instanceof AssignExpr) {
 			AssignExpr assignExpr = (AssignExpr) expr;
 
-			AnalyzedExpression value = analyzeExpression(assignExpr.getValue());
-			AnalyzedExpression target = analyzeExpression(assignExpr
-					.getTarget());
+			AnalyzedExpression value = analyzeExpression(assignExpr.getValue(),
+					containingDenomination, analyzerContext);
+			AnalyzedExpression target = analyzeExpression(
+					assignExpr.getTarget(), containingDenomination,
+					analyzerContext);
 			AssignExpression.Operator operator = AssignExpression.Operator
 					.values()[assignExpr.getOperator().ordinal()];
 
@@ -1146,8 +1227,10 @@ public class ClassAnalyzer {
 		if (expr instanceof BinaryExpr) {
 			BinaryExpr binaryExpr = (BinaryExpr) expr;
 
-			AnalyzedExpression left = analyzeExpression(binaryExpr.getLeft());
-			AnalyzedExpression right = analyzeExpression(binaryExpr.getRight());
+			AnalyzedExpression left = analyzeExpression(binaryExpr.getLeft(),
+					containingDenomination, analyzerContext);
+			AnalyzedExpression right = analyzeExpression(binaryExpr.getRight(),
+					containingDenomination, analyzerContext);
 			BinaryExpression.Operator operator = BinaryExpression.Operator
 					.values()[binaryExpr.getOperator().ordinal()];
 
@@ -1156,8 +1239,8 @@ public class ClassAnalyzer {
 		if (expr instanceof CastExpr) {
 			CastExpr castExpr = (CastExpr) expr;
 
-			AnalyzedExpression expression = analyzeExpression(castExpr
-					.getExpr());
+			AnalyzedExpression expression = analyzeExpression(
+					castExpr.getExpr(), containingDenomination, analyzerContext);
 			AnalyzedType type = analyzeType(castExpr.getType());
 
 			return new CastExpression(location, type, expression);
@@ -1172,12 +1255,15 @@ public class ClassAnalyzer {
 		if (expr instanceof ConditionalExpr) {
 			ConditionalExpr conditionalExpr = (ConditionalExpr) expr;
 
-			AnalyzedExpression condition = analyzeExpression(conditionalExpr
-					.getCondition());
-			AnalyzedExpression primary = analyzeExpression(conditionalExpr
-					.getThenExpr());
-			AnalyzedExpression alternate = analyzeExpression(conditionalExpr
-					.getElseExpr());
+			AnalyzedExpression condition = analyzeExpression(
+					conditionalExpr.getCondition(), containingDenomination,
+					analyzerContext);
+			AnalyzedExpression primary = analyzeExpression(
+					conditionalExpr.getThenExpr(), containingDenomination,
+					analyzerContext);
+			AnalyzedExpression alternate = analyzeExpression(
+					conditionalExpr.getElseExpr(), containingDenomination,
+					analyzerContext);
 
 			return new ConditionalExpression(Location.from(conditionalExpr),
 					condition, primary, alternate);
@@ -1185,8 +1271,9 @@ public class ClassAnalyzer {
 		if (expr instanceof EnclosedExpr) {
 			EnclosedExpr enclosedExpr = (EnclosedExpr) expr;
 
-			AnalyzedExpression inner = analyzeExpression(enclosedExpr
-					.getInner());
+			AnalyzedExpression inner = analyzeExpression(
+					enclosedExpr.getInner(), containingDenomination,
+					analyzerContext);
 
 			return new EnclosedExpression(Location.from(enclosedExpr), inner);
 		}
@@ -1195,8 +1282,8 @@ public class ClassAnalyzer {
 
 			String fieldName = fieldAccessExpr.getField();
 			Expression scopeExpr = fieldAccessExpr.getScope();
-			AnalyzedExpression scope = scopeExpr != null ? analyzeExpression(scopeExpr)
-					: null;
+			AnalyzedExpression scope = scopeExpr != null ? analyzeExpression(
+					scopeExpr, containingDenomination, analyzerContext) : null;
 
 			FieldAccessExpression fieldAccessExpression = new FieldAccessExpression(
 					Location.from(fieldAccessExpr), scope, fieldName);
@@ -1217,8 +1304,9 @@ public class ClassAnalyzer {
 			InstanceOfExpr instanceOfExpr = (InstanceOfExpr) expr;
 
 			AnalyzedType target = analyzeType(instanceOfExpr.getType());
-			AnalyzedExpression expression = analyzeExpression(instanceOfExpr
-					.getExpr());
+			AnalyzedExpression expression = analyzeExpression(
+					instanceOfExpr.getExpr(), containingDenomination,
+					analyzerContext);
 
 			return new InstanceOfExpression(Location.from(instanceOfExpr),
 					expression, target);
@@ -1244,15 +1332,63 @@ public class ClassAnalyzer {
 		}
 		if (expr instanceof ObjectCreationExpr) {
 			ObjectCreationExpr objectCreationExpr = (ObjectCreationExpr) expr;
-			// TODO
+
+			ClassOrInterface type = analyzeClassOrInterface(objectCreationExpr
+					.getType());
+
+			if (type != null) {
+
+				ObjectCreationExpression creationExpression = new ObjectCreationExpression(
+						Location.from(objectCreationExpr), type);
+				Expression scopeExpr = objectCreationExpr.getScope();
+				if (scopeExpr != null) {
+					creationExpression.setScope(analyzeExpression(scopeExpr,
+							containingDenomination, analyzerContext));
+				}
+				List<Expression> args = objectCreationExpr.getArgs();
+				if (args != null) {
+					for (Expression expression : args) {
+						creationExpression.addArgument(analyzeExpression(
+								expression, containingDenomination,
+								analyzerContext));
+					}
+				}
+				List<Type> typeArgs = objectCreationExpr.getTypeArgs();
+				if (typeArgs != null) {
+					for (Type t : typeArgs) {
+						creationExpression.addTypeArgument(analyzeType(t));
+					}
+				}
+				List<BodyDeclaration> anonymousClassBody = objectCreationExpr
+						.getAnonymousClassBody();
+				if (anonymousClassBody != null) {
+					AnalyzerContext innerClassContext = analyzerContext
+							.anonymousInnerClass();
+
+					AnalyzedClass innerClass = new AnalyzedClass(
+							Location.from(objectCreationExpr), 0,
+							analyzerContext.getScope(),
+							innerClassContext.getScope());
+					containingDenomination.addInnerDenomination(innerClass);
+
+					for (BodyDeclaration bodyDeclaration : anonymousClassBody) {
+						analyzeBodyElement(
+								Integer.toString(innerClassContext.anonymousInnerClassCounter - 1),
+								innerClass, innerClassContext, bodyDeclaration);
+					}
+					creationExpression.setDeclaredAnonymousClass(innerClass);
+				}
+
+				return creationExpression;
+			}
 
 		}
 		if (expr instanceof SuperExpr) {
 			SuperExpr superExpr = (SuperExpr) expr;
 
 			Expression classExpr = superExpr.getClassExpr();
-			AnalyzedExpression classExpression = classExpr != null ? analyzeExpression(classExpr)
-					: null;
+			AnalyzedExpression classExpression = classExpr != null ? analyzeExpression(
+					classExpr, containingDenomination, analyzerContext) : null;
 
 			return new SuperExpression(Location.from(superExpr),
 					classExpression);
@@ -1261,24 +1397,37 @@ public class ClassAnalyzer {
 			ThisExpr thisExpr = (ThisExpr) expr;
 
 			Expression classExpr = thisExpr.getClassExpr();
-			AnalyzedExpression classExpression = classExpr != null ? analyzeExpression(classExpr)
-					: null;
+			AnalyzedExpression classExpression = classExpr != null ? analyzeExpression(
+					classExpr, containingDenomination, analyzerContext) : null;
 
 			return new ThisExpression(Location.from(thisExpr), classExpression);
 		}
 		if (expr instanceof UnaryExpr) {
 			UnaryExpr unaryExpr = (UnaryExpr) expr;
-			// TODO
+
+			AnalyzedExpression expression = analyzeExpression(
+					unaryExpr.getExpr(), containingDenomination,
+					analyzerContext);
+			UnaryExpression.Operator operator = UnaryExpression.Operator
+					.values()[unaryExpr.getOperator().ordinal()];
+
+			return new UnaryExpression(Location.from(unaryExpr), operator,
+					expression);
+
 		}
 		if (expr instanceof VariableDeclarationExpr) {
-			return analyzeVariableDeclarationExpression((VariableDeclarationExpr) expr);
+			return analyzeVariableDeclarationExpression(
+					(VariableDeclarationExpr) expr, containingDenomination,
+					analyzerContext);
 		}
 
 		return new NullExpression(location);
 	}
 
 	private VariableDeclarationExpression analyzeVariableDeclarationExpression(
-			VariableDeclarationExpr variable) {
+			VariableDeclarationExpr variable,
+			ContainingDenomination containingDenomination,
+			AnalyzerContext analyzerContext) {
 
 		final int modifiers = variable.getModifiers();
 		final AnalyzedType type = analyzeType(variable.getType());
@@ -1289,7 +1438,8 @@ public class ClassAnalyzer {
 		List<AnnotationExpr> annotations = variable.getAnnotations();
 		if (annotations != null) {
 			for (AnnotationExpr annotationExpr : annotations) {
-				AnalyzedAnnotation annotation = analyze(annotationExpr);
+				AnalyzedAnnotation annotation = analyze(annotationExpr,
+						containingDenomination, analyzerContext);
 
 				expression.addAnnotation(annotation);
 			}
@@ -1299,7 +1449,8 @@ public class ClassAnalyzer {
 		if (vars != null) {
 			for (VariableDeclarator var : vars) {
 				Expression initExpr = var.getInit();
-				AnalyzedExpression init = initExpr != null ? analyzeExpression(initExpr)
+				AnalyzedExpression init = initExpr != null ? analyzeExpression(
+						initExpr, containingDenomination, analyzerContext)
 						: null;
 
 				expression.addDeclareVariable(new DeclareVariableExpression(
@@ -1312,13 +1463,16 @@ public class ClassAnalyzer {
 
 	@CheckForNull
 	private ArrayInitializerExpression parseInitializer(
-			@Nullable ArrayInitializerExpr initializer) {
+			@Nullable ArrayInitializerExpr initializer,
+			ContainingDenomination containingDenomination,
+			AnalyzerContext analyzerContext) {
 		if (initializer != null) {
 			ArrayInitializerExpression expression = new ArrayInitializerExpression(
 					Location.from(initializer));
 
 			for (Expression expr : initializer.getValues()) {
-				expression.addValue(analyzeExpression(expr));
+				expression.addValue(analyzeExpression(expr,
+						containingDenomination, analyzerContext));
 			}
 
 			return expression;
