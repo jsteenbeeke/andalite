@@ -45,6 +45,7 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 		super(location);
 		this.type = type;
 		this.arguments = Lists.newArrayList();
+		this.typeArguments = Lists.newArrayList();
 	}
 
 	@CheckForNull

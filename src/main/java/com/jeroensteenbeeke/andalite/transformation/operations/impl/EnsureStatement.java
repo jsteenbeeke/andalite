@@ -16,6 +16,9 @@ package com.jeroensteenbeeke.andalite.transformation.operations.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.analyzer.IBodyContainer;
@@ -25,6 +28,9 @@ import com.jeroensteenbeeke.andalite.transformation.operations.IBodyContainerOpe
 import com.jeroensteenbeeke.andalite.transformation.operations.OperationException;
 
 public class EnsureStatement implements IBodyContainerOperation {
+	private static final Logger logger = LoggerFactory
+			.getLogger(EnsureStatement.class);
+
 	private final String statement;
 
 	public EnsureStatement(String statement) {
@@ -48,6 +54,9 @@ public class EnsureStatement implements IBodyContainerOperation {
 
 			final String asJava = String.format("%s;",
 					analyzedStatement.toJavaString());
+
+			logger.debug("Found statement {}", asJava);
+
 			if (asJava.equals(statement)) {
 				return ImmutableList.of();
 			}

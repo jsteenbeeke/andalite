@@ -39,7 +39,10 @@ public class DeclareVariableExpression extends AnalyzedExpression {
 
 	@Override
 	public String toJavaString() {
-		// TODO Auto-generated method stub
-		return null;
+		if (initializationExpression == null)
+			return name;
+
+		return String.format("%s = %s", name,
+				initializationExpression.toJavaString());
 	}
 }

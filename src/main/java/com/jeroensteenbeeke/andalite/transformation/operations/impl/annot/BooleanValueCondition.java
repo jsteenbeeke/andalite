@@ -23,4 +23,5 @@ public class BooleanValueCondition extends BaseValueCondition<Boolean> {
 			@Nullable final Boolean value) {
 		super(name, BooleanValue.class, value);
 	}
+
 }

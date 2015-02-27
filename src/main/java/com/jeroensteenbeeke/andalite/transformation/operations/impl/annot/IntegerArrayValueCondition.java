@@ -23,4 +23,5 @@ public class IntegerArrayValueCondition extends ArrayValueCondition<Integer> {
 			@Nonnull final Integer... values) {
 		super(name, IntegerValue.class, values);
 	}
+
 }

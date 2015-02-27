@@ -17,6 +17,8 @@ package com.jeroensteenbeeke.andalite.analyzer.expression;
 import java.util.List;
 
 import com.github.antlrjavaparser.api.body.ModifierSet;
+import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.Location;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
@@ -27,8 +29,6 @@ public class VariableDeclarationExpression extends AnalyzedExpression {
 	private final boolean declaredFinal;
 
 	private final AnalyzedType type;
-
-	private AnalyzedExpression initializationExpression;
 
 	private final List<AnalyzedAnnotation> annotations;
 
@@ -63,18 +63,36 @@ public class VariableDeclarationExpression extends AnalyzedExpression {
 		return declaredFinal;
 	}
 
-	public AnalyzedExpression getInitializationExpression() {
-		return initializationExpression;
-	}
-
 	public AnalyzedType getType() {
 		return type;
 	}
 
 	@Override
 	public String toJavaString() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		StringBuilder sb = new StringBuilder();
 
+		if (!annotations.isEmpty()) {
+			Joiner.on(" ").appendTo(
+					sb,
+					FluentIterable.from(annotations).transform(
+							AnalyzedAnnotation.toJavaStringFunction()));
+			sb.append(" ");
+		}
+
+		if (isDeclaredFinal()) {
+			sb.append("final ");
+		}
+
+		sb.append(type.toJavaString());
+
+		if (!variables.isEmpty()) {
+			sb.append(" ");
+			Joiner.on(", ").appendTo(
+					sb,
+					FluentIterable.from(variables).transform(
+							AnalyzedExpression.toJavaStringFunction()));
+		}
+
+		return sb.toString();
+	}
 }

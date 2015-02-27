@@ -23,4 +23,5 @@ public class DoubleArrayValueCondition extends ArrayValueCondition<Double> {
 			@Nonnull final Double... values) {
 		super(name, DoubleValue.class, values);
 	}
+
 }

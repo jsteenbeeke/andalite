@@ -23,4 +23,5 @@ public class DoubleValueCondition extends BaseValueCondition<Double> {
 			@Nullable final Double value) {
 		super(name, DoubleValue.class, value);
 	}
+
 }

@@ -16,11 +16,11 @@ package com.jeroensteenbeeke.andalite.transformation.operations.impl.annot;
 
 import javax.annotation.Nonnull;
 
-import com.jeroensteenbeeke.andalite.analyzer.annotation.IntegerValue;
+import com.jeroensteenbeeke.andalite.analyzer.annotation.CharValue;
 
-public class CharArrayValueCondition extends ArrayValueCondition<Integer> {
+public class CharArrayValueCondition extends ArrayValueCondition<Character> {
 	public CharArrayValueCondition(@Nonnull final String name,
-			@Nonnull final Integer... values) {
-		super(name, IntegerValue.class, values);
+			@Nonnull final Character... values) {
+		super(name, CharValue.class, values);
 	}
 }

@@ -1165,8 +1165,17 @@ public class ClassAnalyzer {
 				}
 			}
 
-			return new MethodCallExpression(location, methodCall.getName(),
-					analyzedTypeArguments, analyzedArguments);
+			MethodCallExpression expression = new MethodCallExpression(
+					location, methodCall.getName(), analyzedTypeArguments,
+					analyzedArguments);
+
+			Expression scopeExpr = methodCall.getScope();
+			if (scopeExpr != null) {
+				expression.setScope(analyzeExpression(scopeExpr,
+						containingDenomination, analyzerContext));
+			}
+
+			return expression;
 
 		}
 		if (expr instanceof AnnotationExpr) {

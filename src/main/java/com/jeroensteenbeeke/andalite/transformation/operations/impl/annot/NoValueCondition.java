@@ -33,5 +33,4 @@ public class NoValueCondition implements InnerAnnotationCondition {
 	public String toString() {
 		return String.format("Does not have a value '%s'", name);
 	}
-
 }

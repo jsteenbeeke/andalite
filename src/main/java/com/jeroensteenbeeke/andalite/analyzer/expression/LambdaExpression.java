@@ -21,13 +21,13 @@ public class LambdaExpression extends AnalyzedExpression {
 
 	public LambdaExpression(Location location) {
 		super(location);
-		// TODO Auto-generated constructor stub
+		// TODO When antlr-java-parser is updated
 	}
 
 	@Override
 	public String toJavaString() {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO When antlr-java-parser is updated
+		return "->";
 	}
 
 }

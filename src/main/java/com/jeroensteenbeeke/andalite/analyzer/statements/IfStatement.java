@@ -38,8 +38,19 @@ public class IfStatement extends AnalyzedStatement {
 
 	@Override
 	public String toJavaString() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder java = new StringBuilder();
+
+		java.append("if (");
+		java.append(condition.toJavaString());
+		java.append(") ");
+		java.append(thenStatement.toJavaString());
+
+		if (elseStatement != null) {
+			java.append(" else ");
+			java.append(elseStatement.toJavaString());
+		}
+
+		return java.toString();
 	}
 
 	public AnalyzedExpression getCondition() {

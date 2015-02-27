@@ -30,6 +30,8 @@ public class MethodCallExpression extends AnalyzedExpression {
 
 	private final List<AnalyzedExpression> arguments;
 
+	private AnalyzedExpression scope;
+
 	public MethodCallExpression(@Nonnull final Location location,
 			@Nonnull final String name,
 			@Nonnull final List<AnalyzedType> analyzedTypeArguments,
@@ -44,6 +46,19 @@ public class MethodCallExpression extends AnalyzedExpression {
 		return name;
 	}
 
+	public AnalyzedExpression getScope() {
+		return scope;
+	}
+
+	/**
+	 * @param scope
+	 *            The scope to set
+	 * @nonpublic
+	 */
+	public void setScope(AnalyzedExpression scope) {
+		this.scope = scope;
+	}
+
 	public List<AnalyzedExpression> getArguments() {
 		return arguments;
 	}
@@ -55,6 +70,11 @@ public class MethodCallExpression extends AnalyzedExpression {
 	@Override
 	public String toJavaString() {
 		StringBuilder sb = new StringBuilder();
+
+		if (scope != null) {
+			sb.append(scope.toJavaString());
+			sb.append(".");
+		}
 
 		if (!typeArguments.isEmpty()) {
 			boolean first = true;

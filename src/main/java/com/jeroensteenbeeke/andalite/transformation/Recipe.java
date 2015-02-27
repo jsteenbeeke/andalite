@@ -59,9 +59,11 @@ public class Recipe {
 						step.toString());
 				return stepResult;
 			} else {
-				logger.info("OK: {}", step.toString());
+				logger.debug("OK: {}", step.toString());
 			}
 		}
+
+		logger.debug("All steps executed, checking if resulting file can be parsed");
 
 		return new ClassAnalyzer(file).analyze();
 	}

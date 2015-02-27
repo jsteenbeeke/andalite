@@ -48,7 +48,7 @@ public class AnnotationFieldPresenceMatcher extends
 			}
 
 			mismatchDescription.appendText(String.format(
-					" value named '%s' has type ", name,
+					" value named '%s' has type %s", name,
 					item.getValueType(name)));
 		} else {
 			mismatchDescription.appendText(String.format(
