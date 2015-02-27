@@ -90,7 +90,7 @@ public class MethodCallExpression extends AnalyzedExpression {
 			}
 		}
 
-		sb.append(");");
+		sb.append(")");
 
 		return sb.toString();
 	}
