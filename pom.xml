@@ -3,12 +3,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>andalite</artifactId>
+	<artifactId>andalite-parent</artifactId>
 	<groupId>com.jeroensteenbeeke</groupId>
-	<packaging>jar</packaging>
+	<packaging>pom</packaging>
 	<version>1.0-SNAPSHOT</version>
 
-	<name>Andalite</name>
+	<name>Andalite Parent</name>
 	<inceptionYear>2014</inceptionYear>
 	<description>Library for Java Code Transformations</description>
 
@@ -44,93 +44,99 @@
 		<maven>3.0.5</maven>
 	</prerequisites>
 
-	<dependencies>
-		<!-- Test Dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
+	<dependencyManagement>
+		<dependencies>
+			<!-- Test Dependencies -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
 
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-core</artifactId>
-			<version>${hamcrest.version}</version>
-		</dependency>
+			<dependency>
+				<groupId>org.hamcrest</groupId>
+				<artifactId>hamcrest-core</artifactId>
+				<version>${hamcrest.version}</version>
+			</dependency>
 
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<version>${javaee.version}</version>
-			<scope>test</scope>
-		</dependency>
+			<dependency>
+				<groupId>javax</groupId>
+				<artifactId>javaee-api</artifactId>
+				<version>${javaee.version}</version>
+				<scope>test</scope>
+			</dependency>
 
-		<!-- Java Parser -->
-		<dependency>
-			<groupId>com.github.antlrjavaparser</groupId>
-			<artifactId>antlr-java-parser</artifactId>
-			<version>${parser.version}</version>
-		</dependency>
+			<!-- Java Parser -->
+			<dependency>
+				<groupId>com.github.antlrjavaparser</groupId>
+				<artifactId>antlr-java-parser</artifactId>
+				<version>${parser.version}</version>
+			</dependency>
 
-		<!-- Guava -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
-		</dependency>
+			<!-- Guava -->
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
 
-		<!-- Code Integrity -->
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-			<version>${jsr305.version}</version>
-		</dependency>
+			<!-- Code Integrity -->
+			<dependency>
+				<groupId>com.google.code.findbugs</groupId>
+				<artifactId>jsr305</artifactId>
+				<version>${jsr305.version}</version>
+			</dependency>
 
-		<!-- Logging -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.api.version}</version>
-		</dependency>
+			<!-- Logging -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.api.version}</version>
+			</dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>${slf4j.api.version}</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-simple</artifactId>
+				<version>${slf4j.api.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<!-- Modules -->
+			<dependency>
+				<groupId>com.jeroensteenbeeke</groupId>
+				<artifactId>andalite-core</artifactId>
+				<version>${andalite.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.jeroensteenbeeke</groupId>
+				<artifactId>andalite-java</artifactId>
+				<version>${andalite.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.jeroensteenbeeke</groupId>
+				<artifactId>andalite-xml</artifactId>
+				<version>${andalite.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.jeroensteenbeeke</groupId>
+				<artifactId>andalite-forge</artifactId>
+				<version>${andalite.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.jeroensteenbeeke</groupId>
+				<artifactId>andalite-maven-plugin</artifactId>
+				<version>${andalite.version}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
 
 	<build>
-		<resources>
-			<resource>
-				<filtering>false</filtering>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-		</resources>
-		<testResources>
-			<testResource>
-				<filtering>false</filtering>
-				<directory>src/test/resources</directory>
-				<includes>
-					<include>**</include>
-				</includes>
-			</testResource>
-			<testResource>
-				<filtering>false</filtering>
-				<directory>src/dummy/java</directory>
-				<includes>
-					<include>**/*.java</include>
-				</includes>
-			</testResource>
-		</testResources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -236,32 +242,11 @@
 
 			</plugins>
 		</pluginManagement>
-
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>com.mycila</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
 	</build>
 
 	<properties>
+		<andalite.version>1.0-SNAPSHOT</andalite.version>
+
 		<!-- Dependency Versions -->
 		<guava.version>18.0</guava.version>
 		<hamcrest.version>1.3</hamcrest.version>
@@ -282,4 +267,12 @@
 		<!-- Other settings -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+	<modules>
+		<module>core</module>
+		<module>java</module>
+		<module>xml</module>
+		<module>forge</module>
+		<module>maven-plugin</module>
+	</modules>
 </project>
