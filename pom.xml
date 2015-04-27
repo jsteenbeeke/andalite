@@ -142,6 +142,47 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-eclipse-plugin</artifactId>
+					<version>${maven.eclipse.version}</version>
+					<dependencies>
+						<dependency>
+							<groupId>com.jeroensteenbeeke.andalite</groupId>
+							<artifactId>m2e-settings</artifactId>
+							<version>${andalite.version}</version>
+						</dependency>
+					</dependencies>
+					<configuration>
+						<additionalConfig>
+							<file>
+								<name>.settings/org.eclipse.jdt.core.prefs</name>
+								<location>/org.eclipse.jdt.core.prefs</location>
+							</file>
+							<file>
+								<name>.settings/org.eclipse.jdt.ui.prefs</name>
+								<location>/org.eclipse.jdt.ui.prefs</location>
+							</file>
+							<file>
+								<name>.settings/org.eclipse.m2e.core.prefs</name>
+								<location>/org.eclipse.m2e.core.prefs</location>
+							</file>
+							<file>
+								<name>.settings/org.eclipse.search.prefs</name>
+								<location>/org.eclipse.search.prefs</location>
+							</file>
+							<file>
+								<name>.settings/org.eclipse.ui.prefs</name>
+								<location>/org.eclipse.ui.prefs</location>
+							</file>
+							<file>
+								<name>.settings/org.eclipse.wst.html.ui.prefs</name>
+								<location>/org.eclipse.wst.html.ui.prefs</location>
+							</file>
+
+						</additionalConfig>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-eclipse-plugin</artifactId>
 					<version>${maven.eclipse.plugin.version}</version>
 					<configuration>
 					</configuration>
@@ -269,6 +310,7 @@
 	</properties>
 
 	<modules>
+		<module>m2e-settings</module>
 		<module>core</module>
 		<module>java</module>
 		<module>xml</module>

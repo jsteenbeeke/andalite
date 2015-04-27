@@ -1,0 +1,30 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+	<prerequisites>
+		<maven>3.0.5</maven>
+	</prerequisites>
+
+	<groupId>com.jeroensteenbeeke.andalite</groupId>
+	<artifactId>m2e-settings</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	
+	<build>
+		<defaultGoal>package</defaultGoal>
+		<resources>
+			<resource>
+				<directory>files</directory>
+				<filtering>false</filtering>
+				<includes>
+					<include>**/*</include>
+				</includes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>
