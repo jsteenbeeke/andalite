@@ -132,11 +132,31 @@
 				<artifactId>andalite-maven-plugin</artifactId>
 				<version>${andalite.version}</version>
 			</dependency>
+			
+			<dependency>
+				<groupId>com.jeroensteenbeeke.andalite</groupId>
+				<artifactId>m2e-settings</artifactId>
+				<version>${andalite.version}</version>
+				<scope>compile</scope>
+			</dependency>
 
 		</dependencies>
 	</dependencyManagement>
 
 	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>com.jeroensteenbeeke.andalite</groupId>
+						<artifactId>m2e-settings</artifactId>
+						<version>${andalite.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+		</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -178,13 +198,6 @@
 							</file>
 
 						</additionalConfig>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-eclipse-plugin</artifactId>
-					<version>${maven.eclipse.plugin.version}</version>
-					<configuration>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -275,7 +288,8 @@
 								<name>nonpublic</name>
 								<!-- Indicates that the method is not part of the public API -->
 								<placement>m</placement>
-								<head>THIS METHOD IS NOT PART OF THE PUBLIC API. USAGE IS NOT RECOMMENDED AND RESULTS ARE UNDEFINED</head>
+								<head>THIS METHOD IS NOT PART OF THE PUBLIC API. USAGE IS NOT
+									RECOMMENDED AND RESULTS ARE UNDEFINED</head>
 							</tag>
 						</tags>
 					</configuration>
