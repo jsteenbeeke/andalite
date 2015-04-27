@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import com.google.common.collect.Lists;
@@ -35,12 +36,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.internal.RecipeSelectionQuestion;
 import com.jeroensteenbeeke.andalite.maven.ui.MavenQuestionRenderer;
 
-/**
- * Executes a forge recipe
- * 
- * @goal forge
- */
-
+@Mojo( name = "forge")
 public class ForgeMojo extends AbstractMojo {
 	@Parameter
 	private String[] recipes;
@@ -50,6 +46,10 @@ public class ForgeMojo extends AbstractMojo {
 	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
+		if (recipes == null || recipes.length == 0) {
+			throw new MojoFailureException("No recipes defined for this project!");
+		}
+		
 		List<ForgeRecipe> recipeList = Lists.newArrayList();
 		
 		for (String className: recipes) {
@@ -85,6 +85,10 @@ public class ForgeMojo extends AbstractMojo {
 			} catch (IllegalAccessException e) {
 				getLog().error(e);
 			}
+		}
+		
+		if (recipeList.isEmpty()) {
+			throw new MojoFailureException("Unable to instantiate any recipes!");
 		}
 		
 		MavenQuestionRenderer renderer = new MavenQuestionRenderer();

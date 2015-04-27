@@ -4,8 +4,9 @@
 
 	<parent>
 		<artifactId>andalite-parent</artifactId>
-		<groupId>com.jeroensteenbeeke</groupId>
+		<groupId>com.jeroensteenbeeke.andalite</groupId>
 		<version>1.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
 	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -72,7 +73,7 @@
 
 		<!-- Sibling projects -->
 		<dependency>
-			<groupId>com.jeroensteenbeeke</groupId>
+			<groupId>com.jeroensteenbeeke.andalite</groupId>
 			<artifactId>andalite-forge</artifactId>
 		</dependency>
 	</dependencies>
