@@ -14,7 +14,10 @@
  */
 package com.jeroensteenbeeke.andalite.maven;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -42,6 +45,9 @@ public class ForgeMojo extends AbstractMojo {
 	@Parameter
 	private String[] recipes;
 
+	@Parameter
+	private Map<String,String> extraConfiguration;
+	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		List<ForgeRecipe> recipeList = Lists.newArrayList();
@@ -51,7 +57,16 @@ public class ForgeMojo extends AbstractMojo {
 				Class<?> recipeClass = Class.forName(className);
 				
 				if (ForgeRecipe.class.isAssignableFrom(recipeClass)) {
-					recipeList.add((ForgeRecipe) recipeClass.newInstance());
+					try {
+						// Check for constructor with map parameter
+						Constructor<?> constructor = recipeClass.getConstructor(Map.class);
+						
+						recipeList.add((ForgeRecipe) constructor.newInstance(extraConfiguration));
+					} catch (NoSuchMethodException e) {
+						// And if it doesn't exist, go for a default no-argument constructor
+						recipeList.add((ForgeRecipe) recipeClass.newInstance());	
+					
+					}
 				} else {
 					getLog().error("Class "+ recipeClass.getName() +" does not implement the ForgeRecipe interface");
 				}
@@ -59,6 +74,12 @@ public class ForgeMojo extends AbstractMojo {
 				getLog().error("Recipe not found: "+ className);
 				getLog().error(e);
 			} catch (InstantiationException e) {
+				getLog().error("Could not instantiate recipe: "+ className);
+				getLog().error(e);
+			} catch (IllegalArgumentException e) {
+				getLog().error("Could not instantiate recipe: "+ className);
+				getLog().error(e);
+			} catch (InvocationTargetException e) {
 				getLog().error("Could not instantiate recipe: "+ className);
 				getLog().error(e);
 			} catch (IllegalAccessException e) {

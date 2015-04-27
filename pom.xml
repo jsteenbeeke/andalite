@@ -157,6 +157,11 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<inherited>true</inherited>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -289,8 +294,7 @@
 								<name>nonpublic</name>
 								<!-- Indicates that the method is not part of the public API -->
 								<placement>m</placement>
-								<head>THIS METHOD IS NOT PART OF THE PUBLIC API. USAGE IS NOT
-									RECOMMENDED AND RESULTS ARE UNDEFINED</head>
+								<head>THIS METHOD IS NOT PART OF THE PUBLIC API. USAGE IS NOT RECOMMENDED AND RESULTS ARE UNDEFINED</head>
 							</tag>
 						</tags>
 					</configuration>
