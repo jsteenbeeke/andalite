@@ -17,8 +17,8 @@ package com.jeroensteenbeeke.andalite.transformation;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.transformation.navigation.MethodNavigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
+import com.jeroensteenbeeke.andalite.transformation.navigation.MethodNavigation;
 
 public class MethodLocator extends
 		AbstractMethodBuilder<MethodOperationBuilder> {

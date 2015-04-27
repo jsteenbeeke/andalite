@@ -28,7 +28,6 @@ import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
-import com.jeroensteenbeeke.andalite.forge.ui.actions.CreateFile;
 import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.internal.RecipeSelectionQuestion;
 import com.jeroensteenbeeke.andalite.maven.ui.MavenQuestionRenderer;

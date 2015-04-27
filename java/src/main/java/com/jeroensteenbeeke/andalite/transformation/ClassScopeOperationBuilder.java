@@ -16,8 +16,8 @@
 package com.jeroensteenbeeke.andalite.transformation;
 
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.transformation.navigation.InnerClassNavigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
+import com.jeroensteenbeeke.andalite.transformation.navigation.InnerClassNavigation;
 import com.jeroensteenbeeke.andalite.transformation.operations.IClassOperation;
 
 public class ClassScopeOperationBuilder extends
