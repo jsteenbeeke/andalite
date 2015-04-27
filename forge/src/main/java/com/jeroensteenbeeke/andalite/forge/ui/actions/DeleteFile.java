@@ -16,48 +16,29 @@ package com.jeroensteenbeeke.andalite.forge.ui.actions;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.nio.file.Files;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.forge.ui.CompoundableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 
-public final class CreateFile implements CompoundableAction {
+public final class DeleteFile implements CompoundableAction {
 	private final File file;
 
-	private String initialContents = null;
-
-	public CreateFile(File file) {
+	public DeleteFile(File file) {
 		super();
 		this.file = file;
 	}
 
-	public CreateFile withInitialContents(String contents) {
-		this.initialContents = contents;
-		return this;
-	}
-
 	@Override
 	public ActionResult perform() {
-		if (file.exists()) {
+		if (!file.exists()) {
 			return ActionResult.ok();
 		} else {
 			try {
-				if (file.createNewFile()) {
-					// Check
-
-					if (initialContents != null) {
-						PrintWriter pw = new PrintWriter(file);
-						pw.print(initialContents);
-						pw.flush();
-						pw.close();
-					}
-
-					return ActionResult.ok();
-				} else {
-					return ActionResult.error("Could not create file %s",
-							file.getName());
-				}
+				Files.delete(file.toPath());
+				
+				return ActionResult.ok();
 			} catch (IOException e) {
 				return ActionResult.error(e.getMessage());
 			}

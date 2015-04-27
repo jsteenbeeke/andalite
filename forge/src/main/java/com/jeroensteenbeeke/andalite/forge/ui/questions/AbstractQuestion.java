@@ -16,7 +16,7 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 
-abstract class AbstractQuestion<T> implements Question<T> {
+public abstract class AbstractQuestion<T> implements Question<T> {
 	private final String question;
 
 	protected AbstractQuestion(String question) {

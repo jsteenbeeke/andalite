@@ -19,12 +19,14 @@ import java.io.File;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.FileSelectQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.SimpleQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.YesNoQuestion;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.internal.RecipeSelectionQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.renderer.QuestionRenderer;
 
 public class MavenQuestionRenderer implements QuestionRenderer {
@@ -47,9 +49,39 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 		if (question instanceof FileSelectQuestion) {
 			return renderFileSelectQuestion((FileSelectQuestion) question);
 		}
+		if (question instanceof RecipeSelectionQuestion) {
+			return renderRecipeSelectQuestion((RecipeSelectionQuestion) question);
+		}
 
 		return TypedActionResult.fail("Unknown question type: %s", question
 				.getClass().getName());
+	}
+
+	private TypedActionResult<Action> renderRecipeSelectQuestion(
+			RecipeSelectionQuestion question) {
+		TypedActionResult<Integer> response = TypedActionResult.fail("");
+
+		while (!response.isOk()) {
+			String message = response.getMessage();
+			if (message != null && !message.isEmpty()) {
+				System.out.println(message);
+				System.out.println();
+			}
+			System.out.println(question.getQuestion());
+			int i = 0;
+			for (ForgeRecipe choice : question.getRecipes()) {
+				System.out.print("\t[");
+				System.out.print(++i);
+				System.out.print("] ");
+				System.out.println(choice.getName());
+
+			}
+
+			response = getNumberResponse(1, i);
+		}
+
+		return TypedActionResult.ok(question.onAnswer(question.getRecipes()
+				.get(response.getObject())));
 	}
 
 	private TypedActionResult<Action> renderMultipleChoiceQuestion(
