@@ -19,10 +19,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.forge.ui.CompoundableAction;
-import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 
-public final class CreateFile implements CompoundableAction {
+public final class CreateFile extends AbstractCompoundableAction {
 	private final File file;
 
 	private String initialContents = null;
@@ -64,9 +62,5 @@ public final class CreateFile implements CompoundableAction {
 		}
 
 	}
-	
-	@Override
-	public CompoundAction andThen(PerformableAction nextAction) {
-		return new CompoundAction(this, nextAction);
-	}
+
 }

@@ -14,33 +14,18 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.actions;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
+import com.jeroensteenbeeke.andalite.forge.ui.CompoundableAction;
+import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+public abstract class AbstractCompoundableAction implements CompoundableAction {
 
-public final class DeleteFile extends AbstractCompoundableAction {
-	private final File file;
-
-	public DeleteFile(File file) {
+	public AbstractCompoundableAction() {
 		super();
-		this.file = file;
 	}
 
 	@Override
-	public ActionResult perform() {
-		if (!file.exists()) {
-			return ActionResult.ok();
-		} else {
-			try {
-				Files.delete(file.toPath());
-
-				return ActionResult.ok();
-			} catch (IOException e) {
-				return ActionResult.error(e.getMessage());
-			}
-		}
-
+	public final CompoundAction andThen(PerformableAction nextAction) {
+		return new CompoundAction(this, nextAction);
 	}
+
 }

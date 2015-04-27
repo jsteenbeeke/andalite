@@ -17,10 +17,8 @@ package com.jeroensteenbeeke.andalite.forge.ui.actions;
 import java.io.File;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.forge.ui.CompoundableAction;
-import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 
-public final class EnsureDirectoryExists implements CompoundableAction {
+public final class EnsureDirectoryExists extends AbstractCompoundableAction {
 	private final File file;
 
 	public EnsureDirectoryExists(File directory) {
@@ -28,27 +26,22 @@ public final class EnsureDirectoryExists implements CompoundableAction {
 		this.file = directory;
 	}
 
-
 	@Override
 	public ActionResult perform() {
 		if (file.exists()) {
 			if (!file.isDirectory()) {
 				return ActionResult.error("File exists but is not a directory");
 			}
-			
+
 			return ActionResult.ok();
 		} else {
 			if (file.mkdirs()) {
 				return ActionResult.ok();
 			} else {
-				return ActionResult.error("Failed to create one or more directories");
+				return ActionResult
+						.error("Failed to create one or more directories");
 			}
 		}
 
-	}
-	
-	@Override
-	public CompoundAction andThen(PerformableAction nextAction) {
-		return new CompoundAction(this, nextAction);
 	}
 }
