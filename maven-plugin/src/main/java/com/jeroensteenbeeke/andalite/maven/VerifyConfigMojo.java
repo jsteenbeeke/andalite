@@ -21,17 +21,10 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
-import com.jeroensteenbeeke.andalite.forge.ui.Action;
-import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
-import com.jeroensteenbeeke.andalite.forge.ui.Question;
-import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
-import com.jeroensteenbeeke.andalite.forge.ui.questions.internal.RecipeSelectionQuestion;
-import com.jeroensteenbeeke.andalite.maven.ui.MavenQuestionRenderer;
 
-@Mojo( name = "forge")
-public class ForgeMojo extends RecipeMojo {
+@Mojo( name = "verify-config")
+public class VerifyConfigMojo extends RecipeMojo {
 	
 
 	@Override
@@ -42,29 +35,20 @@ public class ForgeMojo extends RecipeMojo {
 		
 		List<ForgeRecipe> recipeList = determineRecipes();
 		
-		MavenQuestionRenderer renderer = new MavenQuestionRenderer();
-		Action next = new RecipeSelectionQuestion(recipeList);
+		boolean failed = false;
 		
-		while (next instanceof Question) {
-			Question<?> q = (Question<?>) next;
-			TypedActionResult<Action> result = renderer.renderQuestion(q);
-			if (!result.isOk()) {
-				throw new MojoFailureException(result.getMessage());
-			}
-			
-			next = result.getObject();
-		}
-		
-		if (next instanceof Failure) {
-			throw new MojoFailureException("Forge Recipe returned failure");
-		} else if (next instanceof PerformableAction) {
-			PerformableAction action = (PerformableAction) next;
-			ActionResult result = action.perform();
-			if (!result.isOk()) {
-				throw new MojoFailureException(result.getMessage());
+		for (ForgeRecipe recipe: recipeList) {
+			getLog().info("Checking configuration for ".concat(recipe.getName()));
+			ActionResult actionResult = recipe.checkCorrectlyConfigured();
+			if (!actionResult.isOk()) {
+				getLog().error(actionResult.getMessage());
+				failed = true;
 			}
 		}
 		
+		if (failed) {
+			throw new MojoFailureException("One or more recipes incorrectly configured");
+		}
 	
 	}
 

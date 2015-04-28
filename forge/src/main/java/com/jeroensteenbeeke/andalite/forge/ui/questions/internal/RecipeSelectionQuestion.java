@@ -16,10 +16,10 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions.internal;
 
 import java.util.List;
 
+import com.jeroensteenbeeke.andalite.forge.ForgeException;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.AbstractQuestion;
-
 
 public class RecipeSelectionQuestion extends AbstractQuestion<ForgeRecipe> {
 	private final List<ForgeRecipe> recipes;
@@ -32,13 +32,10 @@ public class RecipeSelectionQuestion extends AbstractQuestion<ForgeRecipe> {
 	public List<ForgeRecipe> getRecipes() {
 		return recipes;
 	}
-	
+
 	@Override
-	public Action onAnswer(ForgeRecipe answer) {
+	public Action onAnswer(ForgeRecipe answer) throws ForgeException {
 		return answer.onSelected();
 	}
-	
-	
-	
-	
+
 }

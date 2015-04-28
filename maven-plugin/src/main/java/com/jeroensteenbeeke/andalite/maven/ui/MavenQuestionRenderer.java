@@ -19,6 +19,7 @@ import java.io.File;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.andalite.forge.ForgeException;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
@@ -37,6 +38,7 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 	@Override
 	public TypedActionResult<Action> renderQuestion(
 			@Nonnull Question<?> question) {
+		try {
 		if (question instanceof SimpleQuestion) {
 			return renderSimpleQuestion((SimpleQuestion) question);
 		}
@@ -52,13 +54,17 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 		if (question instanceof RecipeSelectionQuestion) {
 			return renderRecipeSelectQuestion((RecipeSelectionQuestion) question);
 		}
+		}
+		catch (ForgeException e) {
+			return TypedActionResult.fail(e.getMessage());
+		}
 
 		return TypedActionResult.fail("Unknown question type: %s", question
 				.getClass().getName());
 	}
 
 	private TypedActionResult<Action> renderRecipeSelectQuestion(
-			RecipeSelectionQuestion question) {
+			RecipeSelectionQuestion question) throws ForgeException {
 		TypedActionResult<Integer> response = TypedActionResult.fail("");
 
 		while (!response.isOk()) {
@@ -85,7 +91,7 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 	}
 
 	private TypedActionResult<Action> renderMultipleChoiceQuestion(
-			MultipleChoiceQuestion question) {
+			MultipleChoiceQuestion question) throws ForgeException {
 		TypedActionResult<Integer> response = TypedActionResult.fail("");
 
 		while (!response.isOk()) {
@@ -112,7 +118,7 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 	}
 
 	private TypedActionResult<Action> renderFileSelectQuestion(
-			FileSelectQuestion question) {
+			FileSelectQuestion question) throws ForgeException {
 		TypedActionResult<Integer> response = TypedActionResult.fail("");
 
 		while (!response.isOk()) {
@@ -138,7 +144,7 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 				.get(response.getObject())));
 	}
 
-	private TypedActionResult<Action> renderYesNoQuestion(YesNoQuestion question) {
+	private TypedActionResult<Action> renderYesNoQuestion(YesNoQuestion question) throws ForgeException {
 		TypedActionResult<Integer> response = TypedActionResult.fail("");
 
 		while (!response.isOk()) {
@@ -158,7 +164,7 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 	}
 
 	private TypedActionResult<Action> renderSimpleQuestion(
-			SimpleQuestion question) {
+			SimpleQuestion question) throws ForgeException {
 		System.out.println(question.getQuestion());
 		String answer = System.console().readLine();
 		return TypedActionResult.ok(question.onAnswer(answer));

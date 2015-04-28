@@ -14,13 +14,32 @@
  */
 package com.jeroensteenbeeke.andalite.forge;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.forge.ui.Action;
+import java.util.Map;
 
-public interface ForgeRecipe {
-	ActionResult checkCorrectlyConfigured();
+import com.google.common.collect.ImmutableMap;
 
-	String getName();
+/**
+ * Base implementation of ForgeRecipe that enforces the {@code extraSettings}
+ * parameter and takes care of name handling
+ */
+public abstract class AbstractForgeRecipe implements ForgeRecipe {
+	private final Map<String, String> extraSettings;
 
-	Action onSelected() throws ForgeException;
+	private final String identifier;
+
+	protected AbstractForgeRecipe(Map<String, String> extraSettings, String name) {
+		super();
+		this.extraSettings = ImmutableMap.copyOf(extraSettings);
+		this.identifier = name;
+	}
+
+	@Override
+	public String getName() {
+		return identifier;
+	}
+
+	public Map<String, String> getExtraSettings() {
+		return extraSettings;
+	}
+
 }

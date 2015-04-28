@@ -17,14 +17,35 @@ package com.jeroensteenbeeke.andalite.transformation;
 import com.jeroensteenbeeke.andalite.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.transformation.navigation.BodyContainerNavigation;
 import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
+import com.jeroensteenbeeke.andalite.transformation.navigation.ParameterNavigation;
 import com.jeroensteenbeeke.andalite.transformation.operations.IMethodOperation;
 
 public class MethodOperationBuilder extends
 		AbstractOperationBuilder<AnalyzedMethod, IMethodOperation> {
 
+	public static class ParameterLocator {
+		private final MethodOperationBuilder parent;
+		
+		private final String name;
+		
+		private ParameterLocator(MethodOperationBuilder parent, String name) {
+			super();
+			this.parent = parent;
+			this.name = name;
+		}
+
+		public ParameterScopeOperationBuilder ofType(String type) {
+			return new ParameterScopeOperationBuilder(parent.getCollector(), new ParameterNavigation(parent.getNavigation(), type, name));
+		}
+	}
+
 	MethodOperationBuilder(IStepCollector collector,
 			INavigation<AnalyzedMethod> navigation) {
 		super(collector, navigation);
+	}
+	
+	public ParameterLocator forParameterNamed(String name) {
+		return new ParameterLocator(this, name);
 	}
 
 	public BodyContainerOperationBuilder inBody() {

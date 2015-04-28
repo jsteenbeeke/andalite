@@ -12,12 +12,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.forge.ui;
+package com.jeroensteenbeeke.andalite.transformation.operations.impl;
 
-import com.jeroensteenbeeke.andalite.forge.ForgeException;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedParameter;
+import com.jeroensteenbeeke.andalite.transformation.operations.IParameterOperation;
 
-public interface Question<T> extends Action {
-	String getQuestion();
+public class EnsureParameterAnnotation extends
+		AbstractEnsureAnnotation<AnalyzedParameter> implements IParameterOperation {
+	public EnsureParameterAnnotation(String type) {
+		super(type);
+	}
 
-	Action onAnswer(T answer) throws ForgeException;
 }

@@ -12,12 +12,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.forge.ui;
+package com.jeroensteenbeeke.andalite.transformation;
 
-import com.jeroensteenbeeke.andalite.forge.ForgeException;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedParameter;
+import com.jeroensteenbeeke.andalite.transformation.navigation.INavigation;
+import com.jeroensteenbeeke.andalite.transformation.operations.IParameterOperation;
 
-public interface Question<T> extends Action {
-	String getQuestion();
+public class ParameterScopeOperationBuilder extends AbstractOperationBuilder<AnalyzedParameter, IParameterOperation> {
 
-	Action onAnswer(T answer) throws ForgeException;
+	ParameterScopeOperationBuilder(IStepCollector collector,
+			INavigation<AnalyzedParameter> navigation) {
+		super(collector, navigation);
+	}
+
 }

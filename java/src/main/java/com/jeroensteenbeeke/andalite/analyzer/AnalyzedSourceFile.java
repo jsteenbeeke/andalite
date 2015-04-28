@@ -40,12 +40,15 @@ public final class AnalyzedSourceFile extends Locatable {
 	private final Location packageDefinitionLocation;
 
 	private final File originalFile;
+	
+	private final String compilationUnitName;
 
 	public AnalyzedSourceFile(@Nonnull Location location,
 			@Nonnull File originalFile, @Nonnull String packageName,
 			@Nonnull Location packageDefinitionLocation) {
 		super(location);
 		this.originalFile = originalFile;
+		this.compilationUnitName = extractCompilationUnitName(originalFile);
 		this.packageName = packageName;
 		this.packageDefinitionLocation = packageDefinitionLocation;
 		this.classes = Lists.newArrayList();
@@ -55,6 +58,16 @@ public final class AnalyzedSourceFile extends Locatable {
 		this.imports = Lists.newArrayList();
 	}
 
+	private static String extractCompilationUnitName(File file) {
+		final String fileName = file.getName();
+		
+		return fileName.substring(0, fileName.length()-5);
+	}
+
+	public String getCompilationUnitName() {
+		return compilationUnitName;
+	}
+	
 	public Location getPackageDefinitionLocation() {
 		return packageDefinitionLocation;
 	}

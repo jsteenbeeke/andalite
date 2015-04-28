@@ -12,12 +12,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.forge.ui;
+package com.jeroensteenbeeke.andalite.forge;
 
-import com.jeroensteenbeeke.andalite.forge.ForgeException;
+public class ForgeException extends Exception {
+	private static final long serialVersionUID = 1L;
 
-public interface Question<T> extends Action {
-	String getQuestion();
+	public ForgeException(String messageFormat, Object... params) {
+		super(format(messageFormat, params));
+	}
 
-	Action onAnswer(T answer) throws ForgeException;
+	public ForgeException(Throwable cause, String messageFormat,
+			Object... params) {
+		super(format(messageFormat, params), cause);
+	}
+
+	private static String format(String messageFormat, Object[] params) {
+		if (params.length == 0) {
+			return messageFormat;
+		}
+
+		return String.format(messageFormat, params);
+	}
+
 }

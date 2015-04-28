@@ -12,12 +12,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.forge.ui;
+package com.jeroensteenbeeke.andalite.transformation.operations;
 
-import com.jeroensteenbeeke.andalite.forge.ForgeException;
+import com.jeroensteenbeeke.andalite.analyzer.AnalyzedParameter;
 
-public interface Question<T> extends Action {
-	String getQuestion();
+public interface IParameterOperation extends IOperation<AnalyzedParameter> {
 
-	Action onAnswer(T answer) throws ForgeException;
 }

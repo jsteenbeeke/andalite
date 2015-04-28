@@ -165,6 +165,10 @@ public class Operations {
 			@Nonnull String annotation) {
 		return new EnsureMethodAnnotation(annotation);
 	}
+	
+	public static IParameterOperation hasParameterAnnotation(@Nonnull String annotation) {
+		return new EnsureParameterAnnotation(annotation);
+	}
 
 	public static IBodyContainerOperation hasIfStatement(
 			@Nonnull String filterCondition) {
