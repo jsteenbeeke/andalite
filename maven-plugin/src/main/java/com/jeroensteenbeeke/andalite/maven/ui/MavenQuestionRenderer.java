@@ -87,7 +87,7 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 		}
 
 		return TypedActionResult.ok(question.onAnswer(question.getRecipes()
-				.get(response.getObject())));
+				.get(response.getObject()-1)));
 	}
 
 	private TypedActionResult<Action> renderMultipleChoiceQuestion(
@@ -114,7 +114,7 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 		}
 
 		return TypedActionResult.ok(question.onAnswer(question.getChoices()
-				.get(response.getObject())));
+				.get(response.getObject()-1)));
 	}
 
 	private TypedActionResult<Action> renderFileSelectQuestion(
@@ -141,7 +141,7 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 		}
 
 		return TypedActionResult.ok(question.onAnswer(question.getChoices()
-				.get(response.getObject())));
+				.get(response.getObject()-1)));
 	}
 
 	private TypedActionResult<Action> renderYesNoQuestion(YesNoQuestion question) throws ForgeException {
