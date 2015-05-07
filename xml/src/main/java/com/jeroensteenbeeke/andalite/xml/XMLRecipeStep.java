@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 
@@ -58,8 +59,7 @@ public class XMLRecipeStep<T extends ILocatable> {
 						e.getMessage());
 			}
 			for (Transformation transformation : transformations) {
-				ActionResult result = transformation.applyTo(file
-						.getOriginalFile());
+				ActionResult result = transformation.applyTo(file);
 				if (!result.isOk()) {
 					return result;
 				}

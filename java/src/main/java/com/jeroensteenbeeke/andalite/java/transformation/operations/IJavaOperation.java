@@ -17,12 +17,14 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.core.IOutputable;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 
 public interface IJavaOperation<T extends IOutputable> {
-	List<Transformation> perform(T input) throws OperationException;
+	List<Transformation> perform(@Nonnull T input) throws OperationException;
 
 	String getDescription();
 }
