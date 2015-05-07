@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite;
 
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.*;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -24,11 +24,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.jeroensteenbeeke.andalite.analyzer.*;
-import com.jeroensteenbeeke.andalite.analyzer.annotation.AnnotationValue;
-import com.jeroensteenbeeke.andalite.analyzer.annotation.ArrayValue;
-import com.jeroensteenbeeke.andalite.analyzer.annotation.BaseValue;
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.andalite.java.analyzer.*;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.AnnotationValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.ArrayValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
 
 public class AnalyzerTest extends DummyAwareTest {
 	private static final String DUMMY_PACKAGE = "com.jeroensteenbeeke.andalite.dummy";

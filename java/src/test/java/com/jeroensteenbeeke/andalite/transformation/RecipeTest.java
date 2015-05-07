@@ -15,10 +15,10 @@
 
 package com.jeroensteenbeeke.andalite.transformation;
 
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.*;
 import static com.jeroensteenbeeke.andalite.core.ResultMatchers.*;
-import static com.jeroensteenbeeke.andalite.transformation.ClassLocator.*;
-import static com.jeroensteenbeeke.andalite.transformation.Operations.*;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.*;
+import static com.jeroensteenbeeke.andalite.java.transformation.ClassLocator.*;
+import static com.jeroensteenbeeke.andalite.java.transformation.Operations.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -29,17 +29,20 @@ import java.util.List;
 import org.junit.Test;
 
 import com.jeroensteenbeeke.andalite.DummyAwareTest;
-import com.jeroensteenbeeke.andalite.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedAnnotation;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.analyzer.AnalyzedSourceFile;
-import com.jeroensteenbeeke.andalite.analyzer.ClassAnalyzer;
-import com.jeroensteenbeeke.andalite.analyzer.annotation.AnnotationValue;
-import com.jeroensteenbeeke.andalite.analyzer.annotation.ArrayValue;
-import com.jeroensteenbeeke.andalite.analyzer.annotation.BaseValue;
-import com.jeroensteenbeeke.andalite.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.AnnotationValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.ArrayValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
+import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
+import com.jeroensteenbeeke.andalite.java.transformation.Operations;
+import com.jeroensteenbeeke.andalite.java.transformation.RecipeBuilder;
 
 public class RecipeTest extends DummyAwareTest {
 	@Test
@@ -122,7 +125,7 @@ public class RecipeTest extends DummyAwareTest {
 				.withParameter("bar").ofType("String").named("setBar").inBody()
 				.ensure(hasStatement("this.bar = bar;"));
 
-		Recipe recipe = builder.build();
+		JavaRecipe recipe = builder.build();
 
 		File bare = getDummy("BareClass");
 

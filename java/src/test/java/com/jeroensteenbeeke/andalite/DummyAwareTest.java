@@ -22,7 +22,7 @@ import org.junit.After;
 
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
-import com.jeroensteenbeeke.andalite.analyzer.ClassAnalyzer;
+import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 
 public abstract class DummyAwareTest {
 	private final Set<File> dummyFiles = Sets.newConcurrentHashSet();

@@ -50,6 +50,12 @@
 	</prerequisites>
 
 	<dependencies>
+		<!-- Sibling projects -->
+		<dependency>
+			<groupId>com.jeroensteenbeeke.andalite</groupId>
+			<artifactId>andalite-core</artifactId>
+		</dependency>
+		
 		<!-- Test Dependencies -->
 		<dependency>
 			<groupId>junit</groupId>

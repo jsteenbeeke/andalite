@@ -17,14 +17,14 @@ package com.jeroensteenbeeke.andalite.forge.ui.actions;
 import java.io.File;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.transformation.Recipe;
+import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 
 public class JavaTransformation extends AbstractCompoundableAction {
 	private final File targetFile;
 
-	private final Recipe recipe;
+	private final JavaRecipe recipe;
 
-	public JavaTransformation(File targetFile, Recipe recipe) {
+	public JavaTransformation(File targetFile, JavaRecipe recipe) {
 		this.targetFile = targetFile;
 		this.recipe = recipe;
 	}

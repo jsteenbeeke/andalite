@@ -14,8 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.analyzer;
 
-import static com.jeroensteenbeeke.andalite.analyzer.matchers.AndaliteMatchers.*;
 import static com.jeroensteenbeeke.andalite.core.ResultMatchers.*;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -26,12 +26,17 @@ import java.util.List;
 import org.junit.Test;
 
 import com.jeroensteenbeeke.andalite.DummyAwareTest;
-import com.jeroensteenbeeke.andalite.analyzer.statements.BlockStatement;
-import com.jeroensteenbeeke.andalite.analyzer.statements.IfStatement;
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
-import com.jeroensteenbeeke.andalite.transformation.ClassLocator;
-import com.jeroensteenbeeke.andalite.transformation.Operations;
-import com.jeroensteenbeeke.andalite.transformation.RecipeBuilder;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.BlockStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
+import com.jeroensteenbeeke.andalite.java.transformation.ClassLocator;
+import com.jeroensteenbeeke.andalite.java.transformation.Operations;
+import com.jeroensteenbeeke.andalite.java.transformation.RecipeBuilder;
 
 public class IfStatementTest extends DummyAwareTest {
 	@Test
