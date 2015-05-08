@@ -14,16 +14,11 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-import java.util.List;
-
 import javax.annotation.Nonnull;
 
-import com.jeroensteenbeeke.andalite.core.Transformation;
-import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
-
-public interface IXMLOperation<T> {
+public interface IXMLOperation {
 	@Nonnull
-	List<Transformation> perform(@Nonnull T target) throws OperationException;
+	String toXSLTTemplate();
 
 	@Nonnull
 	String getDescription();

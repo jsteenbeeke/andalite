@@ -16,59 +16,59 @@
 package com.jeroensteenbeeke.andalite.xml;
 
 import java.io.File;
-import java.util.List;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.core.Transformation;
-import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
-import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
+import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.andalite.xml.util.XMLUtil;
 
-public class XMLRecipeStep<T extends ILocatable> {
+public class XMLRecipeStep {
 	private final Logger logger = LoggerFactory.getLogger(XMLRecipeStep.class);
 
-	private final IXMLNavigation<T> navigation;
+	private final IXMLNavigation navigation;
 
-	private final IXMLOperation<T> operation;
+	private final IXMLOperation operation;
 
-	XMLRecipeStep(IXMLNavigation<T> navigation, IXMLOperation<T> operation) {
+	public XMLRecipeStep(IXMLNavigation navigation, IXMLOperation operation) {
 		super();
 		this.navigation = navigation;
 		this.operation = operation;
 	}
 
 	public ActionResult perform(File file) {
-		T target;
 		try {
-			target = navigation.navigate(file);
-		} catch (NavigationException e) {
+
+			TypedActionResult<Document> documentResult = XMLUtil.readFile(file);
+			if (!documentResult.isOk()) {
+				return documentResult;
+			}
+
+			TypedActionResult<Transformer> transformerResult = XMLUtil
+					.createTransformer(navigation.getXPathExpression(),
+							operation.toXSLTTemplate());
+			if (!transformerResult.isOk()) {
+				return transformerResult;
+			}
+
+			Transformer transformer = transformerResult.getObject();
+
+			transformer.transform(new StreamSource(file),
+					new StreamResult(file));
+
+			return ActionResult.ok();
+		} catch (TransformerException e) {
 			logger.error(e.getMessage(), e);
 			return ActionResult.error(String.format(
 					"Navigation (%s) failed: %s", navigation.getDescription(),
 					e.getMessage()));
-		}
-		if (target != null) {
-			List<Transformation> transformations;
-			try {
-				transformations = operation.perform(target);
-			} catch (OperationException e) {
-				logger.error(e.getMessage(), e);
-				return ActionResult.error("Operation cannot be performed: %s",
-						e.getMessage());
-			}
-			for (Transformation transformation : transformations) {
-				ActionResult result = transformation.applyTo(file);
-				if (!result.isOk()) {
-					return result;
-				}
-			}
-
-			return ActionResult.ok();
-		} else {
-			return ActionResult.error("Could not navigate to %s",
-					navigation.getDescription());
 		}
 	}
 

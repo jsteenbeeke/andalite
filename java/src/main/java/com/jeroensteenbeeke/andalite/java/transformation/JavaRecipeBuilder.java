@@ -22,10 +22,10 @@ import com.jeroensteenbeeke.andalite.core.ILocatable;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 
-public class RecipeBuilder implements IStepCollector {
+public class JavaRecipeBuilder implements IStepCollector {
 	private final List<JavaRecipeStep<?>> steps;
 
-	public RecipeBuilder() {
+	public JavaRecipeBuilder() {
 		this.steps = Lists.newArrayList();
 	}
 

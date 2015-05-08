@@ -36,7 +36,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.statements.BlockStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.ClassLocator;
 import com.jeroensteenbeeke.andalite.java.transformation.Operations;
-import com.jeroensteenbeeke.andalite.java.transformation.RecipeBuilder;
+import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 
 public class IfStatementTest extends DummyAwareTest {
 	@Test
@@ -73,7 +73,7 @@ public class IfStatementTest extends DummyAwareTest {
 
 		assertThat(ifStatement.getElseStatement(), nullValue());
 
-		RecipeBuilder builder = new RecipeBuilder();
+		JavaRecipeBuilder builder = new JavaRecipeBuilder();
 		builder.inClass(ClassLocator.publicClass()).forMethod()
 				.named("emptyIf").inBody().inIfExpression()
 				.withExpression("1 == 2").thenStatement().body()

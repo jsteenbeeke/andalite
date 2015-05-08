@@ -14,15 +14,11 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-import java.io.File;
-
 import javax.annotation.Nonnull;
 
-import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
-
-public interface IXMLNavigation<T> {
+public interface IXMLNavigation {
 	@Nonnull
-	T navigate(@Nonnull File file) throws NavigationException;
+	String getXPathExpression();
 
 	@Nonnull
 	String getDescription();

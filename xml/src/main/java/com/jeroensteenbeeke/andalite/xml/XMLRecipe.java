@@ -21,14 +21,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.andalite.xml.util.XMLUtil;
 
 public class XMLRecipe {
 	private static final Logger logger = LoggerFactory
 			.getLogger(XMLRecipe.class);
 
-	private final List<XMLRecipeStep<?>> steps;
+	private final List<XMLRecipeStep> steps;
 
-	public XMLRecipe(List<XMLRecipeStep<?>> steps) {
+	public XMLRecipe(List<XMLRecipeStep> steps) {
 		super();
 		this.steps = steps;
 	}
@@ -37,13 +38,16 @@ public class XMLRecipe {
 		logger.info("Applying transformation ({} steps) to {}", steps.size(),
 				file.getName());
 
-		for (XMLRecipeStep<?> step : steps) {
-
+		for (XMLRecipeStep step : steps) {
+			ActionResult result = step.perform(file);
+			if (!result.isOk()) {
+				return result;
+			}
 		}
 
 		logger.debug("All steps executed, checking if resulting file can be parsed");
 
-		return ActionResult.error("Not yet implemented");
+		return XMLUtil.readFile(file);
 	}
 
 }

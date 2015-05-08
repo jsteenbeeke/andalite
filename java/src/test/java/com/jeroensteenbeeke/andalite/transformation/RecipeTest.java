@@ -42,12 +42,12 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.Operations;
-import com.jeroensteenbeeke.andalite.java.transformation.RecipeBuilder;
+import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 
 public class RecipeTest extends DummyAwareTest {
 	@Test
 	public void testBuilder() throws IOException {
-		RecipeBuilder builder = new RecipeBuilder();
+		JavaRecipeBuilder builder = new JavaRecipeBuilder();
 
 		builder.atRoot().ensure(imports("javax.persistence.Entity"));
 		builder.atRoot().ensure(imports("javax.persistence.Table"));
