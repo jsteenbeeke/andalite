@@ -44,7 +44,7 @@ public class AnalyzerTest extends DummyAwareTest {
 		AnalyzedSourceFile source = result.getObject();
 
 		assertTrue(source
-				.hasImport("com.jeroensteenbeeke.andalite.analyzer.ClassAnalyzer"));
+				.hasImport("com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer"));
 	}
 
 	@Test
