@@ -77,14 +77,26 @@ public final class XMLUtil {
 	public static TypedActionResult<Transformer> createTransformer(
 			String xpathExpression, String transformation) {
 		StringBuilder stylesheet = new StringBuilder();
-		stylesheet.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+
+		stylesheet.append("<?xml version='1.0'?>\n");
+		stylesheet.append("<xsl:stylesheet version=\"1.0\"\n");
 		stylesheet
-				.append("<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n");
-		stylesheet.append("<xsl:template match=\"").append(xpathExpression)
+				.append("\txmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" >\n");
+		stylesheet
+				.append("\t<xsl:output omit-xml-declaration=\"no\" indent=\"yes\"/>\n\n");
+
+		stylesheet.append("\t<xsl:template match=\"@* | node()\">\n");
+		stylesheet.append("\t\t<xsl:copy>\n");
+		stylesheet
+				.append("\t\t\t<xsl:apply-templates select=\"@* | node()\" />\n");
+		stylesheet.append("\t\t</xsl:copy>\n");
+		stylesheet.append("\t</xsl:template>\n");
+		stylesheet.append("\t<xsl:template match=\"").append(xpathExpression)
 				.append("\">\n");
-		stylesheet.append(transformation);
-		stylesheet.append("</xsl:template>\n");
-		stylesheet.append("</xsl:stylesheet>");
+
+		stylesheet.append("\t</xsl:template>\n");
+
+		stylesheet.append("</xsl:stylesheet>\n");
 
 		StreamSource source = new StreamSource(new StringReader(
 				stylesheet.toString()));
