@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repository>
+	<things>
+		<thing id="foo" />
+	</things>
+	<stuff>
+		<widget id="1" />
+		<widget id="2" />
+		<widget id="3" />
+	</stuff>
+</repository>

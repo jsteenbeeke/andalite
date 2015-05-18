@@ -76,6 +76,20 @@ public final class XMLUtil {
 
 	public static TypedActionResult<Transformer> createTransformer(
 			String xpathExpression, String transformation) {
+		final String stylesheet = createXSLT(xpathExpression, transformation);
+
+		StreamSource source = new StreamSource(new StringReader(
+				stylesheet.toString()));
+		try {
+			return TypedActionResult.ok(transformerFactory
+					.newTransformer(source));
+		} catch (TransformerConfigurationException e) {
+			return TypedActionResult.fail(e.getMessage());
+		}
+	}
+
+	public static String createXSLT(String xpathExpression,
+			String transformation) {
 		StringBuilder stylesheet = new StringBuilder();
 
 		stylesheet.append("<?xml version='1.0'?>\n");
@@ -94,17 +108,11 @@ public final class XMLUtil {
 		stylesheet.append("\t<xsl:template match=\"").append(xpathExpression)
 				.append("\">\n");
 
+		stylesheet.append(transformation);
+
 		stylesheet.append("\t</xsl:template>\n");
 
 		stylesheet.append("</xsl:stylesheet>\n");
-
-		StreamSource source = new StreamSource(new StringReader(
-				stylesheet.toString()));
-		try {
-			return TypedActionResult.ok(transformerFactory
-					.newTransformer(source));
-		} catch (TransformerConfigurationException e) {
-			return TypedActionResult.fail(e.getMessage());
-		}
+		return stylesheet.toString();
 	}
 }
