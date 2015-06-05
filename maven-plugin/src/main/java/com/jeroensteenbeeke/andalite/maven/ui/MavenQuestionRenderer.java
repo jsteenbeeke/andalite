@@ -25,6 +25,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.FileSelectQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.RetryQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.SimpleQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.YesNoQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.internal.RecipeSelectionQuestion;
@@ -54,6 +55,7 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 		if (question instanceof RecipeSelectionQuestion) {
 			return renderRecipeSelectQuestion((RecipeSelectionQuestion) question);
 		}
+		if (question instanceof RetryQuestion) {
 		}
 		catch (ForgeException e) {
 			return TypedActionResult.fail(e.getMessage());
@@ -87,7 +89,7 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 		}
 
 		return TypedActionResult.ok(question.onAnswer(question.getRecipes()
-				.get(response.getObject()-1)));
+				.get(response.getObject() - 1)));
 	}
 
 	private TypedActionResult<Action> renderMultipleChoiceQuestion(
@@ -114,7 +116,7 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 		}
 
 		return TypedActionResult.ok(question.onAnswer(question.getChoices()
-				.get(response.getObject()-1)));
+				.get(response.getObject() - 1)));
 	}
 
 	private TypedActionResult<Action> renderFileSelectQuestion(
@@ -141,10 +143,11 @@ public class MavenQuestionRenderer implements QuestionRenderer {
 		}
 
 		return TypedActionResult.ok(question.onAnswer(question.getChoices()
-				.get(response.getObject()-1)));
+				.get(response.getObject() - 1)));
 	}
 
-	private TypedActionResult<Action> renderYesNoQuestion(YesNoQuestion question) throws ForgeException {
+	private TypedActionResult<Action> renderYesNoQuestion(YesNoQuestion question)
+			throws ForgeException {
 		TypedActionResult<Integer> response = TypedActionResult.fail("");
 
 		while (!response.isOk()) {
