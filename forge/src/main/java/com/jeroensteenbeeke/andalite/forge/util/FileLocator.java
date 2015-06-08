@@ -7,16 +7,10 @@ public class FileLocator {
 	private FileLocator() {
 	}
 
-	public InModuleLocator inModule(String moduleName) {
+	public static InModuleLocator inModule(String moduleName)
+			throws FileLocatorException {
 		File module = new File(moduleName);
-		if (!module.exists()) {
-			throw new IllegalArgumentException(String.format(
-					"Module %s does not exist", moduleName));
-		}
-		if (!module.isDirectory()) {
-			throw new IllegalArgumentException(String.format(
-					"Module %s is not a directory", moduleName));
-		}
+		checkFile(module);
 
 		return new InModuleLocator(module);
 	}
@@ -41,48 +35,67 @@ public class FileLocator {
 			this.moduleFolder = moduleFolder;
 		}
 
-		public PackageLocator mainSources() {
-			return new PackageLocator(new File(new File(new File(moduleFolder,
-					SRC), MAIN), JAVA));
+		public InPackageLocator mainSources() throws FileLocatorException {
+			return new InPackageLocator(new File(new File(new File(
+					moduleFolder, SRC), MAIN), JAVA));
 		}
 
-		public PackageLocator testSources() {
-			return new PackageLocator(new File(new File(new File(moduleFolder,
-					SRC), TEST), JAVA));
+		public InPackageLocator testSources() throws FileLocatorException {
+			return new InPackageLocator(new File(new File(new File(
+					moduleFolder, SRC), TEST), JAVA));
 		}
 
-		public PackageLocator mainResources() {
-			return new PackageLocator(new File(new File(new File(moduleFolder,
-					SRC), MAIN), RESOURCES));
+		public InPackageLocator mainResources() throws FileLocatorException {
+			return new InPackageLocator(new File(new File(new File(
+					moduleFolder, SRC), MAIN), RESOURCES));
 		}
 
-		public PackageLocator testResources() {
-			return new PackageLocator(new File(new File(new File(moduleFolder,
-					SRC), TEST), RESOURCES));
+		public InPackageLocator testResources() throws FileLocatorException {
+			return new InPackageLocator(new File(new File(new File(
+					moduleFolder, SRC), TEST), RESOURCES));
 		}
 
-		public InPackageLocator webappSources() {
+		public InPackageLocator webappSources() throws FileLocatorException {
 			return new InPackageLocator(new File(new File(new File(
 					moduleFolder, SRC), MAIN), WEBAPP));
 		}
 	}
 
-	public static class PackageLocator {
-		private final File contextFolder;
-
-		private PackageLocator(File contextFolder) {
-			this.contextFolder = contextFolder;
-		}
-
-	}
-
 	public static class InPackageLocator {
 		private final File contextFolder;
 
-		private InPackageLocator(File contextFolder) {
+		private InPackageLocator(File contextFolder)
+				throws FileLocatorException {
 			this.contextFolder = contextFolder;
+			checkFile(contextFolder);
+		}
+
+		public InPackageLocator inPackage(String packageName)
+				throws FileLocatorException {
+			String[] packages = packageName.split("\\.");
+			File next = contextFolder;
+			for (String p : packages) {
+				next = new File(next, p);
+				checkFile(next);
+			}
+
+			return new InPackageLocator(next);
+		}
+
+		public File getFile(String filename) {
+			return new File(contextFolder, filename);
 		}
 
 	}
 
+	private static void checkFile(File next) throws FileLocatorException {
+		if (!next.exists()) {
+			throw new FileLocatorException("File %s does not exist",
+					next.getAbsolutePath());
+		}
+		if (!next.isDirectory()) {
+			throw new FileLocatorException("File %s is not a directory",
+					next.getAbsolutePath());
+		}
+	}
 }

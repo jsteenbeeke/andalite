@@ -16,6 +16,9 @@ package com.jeroensteenbeeke.andalite.forge;
 
 import java.util.Map;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.ImmutableMap;
 
 /**
@@ -38,8 +41,13 @@ public abstract class AbstractForgeRecipe implements ForgeRecipe {
 		return identifier;
 	}
 
-	public Map<String, String> getExtraSettings() {
+	@Nonnull
+	public final Map<String, String> getExtraSettings() {
 		return extraSettings;
 	}
 
+	@CheckForNull
+	public final String getSetting(String key) {
+		return extraSettings.get(key);
+	}
 }
