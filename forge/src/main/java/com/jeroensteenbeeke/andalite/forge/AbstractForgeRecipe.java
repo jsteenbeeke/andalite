@@ -27,7 +27,7 @@ public abstract class AbstractForgeRecipe implements ForgeRecipe {
 
 	private final String identifier;
 
-	protected AbstractForgeRecipe(Map<String, String> extraSettings, String name) {
+	protected AbstractForgeRecipe(String name, Map<String, String> extraSettings) {
 		super();
 		this.extraSettings = ImmutableMap.copyOf(extraSettings);
 		this.identifier = name;
