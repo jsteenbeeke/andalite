@@ -19,6 +19,7 @@ import java.util.List;
 import com.jeroensteenbeeke.andalite.forge.ForgeException;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
+import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.AbstractQuestion;
 
 public class RecipeSelectionQuestion extends AbstractQuestion<ForgeRecipe> {
@@ -34,7 +35,8 @@ public class RecipeSelectionQuestion extends AbstractQuestion<ForgeRecipe> {
 	}
 
 	@Override
-	public Action onAnswer(ForgeRecipe answer) throws ForgeException {
+	public Action onAnswer(ForgeRecipe answer, FeedbackHandler feedbackHandler)
+			throws ForgeException {
 		return answer.onSelected();
 	}
 

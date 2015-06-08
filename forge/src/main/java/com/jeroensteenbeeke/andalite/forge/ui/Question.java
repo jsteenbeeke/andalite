@@ -19,5 +19,5 @@ import com.jeroensteenbeeke.andalite.forge.ForgeException;
 public interface Question<T> extends Action {
 	String getQuestion();
 
-	Action onAnswer(T answer) throws ForgeException;
+	Action onAnswer(T answer, FeedbackHandler handler) throws ForgeException;
 }
