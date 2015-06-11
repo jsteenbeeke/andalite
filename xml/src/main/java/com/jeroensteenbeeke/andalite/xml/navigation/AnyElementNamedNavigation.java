@@ -17,17 +17,21 @@ package com.jeroensteenbeeke.andalite.xml.navigation;
 import com.jeroensteenbeeke.andalite.xml.IXMLNavigation;
 
 public class AnyElementNamedNavigation implements IXMLNavigation {
+	private final String elementName;
+
+	public AnyElementNamedNavigation(String elementName) {
+		super();
+		this.elementName = elementName;
+	}
 
 	@Override
 	public String getXPathExpression() {
-		// TODO Auto-generated method stub
-		return null;
+		return String.format("//%s", elementName);
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return String.format("Any descending element named %s", elementName);
 	}
 
 }
