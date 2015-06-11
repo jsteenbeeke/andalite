@@ -14,12 +14,20 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-public class XMLElementContextBuilder extends AbstractContextBuilder<IElementOperation> {
+import com.jeroensteenbeeke.andalite.xml.navigation.SubElementNavigation;
+
+public class XMLElementContextBuilder extends
+		AbstractContextBuilder<IElementOperation> {
 
 	public XMLElementContextBuilder(IStepCollector collector,
 			IXMLNavigation navigation) {
 		super(collector, navigation);
 	}
 
-	
+	public XMLAttributeFilterableElementContextBuilder forElement(String element) {
+
+		return new XMLAttributeFilterableElementContextBuilder(this,
+				new SubElementNavigation(getNavigation(), element));
+	}
+
 }

@@ -15,11 +15,15 @@
 package com.jeroensteenbeeke.andalite.forge;
 
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 
 /**
  * Base implementation of ForgeRecipe that enforces the {@code extraSettings}
@@ -49,5 +53,22 @@ public abstract class AbstractForgeRecipe implements ForgeRecipe {
 	@CheckForNull
 	public final String getSetting(String key) {
 		return extraSettings.get(key);
+	}
+
+	protected final ActionResult ensureSettings(String... keys) {
+		Set<String> missing = Sets.newTreeSet();
+
+		for (String key : keys) {
+			if (!extraSettings.containsKey(key)) {
+				missing.add(key);
+			}
+		}
+
+		if (!missing.isEmpty()) {
+			return ActionResult.error("Missing configuration options: %s",
+					Joiner.on(", ").join(missing));
+		}
+
+		return ActionResult.ok();
 	}
 }
