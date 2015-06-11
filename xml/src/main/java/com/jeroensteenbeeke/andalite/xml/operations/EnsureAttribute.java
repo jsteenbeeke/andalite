@@ -1,8 +1,8 @@
 package com.jeroensteenbeeke.andalite.xml.operations;
 
-import com.jeroensteenbeeke.andalite.xml.IXMLOperation;
+import com.jeroensteenbeeke.andalite.xml.IElementOperation;
 
-public class EnsureAttribute implements IXMLOperation {
+public class EnsureAttribute implements IElementOperation {
 	private final String attributeName;
 
 	private final String value;

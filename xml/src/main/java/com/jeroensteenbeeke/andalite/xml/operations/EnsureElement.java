@@ -3,9 +3,9 @@ package com.jeroensteenbeeke.andalite.xml.operations;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.jeroensteenbeeke.andalite.xml.IXMLOperation;
+import com.jeroensteenbeeke.andalite.xml.IElementOperation;
 
-public class EnsureElement implements IXMLOperation {
+public class EnsureElement implements IElementOperation {
 	private final String elementName;
 
 	private final Map<String, String> initialAttributes;
