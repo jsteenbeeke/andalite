@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.Lists;
+import com.jeroensteenbeeke.andalite.xml.navigation.AnyElementNamedNavigation;
 import com.jeroensteenbeeke.andalite.xml.navigation.RootElementNavigation;
 
 public class XMLRecipeBuilder implements IStepCollector {
@@ -19,7 +20,7 @@ public class XMLRecipeBuilder implements IStepCollector {
 	}
 	
 	public XMLElementContextBuilder forAnyElement(String elementName) {
-		return new XMLElementContextBuilder(String.format("//%s", elementName), this);
+		return new XMLElementContextBuilder(this, new AnyElementNamedNavigation(elementName));
 	}
 	
 	@Override
