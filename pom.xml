@@ -313,7 +313,7 @@
 		<javaee.version>7.0</javaee.version>
 		<jsr305.version>3.0.0</jsr305.version>
 		<junit.version>4.12</junit.version>
-		<parser.version>1.0.16-SNAPSHOT</parser.version>
+		<parser.version>1.0.17-SNAPSHOT</parser.version>
 		<slf4j.api.version>1.7.10</slf4j.api.version>
 
 		<!-- Plugin Versions -->
