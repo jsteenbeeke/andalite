@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.xml;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -30,10 +31,12 @@ import javax.xml.xpath.XPathFactory;
 import org.junit.AfterClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 
@@ -43,13 +46,21 @@ public class XMLTest {
 
 	private static Set<File> createdTempFiles = Sets.newHashSet();
 
-	protected Node extractNode(File xmlFile, String xpathExpression)
+	protected List<Node> extractNodes(File xmlFile, String xpathExpression)
 			throws SAXException, IOException, ParserConfigurationException,
 			XPathExpressionException {
 		Document doc = DOCUMENT_BUILDER.parse(xmlFile);
 		XPathExpression expression = xpath.compile(xpathExpression);
-		Node node = (Node) expression.evaluate(doc, XPathConstants.NODE);
-		return node;
+		NodeList nodes = (NodeList) expression.evaluate(doc,
+				XPathConstants.NODESET);
+
+		List<Node> rv = Lists.newArrayListWithExpectedSize(nodes.getLength());
+
+		for (int i = 0; i < nodes.getLength(); i++) {
+			rv.add(nodes.item(i));
+		}
+
+		return rv;
 	}
 
 	protected static DocumentBuilder createDocumentBuilder() {

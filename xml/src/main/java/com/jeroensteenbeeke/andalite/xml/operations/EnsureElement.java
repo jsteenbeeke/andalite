@@ -18,6 +18,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -101,14 +104,34 @@ public class EnsureElement implements IElementOperation {
 
 	@Override
 	public void transform(Element node) {
-		Element newElement = node.getOwnerDocument().createElement(elementName);
+		int c = 0;
+		NodeList elementsByTagName = node.getElementsByTagName(elementName);
+		elements: for (int i = 0; i < elementsByTagName.getLength(); i++) {
+			Node item = elementsByTagName.item(i);
+			NamedNodeMap attributes = item.getAttributes();
 
-		node.appendChild(newElement);
+			for (Entry<String, String> entry : initialAttributes.entrySet()) {
+				Node attributeNode = attributes.getNamedItem(entry.getKey());
+				if (attributeNode == null
+						|| !entry.getValue().equals(
+								attributeNode.getNodeValue())) {
+					continue elements;
+				}
+			}
 
-		initialAttributes.forEach((k, v) -> {
-			newElement.setAttribute(k, v);
-		});
+			c++;
+		}
 
+		if (c == 0) {
+			Element newElement = node.getOwnerDocument().createElement(
+					elementName);
+
+			node.appendChild(newElement);
+
+			initialAttributes.forEach((k, v) -> {
+				newElement.setAttribute(k, v);
+			});
+		}
 	}
 
 	@Override

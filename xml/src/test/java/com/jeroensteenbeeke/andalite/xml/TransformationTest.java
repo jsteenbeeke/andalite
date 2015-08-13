@@ -18,6 +18,7 @@ import static com.jeroensteenbeeke.andalite.xml.XMLOperations.*;
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.List;
 
 import org.junit.Test;
 import org.w3c.dom.Node;
@@ -43,11 +44,13 @@ public class TransformationTest extends XMLTest {
 
 		assertTrue(result.isOk());
 
-		Node node = extractNode(inputOutput, widgetExpression);
+		List<Node> nodes = extractNodes(inputOutput, widgetExpression);
 
-		assertNotNull(node);
+		assertNotNull(nodes);
+		assertEquals(1, nodes.size());
 
-		Node scopeAttribute = node.getAttributes().getNamedItem("scope");
+		Node scopeAttribute = nodes.get(0).getAttributes()
+				.getNamedItem("scope");
 
 		assertEquals("test", scopeAttribute.getNodeValue());
 
@@ -73,11 +76,13 @@ public class TransformationTest extends XMLTest {
 
 		assertTrue(result.isOk());
 
-		Node node = extractNode(inputOutput, widgetExpression);
+		List<Node> nodes = extractNodes(inputOutput, widgetExpression);
 
-		assertNotNull(node);
+		assertNotNull(nodes);
+		assertEquals(1, nodes.size());
 
-		Node scopeAttribute = node.getAttributes().getNamedItem("scope");
+		Node scopeAttribute = nodes.get(0).getAttributes()
+				.getNamedItem("scope");
 
 		assertEquals("test", scopeAttribute.getNodeValue());
 
@@ -100,11 +105,13 @@ public class TransformationTest extends XMLTest {
 
 		assertTrue(result.isOk());
 
-		Node node = extractNode(inputOutput, "//widget[@id='1']/component");
+		List<Node> nodes = extractNodes(inputOutput,
+				"//widget[@id='1']/component[@id]");
 
-		assertNotNull(node);
+		assertNotNull(nodes);
+		assertEquals(1, nodes.size());
 
-		Node scopeAttribute = node.getAttributes().getNamedItem("id");
+		Node scopeAttribute = nodes.get(0).getAttributes().getNamedItem("id");
 
 		assertEquals("engine", scopeAttribute.getNodeValue());
 
@@ -131,11 +138,13 @@ public class TransformationTest extends XMLTest {
 
 		assertTrue(result.isOk());
 
-		Node node = extractNode(inputOutput, "//widget[@id='1']/component");
+		List<Node> nodes = extractNodes(inputOutput,
+				"//widget[@id='1']/component[@id]");
 
-		assertNotNull(node);
+		assertNotNull(nodes);
+		assertEquals(1, nodes.size());
 
-		Node scopeAttribute = node.getAttributes().getNamedItem("id");
+		Node scopeAttribute = nodes.get(0).getAttributes().getNamedItem("id");
 
 		assertEquals("engine", scopeAttribute.getNodeValue());
 
