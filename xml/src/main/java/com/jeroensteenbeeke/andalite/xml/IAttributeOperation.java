@@ -14,6 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-public interface IAttributeOperation extends IXMLOperation {
+import org.w3c.dom.Attr;
+
+public interface IAttributeOperation extends IXMLOperation<Attr> {
 
 }

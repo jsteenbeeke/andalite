@@ -20,8 +20,8 @@ import org.w3c.dom.Node;
 
 public interface IXMLOperation<T extends Node> {
 	@Nonnull
-	IXMLTransformationStep<T> getTransformationStep();
-	
+	void transform(T node);
+
 	@Nonnull
 	String getDescription();
 }

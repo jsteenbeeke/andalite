@@ -36,7 +36,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 
 public class XMLTransformation<T extends Node> {
 	private static final DocumentBuilderFactory dbFactory = createDocumentBuilderFactory();
@@ -55,13 +54,11 @@ public class XMLTransformation<T extends Node> {
 		this.operation = operation;
 	}
 
-	public ActionResult applyTo(File file)  {
+	public ActionResult applyTo(File file) {
 		try {
 			DocumentBuilder builder = dbFactory.newDocumentBuilder();
 
 			Document document = builder.parse(file);
-
-			IXMLTransformationStep<T> step = operation.getTransformationStep();
 
 			XPath xpath = xpFactory.newXPath();
 			NodeList results = (NodeList) xpath.evaluate(
@@ -71,7 +68,7 @@ public class XMLTransformation<T extends Node> {
 			for (int i = 0; i < results.getLength(); i++) {
 				@SuppressWarnings("unchecked")
 				T node = (T) results.item(i);
-				step.transform(node);
+				operation.transform(node);
 			}
 
 			// Document already changed at this point, this is just the most
@@ -80,11 +77,12 @@ public class XMLTransformation<T extends Node> {
 			Transformer transformer = tfFactory.newTransformer();
 			transformer.transform(new DOMSource(document), new StreamResult(
 					file));
-			
+
 			return ActionResult.ok();
 		} catch (ParserConfigurationException | SAXException | IOException
 				| XPathExpressionException | TransformerException cause) {
-			return ActionResult.error("Could not perform transformation: %s", cause.getMessage());
+			return ActionResult.error("Could not perform transformation: %s",
+					cause.getMessage());
 		}
 
 	}

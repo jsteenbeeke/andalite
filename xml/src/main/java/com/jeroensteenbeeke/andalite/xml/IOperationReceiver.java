@@ -14,6 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-public interface IOperationReceiver<T extends IXMLOperation> {
+import org.w3c.dom.Node;
+
+public interface IOperationReceiver<N extends Node, T extends IXMLOperation<N>> {
 	void ensure(T operation);
 }

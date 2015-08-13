@@ -23,7 +23,7 @@ import com.jeroensteenbeeke.andalite.xml.navigation.AnyElementNamedNavigation;
 import com.jeroensteenbeeke.andalite.xml.navigation.RootElementNavigation;
 
 public class XMLRecipeBuilder implements IStepCollector {
-	private final List<XMLRecipeStep> steps;
+	private final List<XMLRecipeStep<?>> steps;
 
 	public XMLRecipeBuilder() {
 		this.steps = Lists.newLinkedList();
@@ -33,13 +33,14 @@ public class XMLRecipeBuilder implements IStepCollector {
 		return new XMLElementContextBuilder(this, new RootElementNavigation());
 	}
 
-	public XMLElementContextBuilder forAnyElement(String elementName) {
-		return new XMLElementContextBuilder(this,
+	public XMLAttributeFilterableElementContextBuilder forAnyElement(
+			String elementName) {
+		return new XMLAttributeFilterableElementContextBuilder(this,
 				new AnyElementNamedNavigation(elementName));
 	}
 
 	@Override
-	public void addStep(@Nonnull XMLRecipeStep step) {
+	public void addStep(@Nonnull XMLRecipeStep<?> step) {
 		this.steps.add(step);
 	}
 

@@ -17,9 +17,77 @@ package com.jeroensteenbeeke.andalite.xml.operations;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.w3c.dom.Element;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.jeroensteenbeeke.andalite.xml.IElementOperation;
 
 public class EnsureElement implements IElementOperation {
+
+	public static class AddInitialAttribute {
+		private final String elementName;
+
+		private final String attributeName;
+
+		private final Map<String, String> attr;
+
+		private AddInitialAttribute(String elementName, String attributeName) {
+			this.elementName = elementName;
+			this.attributeName = attributeName;
+			this.attr = Maps.newHashMap();
+		}
+
+		private AddInitialAttribute(String elementName, String attributeName,
+				Map<String, String> attr) {
+			this.elementName = elementName;
+			this.attributeName = attributeName;
+			this.attr = attr;
+		}
+
+		public Builder2 withValue(String value) {
+			attr.put(attributeName, value);
+
+			return new Builder2(elementName, attr);
+		}
+	}
+
+	public static class Builder {
+		private final String elementName;
+
+		public Builder(String elementName) {
+			this.elementName = elementName;
+		}
+
+		public AddInitialAttribute withInitialAttribute(String name) {
+			return new AddInitialAttribute(elementName, name);
+		}
+
+		public EnsureElement withNoInitialAttributes() {
+			return new EnsureElement(elementName, ImmutableMap.of());
+		}
+	}
+
+	public static class Builder2 {
+		private final String elementName;
+
+		private final Map<String, String> initialAttributes;
+
+		public Builder2(String elementName,
+				Map<String, String> initialAttributes) {
+			this.elementName = elementName;
+			this.initialAttributes = initialAttributes;
+		}
+
+		public AddInitialAttribute withInitialAttribute(String name) {
+			return new AddInitialAttribute(elementName, name, initialAttributes);
+		}
+
+		public EnsureElement andNothingElse() {
+			return new EnsureElement(elementName, initialAttributes);
+		}
+	}
+
 	private final String elementName;
 
 	private final Map<String, String> initialAttributes;
@@ -32,45 +100,15 @@ public class EnsureElement implements IElementOperation {
 	}
 
 	@Override
-	public String toXSLTTemplate() {
-		StringBuilder xslt = new StringBuilder();
+	public void transform(Element node) {
+		Element newElement = node.getOwnerDocument().createElement(elementName);
 
-		xslt.append("\t\t\t<xsl:copy>\n");
-		xslt.append("\t\t\t\t<xsl:apply-templates select=\"@* | node()\"/>\n");
-		xslt.append("\t\t\t\t<xsl:if test=\"not(/").append(elementName);
-		if (!initialAttributes.isEmpty()) {
-			xslt.append("[");
+		node.appendChild(newElement);
 
-			int i = 0;
-			for (Entry<String, String> entry : initialAttributes.entrySet()) {
-				if (i++ > 0) {
-					xslt.append(" and ");
-				}
+		initialAttributes.forEach((k, v) -> {
+			newElement.setAttribute(k, v);
+		});
 
-				xslt.append(entry.getKey()).append("='")
-						.append(entry.getValue()).append("'");
-			}
-
-			xslt.append("]");
-		}
-		xslt.append(")\">\n");
-
-		xslt.append("\t\t\t\t\t<xsl:element name=\"").append(elementName)
-				.append("\">\n");
-
-		if (!initialAttributes.isEmpty()) {
-			for (Entry<String, String> entry : initialAttributes.entrySet()) {
-				xslt.append("\t\t\t\t\t\t<xsl:attribute name=\"")
-						.append(entry.getKey()).append("\">")
-						.append(entry.getValue()).append("</xsl:attribute>\n");
-			}
-		}
-
-		xslt.append("\t\t\t\t\t</xsl:element>\n");
-		xslt.append("\t\t\t\t</xsl:if>\n");
-		xslt.append("\t\t</xsl:copy>\n");
-
-		return xslt.toString();
 	}
 
 	@Override

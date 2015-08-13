@@ -14,10 +14,12 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
+import org.w3c.dom.Element;
+
 import com.jeroensteenbeeke.andalite.xml.navigation.SubElementNavigation;
 
 public class XMLElementContextBuilder extends
-		AbstractContextBuilder<IElementOperation> {
+		AbstractContextBuilder<Element, IElementOperation> {
 
 	public XMLElementContextBuilder(IStepCollector collector,
 			IXMLNavigation navigation) {

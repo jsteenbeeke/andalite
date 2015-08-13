@@ -16,30 +16,33 @@ package com.jeroensteenbeeke.andalite.xml;
 
 import javax.annotation.Nonnull;
 
+import org.w3c.dom.Node;
 
-public abstract class AbstractContextBuilder<T extends IXMLOperation> implements IStepCollector, IOperationReceiver<T> {
+public abstract class AbstractContextBuilder<N extends Node, T extends IXMLOperation<N>>
+		implements IStepCollector, IOperationReceiver<N, T> {
 	private final IStepCollector collector;
-	
+
 	private final IXMLNavigation navigation;
 
-	protected AbstractContextBuilder(@Nonnull IStepCollector collector, @Nonnull IXMLNavigation navigation) {
+	protected AbstractContextBuilder(@Nonnull IStepCollector collector,
+			@Nonnull IXMLNavigation navigation) {
 		super();
 		this.collector = collector;
 		this.navigation = navigation;
 	}
-	
+
 	@Override
 	public void ensure(@Nonnull T operation) {
-		addStep(new XMLRecipeStep(navigation, operation));
+		addStep(new XMLRecipeStep<N>(navigation, operation));
 	}
-	
-	@Nonnull 
+
+	@Nonnull
 	public IXMLNavigation getNavigation() {
 		return navigation;
 	}
-	
+
 	@Override
-	public void addStep(@Nonnull XMLRecipeStep step) {
+	public void addStep(@Nonnull XMLRecipeStep<?> step) {
 		collector.addStep(step);
 	}
 }

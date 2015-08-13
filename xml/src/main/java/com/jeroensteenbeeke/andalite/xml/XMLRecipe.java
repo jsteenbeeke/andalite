@@ -27,9 +27,9 @@ public class XMLRecipe {
 	private static final Logger logger = LoggerFactory
 			.getLogger(XMLRecipe.class);
 
-	private final List<XMLRecipeStep> steps;
+	private final List<XMLRecipeStep<?>> steps;
 
-	public XMLRecipe(List<XMLRecipeStep> steps) {
+	public XMLRecipe(List<XMLRecipeStep<?>> steps) {
 		super();
 		this.steps = steps;
 	}
@@ -38,7 +38,7 @@ public class XMLRecipe {
 		logger.info("Applying transformation ({} steps) to {}", steps.size(),
 				file.getName());
 
-		for (XMLRecipeStep step : steps) {
+		for (XMLRecipeStep<?> step : steps) {
 			ActionResult result = step.perform(file);
 			if (!result.isOk()) {
 				return result;

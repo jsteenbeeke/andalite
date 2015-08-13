@@ -14,6 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-public interface IElementOperation extends IXMLOperation {
+import org.w3c.dom.Element;
+
+public interface IElementOperation extends IXMLOperation<Element> {
 
 }

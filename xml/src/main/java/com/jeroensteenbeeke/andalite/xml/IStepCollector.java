@@ -18,6 +18,6 @@ import javax.annotation.Nonnull;
 
 public interface IStepCollector {
 
-	void addStep(@Nonnull XMLRecipeStep step);
+	void addStep(@Nonnull XMLRecipeStep<?> step);
 
 }

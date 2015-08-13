@@ -17,13 +17,6 @@ package com.jeroensteenbeeke.andalite.xml;
 
 import java.io.File;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
@@ -31,14 +24,12 @@ import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
 import com.jeroensteenbeeke.andalite.xml.util.XMLUtil;
 
-public class XMLRecipeStep {
-	private final Logger logger = LoggerFactory.getLogger(XMLRecipeStep.class);
-
+public class XMLRecipeStep<N extends Node> {
 	private final IXMLNavigation navigation;
 
-	private final IXMLOperation operation;
+	private final IXMLOperation<N> operation;
 
-	public XMLRecipeStep(IXMLNavigation navigation, IXMLOperation operation) {
+	public XMLRecipeStep(IXMLNavigation navigation, IXMLOperation<N> operation) {
 		super();
 		this.navigation = navigation;
 		this.operation = operation;
