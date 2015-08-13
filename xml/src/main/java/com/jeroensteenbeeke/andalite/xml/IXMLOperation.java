@@ -16,10 +16,12 @@ package com.jeroensteenbeeke.andalite.xml;
 
 import javax.annotation.Nonnull;
 
-public interface IXMLOperation {
-	@Nonnull
-	String toXSLTTemplate();
+import org.w3c.dom.Node;
 
+public interface IXMLOperation<T extends Node> {
+	@Nonnull
+	IXMLTransformationStep<T> getTransformationStep();
+	
 	@Nonnull
 	String getDescription();
 }

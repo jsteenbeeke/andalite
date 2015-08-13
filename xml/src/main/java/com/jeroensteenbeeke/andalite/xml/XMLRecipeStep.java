@@ -25,6 +25,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
@@ -44,32 +45,15 @@ public class XMLRecipeStep {
 	}
 
 	public ActionResult perform(File file) {
-		try {
-
-			TypedActionResult<Document> documentResult = XMLUtil.readFile(file);
-			if (!documentResult.isOk()) {
-				return documentResult;
-			}
-
-			TypedActionResult<Transformer> transformerResult = XMLUtil
-					.createTransformer(navigation.getXPathExpression(),
-							operation.toXSLTTemplate());
-			if (!transformerResult.isOk()) {
-				return transformerResult;
-			}
-
-			Transformer transformer = transformerResult.getObject();
-
-			transformer.transform(new StreamSource(file),
-					new StreamResult(file));
-
-			return ActionResult.ok();
-		} catch (TransformerException e) {
-			logger.error(e.getMessage(), e);
-			return ActionResult.error(String.format(
-					"Navigation (%s) failed: %s", navigation.getDescription(),
-					e.getMessage()));
+		TypedActionResult<Document> documentResult = XMLUtil.readFile(file);
+		if (!documentResult.isOk()) {
+			return documentResult;
 		}
+
+		XMLTransformation<? extends Node> transformation = XMLTransformation
+				.create(navigation, operation);
+
+		return transformation.applyTo(file);
 	}
 
 	@Override

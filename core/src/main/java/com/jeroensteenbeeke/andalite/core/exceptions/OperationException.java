@@ -14,11 +14,17 @@
  */
 package com.jeroensteenbeeke.andalite.core.exceptions;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 public class OperationException extends Exception {
 	private static final long serialVersionUID = 1L;
 
 	public OperationException(String message) {
 		super(message);
+	}
+
+	public OperationException(Exception cause) {
+		super(cause);
 	}
 
 }
