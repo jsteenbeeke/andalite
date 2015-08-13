@@ -95,7 +95,7 @@ public class EnsureElement implements IElementOperation {
 
 	private final Map<String, String> initialAttributes;
 
-	public EnsureElement(String elementName,
+	private EnsureElement(String elementName,
 			Map<String, String> initialAttributes) {
 		super();
 		this.elementName = elementName;
