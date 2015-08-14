@@ -30,31 +30,31 @@ import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.internal.RecipeSelectionQuestion;
 import com.jeroensteenbeeke.andalite.maven.ui.MavenQuestionRenderer;
 
-@Mojo( name = "forge")
+@Mojo(name = "forge", aggregator = true)
 public class ForgeMojo extends RecipeMojo {
-	
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (recipes == null || recipes.length == 0) {
-			throw new MojoFailureException("No recipes defined for this project!");
+			throw new MojoFailureException(
+					"No recipes defined for this project!");
 		}
-		
+
 		List<ForgeRecipe> recipeList = determineRecipes();
-		
+
 		MavenQuestionRenderer renderer = new MavenQuestionRenderer();
 		Action next = new RecipeSelectionQuestion(recipeList);
-		
+
 		while (next instanceof Question) {
 			Question<?> q = (Question<?>) next;
 			TypedActionResult<Action> result = renderer.renderQuestion(q);
 			if (!result.isOk()) {
 				throw new MojoFailureException(result.getMessage());
 			}
-			
+
 			next = result.getObject();
 		}
-		
+
 		if (next instanceof Failure) {
 			throw new MojoFailureException("Forge Recipe returned failure");
 		} else if (next instanceof PerformableAction) {
@@ -63,9 +63,9 @@ public class ForgeMojo extends RecipeMojo {
 			if (!result.isOk()) {
 				throw new MojoFailureException(result.getMessage());
 			}
+		} else {
+			getLog().info("Forge completed");
 		}
-		
-	
 	}
 
 }

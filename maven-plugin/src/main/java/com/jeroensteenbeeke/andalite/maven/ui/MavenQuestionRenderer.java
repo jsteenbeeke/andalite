@@ -73,6 +73,8 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 			RecipeSelectionQuestion question) throws ForgeException {
 		TypedActionResult<Integer> response = TypedActionResult.fail("");
 
+		final int exit = question.getRecipes().size() + 1;
+
 		while (!response.isOk()) {
 			String message = response.getMessage();
 			if (message != null && !message.isEmpty()) {
@@ -89,7 +91,15 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 
 			}
 
-			response = getNumberResponse(1, i);
+			System.out.print("\t[");
+			System.out.print(++i);
+			System.out.println("] Done");
+
+			response = getNumberResponse(1, i + 1);
+		}
+
+		if (response.getObject().intValue() == exit) {
+			return TypedActionResult.ok(Completed.get());
 		}
 
 		return TypedActionResult.ok(question.onAnswer(question.getRecipes()
