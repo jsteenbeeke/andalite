@@ -14,9 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.xml.navigation;
 
-import com.jeroensteenbeeke.andalite.xml.IXMLNavigation;
-
-public class RootElementNavigation implements IXMLNavigation {
+public class RootElementNavigation implements IElementNavigation {
 
 	@Override
 	public String getXPathExpression() {

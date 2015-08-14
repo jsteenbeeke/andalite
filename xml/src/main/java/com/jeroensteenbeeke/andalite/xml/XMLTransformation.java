@@ -44,11 +44,11 @@ public class XMLTransformation<T extends Node> {
 
 	private static final XPathFactory xpFactory = createXPathFactory();
 
-	private final IXMLNavigation navigation;
+	private final IXMLNavigation<T> navigation;
 
 	private final IXMLOperation<T> operation;
 
-	private XMLTransformation(IXMLNavigation navigation,
+	private XMLTransformation(IXMLNavigation<T> navigation,
 			IXMLOperation<T> operation) {
 		this.navigation = navigation;
 		this.operation = operation;
@@ -66,8 +66,7 @@ public class XMLTransformation<T extends Node> {
 					XPathConstants.NODESET);
 
 			for (int i = 0; i < results.getLength(); i++) {
-				@SuppressWarnings("unchecked")
-				T node = (T) results.item(i);
+				T node = navigation.castNode(results.item(i));
 				operation.transform(node);
 			}
 
@@ -88,7 +87,7 @@ public class XMLTransformation<T extends Node> {
 	}
 
 	public static <T extends Node> XMLTransformation<T> create(
-			IXMLNavigation navigation, IXMLOperation<T> operation) {
+			IXMLNavigation<T> navigation, IXMLOperation<T> operation) {
 		return new XMLTransformation<T>(navigation, operation);
 	}
 

@@ -19,12 +19,12 @@ import java.util.Map.Entry;
 
 import com.jeroensteenbeeke.andalite.xml.IXMLNavigation;
 
-public class WithAttributesNavigation implements IXMLNavigation {
-	private final IXMLNavigation parentNav;
+public class WithAttributesNavigation implements IElementNavigation {
+	private final IXMLNavigation<?> parentNav;
 
 	private final Map<String, String> attributes;
 
-	public WithAttributesNavigation(IXMLNavigation parentNav,
+	public WithAttributesNavigation(IXMLNavigation<?> parentNav,
 			Map<String, String> attributes) {
 		super();
 		this.parentNav = parentNav;

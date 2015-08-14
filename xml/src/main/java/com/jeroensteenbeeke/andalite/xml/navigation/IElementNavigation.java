@@ -12,19 +12,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.xml;
+package com.jeroensteenbeeke.andalite.xml.navigation;
 
-import javax.annotation.Nonnull;
-
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-public interface IXMLNavigation<T extends Node> {
-	@Nonnull
-	String getXPathExpression();
+import com.jeroensteenbeeke.andalite.xml.IXMLNavigation;
 
-	@Nonnull
-	String getDescription();
-	
-	@Nonnull
-	T castNode(Node node);
+public interface IElementNavigation extends IXMLNavigation<Element> {
+	@Override
+	public default Element castNode(Node node) {
+		if (node instanceof Element) {
+			return (Element) node;
+		}
+
+		if (node instanceof Document) {
+			Document doc = (Document) node;
+
+			return (Element) doc.getFirstChild();
+		}
+
+		throw new IllegalArgumentException(
+				"Argument node is neither an element nor a document");
+	}
 }

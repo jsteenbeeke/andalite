@@ -14,9 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.xml.navigation;
 
-import com.jeroensteenbeeke.andalite.xml.IXMLNavigation;
-
-public class AnyElementNamedNavigation implements IXMLNavigation {
+public class AnyElementNamedNavigation implements IElementNavigation {
 	private final String elementName;
 
 	public AnyElementNamedNavigation(String elementName) {
