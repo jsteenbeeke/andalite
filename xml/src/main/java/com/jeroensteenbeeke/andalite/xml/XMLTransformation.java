@@ -20,6 +20,7 @@ import java.io.IOException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -73,7 +74,13 @@ public class XMLTransformation<T extends Node> {
 			// Document already changed at this point, this is just the most
 			// convenient way
 			// to write a Document to a file
+
 			Transformer transformer = tfFactory.newTransformer();
+
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			transformer.setOutputProperty(
+					"{http://xml.apache.org/xslt}indent-amount", "2");
+
 			transformer.transform(new DOMSource(document), new StreamResult(
 					file));
 
