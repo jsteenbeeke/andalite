@@ -25,11 +25,12 @@ import com.jeroensteenbeeke.andalite.core.TypedActionResult;
 import com.jeroensteenbeeke.andalite.xml.util.XMLUtil;
 
 public class XMLRecipeStep<N extends Node> {
-	private final IXMLNavigation navigation;
+	private final IXMLNavigation<N> navigation;
 
 	private final IXMLOperation<N> operation;
 
-	public XMLRecipeStep(IXMLNavigation navigation, IXMLOperation<N> operation) {
+	public XMLRecipeStep(IXMLNavigation<N> navigation,
+			IXMLOperation<N> operation) {
 		super();
 		this.navigation = navigation;
 		this.operation = operation;

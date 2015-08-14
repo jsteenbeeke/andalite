@@ -22,7 +22,7 @@ public class XMLElementContextBuilder extends
 		AbstractContextBuilder<Element, IElementOperation> {
 
 	public XMLElementContextBuilder(IStepCollector collector,
-			IXMLNavigation navigation) {
+			IXMLNavigation<Element> navigation) {
 		super(collector, navigation);
 	}
 

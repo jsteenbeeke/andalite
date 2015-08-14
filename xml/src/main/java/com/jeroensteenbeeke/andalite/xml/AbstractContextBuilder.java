@@ -22,10 +22,10 @@ public abstract class AbstractContextBuilder<N extends Node, T extends IXMLOpera
 		implements IStepCollector, IOperationReceiver<N, T> {
 	private final IStepCollector collector;
 
-	private final IXMLNavigation navigation;
+	private final IXMLNavigation<N> navigation;
 
 	protected AbstractContextBuilder(@Nonnull IStepCollector collector,
-			@Nonnull IXMLNavigation navigation) {
+			@Nonnull IXMLNavigation<N> navigation) {
 		super();
 		this.collector = collector;
 		this.navigation = navigation;
@@ -37,7 +37,7 @@ public abstract class AbstractContextBuilder<N extends Node, T extends IXMLOpera
 	}
 
 	@Nonnull
-	public IXMLNavigation getNavigation() {
+	public IXMLNavigation<N> getNavigation() {
 		return navigation;
 	}
 

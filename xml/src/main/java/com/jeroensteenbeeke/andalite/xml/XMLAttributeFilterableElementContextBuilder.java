@@ -28,7 +28,7 @@ public class XMLAttributeFilterableElementContextBuilder extends
 	private final Map<String, String> attributes;
 
 	public XMLAttributeFilterableElementContextBuilder(
-			IStepCollector collector, IXMLNavigation navigation) {
+			IStepCollector collector, IXMLNavigation<Element> navigation) {
 		super(collector, navigation);
 		this.attributes = Maps.newHashMap();
 	}
