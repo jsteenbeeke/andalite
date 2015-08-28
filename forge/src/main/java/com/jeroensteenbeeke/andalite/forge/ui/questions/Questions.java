@@ -97,6 +97,24 @@ public class Questions {
 			});
 		}
 
+		public FinalizerStage withSimpleAnswerMatching(String pattern) {
+			return new FinalizerStage(initiators, key, question, (q, a, s) -> {
+				return new SimpleQuestion(q) {
+
+					@Override
+					public Action onAnswer(String answer,
+							FeedbackHandler handler) throws ForgeException {
+						if (!answer.matches(pattern)) {
+							handler.error("Invalid input");
+							return this;
+						}
+
+						return s.apply(answer);
+					}
+				};
+			});
+		}
+
 		public FinalizerStage withYesNoAnswer() {
 			return new FinalizerStage(initiators, key, question, (q, a, s) -> {
 				return new YesNoQuestion(q) {

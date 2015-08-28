@@ -63,4 +63,14 @@ public final class CreateFile extends AbstractCompoundableAction {
 
 	}
 
+	public static CreateFile emptyJavaFile(File file, String packageName,
+			String className) {
+
+		final StringBuilder initial = new StringBuilder();
+		initial.append("package ").append(packageName).append(";\n\n");
+		initial.append("public class ").append(className).append(" {\n\n");
+		initial.append("}\n");
+
+		return new CreateFile(file).withInitialContents(initial.toString());
+	}
 }
