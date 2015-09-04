@@ -161,7 +161,7 @@ public class RecipeTest extends DummyAwareTest {
 		assertThat(analyzedClass, hasAnnotation("Entity"));
 		assertThat(analyzedClass, hasAnnotation("Table"));
 
-		assertThat(analyzedClass, extendsClass("DomainObject"));
+		assertThat(analyzedClass, extendsClass("BaseDomainObject"));
 
 		AnalyzedAnnotation tableAnnotation = analyzedClass
 				.getAnnotation("Table");

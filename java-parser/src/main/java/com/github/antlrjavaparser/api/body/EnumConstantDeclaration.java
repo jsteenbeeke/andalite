@@ -19,76 +19,83 @@
  */
 package com.github.antlrjavaparser.api.body;
 
+import java.util.List;
+
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.github.antlrjavaparser.api.expr.AnnotationExpr;
 import com.github.antlrjavaparser.api.expr.Expression;
 import com.github.antlrjavaparser.api.visitor.GenericVisitor;
 import com.github.antlrjavaparser.api.visitor.VoidVisitor;
-
-import java.util.List;
 
 /**
  * @author Julio Vilmar Gesser
  */
 public final class EnumConstantDeclaration extends BodyDeclaration {
 
-    private String name;
+	private TerminalNode name;
 
-    private List<Expression> args;
+	private List<Expression> args;
 
-    private List<BodyDeclaration> classBody;
+	private List<BodyDeclaration> classBody;
 
-    public EnumConstantDeclaration() {
-    }
+	public EnumConstantDeclaration() {
+	}
 
-    public EnumConstantDeclaration(String name) {
-        this.name = name;
-    }
+	public EnumConstantDeclaration(TerminalNode name) {
+		this.name = name;
+	}
 
-    public EnumConstantDeclaration(JavadocComment javaDoc, List<AnnotationExpr> annotations, String name, List<Expression> args, List<BodyDeclaration> classBody) {
-        super(annotations, javaDoc);
-        this.name = name;
-        this.args = args;
-        this.classBody = classBody;
-    }
+	public EnumConstantDeclaration(JavadocComment javaDoc,
+			List<AnnotationExpr> annotations, TerminalNode name,
+			List<Expression> args, List<BodyDeclaration> classBody) {
+		super(annotations, javaDoc);
+		this.name = name;
+		this.args = args;
+		this.classBody = classBody;
+	}
 
-    public EnumConstantDeclaration(int beginLine, int beginColumn, int endLine, int endColumn, JavadocComment javaDoc, List<AnnotationExpr> annotations, String name, List<Expression> args, List<BodyDeclaration> classBody) {
-        super(beginLine, beginColumn, endLine, endColumn, annotations, javaDoc);
-        this.name = name;
-        this.args = args;
-        this.classBody = classBody;
-    }
+	public EnumConstantDeclaration(int beginLine, int beginColumn, int endLine,
+			int endColumn, JavadocComment javaDoc,
+			List<AnnotationExpr> annotations, TerminalNode name,
+			List<Expression> args, List<BodyDeclaration> classBody) {
+		super(beginLine, beginColumn, endLine, endColumn, annotations, javaDoc);
+		this.name = name;
+		this.args = args;
+		this.classBody = classBody;
+	}
 
-    @Override
-    public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
-        return v.visit(this, arg);
-    }
+	@Override
+	public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
+		return v.visit(this, arg);
+	}
 
-    @Override
-    public <A> void accept(VoidVisitor<A> v, A arg) {
-        v.visit(this, arg);
-    }
+	@Override
+	public <A> void accept(VoidVisitor<A> v, A arg) {
+		v.visit(this, arg);
+	}
 
-    public List<Expression> getArgs() {
-        return args;
-    }
+	public List<Expression> getArgs() {
+		return args;
+	}
 
-    public List<BodyDeclaration> getClassBody() {
-        return classBody;
-    }
+	public List<BodyDeclaration> getClassBody() {
+		return classBody;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public TerminalNode getName() {
+		return name;
+	}
 
-    public void setArgs(List<Expression> args) {
-        this.args = args;
-    }
+	public void setArgs(List<Expression> args) {
+		this.args = args;
+	}
 
-    public void setClassBody(List<BodyDeclaration> classBody) {
-        this.classBody = classBody;
-    }
+	public void setClassBody(List<BodyDeclaration> classBody) {
+		this.classBody = classBody;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(TerminalNode name) {
+		this.name = name;
+	}
 }

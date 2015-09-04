@@ -346,7 +346,7 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 			n.getScope().accept(this, arg);
 			printer.print(".");
 		}
-		printer.print(n.getName());
+		printer.print(n.getNameAsString());
 		printTypeArgs(n.getTypeArgs(), arg);
 		printEndComments(n.getEndComments(), arg);
 	}
@@ -1184,7 +1184,7 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 		printJavadoc(n.getJavaDoc(), arg);
 		printMemberAnnotations(n.getAnnotations(), arg);
 		printBeginComments(n.getBeginComments(), arg);
-		printer.print(n.getName());
+		printer.print(n.getName().getText());
 
 		if (n.getArgs() != null) {
 			printArguments(n.getArgs(), arg);

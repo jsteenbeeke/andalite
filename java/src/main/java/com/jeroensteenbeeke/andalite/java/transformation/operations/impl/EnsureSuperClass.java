@@ -40,9 +40,9 @@ public class EnsureSuperClass implements IClassOperation {
 					}
 				} else {
 					// Rare
-					return ImmutableList.of(Transformation.insertAt(input
-							.getBodyLocation().getStart() - 2, "extends "
-							.concat(superClass)));
+					return ImmutableList.of(Transformation.insertAfter(
+							input.getNameLocation(),
+							" extends ".concat(superClass)));
 				}
 			}
 		}

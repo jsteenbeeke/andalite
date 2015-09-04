@@ -16,6 +16,8 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import java.util.List;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
@@ -25,7 +27,7 @@ public class AnalyzedEnum extends ConstructableDenomination {
 	private final List<AnalyzedEnumConstant> constants;
 
 	public AnalyzedEnum(Location location, int modifiers, String packageName,
-			String denominationName) {
+			TerminalNode denominationName) {
 		super(location, modifiers, packageName, denominationName);
 		this.constants = Lists.newArrayList();
 	}

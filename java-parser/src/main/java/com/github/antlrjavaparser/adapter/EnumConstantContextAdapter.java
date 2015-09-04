@@ -22,33 +22,41 @@ package com.github.antlrjavaparser.adapter;
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.body.EnumConstantDeclaration;
 
-public class EnumConstantContextAdapter implements Adapter<EnumConstantDeclaration, Java8Parser.EnumConstantContext> {
-    public EnumConstantDeclaration adapt(Java8Parser.EnumConstantContext context, AdapterParameters adapterParameters) {
+public class EnumConstantContextAdapter implements
+		Adapter<EnumConstantDeclaration, Java8Parser.EnumConstantContext> {
+	public EnumConstantDeclaration adapt(
+			Java8Parser.EnumConstantContext context,
+			AdapterParameters adapterParameters) {
 
-        /*
-        enumConstant
-            :   (annotations)? Identifier(arguments)? (classBody)?
-            ;
-         */
+		/*
+		 * enumConstant : (annotations)? Identifier(arguments)? (classBody)? ;
+		 */
 
-        EnumConstantDeclaration enumConstantDeclaration = new EnumConstantDeclaration();
-        AdapterUtil.setComments(enumConstantDeclaration, context, adapterParameters);
-        AdapterUtil.setPosition(enumConstantDeclaration, context);
+		EnumConstantDeclaration enumConstantDeclaration = new EnumConstantDeclaration();
+		AdapterUtil.setComments(enumConstantDeclaration, context,
+				adapterParameters);
+		AdapterUtil.setPosition(enumConstantDeclaration, context);
 
-        if (context.annotations() != null) {
-            enumConstantDeclaration.setAnnotations(Adapters.getAnnotationsContextAdapter().adapt(context.annotations(), adapterParameters));
-        }
+		if (context.annotations() != null) {
+			enumConstantDeclaration.setAnnotations(Adapters
+					.getAnnotationsContextAdapter().adapt(
+							context.annotations(), adapterParameters));
+		}
 
-        enumConstantDeclaration.setName(context.Identifier().getText());
+		enumConstantDeclaration.setName(context.Identifier());
 
-        if (context.arguments() != null) {
-            enumConstantDeclaration.setArgs(Adapters.getArgumentsContextAdapter().adapt(context.arguments(), adapterParameters));
-        }
+		if (context.arguments() != null) {
+			enumConstantDeclaration.setArgs(Adapters
+					.getArgumentsContextAdapter().adapt(context.arguments(),
+							adapterParameters));
+		}
 
-        if (context.classBody() != null) {
-            enumConstantDeclaration.setClassBody(Adapters.getClassBodyContextAdapter().adapt(context.classBody(), adapterParameters));
-        }
+		if (context.classBody() != null) {
+			enumConstantDeclaration.setClassBody(Adapters
+					.getClassBodyContextAdapter().adapt(context.classBody(),
+							adapterParameters));
+		}
 
-        return enumConstantDeclaration;
-    }
+		return enumConstantDeclaration;
+	}
 }

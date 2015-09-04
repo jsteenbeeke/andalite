@@ -14,13 +14,15 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
 public class AnalyzedEnumConstant extends ContainingDenomination {
 
 	public AnalyzedEnumConstant(Location location, int modifiers,
-			String packageName, String denominationName) {
+			String packageName, TerminalNode denominationName) {
 		super(location, modifiers, packageName, denominationName);
 	}
 

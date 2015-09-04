@@ -14,14 +14,18 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
+import javax.annotation.Nonnull;
+
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
 public class AnalyzedAnnotationType extends ContainingDenomination {
 
-	protected AnalyzedAnnotationType(Location location, int modifiers,
-			String packageName, Location nameLocation, String denominationName) {
-		super(location, modifiers, packageName, nameLocation, denominationName);
+	protected AnalyzedAnnotationType(@Nonnull Location location, int modifiers,
+			@Nonnull String packageName, @Nonnull TerminalNode denominationName) {
+		super(location, modifiers, packageName, denominationName);
 	}
 
 	public String getAnnotationName() {

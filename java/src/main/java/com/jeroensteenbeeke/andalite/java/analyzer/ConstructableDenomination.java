@@ -18,6 +18,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
@@ -28,8 +30,8 @@ public abstract class ConstructableDenomination extends ContainingDenomination {
 
 	protected ConstructableDenomination(@Nonnull Location location,
 			int modifiers, @Nonnull String packageName,
-			@Nonnull Location nameLocation, @Nonnull String denominationName) {
-		super(location, modifiers, packageName, nameLocation, denominationName);
+			@Nonnull TerminalNode denominationName) {
+		super(location, modifiers, packageName, denominationName);
 		this.constructors = Lists.newArrayList();
 	}
 

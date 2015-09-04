@@ -18,6 +18,8 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
@@ -28,9 +30,8 @@ public final class AnalyzedClass extends ConstructableDenomination {
 	private String superClass = null;
 
 	public AnalyzedClass(@Nonnull Location location, int modifiers,
-			@Nonnull String packageName, @Nonnull Location nameLocation,
-			@Nonnull String className) {
-		super(location, modifiers, packageName, nameLocation, className);
+			@Nonnull String packageName, @Nonnull TerminalNode className) {
+		super(location, modifiers, packageName, className);
 	}
 
 	public String getClassName() {

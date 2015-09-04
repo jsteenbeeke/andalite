@@ -23,39 +23,50 @@ import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.expr.ObjectCreationExpr;
 import com.github.antlrjavaparser.api.type.ClassOrInterfaceType;
 
-public class InnerCreatorContextAdapter implements Adapter<ObjectCreationExpr, Java8Parser.InnerCreatorContext> {
-    public ObjectCreationExpr adapt(Java8Parser.InnerCreatorContext context, AdapterParameters adapterParameters) {
+public class InnerCreatorContextAdapter implements
+		Adapter<ObjectCreationExpr, Java8Parser.InnerCreatorContext> {
+	public ObjectCreationExpr adapt(Java8Parser.InnerCreatorContext context,
+			AdapterParameters adapterParameters) {
 
-        /*
-            innerCreator
-                :   DOT NEW (nonWildcardTypeArguments)? identifierTypeArgument classCreatorRest
-                ;
-         */
+		/*
+		 * innerCreator : DOT NEW (nonWildcardTypeArguments)?
+		 * identifierTypeArgument classCreatorRest ;
+		 */
 
-        ObjectCreationExpr objectCreationExpr = new ObjectCreationExpr();
-        AdapterUtil.setComments(objectCreationExpr, context, adapterParameters);
-        AdapterUtil.setPosition(objectCreationExpr, context);
+		ObjectCreationExpr objectCreationExpr = new ObjectCreationExpr();
+		AdapterUtil.setComments(objectCreationExpr, context, adapterParameters);
+		AdapterUtil.setPosition(objectCreationExpr, context);
 
-        if (context.nonWildcardTypeArguments() != null) {
-            objectCreationExpr.setTypeArgs(Adapters.getTypeListContextAdapter().adapt(context.nonWildcardTypeArguments().typeList(), adapterParameters));
-        }
+		if (context.nonWildcardTypeArguments() != null) {
+			objectCreationExpr.setTypeArgs(Adapters.getTypeListContextAdapter()
+					.adapt(context.nonWildcardTypeArguments().typeList(),
+							adapterParameters));
+		}
 
-        ClassOrInterfaceType classOrInterfaceType = new ClassOrInterfaceType();
-        classOrInterfaceType.setName(context.identifierTypeArgument().Identifier().getText());
+		ClassOrInterfaceType classOrInterfaceType = new ClassOrInterfaceType();
+		classOrInterfaceType.setName(context.identifierTypeArgument()
+				.Identifier());
 
-        if (context.identifierTypeArgument().typeArguments() != null) {
-            classOrInterfaceType.setTypeArgs(Adapters.getTypeArgumentsContextAdapter().adapt(context.identifierTypeArgument().typeArguments(), adapterParameters));
-        }
+		if (context.identifierTypeArgument().typeArguments() != null) {
+			classOrInterfaceType.setTypeArgs(Adapters
+					.getTypeArgumentsContextAdapter().adapt(
+							context.identifierTypeArgument().typeArguments(),
+							adapterParameters));
+		}
 
-        objectCreationExpr.setType(classOrInterfaceType);
+		objectCreationExpr.setType(classOrInterfaceType);
 
-        // arguments classBody?
-        objectCreationExpr.setArgs(Adapters.getArgumentsContextAdapter().adapt(context.classCreatorRest().arguments(), adapterParameters));
+		// arguments classBody?
+		objectCreationExpr.setArgs(Adapters.getArgumentsContextAdapter().adapt(
+				context.classCreatorRest().arguments(), adapterParameters));
 
-        if (context.classCreatorRest().classBody() != null) {
-            objectCreationExpr.setAnonymousClassBody(Adapters.getClassBodyContextAdapter().adapt(context.classCreatorRest().classBody(), adapterParameters));
-        }
+		if (context.classCreatorRest().classBody() != null) {
+			objectCreationExpr.setAnonymousClassBody(Adapters
+					.getClassBodyContextAdapter().adapt(
+							context.classCreatorRest().classBody(),
+							adapterParameters));
+		}
 
-        return objectCreationExpr;
-    }
+		return objectCreationExpr;
+	}
 }

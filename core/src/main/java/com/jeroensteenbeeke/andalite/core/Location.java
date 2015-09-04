@@ -59,7 +59,7 @@ public final class Location {
 	public static Location from(@Nonnull TerminalNode node) {
 		Token symbol = node.getSymbol();
 
-		return new Location(symbol.getStartIndex(), symbol.getStopIndex());
+		return new Location(symbol.getStartIndex(), symbol.getStopIndex() + 1);
 	}
 
 	@Override

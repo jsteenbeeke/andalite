@@ -23,6 +23,8 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.github.antlrjavaparser.JavaParser;
 import com.github.antlrjavaparser.ParseException;
 import com.github.antlrjavaparser.api.CompilationUnit;
@@ -71,7 +73,8 @@ public class ClassAnalyzer {
 
 			final String packageName = determinePackageName(packageDefinition);
 
-			AnalyzerContext context = new AnalyzerContext(packageName, null);
+			AnalyzerContext context = new AnalyzerContext(packageName,
+					Location.from(packageDefinition.getName()), null);
 
 			AnalyzedSourceFile sourceFile = new AnalyzedSourceFile(
 					Location.from(compilationUnit), targetFile, packageName,
@@ -119,8 +122,7 @@ public class ClassAnalyzer {
 				return element;
 			} else {
 				AnalyzedClass element = new AnalyzedClass(Location.from(decl),
-						decl.getModifiers(), context.getScope(),
-						Location.from(decl.getName()), decl.getNameAsString());
+						decl.getModifiers(), context.getScope(), decl.getName());
 
 				processClassDeclaration(decl,
 						context.innerDeclaration(decl.getName()), element);
@@ -135,11 +137,10 @@ public class ClassAnalyzer {
 			EnumDeclaration decl = (EnumDeclaration) typeDeclaration;
 
 			AnalyzedEnum element = new AnalyzedEnum(Location.from(decl),
-					decl.getModifiers(), context.getScope(),
-					decl.getNameAsString());
+					decl.getModifiers(), context.getScope(), decl.getName());
 
 			processEnumDeclaration(decl,
-					context.innerDeclaration(decl.getNameAsString()), element);
+					context.innerDeclaration(decl.getName()), element);
 
 			if (sourceFile != null) {
 				sourceFile.addEnum(element);
@@ -151,8 +152,7 @@ public class ClassAnalyzer {
 
 			AnalyzedAnnotationType element = new AnalyzedAnnotationType(
 					Location.from(decl), decl.getModifiers(),
-					context.getScope(), Location.from(decl.getName()), decl
-							.getName().getText());
+					context.getScope(), decl.getName());
 
 			processAnnotationDeclaration(decl, element);
 
@@ -169,8 +169,11 @@ public class ClassAnalyzer {
 	private void processAnnotationDeclaration(AnnotationDeclaration decl,
 			AnalyzedAnnotationType element) {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
-			AnalyzedAnnotation annotation = analyze(expr, element,
-					new AnalyzerContext(element.getAnnotationName(), null));
+			AnalyzedAnnotation annotation = analyze(
+					expr,
+					element,
+					new AnalyzerContext(element.getAnnotationName(), element
+							.getNameLocation(), null));
 			if (annotation != null) {
 				element.addAnnotation(annotation);
 			}
@@ -191,7 +194,7 @@ public class ClassAnalyzer {
 		List<ClassOrInterfaceType> implementedInterfaces = decl.getImplements();
 		if (implementedInterfaces != null) {
 			for (ClassOrInterfaceType type : implementedInterfaces) {
-				element.addInterface(type.getName());
+				element.addInterface(type.getNameAsString());
 				element.setLastImplementsLocation(Location.from(type));
 			}
 		}
@@ -294,14 +297,11 @@ public class ClassAnalyzer {
 						innerClassDecl.getModifiers(), String.format("%s.%s",
 								element.getPackageName(),
 								element.getDenominationName()),
-						innerClassDecl.getNameAsString());
+						innerClassDecl.getName());
 
-				processInterfaceDeclaration(
-						innerClassDecl,
-						analyzerContext.innerDeclaration(
-								innerClassDecl.getNameAsString(),
-								Location.from(innerClassDecl.getName())),
-						innerInterface);
+				processInterfaceDeclaration(innerClassDecl,
+						analyzerContext.innerDeclaration(innerClassDecl
+								.getName()), innerInterface);
 
 				element.addInnerDenomination(innerInterface);
 
@@ -311,15 +311,11 @@ public class ClassAnalyzer {
 						innerClassDecl.getModifiers(), String.format("%s.%s",
 								element.getPackageName(),
 								element.getDenominationName()),
-						Location.from(innerClassDecl.getName()),
-						innerClassDecl.getNameAsString());
+						innerClassDecl.getName());
 
-				processClassDeclaration(
-						innerClassDecl,
-						analyzerContext.innerDeclaration(
-								innerClassDecl.getNameAsString(),
-								Location.from(innerClassDecl.getName())),
-						innerClass);
+				processClassDeclaration(innerClassDecl,
+						analyzerContext.innerDeclaration(innerClassDecl
+								.getName()), innerClass);
 
 				element.addInnerDenomination(innerClass);
 			}
@@ -329,11 +325,10 @@ public class ClassAnalyzer {
 
 			AnalyzedEnum elem = new AnalyzedEnum(Location.from(decl),
 					decl.getModifiers(), analyzerContext.getScope(),
-					decl.getNameAsString());
+					decl.getName());
 
-			processEnumDeclaration(decl, analyzerContext.innerDeclaration(
-					decl.getNameAsString(), Location.from(decl.getName())),
-					elem);
+			processEnumDeclaration(decl,
+					analyzerContext.innerDeclaration(decl.getName()), elem);
 
 			element.addInnerDenomination(elem);
 		} else if (member instanceof AnnotationDeclaration) {
@@ -341,8 +336,7 @@ public class ClassAnalyzer {
 
 			AnalyzedAnnotationType elem = new AnalyzedAnnotationType(
 					Location.from(decl), decl.getModifiers(),
-					analyzerContext.getScope(), Location.from(decl.getName()),
-					decl.getName().getText());
+					analyzerContext.getScope(), decl.getName());
 
 			processAnnotationDeclaration(decl, elem);
 
@@ -376,7 +370,7 @@ public class ClassAnalyzer {
 		List<ClassOrInterfaceType> extendedClasses = decl.getExtends();
 		if (extendedClasses != null) {
 			for (ClassOrInterfaceType type : extendedClasses) {
-				element.setSuperClass(type.getName());
+				element.setSuperClass(type.getNameAsString());
 				element.setExtendsLocation(Location.from(type));
 
 				break; // Classes only have single inheritance
@@ -387,12 +381,7 @@ public class ClassAnalyzer {
 		if (implementedInterfaces != null) {
 
 			for (ClassOrInterfaceType type : implementedInterfaces) {
-				if (element.getExtendsLocation() == null) {
-					element.setExtendsLocation(new Location(type
-							.getBeginIndex() - 1, type.getBeginIndex() - 1));
-				}
-
-				element.addInterface(type.getName());
+				element.addInterface(type.getNameAsString());
 				element.setLastImplementsLocation(Location.from(type));
 			}
 		}
@@ -428,7 +417,7 @@ public class ClassAnalyzer {
 		List<ClassOrInterfaceType> extendedClasses = decl.getExtends();
 		if (extendedClasses != null) {
 			for (ClassOrInterfaceType type : extendedClasses) {
-				element.addInterface(type.getName());
+				element.addInterface(type.getNameAsString());
 				element.setLastImplementsLocation(Location.from(type));
 			}
 		}
@@ -1399,8 +1388,8 @@ public class ClassAnalyzer {
 
 					AnalyzedClass innerClass = new AnalyzedClass(
 							Location.from(objectCreationExpr), 0,
-							analyzerContext.getScope(), nameLocation,
-							innerClassContext.getScope());
+							analyzerContext.getScope(), objectCreationExpr
+									.getType().getName());
 					containingDenomination.addInnerDenomination(innerClass);
 
 					for (BodyDeclaration bodyDeclaration : anonymousClassBody) {
@@ -1623,9 +1612,9 @@ public class ClassAnalyzer {
 					++anonymousInnerClassCounter), nameLocation, this);
 		}
 
-		public AnalyzerContext innerDeclaration(String className,
-				Location nameLocation) {
-			return new AnalyzerContext(className, nameLocation, this);
+		public AnalyzerContext innerDeclaration(TerminalNode name) {
+			return new AnalyzerContext(name.getText(), Location.from(name),
+					this);
 		}
 
 	}

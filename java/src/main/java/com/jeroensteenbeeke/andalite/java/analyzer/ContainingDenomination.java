@@ -21,6 +21,8 @@ import java.util.Set;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.*;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
@@ -40,8 +42,8 @@ public abstract class ContainingDenomination extends Denomination {
 	private Location bodyLocation = null;
 
 	protected ContainingDenomination(Location location, int modifiers,
-			String packageName, Location nameLocation, String denominationName) {
-		super(location, modifiers, packageName, nameLocation, denominationName);
+			String packageName, TerminalNode denominationName) {
+		super(location, modifiers, packageName, denominationName);
 		this.methods = LinkedHashMultimap.create();
 		this.innerDenominations = Maps.newHashMap();
 		this.fields = Maps.newHashMap();

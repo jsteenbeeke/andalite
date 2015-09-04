@@ -18,6 +18,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
@@ -25,21 +27,29 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 public class ClassOrInterface extends AnalyzedType {
 	private final String name;
 
+	private final Location nameLocation;
+
 	private final ClassOrInterface scope;
 
 	private final List<AnalyzedType> typeArguments;
 
 	public ClassOrInterface(@Nonnull final Location location,
-			@Nonnull final String name, @Nonnull final ClassOrInterface scope,
+			@Nonnull final TerminalNode name,
+			@Nonnull final ClassOrInterface scope,
 			@Nonnull final List<AnalyzedType> typeArguments) {
 		super(location);
-		this.name = name;
+		this.name = name.getText();
+		this.nameLocation = Location.from(name);
 		this.scope = scope;
 		this.typeArguments = ImmutableList.copyOf(typeArguments);
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	public Location getNameLocation() {
+		return nameLocation;
 	}
 
 	public ClassOrInterface getScope() {
