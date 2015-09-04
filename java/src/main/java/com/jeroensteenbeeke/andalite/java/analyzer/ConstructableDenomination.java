@@ -26,9 +26,10 @@ public abstract class ConstructableDenomination extends ContainingDenomination {
 
 	private final List<AnalyzedConstructor> constructors;
 
-	protected ConstructableDenomination(Location location, int modifiers,
-			String packageName, String denominationName) {
-		super(location, modifiers, packageName, denominationName);
+	protected ConstructableDenomination(@Nonnull Location location,
+			int modifiers, @Nonnull String packageName,
+			@Nonnull Location nameLocation, @Nonnull String denominationName) {
+		super(location, modifiers, packageName, nameLocation, denominationName);
 		this.constructors = Lists.newArrayList();
 	}
 

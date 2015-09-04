@@ -29,7 +29,7 @@ public class TransformationTest extends XMLTest {
 
 	@Test
 	public void testAddAttribute() throws Exception {
-		File inputOutput = createCopy("src/test/resources/test.xml");
+		File inputOutput = copy("src/test/resources/test.xml").as("test.xml");
 
 		String widgetExpression = "//widget[@id='1']";
 
@@ -58,7 +58,7 @@ public class TransformationTest extends XMLTest {
 
 	@Test
 	public void testRepeatedAddAttribute() throws Exception {
-		File inputOutput = createCopy("src/test/resources/test.xml");
+		File inputOutput = copy("src/test/resources/test.xml").as("test.xml");
 
 		String widgetExpression = "//widget[@id='1']";
 		XMLRecipeBuilder builder = new XMLRecipeBuilder();
@@ -90,7 +90,7 @@ public class TransformationTest extends XMLTest {
 
 	@Test
 	public void testAddElement() throws Exception {
-		File inputOutput = createCopy("src/test/resources/test.xml");
+		File inputOutput = copy("src/test/resources/test.xml").as("test.xml");
 
 		XMLRecipeBuilder builder = new XMLRecipeBuilder();
 
@@ -119,7 +119,7 @@ public class TransformationTest extends XMLTest {
 
 	@Test
 	public void testRepeatedAddElement() throws Exception {
-		File inputOutput = createCopy("src/test/resources/test.xml");
+		File inputOutput = copy("src/test/resources/test.xml").as("test.xml");
 
 		XMLRecipeBuilder builder = new XMLRecipeBuilder();
 

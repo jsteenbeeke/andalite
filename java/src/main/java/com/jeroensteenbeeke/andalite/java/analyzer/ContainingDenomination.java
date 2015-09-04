@@ -40,8 +40,8 @@ public abstract class ContainingDenomination extends Denomination {
 	private Location bodyLocation = null;
 
 	protected ContainingDenomination(Location location, int modifiers,
-			String packageName, String denominationName) {
-		super(location, modifiers, packageName, denominationName);
+			String packageName, Location nameLocation, String denominationName) {
+		super(location, modifiers, packageName, nameLocation, denominationName);
 		this.methods = LinkedHashMultimap.create();
 		this.innerDenominations = Maps.newHashMap();
 		this.fields = Maps.newHashMap();

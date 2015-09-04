@@ -17,7 +17,6 @@ package com.jeroensteenbeeke.andalite.xml;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,7 +27,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.junit.AfterClass;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -37,14 +35,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.common.io.Files;
+import com.jeroensteenbeeke.andalite.core.TempFileCleaningTest;
 
-public class XMLTest {
+public class XMLTest extends TempFileCleaningTest {
 	private static final XPath xpath = XPathFactory.newInstance().newXPath();
 	private static final DocumentBuilder DOCUMENT_BUILDER = createDocumentBuilder();
-
-	private static Set<File> createdTempFiles = Sets.newHashSet();
 
 	protected List<Node> extractNodes(File xmlFile, String xpathExpression)
 			throws SAXException, IOException, ParserConfigurationException,
@@ -96,25 +91,6 @@ public class XMLTest {
 			return builder;
 		} catch (ParserConfigurationException e) {
 			throw new RuntimeException(e);
-		}
-	}
-
-	protected File createCopy(String pathname) throws IOException {
-		File temp = newTempFile("test", ".xml");
-		Files.copy(new File(pathname), temp);
-		return temp;
-	}
-
-	protected File newTempFile(String prefix, String suffix) throws IOException {
-		File temp = File.createTempFile(prefix, suffix);
-		createdTempFiles.add(temp);
-		return temp;
-	}
-
-	@AfterClass
-	public static void removeTempFiles() {
-		for (File file : createdTempFiles) {
-			file.delete();
 		}
 	}
 }

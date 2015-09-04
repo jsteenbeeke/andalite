@@ -28,8 +28,9 @@ public final class AnalyzedClass extends ConstructableDenomination {
 	private String superClass = null;
 
 	public AnalyzedClass(@Nonnull Location location, int modifiers,
-			@Nonnull String packageName, @Nonnull String className) {
-		super(location, modifiers, packageName, className);
+			@Nonnull String packageName, @Nonnull Location nameLocation,
+			@Nonnull String className) {
+		super(location, modifiers, packageName, nameLocation, className);
 	}
 
 	public String getClassName() {

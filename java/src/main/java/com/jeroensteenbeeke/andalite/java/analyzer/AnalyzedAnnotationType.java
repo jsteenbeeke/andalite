@@ -20,8 +20,8 @@ import com.jeroensteenbeeke.andalite.core.Location;
 public class AnalyzedAnnotationType extends ContainingDenomination {
 
 	protected AnalyzedAnnotationType(Location location, int modifiers,
-			String packageName, String denominationName) {
-		super(location, modifiers, packageName, denominationName);
+			String packageName, Location nameLocation, String denominationName) {
+		super(location, modifiers, packageName, nameLocation, denominationName);
 	}
 
 	public String getAnnotationName() {

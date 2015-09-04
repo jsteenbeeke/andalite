@@ -24,12 +24,19 @@ public abstract class Denomination extends AccessModifiable {
 
 	private final String denominationName;
 
+	private final Location nameLocation;
+
 	public Denomination(@Nonnull Location location, int modifiers,
-			@Nonnull String packageName, @Nonnull String denominationName) {
+			@Nonnull String packageName, @Nonnull Location nameLocation,
+			@Nonnull String denominationName) {
 		super(location, modifiers);
+		this.nameLocation = nameLocation;
 		this.packageName = packageName;
 		this.denominationName = denominationName;
+	}
 
+	public Location getNameLocation() {
+		return nameLocation;
 	}
 
 	public String getDenominationName() {

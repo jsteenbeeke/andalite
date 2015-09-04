@@ -41,8 +41,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.ArrayValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
-import com.jeroensteenbeeke.andalite.java.transformation.Operations;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
+import com.jeroensteenbeeke.andalite.java.transformation.Operations;
 
 public class RecipeTest extends DummyAwareTest {
 	@Test
@@ -125,6 +125,12 @@ public class RecipeTest extends DummyAwareTest {
 				.withParameter("bar").ofType("String").named("setBar").inBody()
 				.ensure(hasStatement("this.bar = bar;"));
 
+		builder.atRoot().ensure(
+				imports("com.jeroensteenbeeke.hyperion.data.BaseDomainObject"));
+
+		builder.inClass(publicClass())
+				.ensure(hasSuperclass("BaseDomainObject"));
+
 		JavaRecipe recipe = builder.build();
 
 		File bare = getDummy("BareClass");
@@ -145,12 +151,17 @@ public class RecipeTest extends DummyAwareTest {
 				importsClass("javax.persistence.UniqueConstraint"));
 		assertThat(sourceFile, importsClass("javax.persistence.Table"));
 		assertThat(sourceFile, importsClass("javax.persistence.Column"));
+		assertThat(
+				sourceFile,
+				importsClass("com.jeroensteenbeeke.hyperion.data.BaseDomainObject"));
 		assertThat(sourceFile, hasClasses(1));
 
 		AnalyzedClass analyzedClass = sourceFile.getClasses().get(0);
 
 		assertThat(analyzedClass, hasAnnotation("Entity"));
 		assertThat(analyzedClass, hasAnnotation("Table"));
+
+		assertThat(analyzedClass, extendsClass("DomainObject"));
 
 		AnalyzedAnnotation tableAnnotation = analyzedClass
 				.getAnnotation("Table");

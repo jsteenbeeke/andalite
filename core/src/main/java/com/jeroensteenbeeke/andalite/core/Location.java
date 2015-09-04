@@ -17,6 +17,9 @@ package com.jeroensteenbeeke.andalite.core;
 
 import javax.annotation.Nonnull;
 
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.github.antlrjavaparser.api.Node;
 
 public final class Location {
@@ -25,9 +28,16 @@ public final class Location {
 	private final int end;
 
 	public Location(@Nonnull int start, @Nonnull int end) {
-		super();
+		if (end < start) {
+			throw new IllegalArgumentException("End before start");
+		}
 		this.start = start;
 		this.end = end;
+	}
+
+	@Nonnull
+	public int getLength() {
+		return end - start;
 	}
 
 	@Nonnull
@@ -43,5 +53,17 @@ public final class Location {
 	@Nonnull
 	public static Location from(@Nonnull Node node) {
 		return new Location(node.getBeginIndex(), node.getEndIndex() + 1);
+	}
+
+	@Nonnull
+	public static Location from(@Nonnull TerminalNode node) {
+		Token symbol = node.getSymbol();
+
+		return new Location(symbol.getStartIndex(), symbol.getStopIndex());
+	}
+
+	@Override
+	public String toString() {
+		return String.format("[%d,%d]", start, end);
 	}
 }

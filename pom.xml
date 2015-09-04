@@ -67,13 +67,6 @@
 				<scope>test</scope>
 			</dependency>
 
-			<!-- Java Parser -->
-			<dependency>
-				<groupId>com.github.antlrjavaparser</groupId>
-				<artifactId>antlr-java-parser</artifactId>
-				<version>${parser.version}</version>
-			</dependency>
-
 			<!-- Guava -->
 			<dependency>
 				<groupId>com.google.guava</groupId>
@@ -102,10 +95,23 @@
 				<scope>test</scope>
 			</dependency>
 
+			<!-- Parser -->
+			<dependency>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4</artifactId>
+				<version>${antlr.version}</version>
+			</dependency>
+
 			<!-- Modules -->
 			<dependency>
 				<groupId>com.jeroensteenbeeke.andalite</groupId>
 				<artifactId>andalite-core</artifactId>
+				<version>${andalite.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.jeroensteenbeeke.andalite</groupId>
+				<artifactId>andalite-java-parser</artifactId>
 				<version>${andalite.version}</version>
 			</dependency>
 
@@ -165,6 +171,11 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+			<plugin>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4-maven-plugin</artifactId>
+				<version>${maven.antlr.plugin.version}</version>
+			</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-eclipse-plugin</artifactId>
@@ -306,6 +317,7 @@
 
 	<properties>
 		<andalite.version>1.0-SNAPSHOT</andalite.version>
+		<antlr.version>4.5</antlr.version>
 
 		<!-- Dependency Versions -->
 		<guava.version>18.0</guava.version>
@@ -313,10 +325,11 @@
 		<javaee.version>7.0</javaee.version>
 		<jsr305.version>3.0.0</jsr305.version>
 		<junit.version>4.12</junit.version>
-		<parser.version>1.0.17-SNAPSHOT</parser.version>
+		<parser.version>1.0.17</parser.version>
 		<slf4j.api.version>1.7.10</slf4j.api.version>
 
 		<!-- Plugin Versions -->
+		<maven.antlr.plugin.version>4.5.1-1</maven.antlr.plugin.version>
 		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
 		<maven.eclipse.plugin.version>2.9</maven.eclipse.plugin.version>
 		<maven.javadoc.plugin.version>2.10.1</maven.javadoc.plugin.version>
@@ -331,6 +344,7 @@
 	<modules>
 		<module>m2e-settings</module>
 		<module>core</module>
+		<module>java-parser</module>
 		<module>java</module>
 		<module>xml</module>
 		<module>forge</module>

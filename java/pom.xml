@@ -76,8 +76,8 @@
 
 		<!-- Java Parser -->
 		<dependency>
-			<groupId>com.github.antlrjavaparser</groupId>
-			<artifactId>antlr-java-parser</artifactId>
+			<groupId>com.jeroensteenbeeke.andalite</groupId>
+			<artifactId>andalite-java-parser</artifactId>
 		</dependency>
 
 		<!-- Guava -->

@@ -165,8 +165,9 @@ public class Operations {
 			@Nonnull String annotation) {
 		return new EnsureMethodAnnotation(annotation);
 	}
-	
-	public static IParameterOperation hasParameterAnnotation(@Nonnull String annotation) {
+
+	public static IParameterOperation hasParameterAnnotation(
+			@Nonnull String annotation) {
 		return new EnsureParameterAnnotation(annotation);
 	}
 
@@ -178,6 +179,10 @@ public class Operations {
 	public static ICompilationUnitOperation hasPackageClass(
 			@Nonnull String packageClassName) {
 		return new EnsurePackageClass(packageClassName);
+	}
+
+	public static IClassOperation hasSuperclass(String superClass) {
+		return new EnsureSuperClass(superClass);
 	}
 
 }
