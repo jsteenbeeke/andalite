@@ -62,7 +62,7 @@ public class FieldAccessExpression extends AnalyzedExpression {
 	/**
 	 * @param type
 	 *            The type argument to add to the list
-	 * @nonpublic
+	 * @non.public
 	 */
 	public void addTypeArgument(@Nonnull AnalyzedType type) {
 		this.typeArguments.add(type);

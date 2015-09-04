@@ -7,6 +7,7 @@ import java.util.Set;
 import org.junit.AfterClass;
 
 import com.google.common.collect.Sets;
+import com.google.common.io.Files;
 
 public abstract class TempFileCleaningTest {
 
@@ -40,6 +41,7 @@ public abstract class TempFileCleaningTest {
 		public File as(String filename) throws IOException {
 			File tempFile = newTempFile(filename, null);
 			createdTempFiles.add(tempFile);
+			Files.copy(new File(pathName), tempFile);
 			return tempFile;
 		}
 	}

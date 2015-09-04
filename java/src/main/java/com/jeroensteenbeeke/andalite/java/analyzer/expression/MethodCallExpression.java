@@ -53,7 +53,7 @@ public class MethodCallExpression extends AnalyzedExpression {
 	/**
 	 * @param scope
 	 *            The scope to set
-	 * @nonpublic
+	 * @non.public
 	 */
 	public void setScope(AnalyzedExpression scope) {
 		this.scope = scope;

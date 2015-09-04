@@ -66,7 +66,7 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 	/**
 	 * @param scope
 	 *            The class scope of the created object
-	 * @nonpublic
+	 * @non.public
 	 */
 	public void setScope(AnalyzedExpression scope) {
 		this.scope = scope;
@@ -80,7 +80,7 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 	/**
 	 * @param declaredAnonymousClass
 	 *            The class to set as anonymous inner class
-	 * @nonpublic
+	 * @non.public
 	 */
 	public void setDeclaredAnonymousClass(
 			@Nonnull AnalyzedClass declaredAnonymousClass) {
@@ -90,7 +90,7 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 	/**
 	 * @param expression
 	 *            The expression to add as constructor argument
-	 * @nonpublic
+	 * @non.public
 	 */
 	public void addArgument(@Nonnull AnalyzedExpression expression) {
 		arguments.add(expression);
@@ -104,7 +104,7 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 	/**
 	 * @param type
 	 *            The type argument to add to the list
-	 * @nonpublic
+	 * @non.public
 	 */
 	public void addTypeArgument(@Nonnull AnalyzedType type) {
 		typeArguments.add(type);

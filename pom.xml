@@ -310,11 +310,10 @@
 					<configuration>
 						<tags>
 							<tag>
-								<name>nonpublic</name>
+								<name>non.public</name>
 								<!-- Indicates that the method is not part of the public API -->
 								<placement>m</placement>
-								<head>THIS METHOD IS NOT PART OF THE PUBLIC API. USAGE IS
-									NOTRECOMMENDED AND RESULTS ARE UNDEFINED</head>
+								<head>THIS METHOD IS NOT PART OF THE PUBLIC API</head>
 							</tag>
 						</tags>
 					</configuration>
@@ -341,7 +340,7 @@
 		<maven.antlr.plugin.version>4.5.1-1</maven.antlr.plugin.version>
 		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
 		<maven.eclipse.plugin.version>2.9</maven.eclipse.plugin.version>
-		<maven.javadoc.plugin.version>2.10.1</maven.javadoc.plugin.version>
+		<maven.javadoc.plugin.version>2.10.3</maven.javadoc.plugin.version>
 		<maven.license.plugin.version>2.3</maven.license.plugin.version>
 		<maven.lifecycle.plugin.version>1.0.0</maven.lifecycle.plugin.version>
 		<maven.source.plugin.version>2.4</maven.source.plugin.version>
