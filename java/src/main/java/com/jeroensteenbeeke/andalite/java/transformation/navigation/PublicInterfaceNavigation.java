@@ -12,35 +12,32 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.java.analyzer.ContainingDenomination;
+import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 
-public class InnerClassNavigation<S extends ContainingDenomination> extends
-		ChainedNavigation<S, AnalyzedClass> {
-	private final String className;
-
-	public InnerClassNavigation(IJavaNavigation<S> chained, String className) {
-		super(chained);
-		this.className = className;
-	}
+public class PublicInterfaceNavigation implements
+		IJavaNavigation<AnalyzedInterface> {
 
 	@Override
-	public AnalyzedClass navigate(S chainedTarget) throws NavigationException {
-		if (chainedTarget.hasInnerClass(className)) {
-			return chainedTarget.getInnerClass(className);
+	public AnalyzedInterface navigate(AnalyzedSourceFile file)
+			throws NavigationException {
+		for (AnalyzedInterface analyzedInterface : file.getInterfaces()) {
+			if (analyzedInterface.getAccessModifier() == AccessModifier.PUBLIC) {
+				return analyzedInterface;
+			}
 		}
 
-		throw new NavigationException(String.format(
-				"Denomination %s has no inner class named %s",
-				chainedTarget.getDenominationName(), className));
+		throw new NavigationException("Source file has no public interface");
 	}
 
 	@Override
-	public String getStepDescription() {
-
-		return String.format("Go to inner class %s", className);
+	public String getDescription() {
+		return "Public interface";
 	}
+
 }

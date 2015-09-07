@@ -18,8 +18,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureClassMethod;
 
-public class EnsureMethodBuilder extends AbstractMethodBuilder<IClassOperation> {
-	EnsureMethodBuilder() {
+public class EnsureClassMethodBuilder extends AbstractMethodBuilder<IClassOperation> {
+	EnsureClassMethodBuilder() {
 		super("void", AccessModifier.PUBLIC);
 	}
 

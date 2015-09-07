@@ -47,4 +47,8 @@ public class JavaRecipeBuilder implements IStepCollector {
 		return new JavaRecipe(steps);
 	}
 
+	public InterfaceScopeOperationBuilder inInterface(InterfaceLocator locator) {
+		return new InterfaceScopeOperationBuilder(this, locator.getNavigation());
+	}
+
 }

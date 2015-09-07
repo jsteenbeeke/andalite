@@ -15,34 +15,32 @@
 
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.InnerClassNavigation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
 
-public class ClassScopeOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedClass, IClassOperation> {
+public class InterfaceScopeOperationBuilder extends
+		AbstractOperationBuilder<AnalyzedInterface, IInterfaceOperation> {
 
-	ClassScopeOperationBuilder(IStepCollector collector,
-			IJavaNavigation<AnalyzedClass> navigation) {
+	InterfaceScopeOperationBuilder(IStepCollector collector,
+			IJavaNavigation<AnalyzedInterface> navigation) {
 		super(collector, navigation);
-	}
-
-	public FieldOperationBuilder forField(String name) {
-		return new FieldOperationBuilder(getCollector(), getNavigation(), name);
 	}
 
 	public ClassScopeOperationBuilder forInnerClass(String name) {
 		return new ClassScopeOperationBuilder(getCollector(),
-				new InnerClassNavigation(getNavigation(), name));
+				new InnerClassNavigation<AnalyzedInterface>(getNavigation(),
+						name));
 	}
 
-	public AnnotatableOperationBuilder<AnalyzedClass> forAnnotation(String type) {
-		return new AnnotatableOperationBuilder<AnalyzedClass>(getCollector(),
-				getNavigation(), type);
+	public AnnotatableOperationBuilder<AnalyzedInterface> forAnnotation(
+			String type) {
+		return new AnnotatableOperationBuilder<AnalyzedInterface>(
+				getCollector(), getNavigation(), type);
 	}
 
-	public ClassMethodLocator forMethod() {
-		return new ClassMethodLocator(getCollector(), getNavigation());
+	public InterfaceMethodLocator forMethod() {
+		return new InterfaceMethodLocator(getCollector(), getNavigation());
 	}
 }

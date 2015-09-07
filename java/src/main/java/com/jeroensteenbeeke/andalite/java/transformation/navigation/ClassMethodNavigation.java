@@ -27,7 +27,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
-public class MethodNavigation extends
+public class ClassMethodNavigation extends
 		ChainedNavigation<AnalyzedClass, AnalyzedMethod> {
 	private final String name;
 
@@ -37,7 +37,7 @@ public class MethodNavigation extends
 
 	private final List<ParameterDescriptor> descriptors;
 
-	public MethodNavigation(
+	public ClassMethodNavigation(
 			@Nonnull IJavaNavigation<AnalyzedClass> classNavigation,
 			@Nonnull String name, @Nullable String type,
 			@Nullable AccessModifier modifier,

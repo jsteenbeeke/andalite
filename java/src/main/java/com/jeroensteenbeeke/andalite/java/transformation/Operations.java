@@ -60,8 +60,8 @@ public class Operations {
 		return new EnsureFieldAnnotation(annotation);
 	}
 
-	public static EnsureMethodBuilder hasMethod() {
-		return new EnsureMethodBuilder();
+	public static EnsureClassMethodBuilder hasMethod() {
+		return new EnsureClassMethodBuilder();
 	}
 
 	public static IAnnotationOperation hasBooleanValue(@Nonnull String name,

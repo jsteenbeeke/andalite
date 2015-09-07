@@ -12,77 +12,67 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
+package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
 import java.util.List;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
-import com.jeroensteenbeeke.andalite.core.Location;
-import com.jeroensteenbeeke.andalite.core.Transformation;
-import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
-public class EnsureInterfaceMethod implements IInterfaceOperation {
+public class InterfaceMethodNavigation extends
+		ChainedNavigation<AnalyzedInterface, AnalyzedMethod> {
 	private final String name;
 
 	private final String type;
 
 	private final List<ParameterDescriptor> descriptors;
 
-	public EnsureInterfaceMethod(String name, String type,
-			List<ParameterDescriptor> descriptors) {
+	public InterfaceMethodNavigation(
+			@Nonnull IJavaNavigation<AnalyzedInterface> classNavigation,
+			@Nonnull String name, @Nullable String type,
+			@Nonnull List<ParameterDescriptor> descriptors) {
+		super(classNavigation);
 		this.name = name;
 		this.type = type;
 		this.descriptors = descriptors;
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedInterface input)
-			throws OperationException {
-		Location last = input.getBodyLocation();
+	public String getStepDescription() {
+		return String.format("go to method %s",
+				AnalyzeUtil.getMethodSignature(name, descriptors));
+	}
 
-		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
+	@Override
+	public AnalyzedMethod navigate(AnalyzedInterface chainedTarget)
+			throws NavigationException {
+		for (AnalyzedMethod analyzedMethod : chainedTarget.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
 					AnalyzedType returnType = analyzedMethod.getReturnType();
 					final String returnTypeAsString = returnType != null ? returnType
 							.toJavaString() : "void";
 
-					if (!type.equals(returnTypeAsString)) {
-						throw new OperationException(
-								String.format(
-										"Method with expected signature exists, but has incorrect return type %s (expected %s)",
-										returnTypeAsString, type));
+					if (type != null && !type.equals(returnTypeAsString)) {
+						throw new NavigationException(
+								"Method %s found, but has incorrect return type %s (expected %s)",
+								AnalyzeUtil.getMethodSignature(name,
+										descriptors), returnTypeAsString, type);
 					}
 
-					return ImmutableList.of();
+					return analyzedMethod;
 				}
 			}
-
-			last = analyzedMethod.getLocation();
 		}
-		StringBuilder code = new StringBuilder();
-		code.append("\t");
-		code.append(type);
-		code.append(" ");
-		code.append(name);
-		code.append("(");
-		code.append(Joiner.on(", ").join(descriptors));
-		code.append(");\n\n");
 
-		return ImmutableList.of(Transformation.insertBefore(last,
-				code.toString()));
-	}
-
-	@Override
-	public String getDescription() {
-		return String.format("existence of method: %s %s", type,
+		throw new NavigationException("Could not find method %s",
 				AnalyzeUtil.getMethodSignature(name, descriptors));
 	}
 

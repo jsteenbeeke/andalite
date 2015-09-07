@@ -16,19 +16,19 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import javax.annotation.Nonnull;
 
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
-import com.jeroensteenbeeke.andalite.java.transformation.navigation.MethodNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.InterfaceMethodNavigation;
 
-public class MethodLocator extends
+public class InterfaceMethodLocator extends
 		AbstractMethodBuilder<MethodOperationBuilder> {
 
 	private final IStepCollector collector;
 
-	private final IJavaNavigation<AnalyzedClass> parentNavigation;
+	private final IJavaNavigation<AnalyzedInterface> parentNavigation;
 
-	MethodLocator(IStepCollector collector,
-			IJavaNavigation<AnalyzedClass> parentNavigation) {
+	InterfaceMethodLocator(IStepCollector collector,
+			IJavaNavigation<AnalyzedInterface> parentNavigation) {
 		super(null, null);
 		this.collector = collector;
 		this.parentNavigation = parentNavigation;
@@ -36,9 +36,9 @@ public class MethodLocator extends
 	}
 
 	public MethodOperationBuilder named(@Nonnull String name) {
-		return new MethodOperationBuilder(collector, new MethodNavigation(
-				parentNavigation, name, getType(), getModifier(),
-				getDescriptors()));
+		return new MethodOperationBuilder(collector,
+				new InterfaceMethodNavigation(parentNavigation, name,
+						getType(), getDescriptors()));
 	}
 
 }
