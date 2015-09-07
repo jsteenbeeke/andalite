@@ -186,6 +186,11 @@ public class Operations {
 		return new EnsureSuperClass(superClass);
 	}
 
+	public static IInterfaceOperation extendsInterface(
+			@Nonnull String interfaceName) {
+		return new EnsureSuperInterface(interfaceName);
+	}
+
 	public static IClassOperation implementsInterface(
 			@Nonnull String interfaceName) {
 		return new EnsureImplements(interfaceName);
