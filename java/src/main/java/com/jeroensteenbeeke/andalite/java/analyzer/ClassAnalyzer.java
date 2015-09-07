@@ -27,6 +27,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.github.antlrjavaparser.JavaParser;
 import com.github.antlrjavaparser.ParseException;
+import com.github.antlrjavaparser.api.Comment;
 import com.github.antlrjavaparser.api.CompilationUnit;
 import com.github.antlrjavaparser.api.ImportDeclaration;
 import com.github.antlrjavaparser.api.PackageDeclaration;
@@ -737,7 +738,8 @@ public class ClassAnalyzer {
 					returnStmt.getExpr(), containingDenomination,
 					analyzerContext);
 
-			return new ReturnStatement(location, returnExpression);
+			return addComments(statement, new ReturnStatement(location,
+					returnExpression));
 		} else if (statement instanceof IfStmt) {
 			IfStmt ifStmt = (IfStmt) statement;
 
@@ -754,31 +756,38 @@ public class ClassAnalyzer {
 			ifStatement.setElseStatement(analyzeStatement(ifStmt.getElseStmt(),
 					containingDenomination, analyzerContext));
 
-			return ifStatement;
+			return addComments(statement, ifStatement);
 
 		} else if (statement instanceof AssertStmt) {
 			AssertStmt assertStmt = (AssertStmt) statement;
 
-			return new AssertStatement(Location.from(statement),
-					analyzeExpression(assertStmt.getCheck(),
-							containingDenomination, analyzerContext));
+			return addComments(
+					statement,
+					new AssertStatement(Location.from(statement),
+							analyzeExpression(assertStmt.getCheck(),
+									containingDenomination, analyzerContext)));
 		} else if (statement instanceof BlockStmt) {
 			BlockStmt blockStmt = (BlockStmt) statement;
 
-			return analyzeBlockStatement(blockStmt, containingDenomination,
-					analyzerContext);
+			return addComments(
+					statement,
+					analyzeBlockStatement(blockStmt, containingDenomination,
+							analyzerContext));
 
 		} else if (statement instanceof BreakStmt) {
 			BreakStmt breakStmt = (BreakStmt) statement;
 
-			return new BreakStatement(Location.from(breakStmt),
-					breakStmt.getId());
+			return addComments(
+					statement,
+					new BreakStatement(Location.from(breakStmt), breakStmt
+							.getId()));
 
 		} else if (statement instanceof ContinueStmt) {
 			ContinueStmt continueStmt = (ContinueStmt) statement;
 
-			return new ContinueStatement(Location.from(continueStmt),
-					continueStmt.getId());
+			return addComments(statement,
+					new ContinueStatement(Location.from(continueStmt),
+							continueStmt.getId()));
 		} else if (statement instanceof DoStmt) {
 			DoStmt doStmt = (DoStmt) statement;
 
@@ -788,7 +797,8 @@ public class ClassAnalyzer {
 			AnalyzedStatement body = analyzeStatement(doStmt.getBody(),
 					containingDenomination, analyzerContext);
 
-			return new DoStatement(Location.from(doStmt), condition, body);
+			return addComments(statement, new DoStatement(
+					Location.from(doStmt), condition, body));
 		} else if (statement instanceof EmptyStmt) {
 			return new EmptyStatement(Location.from(statement));
 		} else if (statement instanceof ExplicitConstructorInvocationStmt) {
@@ -835,13 +845,14 @@ public class ClassAnalyzer {
 				}
 			}
 
-			return invocation;
+			return addComments(statement, invocation);
 		} else if (statement instanceof ExpressionStmt) {
 			ExpressionStmt expr = (ExpressionStmt) statement;
 			AnalyzedExpression e = analyzeExpression(expr.getExpression(),
 					containingDenomination, analyzerContext);
 
-			return new ExpressionStatement(Location.from(expr), e);
+			return addComments(statement,
+					new ExpressionStatement(Location.from(expr), e));
 
 		} else if (statement instanceof ForeachStmt) {
 			ForeachStmt foreachStmt = (ForeachStmt) statement;
@@ -855,8 +866,9 @@ public class ClassAnalyzer {
 					foreachStmt.getIterable(), containingDenomination,
 					analyzerContext);
 
-			return new ForEachStatement(Location.from(foreachStmt),
-					declareExpression, iterable, body);
+			return addComments(statement,
+					new ForEachStatement(Location.from(foreachStmt),
+							declareExpression, iterable, body));
 		} else if (statement instanceof ForStmt) {
 			ForStmt forStmt = (ForStmt) statement;
 
@@ -892,7 +904,7 @@ public class ClassAnalyzer {
 				}
 			}
 
-			return forStatement;
+			return addComments(statement, forStatement);
 		} else if (statement instanceof LabeledStmt) {
 			LabeledStmt labeledStmt = (LabeledStmt) statement;
 
@@ -919,12 +931,14 @@ public class ClassAnalyzer {
 				}
 			}
 
-			return switchStatement;
+			return addComments(statement, switchStatement);
 		} else if (statement instanceof SwitchEntryStmt) {
 			SwitchEntryStmt switchEntryStmt = (SwitchEntryStmt) statement;
 
-			return analyzeSwitchEntry(switchEntryStmt, containingDenomination,
-					analyzerContext);
+			return addComments(
+					statement,
+					analyzeSwitchEntry(switchEntryStmt, containingDenomination,
+							analyzerContext));
 
 		} else if (statement instanceof SynchronizedStmt) {
 			SynchronizedStmt synchronizedStmt = (SynchronizedStmt) statement;
@@ -936,14 +950,17 @@ public class ClassAnalyzer {
 					synchronizedStmt.getExpr(), containingDenomination,
 					analyzerContext);
 
-			return new SynchronizedStatement(Location.from(synchronizedStmt),
-					syncExpression, block);
+			return addComments(statement,
+					new SynchronizedStatement(Location.from(synchronizedStmt),
+							syncExpression, block));
 		} else if (statement instanceof ThrowStmt) {
 			ThrowStmt throwStmt = (ThrowStmt) statement;
 
-			return new ThrowStatement(Location.from(throwStmt),
-					analyzeExpression(throwStmt.getExpr(),
-							containingDenomination, analyzerContext));
+			return addComments(
+					statement,
+					new ThrowStatement(Location.from(throwStmt),
+							analyzeExpression(throwStmt.getExpr(),
+									containingDenomination, analyzerContext)));
 		} else if (statement instanceof TryStmt) {
 			TryStmt tryStmt = (TryStmt) statement;
 
@@ -1033,16 +1050,18 @@ public class ClassAnalyzer {
 				}
 			}
 
-			return tryStatement;
+			return addComments(statement, tryStatement);
 		} else if (statement instanceof TypeDeclarationStmt) {
 			TypeDeclarationStmt typeDeclarationStmt = (TypeDeclarationStmt) statement;
 
-			return new TypeDeclarationStatement(
-					Location.from(typeDeclarationStmt), analyze(null,
+			return addComments(
+					statement,
+					new TypeDeclarationStatement(Location
+							.from(typeDeclarationStmt), analyze(null,
 							analyzerContext.anonymousInnerClass(Location
 									.from(typeDeclarationStmt
 											.getTypeDeclaration())),
-							typeDeclarationStmt.getTypeDeclaration()));
+							typeDeclarationStmt.getTypeDeclaration())));
 		} else if (statement instanceof WhileStmt) {
 			WhileStmt whileStmt = (WhileStmt) statement;
 
@@ -1052,11 +1071,25 @@ public class ClassAnalyzer {
 			AnalyzedStatement body = analyzeStatement(whileStmt.getBody(),
 					containingDenomination, analyzerContext);
 
-			return new WhileStatement(Location.from(whileStmt), condition, body);
+			return addComments(statement,
+					new WhileStatement(Location.from(whileStmt), condition,
+							body));
 		}
 
 		throw new IllegalStateException(
 				"Unhandled statement type! Go slap the andalite developers!");
+	}
+
+	private AnalyzedStatement addComments(Statement stmt,
+			AnalyzedStatement statement) {
+		for (Comment comment : stmt.getBeginComments()) {
+			statement.addComment(comment.getContent());
+		}
+		for (Comment comment : stmt.getEndComments()) {
+			statement.addComment(comment.getContent());
+		}
+
+		return statement;
 	}
 
 	private BlockStatement analyzeBlockStatement(BlockStmt blockStmt,

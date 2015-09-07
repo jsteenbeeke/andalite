@@ -15,7 +15,9 @@
 package com.jeroensteenbeeke.andalite.java.transformation;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.ReturnStatementNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 
 public class BodyContainerOperationBuilder extends
@@ -27,5 +29,10 @@ public class BodyContainerOperationBuilder extends
 
 	public IfStatementLocator inIfExpression() {
 		return new IfStatementLocator(this);
+	}
+
+	public StatementOperationBuilder<ReturnStatement> forReturnStatement() {
+		return new StatementOperationBuilder<ReturnStatement>(getCollector(),
+				new ReturnStatementNavigation(getNavigation()));
 	}
 }

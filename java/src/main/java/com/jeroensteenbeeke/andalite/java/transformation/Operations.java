@@ -18,6 +18,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BooleanValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.CharValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.FieldAccessValue;
@@ -181,8 +182,23 @@ public class Operations {
 		return new EnsurePackageClass(packageClassName);
 	}
 
-	public static IClassOperation hasSuperclass(String superClass) {
+	public static IClassOperation hasSuperclass(@Nonnull String superClass) {
 		return new EnsureSuperClass(superClass);
+	}
+
+	public static IClassOperation implementsInterface(
+			@Nonnull String interfaceName) {
+		return new EnsureImplements(interfaceName);
+	}
+
+	public static <S extends AnalyzedStatement> IJavaOperation<S> hasPrefixComment(
+			@Nonnull String comment) {
+		return new EnsureStatementComment<S>(comment, true);
+	}
+
+	public static <S extends AnalyzedStatement> IJavaOperation<S> hasSuffixComment(
+			@Nonnull String comment) {
+		return new EnsureStatementComment<S>(comment, false);
 	}
 
 }

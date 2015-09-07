@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import javax.annotation.Nonnull;
 
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.IfStatementLocator.IfStatementLocatorTerminator;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ByExpressionIfStatementNavigation;
@@ -56,13 +57,13 @@ public class IfStatementLocator extends
 			this.statementNavigation = statementNavigation;
 		}
 
-		public StatementOperationBuilder thenStatement() {
-			return new StatementOperationBuilder(collector,
+		public StatementOperationBuilder<AnalyzedStatement> thenStatement() {
+			return new StatementOperationBuilder<AnalyzedStatement>(collector,
 					new ThenStatementNavigation(statementNavigation));
 		}
 
-		public StatementOperationBuilder elseStatement() {
-			return new StatementOperationBuilder(collector,
+		public StatementOperationBuilder<AnalyzedStatement> elseStatement() {
+			return new StatementOperationBuilder<AnalyzedStatement>(collector,
 					new ElseStatementNavigation(statementNavigation));
 		}
 

@@ -17,6 +17,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
@@ -37,13 +38,29 @@ public class EnsureImplements implements IClassOperation {
 		Location extendsLocation = input.getExtendsLocation();
 		Location nameLocation = input.getNameLocation();
 
-		throw new OperationException("Not yet implemented");
+		if (input.getInterfaces().contains(interfaceName)) {
+			return ImmutableList.of();
+		}
+
+		if (lastImplementsLocation != null) {
+			return ImmutableList.of(Transformation.insertAfter(
+					lastImplementsLocation, ", ".concat(interfaceName)));
+		} else {
+			if (extendsLocation != null) {
+				return ImmutableList.of(Transformation.insertAfter(
+						extendsLocation, " implements ".concat(interfaceName)));
+
+			} else {
+				return ImmutableList.of(Transformation.insertAfter(
+						nameLocation, " implements ".concat(interfaceName)));
+
+			}
+		}
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Ensure that class implements ".concat(interfaceName);
 	}
 
 }

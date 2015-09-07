@@ -17,19 +17,19 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.StatementAsBodyNavigation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IStatementOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 
-public class StatementOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedStatement, IStatementOperation> {
+public class StatementOperationBuilder<S extends AnalyzedStatement> extends
+		AbstractOperationBuilder<S, IJavaOperation<S>> {
 
 	public StatementOperationBuilder(IStepCollector collector,
-			IJavaNavigation<AnalyzedStatement> navigation) {
+			IJavaNavigation<S> navigation) {
 		super(collector, navigation);
 	}
 
 	public BodyContainerOperationBuilder body() {
 		return new BodyContainerOperationBuilder(getCollector(),
-				new StatementAsBodyNavigation(getNavigation()));
+				new StatementAsBodyNavigation<S>(getNavigation()));
 	}
 
 }

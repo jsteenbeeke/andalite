@@ -15,15 +15,32 @@
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Locatable;
 import com.jeroensteenbeeke.andalite.core.Location;
 
 public abstract class AnalyzedStatement extends Locatable {
+	private final List<String> comments;
+
 	protected AnalyzedStatement(Location location) {
 		super(location);
+		this.comments = Lists.newArrayList();
+	}
+
+	/**
+	 * @nonpublic
+	 */
+	public void addComment(String comment) {
+		this.comments.add(comment);
+	}
+
+	public List<String> getComments() {
+		return ImmutableList.copyOf(comments);
 	}
 
 	public abstract String toJavaString();

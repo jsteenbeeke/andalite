@@ -18,9 +18,9 @@ import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 
-public class StatementAsBodyNavigation extends
-		ChainedNavigation<AnalyzedStatement, IBodyContainer> {
-	public StatementAsBodyNavigation(IJavaNavigation<AnalyzedStatement> chained) {
+public class StatementAsBodyNavigation<S extends AnalyzedStatement> extends
+		ChainedNavigation<S, IBodyContainer> {
+	public StatementAsBodyNavigation(IJavaNavigation<S> chained) {
 		super(chained);
 	}
 
@@ -29,8 +29,7 @@ public class StatementAsBodyNavigation extends
 		return "assume it is a body statement";
 	}
 
-	public IBodyContainer navigate(AnalyzedStatement chainedTarget)
-			throws NavigationException {
+	public IBodyContainer navigate(S chainedTarget) throws NavigationException {
 		if (chainedTarget instanceof IBodyContainer) {
 			return (IBodyContainer) chainedTarget;
 		}
