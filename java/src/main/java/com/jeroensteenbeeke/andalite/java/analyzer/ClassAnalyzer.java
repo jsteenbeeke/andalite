@@ -1082,11 +1082,18 @@ public class ClassAnalyzer {
 
 	private AnalyzedStatement addComments(Statement stmt,
 			AnalyzedStatement statement) {
-		for (Comment comment : stmt.getBeginComments()) {
-			statement.addComment(comment.getContent());
+		List<Comment> beginComments = stmt.getBeginComments();
+		if (beginComments != null) {
+			for (Comment comment : beginComments) {
+				statement.addComment(comment.getContent());
+			}
 		}
-		for (Comment comment : stmt.getEndComments()) {
-			statement.addComment(comment.getContent());
+
+		List<Comment> endComments = stmt.getEndComments();
+		if (endComments != null) {
+			for (Comment comment : endComments) {
+				statement.addComment(comment.getContent());
+			}
 		}
 
 		return statement;
