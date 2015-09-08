@@ -74,8 +74,7 @@ public class ClassAnalyzer {
 
 			final String packageName = determinePackageName(packageDefinition);
 
-			AnalyzerContext context = new AnalyzerContext(packageName,
-					Location.from(packageDefinition.getName()), null);
+			AnalyzerContext context = new AnalyzerContext(packageName, null);
 
 			AnalyzedSourceFile sourceFile = new AnalyzedSourceFile(
 					Location.from(compilationUnit), targetFile, packageName,
@@ -170,11 +169,8 @@ public class ClassAnalyzer {
 	private void processAnnotationDeclaration(AnnotationDeclaration decl,
 			AnalyzedAnnotationType element) {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
-			AnalyzedAnnotation annotation = analyze(
-					expr,
-					element,
-					new AnalyzerContext(element.getAnnotationName(), element
-							.getNameLocation(), null));
+			AnalyzedAnnotation annotation = analyze(expr, element,
+					new AnalyzerContext(element.getAnnotationName(), null));
 			if (annotation != null) {
 				element.addAnnotation(annotation);
 			}
@@ -1058,9 +1054,7 @@ public class ClassAnalyzer {
 					statement,
 					new TypeDeclarationStatement(Location
 							.from(typeDeclarationStmt), analyze(null,
-							analyzerContext.anonymousInnerClass(Location
-									.from(typeDeclarationStmt
-											.getTypeDeclaration())),
+							analyzerContext.anonymousInnerClass(),
 							typeDeclarationStmt.getTypeDeclaration())));
 		} else if (statement instanceof WhileStmt) {
 			WhileStmt whileStmt = (WhileStmt) statement;
@@ -1421,10 +1415,8 @@ public class ClassAnalyzer {
 				List<BodyDeclaration> anonymousClassBody = objectCreationExpr
 						.getAnonymousClassBody();
 				if (anonymousClassBody != null) {
-					Location nameLocation = Location.from(objectCreationExpr
-							.getType());
 					AnalyzerContext innerClassContext = analyzerContext
-							.anonymousInnerClass(nameLocation);
+							.anonymousInnerClass();
 
 					AnalyzedClass innerClass = new AnalyzedClass(
 							Location.from(objectCreationExpr), 0,
@@ -1624,13 +1616,9 @@ public class ClassAnalyzer {
 
 		private final String currentScope;
 
-		private final Location nameLocation;
-
 		private final AnalyzerContext parent;
 
-		private AnalyzerContext(String currentScope, Location nameLocation,
-				AnalyzerContext parent) {
-			this.nameLocation = nameLocation;
+		private AnalyzerContext(String currentScope, AnalyzerContext parent) {
 			this.currentScope = currentScope;
 			this.parent = parent;
 		}
@@ -1643,18 +1631,13 @@ public class ClassAnalyzer {
 			return String.format("%s.%s", parent.getScope(), currentScope);
 		}
 
-		public Location getNameLocation() {
-			return nameLocation;
-		}
-
-		public AnalyzerContext anonymousInnerClass(Location nameLocation) {
+		public AnalyzerContext anonymousInnerClass() {
 			return new AnalyzerContext(String.format("$%d",
-					++anonymousInnerClassCounter), nameLocation, this);
+					++anonymousInnerClassCounter), this);
 		}
 
 		public AnalyzerContext innerDeclaration(TerminalNode name) {
-			return new AnalyzerContext(name.getText(), Location.from(name),
-					this);
+			return new AnalyzerContext(name.getText(), this);
 		}
 
 	}
