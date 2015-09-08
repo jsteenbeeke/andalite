@@ -90,8 +90,19 @@ public class EnsureClassMethod implements IClassOperation {
 		code.append(") {\n");
 		code.append("\t}\n\n");
 
-		return ImmutableList.of(Transformation.insertBefore(last,
-				code.toString()));
+		ImmutableList.Builder<Transformation> transforms = ImmutableList
+				.builder();
+
+		int l = last.getEnd() + 2;
+
+		if (last.getLength() == 0) {
+			transforms
+					.add(Transformation.insertAt(last.getStart() + 2, "\n\n"));
+
+			l = last.getStart() + 3;
+		}
+
+		return ImmutableList.of(Transformation.insertAt(l, code.toString()));
 	}
 
 	@Override

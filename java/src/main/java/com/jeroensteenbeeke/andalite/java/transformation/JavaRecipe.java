@@ -40,6 +40,8 @@ public class JavaRecipe {
 		logger.debug("Applying transformation ({} steps) to {}", steps.size(),
 				file.getName());
 
+		JavaRecipeStep<?> prev = null;
+
 		for (JavaRecipeStep<?> step : steps) {
 
 			TypedActionResult<AnalyzedSourceFile> result = new ClassAnalyzer(
@@ -48,6 +50,9 @@ public class JavaRecipe {
 			if (!result.isOk()) {
 				logger.error("ERROR, could not read file: {}",
 						result.getMessage());
+				if (prev != null) {
+					logger.error("Previous action: {}", prev.toString());
+				}
 
 				return ActionResult.error(result.getMessage());
 
@@ -62,6 +67,8 @@ public class JavaRecipe {
 			} else {
 				logger.debug("OK: {}", step.toString());
 			}
+
+			prev = step;
 		}
 
 		logger.debug("All steps executed, checking if resulting file can be parsed");

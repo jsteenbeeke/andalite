@@ -47,7 +47,8 @@ public class Questions {
 
 				if (!type.isAssignableFrom(object.getClass())) {
 					throw new IllegalStateException("Answer with key " + key
-							+ " not of type " + type.getName());
+							+ " not of type " + type.getName()
+							+ " but of type " + object.getClass().getName());
 				}
 
 				return (T) object;
@@ -58,6 +59,9 @@ public class Questions {
 		}
 
 		private void register(String key, Object answer) {
+			if (answers.containsKey(key)) {
+				throw new IllegalArgumentException("Duplicate key " + key);
+			}
 			answers.put(key, answer);
 
 		}
@@ -105,6 +109,7 @@ public class Questions {
 					@Override
 					public Action onAnswer(String answer,
 							FeedbackHandler handler) throws ForgeException {
+
 						return s.apply(answer);
 					}
 				};
@@ -136,6 +141,7 @@ public class Questions {
 					@Override
 					public Action onAnswer(Boolean answer,
 							FeedbackHandler handler) throws ForgeException {
+
 						return s.apply(answer);
 					}
 				};
@@ -150,6 +156,7 @@ public class Questions {
 					@Override
 					public Action onAnswer(String answer,
 							FeedbackHandler handler) throws ForgeException {
+
 						return s.apply(answer);
 					}
 
@@ -168,6 +175,7 @@ public class Questions {
 					@Override
 					public Action onAnswer(String answer,
 							FeedbackHandler handler) throws ForgeException {
+
 						return s.apply(answer);
 					}
 
@@ -206,7 +214,7 @@ public class Questions {
 		public Action andThen(Function<Answers, Action> answersToAction) {
 			QuestionInitiator initiator = initiators.remove(0);
 
-			return initiator.initiate(initiators);
+			return initiator.initiate(initiators, answersToAction);
 		}
 	}
 
@@ -224,17 +232,23 @@ public class Questions {
 			this.questionMaker = questionMaker;
 		}
 
-		public Action initiate(List<QuestionInitiator> next) {
-			return initiate(new Answers(Maps.newLinkedHashMap()), next);
+		public Action initiate(List<QuestionInitiator> next,
+				Function<Answers, Action> answersToAction) {
+			return initiate(new Answers(Maps.newLinkedHashMap()), next,
+					answersToAction);
 		}
 
-		private Action initiate(Answers answers, List<QuestionInitiator> next) {
+		private Action initiate(Answers answers, List<QuestionInitiator> next,
+				Function<Answers, Action> answersToAction) {
 			return questionMaker.initialize(question, answers, s -> {
 				answers.register(key, s);
 
+				if (next.isEmpty()) {
+					return answersToAction.apply(answers);
+				}
 				QuestionInitiator initiator = next.remove(0);
 
-				return initiator.initiate(next);
+				return initiator.initiate(answers, next, answersToAction);
 
 			});
 		}

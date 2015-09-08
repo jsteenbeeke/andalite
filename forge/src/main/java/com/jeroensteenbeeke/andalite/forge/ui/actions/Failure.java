@@ -17,9 +17,13 @@ package com.jeroensteenbeeke.andalite.forge.ui.actions;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
 
 public final class Failure implements Action {
-	private static final Failure instance = new Failure();
+	private final String reason;
 
-	public static Failure get() {
-		return instance;
+	public Failure(String reason) {
+		this.reason = reason;
+	}
+
+	public String getReason() {
+		return reason;
 	}
 }

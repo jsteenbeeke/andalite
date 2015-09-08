@@ -44,4 +44,17 @@ public class ActionResult {
 			return new ActionResult(false, String.format(message, params));
 		}
 	}
+
+	@Override
+	public String toString() {
+		if (ok) {
+			return "Result: OK";
+		}
+
+		if (message != null) {
+			return "Result: FAIL, ".concat(message);
+		} else {
+			return "Result: FAIL, NO REASON GIVEN";
+		}
+	}
 }

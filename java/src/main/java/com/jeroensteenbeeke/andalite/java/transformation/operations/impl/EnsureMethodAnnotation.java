@@ -23,4 +23,9 @@ public class EnsureMethodAnnotation extends
 		super(type);
 	}
 
+	@Override
+	protected boolean isNewlineAfter() {
+		return true;
+	}
+
 }

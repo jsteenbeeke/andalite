@@ -12,7 +12,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.xml;
+package com.jeroensteenbeeke.andalite.testbase;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +35,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 import com.google.common.collect.Lists;
-import com.jeroensteenbeeke.andalite.core.TempFileCleaningTest;
 
 public class XMLTest extends TempFileCleaningTest {
 	private static final XPath xpath = XPathFactory.newInstance().newXPath();

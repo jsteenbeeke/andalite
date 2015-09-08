@@ -111,10 +111,9 @@
 
 			<dependency>
 				<groupId>com.jeroensteenbeeke.andalite</groupId>
-				<artifactId>andalite-core</artifactId>
-				<type>test-jar</type>
-				<scope>test</scope>
+				<artifactId>andalite-testbase</artifactId>
 				<version>${andalite.version}</version>
+				<scope>test</scope>
 			</dependency>
 
 			<dependency>
@@ -352,6 +351,7 @@
 	<modules>
 		<module>m2e-settings</module>
 		<module>core</module>
+		<module>testbase</module>
 		<module>java-parser</module>
 		<module>java</module>
 		<module>xml</module>

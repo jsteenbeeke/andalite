@@ -24,6 +24,7 @@ import org.junit.Test;
 import org.w3c.dom.Node;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.andalite.testbase.XMLTest;
 
 public class TransformationTest extends XMLTest {
 

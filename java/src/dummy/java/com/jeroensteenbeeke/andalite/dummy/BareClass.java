@@ -14,6 +14,4 @@
  */
 package com.jeroensteenbeeke.andalite.dummy;
 
-public class BareClass {
-
-}
+public class BareClass {}

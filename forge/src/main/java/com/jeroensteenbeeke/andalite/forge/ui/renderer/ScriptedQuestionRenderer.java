@@ -26,6 +26,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
 import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
 
 public class ScriptedQuestionRenderer implements QuestionRenderer {
 	private final List<Object> answers;
@@ -42,10 +43,24 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 	@Override
 	public <T> TypedActionResult<Action> renderQuestion(Question<T> question) {
 		try {
-			Action answer = question.onAnswer((T) answers.remove(0),
-					feedbackHandler);
+			if (answers.isEmpty()) {
+				throw new IllegalStateException(
+						"Scenario incorrect, no answers left but questions remaining");
+			}
+			T answer = (T) answers.remove(0);
+			feedbackHandler.info("Question: %s?", question.getQuestion());
+			if (question instanceof MultipleChoiceQuestion) {
+				MultipleChoiceQuestion mcq = (MultipleChoiceQuestion) question;
 
-			return TypedActionResult.ok(answer);
+				mcq.getChoices().forEach(
+						c -> feedbackHandler.info("\t\t - %s", c));
+			}
+
+			feedbackHandler.info("\tAnswer: %s", answer.toString());
+
+			Action action = question.onAnswer(answer, feedbackHandler);
+
+			return TypedActionResult.ok(action);
 		} catch (ForgeException e) {
 			return TypedActionResult.fail(e.getMessage());
 		}
@@ -93,12 +108,14 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 			}
 
 			if (next instanceof Failure) {
-				return ActionResult.error("Forge Recipe returned failure");
+				Failure failure = (Failure) next;
+
+				return ActionResult.error(failure.getReason());
 			} else if (next instanceof PerformableAction) {
 				PerformableAction action = (PerformableAction) next;
 				ActionResult r = action.perform();
 				if (!r.isOk()) {
-					return result;
+					return r;
 				}
 			}
 

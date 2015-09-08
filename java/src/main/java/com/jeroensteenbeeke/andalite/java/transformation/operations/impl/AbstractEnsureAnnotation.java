@@ -44,7 +44,7 @@ public abstract class AbstractEnsureAnnotation<T extends Annotatable>
 	public final List<Transformation> perform(T input)
 			throws OperationException {
 		if (!input.hasAnnotation(type)) {
-			final String before = isNewlineBefore() ? "\n" : " ";
+			final String before = isNewlineBefore() ? "\n\t" : " ";
 			final String suffix = isNewlineAfter() ? "\n" : " ";
 
 			final String code = String.format("%s%s@%s%s", before, getPrefix(),
@@ -57,10 +57,14 @@ public abstract class AbstractEnsureAnnotation<T extends Annotatable>
 				return ImmutableList.of(Transformation.insertAfter(last, code));
 			}
 
-			return ImmutableList.of(Transformation.insertBefore(input, code));
+			return ImmutableList.of(createFirst(input, code));
 		}
 
 		return ImmutableList.of();
+	}
+
+	protected Transformation createFirst(T input, final String code) {
+		return Transformation.insertBefore(input, code);
 	}
 
 	protected String getPrefix() {

@@ -16,6 +16,7 @@
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -23,10 +24,14 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.antlr.v4.runtime.BailErrorStrategy;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.JavaParser;
 import com.github.antlrjavaparser.ParseException;
+import com.github.antlrjavaparser.ParserConfigurator;
 import com.github.antlrjavaparser.api.Comment;
 import com.github.antlrjavaparser.api.CompilationUnit;
 import com.github.antlrjavaparser.api.ImportDeclaration;
@@ -68,7 +73,12 @@ public class ClassAnalyzer {
 	@Nonnull
 	public TypedActionResult<AnalyzedSourceFile> analyze() {
 		try {
-			CompilationUnit compilationUnit = JavaParser.parse(targetFile);
+			CompilationUnit compilationUnit = JavaParser.parse(
+					new FileInputStream(targetFile), new ParserConfigurator() {
+						public void configure(Java8Parser parser) {
+							parser.setErrorHandler(new BailErrorStrategy());
+						}
+					});
 
 			PackageDeclaration packageDefinition = compilationUnit.getPackage();
 
@@ -96,7 +106,7 @@ public class ClassAnalyzer {
 			}
 
 			return TypedActionResult.ok(sourceFile);
-		} catch (ParseException | IOException e) {
+		} catch (ParseException | ParseCancellationException | IOException e) {
 			return TypedActionResult.fail(e.getMessage());
 		}
 	}

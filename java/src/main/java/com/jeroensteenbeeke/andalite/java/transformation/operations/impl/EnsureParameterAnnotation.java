@@ -14,13 +14,33 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
+import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedParameter;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
 
 public class EnsureParameterAnnotation extends
-		AbstractEnsureAnnotation<AnalyzedParameter> implements IParameterOperation {
+		AbstractEnsureAnnotation<AnalyzedParameter> implements
+		IParameterOperation {
+
 	public EnsureParameterAnnotation(String type) {
 		super(type);
+	}
+
+	@Override
+	protected Transformation createFirst(AnalyzedParameter input, String code) {
+		int startPlusOne = input.getLocation().getStart() + 1;
+
+		return Transformation.insertAt(startPlusOne, code);
+	}
+
+	@Override
+	protected boolean isNewlineBefore() {
+		return false;
+	}
+
+	@Override
+	protected boolean isNewlineAfter() {
+		return false;
 	}
 
 }
