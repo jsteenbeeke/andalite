@@ -21,5 +21,5 @@ import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 
 public interface QuestionRenderer {
-	TypedActionResult<Action> renderQuestion(@Nonnull Question<?> question);
+	<T> TypedActionResult<Action> renderQuestion(@Nonnull Question<T> question);
 }

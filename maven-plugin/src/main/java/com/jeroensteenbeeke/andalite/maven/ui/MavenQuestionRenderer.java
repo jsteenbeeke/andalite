@@ -43,8 +43,8 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 			.getLogger(MavenQuestionRenderer.class);
 
 	@Override
-	public TypedActionResult<Action> renderQuestion(
-			@Nonnull Question<?> question) {
+	public <T> TypedActionResult<Action> renderQuestion(
+			@Nonnull Question<T> question) {
 		try {
 			if (question instanceof SimpleQuestion) {
 				return renderSimpleQuestion((SimpleQuestion) question);
