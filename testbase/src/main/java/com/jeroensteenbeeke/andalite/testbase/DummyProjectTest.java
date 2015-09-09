@@ -1,6 +1,6 @@
 package com.jeroensteenbeeke.andalite.testbase;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -13,6 +13,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.After;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.LinkedHashMultimap;
@@ -22,7 +24,8 @@ import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 
 public abstract class DummyProjectTest {
-
+	private static final Logger log = LoggerFactory.getLogger(DummyProjectTest.class);
+	
 	private static final String SRC_MAIN_JAVA = "src/main/java";
 
 	public static final String KEY_SOURCE_PATH = "sourcePath";
@@ -75,10 +78,14 @@ public abstract class DummyProjectTest {
 			if (c.contains(FILE_SEPARATOR)) {
 				if (!f.mkdirs()) {
 					success.set(false);
+				} else {
+					log.info("Created folder {}", f.getAbsolutePath());
 				}
 			} else {
 				if (!f.mkdir()) {
 					success.set(false);
+				} else {
+					log.info("Created folder {}", f.getAbsolutePath());
 				}
 			}
 
@@ -90,6 +97,7 @@ public abstract class DummyProjectTest {
 							fos.write(e);
 						}
 						fos.flush();
+						log.info("Created file {}", dummy.getAbsolutePath());
 					} catch (IOException ioe) {
 						success.set(false);
 					}

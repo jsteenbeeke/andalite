@@ -27,6 +27,8 @@ import javax.annotation.Nullable;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.JavaParser;
@@ -62,7 +64,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.types.Wildcard;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
 public class ClassAnalyzer {
-
+	private static final Logger log = LoggerFactory.getLogger(ClassAnalyzer.class);
+	
 	private final File targetFile;
 
 	public ClassAnalyzer(@Nonnull File targetFile) {
@@ -106,7 +109,10 @@ public class ClassAnalyzer {
 			}
 
 			return TypedActionResult.ok(sourceFile);
-		} catch (ParseException | ParseCancellationException | IOException e) {
+		} catch (ParseCancellationException e) {
+			log.error(e.getMessage(), e);
+			return TypedActionResult.fail(targetFile.getAbsolutePath());
+		} catch (ParseException |  IOException e) {
 			return TypedActionResult.fail(e.getMessage());
 		}
 	}

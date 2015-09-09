@@ -102,7 +102,9 @@ public class EnsureClassMethod implements IClassOperation {
 			l = last.getStart() + 3;
 		}
 
-		return ImmutableList.of(Transformation.insertAt(l, code.toString()));
+		transforms.add(Transformation.insertAt(l, code.toString()));
+		
+		return transforms.build();
 	}
 
 	@Override
