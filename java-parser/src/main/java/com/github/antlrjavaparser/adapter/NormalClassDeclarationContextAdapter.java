@@ -52,6 +52,13 @@ public class NormalClassDeclarationContextAdapter implements
 
 			ClassOrInterfaceType extendsClassOrInterfaceType = (ClassOrInterfaceType) referenceType
 					.getType();
+			extendsClassOrInterfaceType.setBeginColumn(referenceType.getBeginColumn());
+			extendsClassOrInterfaceType.setBeginLine(referenceType.getBeginLine());
+			extendsClassOrInterfaceType.setBeginIndex(referenceType.getBeginIndex());
+			extendsClassOrInterfaceType.setEndColumn(referenceType.getEndColumn());
+			extendsClassOrInterfaceType.setEndLine(referenceType.getEndLine());
+			extendsClassOrInterfaceType.setEndIndex(referenceType.getEndIndex());
+			
 			classOrInterfaceTypeList.add(extendsClassOrInterfaceType);
 			classOrInterfaceDeclaration.setExtends(classOrInterfaceTypeList);
 		}
