@@ -35,6 +35,12 @@ public class EnsureField implements IClassOperation {
 
 	private final AccessModifier modifier;
 
+	private boolean staticField = false;
+
+	private boolean finalField = false;
+
+	private boolean volatileField = false;
+
 	public EnsureField(@Nonnull String name, @Nonnull String type,
 			@Nonnull AccessModifier modifier) {
 		super();
@@ -43,11 +49,29 @@ public class EnsureField implements IClassOperation {
 		this.modifier = modifier;
 	}
 
+	public EnsureField shouldBeStatic() {
+		this.staticField = true;
+		return this;
+	}
+
+	public EnsureField shouldBeFinal() {
+		this.finalField = true;
+		return this;
+	}
+
+	public EnsureField shouldBeVolatile() {
+		this.volatileField = true;
+		return this;
+	}
+
 	@Override
 	public List<Transformation> perform(@Nonnull AnalyzedClass input)
 			throws OperationException {
 		if (input.hasField(name)) {
 			AnalyzedField field = input.getField(name);
+
+			ImmutableList.Builder<Transformation> transforms = ImmutableList
+					.builder();
 
 			if (field != null) { // Findbugs, implied by input.hasField
 				AnalyzedType analyzedType = field.getType();
@@ -65,9 +89,40 @@ public class EnsureField implements IClassOperation {
 									"Field %s should have access modifier %s but instead has access modifier %s",
 									name, modifier, field.getAccessModifier()));
 				}
+
+				if (field.isFinal() != finalField) {
+					if (finalField) {
+						transforms.add(Transformation.insertBefore(
+								field.getType(), " final "));
+					} else {
+						throw new OperationException(String.format(
+								"Field %s should not be final, but is",
+								field.getName()));
+					}
+				}
+				if (field.isStatic() != staticField) {
+					if (staticField) {
+						transforms.add(Transformation.insertBefore(
+								field.getType(), " static "));
+					} else {
+						throw new OperationException(String.format(
+								"Field %s should not be static, but is",
+								field.getName()));
+					}
+				}
+				if (field.isVolatile() != volatileField) {
+					if (volatileField) {
+						transforms.add(Transformation.insertBefore(
+								field.getType(), " volatile "));
+					} else {
+						throw new OperationException(String.format(
+								"Field %s should not be volatile, but is",
+								field.getName()));
+					}
+				}
 			}
 
-			return ImmutableList.of();
+			return transforms.build();
 		}
 
 		Location location = input.getBodyLocation();

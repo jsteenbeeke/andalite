@@ -28,10 +28,10 @@ import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 
 public abstract class RecipeMojo extends AbstractMojo {
 	@Parameter
-	String[] recipes;
+	protected String[] recipes;
 
 	@Parameter
-	Map<String, String> extraConfiguration;
+	protected Map<String, String> extraConfiguration;
 
 	public RecipeMojo() {
 		super();

@@ -153,7 +153,7 @@ public class Operations {
 			this.type = type;
 		}
 
-		public IClassOperation withAccess(@Nonnull AccessModifier modifier) {
+		public EnsureField withAccess(@Nonnull AccessModifier modifier) {
 			return new EnsureField(name, type, modifier);
 		}
 	}
