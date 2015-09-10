@@ -41,6 +41,14 @@ public final class CreateFile extends AbstractCompoundableAction {
 			return ActionResult.ok();
 		} else {
 			try {
+				if (!file.getParentFile().exists()) {
+					if (!file.getParentFile().mkdirs()) {
+						return ActionResult
+								.error("Parent directory %s does not exist and could not create",
+										file.getParentFile().getAbsolutePath());
+					}
+				}
+
 				if (file.createNewFile()) {
 					// Check
 
