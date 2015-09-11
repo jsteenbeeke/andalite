@@ -15,10 +15,12 @@
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
@@ -125,6 +127,17 @@ public class EnsureField implements IClassOperation {
 			return transforms.build();
 		}
 
+		List<String> extras = Lists.newArrayList();
+		if (staticField) {
+			extras.add("static ");
+		}
+		if (finalField) {
+			extras.add("final ");
+		}
+		if (volatileField) {
+			extras.add("volatile ");
+		}
+
 		Location location = input.getBodyLocation();
 
 		for (AnalyzedField field : input.getFields()) {
@@ -149,7 +162,8 @@ public class EnsureField implements IClassOperation {
 		}
 
 		transforms.add(Transformation.insertAt(l, String.format(
-				"\n\t%s%s %s;\n\n", modifier.getOutput(), type, name)));
+				"\n\t%s%s%s %s;\n\n", modifier.getOutput(), extras.stream()
+						.collect(Collectors.joining()), type, name)));
 
 		return transforms.build();
 	}
