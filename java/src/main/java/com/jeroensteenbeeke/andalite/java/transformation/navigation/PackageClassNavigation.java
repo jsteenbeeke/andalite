@@ -15,8 +15,12 @@
 
 package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.annotation.Nonnull;
 
+import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
@@ -33,15 +37,24 @@ public class PackageClassNavigation implements IJavaNavigation<AnalyzedClass> {
 	@Nonnull
 	public AnalyzedClass navigate(AnalyzedSourceFile file)
 			throws NavigationException {
+		List<String> found = Lists.newArrayList();
+
 		for (AnalyzedClass analyzedClass : file.getClasses()) {
-			if (analyzedClass.getAccessModifier() == AccessModifier.DEFAULT
-					&& name.equals(analyzedClass.getClassName())) {
-				return analyzedClass;
+			if (analyzedClass.getAccessModifier() == AccessModifier.DEFAULT) {
+				if (name.equals(analyzedClass.getClassName())) {
+					return analyzedClass;
+				} else {
+					found.add("class ".concat(analyzedClass.getClassName()));
+				}
+			} else {
+				found.add("public class ".concat(analyzedClass.getClassName()));
 			}
+
 		}
 
 		throw new NavigationException(
-				"Source file has no package class named %s", name);
+				"Source file has no package class named %s (found: %s)", name,
+				found.stream().collect(Collectors.joining(", ")));
 	}
 
 	@Override

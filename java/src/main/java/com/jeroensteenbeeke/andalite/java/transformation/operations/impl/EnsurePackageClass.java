@@ -46,8 +46,9 @@ public class EnsurePackageClass implements ICompilationUnitOperation {
 			last = analyzedClass;
 		}
 
-		return ImmutableList.of(Transformation.insertAfter(last,
-				String.format("class %s {\n\n}\n", expectedClassName)));
+		return ImmutableList.of(Transformation.insertAt(last.getLocation()
+				.getEnd() + 2, String.format("class %s {\n\n}\n",
+				expectedClassName)));
 	}
 
 	@Override
