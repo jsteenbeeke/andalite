@@ -22,11 +22,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 
 public abstract class DummyProjectTest {
-	private static final Logger log = LoggerFactory.getLogger(DummyProjectTest.class);
-	
-	private static final String SRC_MAIN_JAVA = "src/main/java";
+	private static final Logger log = LoggerFactory
+			.getLogger(DummyProjectTest.class);
 
 	public static final String KEY_SOURCE_PATH = "sourcePath";
 
@@ -35,6 +36,12 @@ public abstract class DummyProjectTest {
 
 	private static final String LINE_SEPARATOR = System
 			.getProperty("line.separator");
+
+	private static final String SRC_MAIN_JAVA = String.format(
+			"src%smain%sjava", FILE_SEPARATOR, FILE_SEPARATOR);
+
+	private static final String SRC_TEST_JAVA = String.format(
+			"src%stest%sjava", FILE_SEPARATOR, FILE_SEPARATOR);
 
 	private final DummyProjectContext context;
 
@@ -106,6 +113,41 @@ public abstract class DummyProjectTest {
 		});
 
 		assertTrue(success.get());
+	}
+
+	public ActionResult validateMainJavaClass(String fqdn) {
+		return validateJavaClass(SRC_MAIN_JAVA, fqdn);
+	}
+
+	public ActionResult validateTestJavaClass(String fqdn) {
+		return validateJavaClass(SRC_TEST_JAVA, fqdn);
+	}
+
+	private ActionResult validateJavaClass(String source, String fqdn) {
+		String todo = fqdn;
+
+		File base = new File(baseFolder, source);
+		int dotIndex = todo.indexOf('.');
+		String path = "";
+
+		while (dotIndex != -1) {
+			String segment = todo.substring(0, dotIndex);
+			if (path.isEmpty()) {
+				path = segment;
+			} else {
+				path = String.format("%s%s%s", path, FILE_SEPARATOR, segment);
+			}
+
+			todo = todo.substring(dotIndex + 1);
+
+			dotIndex = todo.indexOf('.');
+		}
+
+		String filename = todo;
+
+		File target = new File(new File(base, path), filename.concat(".java"));
+
+		return new ClassAnalyzer(target).analyze();
 	}
 
 	@After

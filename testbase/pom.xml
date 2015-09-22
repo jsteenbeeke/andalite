@@ -55,6 +55,10 @@
 			<groupId>com.jeroensteenbeeke.andalite</groupId>
 			<artifactId>andalite-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.jeroensteenbeeke.andalite</groupId>
+			<artifactId>andalite-java</artifactId>
+		</dependency>
 	
 		<!-- Test Dependencies -->
 		<dependency>
