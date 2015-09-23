@@ -14,8 +14,10 @@
  */
 package com.jeroensteenbeeke.andalite.forge;
 
+import java.io.File;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -24,6 +26,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 
 /**
  * Base implementation of ForgeRecipe that enforces the {@code extraSettings}
@@ -70,5 +73,21 @@ public abstract class AbstractForgeRecipe implements ForgeRecipe {
 		}
 
 		return ActionResult.ok();
+	}
+
+	protected final ActionResult ensureFiles(String type, File path,
+			Predicate<AnalyzedSourceFile> condition) {
+		if (countFiles(path, condition) == 0) {
+			return ActionResult.error("No %s found", type);
+		}
+
+		return ActionResult.ok();
+	}
+
+	private final int countFiles(File path,
+			Predicate<AnalyzedSourceFile> condition) {
+		int count = 0;
+
+		return count;
 	}
 }

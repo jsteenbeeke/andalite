@@ -206,4 +206,8 @@ public class Operations {
 		return new EnsureStatementComment<S>(comment, false);
 	}
 
+	public static HasConstructorBuilder hasConstructor() {
+		return new HasConstructorBuilder();
+	}
+
 }

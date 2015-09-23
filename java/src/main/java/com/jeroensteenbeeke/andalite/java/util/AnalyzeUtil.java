@@ -22,6 +22,7 @@ import com.github.antlrjavaparser.api.expr.NameExpr;
 import com.github.antlrjavaparser.api.expr.QualifiedNameExpr;
 import com.google.common.base.Joiner;
 import com.google.common.collect.FluentIterable;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedParameter;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
@@ -47,6 +48,27 @@ public final class AnalyzeUtil {
 			@Nonnull List<ParameterDescriptor> descriptors) {
 
 		List<AnalyzedParameter> parameters = analyzedMethod.getParameters();
+		if (parameters.size() == descriptors.size()) {
+			int i = 0;
+
+			for (ParameterDescriptor descriptor : descriptors) {
+				if (!descriptor.appliesTo(parameters.get(i++))) {
+					return false;
+				}
+			}
+
+			return true;
+
+		}
+
+		return false;
+	}
+	
+	public static boolean matchesSignature(
+			@Nonnull AnalyzedConstructor ctor,
+			@Nonnull List<ParameterDescriptor> descriptors) {
+
+		List<AnalyzedParameter> parameters = ctor.getParameters();
 		if (parameters.size() == descriptors.size()) {
 			int i = 0;
 

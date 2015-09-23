@@ -23,6 +23,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 
 public abstract class DummyProjectTest {
@@ -42,6 +44,13 @@ public abstract class DummyProjectTest {
 
 	private static final String SRC_TEST_JAVA = String.format(
 			"src%stest%sjava", FILE_SEPARATOR, FILE_SEPARATOR);
+	
+	/**
+	 * Imports that, if used without a class or wildcard added, are invalid
+	 */
+	private static String[] DISALLOWED_IMPORTS = {
+		"java.lang", "java.util", "java.math"
+	};
 
 	private final DummyProjectContext context;
 
@@ -115,15 +124,15 @@ public abstract class DummyProjectTest {
 		assertTrue(success.get());
 	}
 
-	public ActionResult validateMainJavaClass(String fqdn) {
-		return validateJavaClass(SRC_MAIN_JAVA, fqdn);
+	public ActionResult validateMainJavaClass(String fqdn, String...disallowedPackages) {
+		return validateJavaClass(SRC_MAIN_JAVA, fqdn, disallowedPackages);
 	}
 
-	public ActionResult validateTestJavaClass(String fqdn) {
-		return validateJavaClass(SRC_TEST_JAVA, fqdn);
+	public ActionResult validateTestJavaClass(String fqdn,String...disallowedPackages) {
+		return validateJavaClass(SRC_TEST_JAVA, fqdn, disallowedPackages);
 	}
 
-	private ActionResult validateJavaClass(String source, String fqdn) {
+	private ActionResult validateJavaClass(String source, String fqdn, String...disallowedPackages) {
 		String todo = fqdn;
 
 		File base = new File(baseFolder, source);
@@ -147,7 +156,27 @@ public abstract class DummyProjectTest {
 
 		File target = new File(new File(base, path), filename.concat(".java"));
 
-		return new ClassAnalyzer(target).analyze();
+		TypedActionResult<AnalyzedSourceFile> result = new ClassAnalyzer(target).analyze();
+		
+		if (!result.isOk()) {
+			return result;
+		}
+		
+		AnalyzedSourceFile sourceFile = result.getObject();
+		
+		for (String disallowed : DISALLOWED_IMPORTS) {
+			if (sourceFile.hasImport(disallowed)) {
+				return TypedActionResult.fail("Source file has disallowed import %s (there should be a wildcard or classname after this)", disallowed);
+			}
+		}
+		
+		for (String disallowed : disallowedPackages) {
+			if (sourceFile.hasImport(disallowed)) {
+				return TypedActionResult.fail("Source file has disallowed import %s (there should be a wildcard or classname after this)", disallowed);
+			}
+		}
+		
+		return result;
 	}
 
 	@After
