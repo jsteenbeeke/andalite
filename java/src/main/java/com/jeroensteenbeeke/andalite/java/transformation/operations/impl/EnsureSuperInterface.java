@@ -18,6 +18,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
@@ -53,6 +54,16 @@ public class EnsureSuperInterface implements IInterfaceOperation {
 	@Override
 	public String getDescription() {
 		return "Ensure that class implements ".concat(interfaceName);
+	}
+
+	@Override
+	public ActionResult verify(AnalyzedInterface input) {
+		if (input.getInterfaces().contains(interfaceName)) {
+			return ActionResult.ok();
+		}
+
+		return ActionResult
+				.error("Interface does not extend %s", interfaceName);
 	}
 
 }

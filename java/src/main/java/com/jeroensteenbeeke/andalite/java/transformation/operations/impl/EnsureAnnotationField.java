@@ -20,6 +20,7 @@ import java.util.Objects;
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
@@ -114,6 +115,27 @@ public abstract class EnsureAnnotationField<T> implements IAnnotationOperation {
 	public String getDescription() {
 		return String.format("presence of annotation field %s with value %s",
 				name, format(expectedValue));
+	}
+
+	@Override
+	public ActionResult verify(AnalyzedAnnotation input) {
+		if (input.hasValueOfType(expectedType, name)) {
+			BaseValue<T> value = input.getValue(expectedType, name);
+
+			String observed = format(value.getValue());
+			String expected = format(expectedValue);
+
+			if (observed.equals(expected)) {
+				return ActionResult.ok();
+			}
+
+			return ActionResult.error(
+					"Value mismatch. Expected %s but found %s", expected,
+					observed);
+		}
+
+		return ActionResult.error("Input has no value named %s of type %s",
+				name, expectedType.getName());
 	}
 
 }

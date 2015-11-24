@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -78,4 +79,29 @@ public class EnsureEndReturnStatement implements IBodyContainerOperation {
 		return String.format("Body container returns %s", returnValue);
 	}
 
+	@Override
+	public ActionResult verify(IBodyContainer input) {
+		AnalyzedStatement last = Iterables.getLast(input.getStatements(), null);
+
+		if (last instanceof ReturnStatement) {
+			ReturnStatement statement = (ReturnStatement) last;
+
+			AnalyzedExpression returnExpression = statement
+					.getReturnExpression();
+			if (!returnExpression.toJavaString().equals(returnValue)) {
+				return ActionResult.error("Invalid return expression: %s",
+						returnExpression.toJavaString());
+			}
+
+			return ActionResult.ok();
+		}
+
+		if (last != null) {
+			return ActionResult.error(
+					"Last statement is not a return statement: %s",
+					last.toJavaString());
+		} else {
+			return ActionResult.error("Body has no statements");
+		}
+	}
 }

@@ -17,6 +17,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
@@ -37,7 +38,7 @@ public class EnsureStatementComment<S extends AnalyzedStatement> implements
 
 	@Override
 	public List<Transformation> perform(S input) throws OperationException {
-		if (!input.getComments().contains(input)) {
+		if (!input.getComments().contains("// ".concat(comment))) {
 			if (prefix) {
 				return ImmutableList.of(Transformation.insertBefore(input,
 						String.format("// %s\n", comment)));
@@ -55,4 +56,12 @@ public class EnsureStatementComment<S extends AnalyzedStatement> implements
 		return "Ensure statement has comment: ".concat(comment);
 	}
 
+	@Override
+	public ActionResult verify(S input) {
+		if (!input.getComments().contains("// ".concat(comment))) {
+			return ActionResult.error("Missing comment: %s", comment);
+		}
+
+		return ActionResult.ok();
+	}
 }

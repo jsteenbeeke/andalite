@@ -16,8 +16,10 @@
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
@@ -61,6 +63,19 @@ public class EnsureImplements implements IClassOperation {
 	@Override
 	public String getDescription() {
 		return "Ensure that class implements ".concat(interfaceName);
+	}
+
+	@Override
+	public ActionResult verify(AnalyzedClass input) {
+		if (input.getInterfaces().contains(interfaceName)) {
+			return ActionResult.ok();
+		}
+
+		return ActionResult.error(
+				"Class does not implement %s (observed: %s )",
+				interfaceName,
+				input.getInterfaces().stream().sorted()
+						.collect(Collectors.joining(", ")));
 	}
 
 }

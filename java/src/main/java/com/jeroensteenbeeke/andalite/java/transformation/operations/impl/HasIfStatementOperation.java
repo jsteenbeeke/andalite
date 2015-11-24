@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
@@ -95,4 +96,24 @@ public class HasIfStatementOperation implements IBodyContainerOperation {
 				.format("Ensure if-statement with condition %s", condition);
 	}
 
+	@Override
+	public ActionResult verify(IBodyContainer input) {
+		for (AnalyzedStatement analyzedStatement : input.getStatements()) {
+			if (analyzedStatement instanceof IfStatement) {
+				IfStatement stmt = (IfStatement) analyzedStatement;
+
+				final String conditionAsJavaString = stmt.getCondition()
+						.toJavaString();
+				logger.debug("found if-statement with condition {}",
+						conditionAsJavaString);
+
+				if (conditionAsJavaString.equals(condition)) {
+					return ActionResult.ok();
+				}
+			}
+		}
+
+		return ActionResult.error("if-statement with condition %s not found",
+				condition);
+	}
 }

@@ -81,4 +81,14 @@ public class JavaRecipeStep<T extends ILocatable> {
 		return String.format("Go to %s and then ensure %s",
 				navigation.getDescription(), operation.getDescription());
 	}
+
+	public ActionResult verify(AnalyzedSourceFile sourceFile) {
+		try {
+			T target = navigation.navigate(sourceFile);
+			return operation.verify(target);
+		} catch (NavigationException e) {
+			return ActionResult
+					.error("Verification failed: %s", e.getMessage());
+		}
+	}
 }

@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
@@ -91,4 +92,20 @@ public class EnsureStatement implements IBodyContainerOperation {
 		return String.format("it has statement: %s", statement);
 	}
 
+	@Override
+	public ActionResult verify(IBodyContainer input) {
+		for (AnalyzedStatement analyzedStatement : input.getStatements()) {
+			if (analyzedStatement == null)
+				continue;
+
+			final String asJava = String.format("%s;",
+					analyzedStatement.toJavaString());
+
+			if (asJava.equals(statement)) {
+				return ActionResult.ok();
+			}
+		}
+
+		return ActionResult.error("Missing statement: %s", statement);
+	}
 }

@@ -15,9 +15,11 @@
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
@@ -103,7 +105,7 @@ public class EnsureClassMethod implements IClassOperation {
 		}
 
 		transforms.add(Transformation.insertAt(l, code.toString()));
-		
+
 		return transforms.build();
 	}
 
@@ -112,6 +114,38 @@ public class EnsureClassMethod implements IClassOperation {
 		return String.format("existence of method: %s%s %s",
 				modifier.getOutput(), type,
 				AnalyzeUtil.getMethodSignature(name, descriptors));
+	}
+
+	@Override
+	public ActionResult verify(AnalyzedClass input) {
+		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
+			if (name.equals(analyzedMethod.getName())) {
+				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
+					AnalyzedType returnType = analyzedMethod.getReturnType();
+					final String returnTypeAsString = returnType != null ? returnType
+							.toJavaString() : "void";
+
+					if (!type.equals(returnTypeAsString)) {
+						return ActionResult
+								.error("Method with expected signature exists, but has incorrect return type %s (expected %s)",
+										returnTypeAsString, type);
+					}
+
+					if (!modifier.equals(analyzedMethod.getAccessModifier())) {
+						return ActionResult
+								.error("Method with expected signature exists, but has incorrect access %s (expected %s)",
+										analyzedMethod.getAccessModifier(),
+										modifier);
+					}
+
+					return ActionResult.ok();
+				}
+			}
+		}
+
+		return ActionResult.error("No method %s with parameters ( %s ) found",
+				name, descriptors.stream().map(ParameterDescriptor::toString)
+						.collect(Collectors.joining(", ")));
 	}
 
 }

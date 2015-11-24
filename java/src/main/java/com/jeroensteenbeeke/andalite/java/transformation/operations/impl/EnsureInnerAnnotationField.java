@@ -19,6 +19,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
@@ -129,6 +130,47 @@ public class EnsureInnerAnnotationField implements IAnnotationOperation {
 	public String getDescription() {
 		return String.format("presence of annotation field %s of type @%s",
 				name, type);
+	}
+
+	@Override
+	public ActionResult verify(AnalyzedAnnotation input) {
+		if (input.hasValueNamed(name)) {
+
+			if (input.hasValueOfType(AnnotationValue.class, name)) {
+				AnnotationValue value = input.getValue(AnnotationValue.class,
+						name);
+
+				if (!value.getValue().getType().equals(type)) {
+					return ActionResult
+							.error("Annotation value %s has incorrect type @%s, expected %s",
+									name, value.getValue().getType(), type);
+				}
+				if (!condition.isSatisfiedBy(value)) {
+					return ActionResult
+							.error("Annotation value %s does not satisfy condition %s",
+									name, condition.toString());
+				}
+
+				return ActionResult.ok();
+			} else if (allowArray
+					&& input.hasValueOfType(ArrayValue.class, name)) {
+				ArrayValue value = input.getValue(ArrayValue.class, name);
+
+				for (BaseValue<?> baseValue : value.getValue()) {
+					if (baseValue instanceof AnnotationValue) {
+						AnnotationValue annot = (AnnotationValue) baseValue;
+						if (condition.isSatisfiedBy(annot)) {
+							return ActionResult.ok();
+						}
+					}
+				}
+				return ActionResult.error(
+						"No array value in %s that satisfies %s", name,
+						condition.toString());
+			}
+		}
+
+		return ActionResult.error("No value named %s", name);
 	}
 
 	@Nonnull

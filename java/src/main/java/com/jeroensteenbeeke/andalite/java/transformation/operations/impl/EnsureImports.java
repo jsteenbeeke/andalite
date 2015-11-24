@@ -18,6 +18,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedImport;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
@@ -58,4 +59,12 @@ public class EnsureImports implements ICompilationUnitOperation {
 		return String.format("import of class %s", fqdn);
 	}
 
+	@Override
+	public ActionResult verify(AnalyzedSourceFile input) {
+		if (input.hasImport(fqdn)) {
+			return ActionResult.ok();
+		}
+
+		return ActionResult.error("Class does not import %s", fqdn);
+	}
 }

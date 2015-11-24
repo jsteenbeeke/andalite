@@ -17,6 +17,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -55,4 +56,23 @@ public class EnsureFieldInitialization implements IFieldOperation {
 		return String.format("Initialize field to %s", expression);
 	}
 
+	@Override
+	public ActionResult verify(AnalyzedField input) {
+		AnalyzedExpression init = input.getInitializationExpression();
+
+		if (init != null) {
+			String expected = expression;
+			String observed = init.toJavaString();
+
+			if (expected.equals(observed)) {
+				return ActionResult.ok();
+			}
+
+			return ActionResult.error(
+					"Incorrect initialization value. Expected %s but found %s",
+					expected, observed);
+		}
+
+		return ActionResult.error("Missing initialization expression");
+	}
 }

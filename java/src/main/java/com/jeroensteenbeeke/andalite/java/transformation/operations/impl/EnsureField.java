@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
@@ -172,6 +173,41 @@ public class EnsureField implements IClassOperation {
 	public String getDescription() {
 		return String.format("presence of field: %s %s %s",
 				modifier.getOutput(), type, name);
+	}
+
+	@Override
+	public ActionResult verify(AnalyzedClass input) {
+		if (input.hasField(name)) {
+			AnalyzedField field = input.getField(name);
+
+			if (!field.getType().toJavaString().equals(type)) {
+				return ActionResult.error(
+						"Invalid field type: %s (expected %s)", field.getType()
+								.toJavaString(), type);
+			}
+
+			if (field.getAccessModifier() != modifier) {
+				return ActionResult.error(
+						"Invalid field access modifier: %s (expected %s)",
+						field.getAccessModifier(), modifier);
+			}
+
+			if (field.isFinal() != finalField) {
+				return ActionResult.error(
+						"Invalid final modifier: %s (expected %s)",
+						field.isFinal(), finalField);
+			}
+
+			if (field.isStatic() != staticField) {
+				return ActionResult.error(
+						"Invalid static modifier: %s (expected %s)",
+						field.isStatic(), staticField);
+			}
+
+			return ActionResult.ok();
+		}
+
+		return ActionResult.error("Class does not have field %s", name);
 	}
 
 }

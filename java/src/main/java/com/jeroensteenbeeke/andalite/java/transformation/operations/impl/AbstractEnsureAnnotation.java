@@ -17,6 +17,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
@@ -74,5 +75,12 @@ public abstract class AbstractEnsureAnnotation<T extends Annotatable>
 	@Override
 	public String getDescription() {
 		return "annotation of type @".concat(type);
+	}
+
+	@Override
+	public ActionResult verify(T input) {
+		boolean hasAnnotation = input.hasAnnotation(type);
+		return hasAnnotation ? ActionResult.ok() : ActionResult.error(
+				"Annotation @%s not present", type);
 	}
 }

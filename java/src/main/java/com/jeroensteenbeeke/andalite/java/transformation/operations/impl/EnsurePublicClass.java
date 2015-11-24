@@ -20,6 +20,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
@@ -58,5 +59,16 @@ public class EnsurePublicClass implements ICompilationUnitOperation {
 	@Override
 	public String getDescription() {
 		return "presence of a public class with name similar to compilation unit";
+	}
+
+	@Override
+	public ActionResult verify(AnalyzedSourceFile input) {
+		for (AnalyzedClass analyzedClass : input.getClasses()) {
+			if (analyzedClass.getAccessModifier() == AccessModifier.PUBLIC) {
+				return ActionResult.ok();
+			}
+		}
+
+		return ActionResult.error("No public classes in compilation unit");
 	}
 }

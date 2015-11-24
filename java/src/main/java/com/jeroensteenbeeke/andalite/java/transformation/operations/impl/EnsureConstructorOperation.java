@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
@@ -32,19 +33,17 @@ public class EnsureConstructorOperation implements IClassOperation {
 		Location last = input.getBodyLocation();
 
 		for (AnalyzedConstructor ctor : input.getConstructors()) {
-				if (AnalyzeUtil.matchesSignature(ctor, parameters)) {
+			if (AnalyzeUtil.matchesSignature(ctor, parameters)) {
 
-					
-					if (!modifier.equals(ctor.getAccessModifier())) {
-						throw new OperationException(
-								String.format(
-										"Constructor with expected signature exists, but has incorrect access %s (expected %s)",
-										ctor.getAccessModifier(),
-										modifier));
-					}
-
-					return ImmutableList.of();
+				if (!modifier.equals(ctor.getAccessModifier())) {
+					throw new OperationException(
+							String.format(
+									"Constructor with expected signature exists, but has incorrect access %s (expected %s)",
+									ctor.getAccessModifier(), modifier));
 				}
+
+				return ImmutableList.of();
+			}
 
 			last = ctor.getLocation();
 		}
@@ -71,24 +70,42 @@ public class EnsureConstructorOperation implements IClassOperation {
 		}
 
 		transforms.add(Transformation.insertAt(l, code.toString()));
-		
+
 		return transforms.build();
 	}
 
 	@Override
 	public String getDescription() {
-		return String
-				.format("Ensure presence of %s constructor with parameters (%s)",
-						modifier.getOutput(),
-						createParameterList());
+		return String.format(
+				"Ensure presence of %s constructor with parameters (%s)",
+				modifier.getOutput(), createParameterList());
 	}
 
 	protected String createParameterList() {
-		return parameters
-				.stream()
-				.map(p -> String.format("%s %s", p.getType(),
-						p.getName()))
+		return parameters.stream()
+				.map(p -> String.format("%s %s", p.getType(), p.getName()))
 				.collect(Collectors.joining(", "));
 	}
 
+	@Override
+	public ActionResult verify(AnalyzedClass input) {
+
+		for (AnalyzedConstructor ctor : input.getConstructors()) {
+			if (AnalyzeUtil.matchesSignature(ctor, parameters)) {
+
+				if (!modifier.equals(ctor.getAccessModifier())) {
+					return ActionResult
+							.error("Constructor with expected signature exists, but has incorrect access %s (expected %s)",
+									ctor.getAccessModifier(), modifier);
+				}
+
+				return ActionResult.ok();
+			}
+		}
+
+		return ActionResult.error(
+				"No constructor with parameters ( %s ) found",
+				parameters.stream().map(ParameterDescriptor::toString)
+						.collect(Collectors.joining(", ")));
+	}
 }

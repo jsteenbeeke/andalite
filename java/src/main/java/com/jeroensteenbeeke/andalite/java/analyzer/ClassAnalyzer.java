@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -38,9 +39,75 @@ import com.github.antlrjavaparser.api.Comment;
 import com.github.antlrjavaparser.api.CompilationUnit;
 import com.github.antlrjavaparser.api.ImportDeclaration;
 import com.github.antlrjavaparser.api.PackageDeclaration;
-import com.github.antlrjavaparser.api.body.*;
-import com.github.antlrjavaparser.api.expr.*;
-import com.github.antlrjavaparser.api.stmt.*;
+import com.github.antlrjavaparser.api.body.AnnotationDeclaration;
+import com.github.antlrjavaparser.api.body.BodyDeclaration;
+import com.github.antlrjavaparser.api.body.CatchParameter;
+import com.github.antlrjavaparser.api.body.ClassOrInterfaceDeclaration;
+import com.github.antlrjavaparser.api.body.ConstructorDeclaration;
+import com.github.antlrjavaparser.api.body.EnumConstantDeclaration;
+import com.github.antlrjavaparser.api.body.EnumDeclaration;
+import com.github.antlrjavaparser.api.body.FieldDeclaration;
+import com.github.antlrjavaparser.api.body.MethodDeclaration;
+import com.github.antlrjavaparser.api.body.ModifierSet;
+import com.github.antlrjavaparser.api.body.Parameter;
+import com.github.antlrjavaparser.api.body.Resource;
+import com.github.antlrjavaparser.api.body.TypeDeclaration;
+import com.github.antlrjavaparser.api.body.VariableDeclarator;
+import com.github.antlrjavaparser.api.expr.AnnotationExpr;
+import com.github.antlrjavaparser.api.expr.ArrayAccessExpr;
+import com.github.antlrjavaparser.api.expr.ArrayCreationExpr;
+import com.github.antlrjavaparser.api.expr.ArrayInitializerExpr;
+import com.github.antlrjavaparser.api.expr.AssignExpr;
+import com.github.antlrjavaparser.api.expr.BinaryExpr;
+import com.github.antlrjavaparser.api.expr.BooleanLiteralExpr;
+import com.github.antlrjavaparser.api.expr.CastExpr;
+import com.github.antlrjavaparser.api.expr.CharLiteralExpr;
+import com.github.antlrjavaparser.api.expr.ClassExpr;
+import com.github.antlrjavaparser.api.expr.ConditionalExpr;
+import com.github.antlrjavaparser.api.expr.DoubleLiteralExpr;
+import com.github.antlrjavaparser.api.expr.EnclosedExpr;
+import com.github.antlrjavaparser.api.expr.Expression;
+import com.github.antlrjavaparser.api.expr.FieldAccessExpr;
+import com.github.antlrjavaparser.api.expr.InstanceOfExpr;
+import com.github.antlrjavaparser.api.expr.IntegerLiteralExpr;
+import com.github.antlrjavaparser.api.expr.LambdaExpr;
+import com.github.antlrjavaparser.api.expr.LongLiteralExpr;
+import com.github.antlrjavaparser.api.expr.MarkerAnnotationExpr;
+import com.github.antlrjavaparser.api.expr.MemberValuePair;
+import com.github.antlrjavaparser.api.expr.MethodCallExpr;
+import com.github.antlrjavaparser.api.expr.MethodReferenceExpr;
+import com.github.antlrjavaparser.api.expr.NameExpr;
+import com.github.antlrjavaparser.api.expr.NormalAnnotationExpr;
+import com.github.antlrjavaparser.api.expr.NullLiteralExpr;
+import com.github.antlrjavaparser.api.expr.ObjectCreationExpr;
+import com.github.antlrjavaparser.api.expr.SingleMemberAnnotationExpr;
+import com.github.antlrjavaparser.api.expr.StringLiteralExpr;
+import com.github.antlrjavaparser.api.expr.SuperExpr;
+import com.github.antlrjavaparser.api.expr.ThisExpr;
+import com.github.antlrjavaparser.api.expr.UnaryExpr;
+import com.github.antlrjavaparser.api.expr.VariableDeclarationExpr;
+import com.github.antlrjavaparser.api.stmt.AssertStmt;
+import com.github.antlrjavaparser.api.stmt.BlockStmt;
+import com.github.antlrjavaparser.api.stmt.BreakStmt;
+import com.github.antlrjavaparser.api.stmt.CatchClause;
+import com.github.antlrjavaparser.api.stmt.ContinueStmt;
+import com.github.antlrjavaparser.api.stmt.DoStmt;
+import com.github.antlrjavaparser.api.stmt.EmptyStmt;
+import com.github.antlrjavaparser.api.stmt.ExplicitConstructorInvocationStmt;
+import com.github.antlrjavaparser.api.stmt.ExpressionStmt;
+import com.github.antlrjavaparser.api.stmt.ForStmt;
+import com.github.antlrjavaparser.api.stmt.ForeachStmt;
+import com.github.antlrjavaparser.api.stmt.IfStmt;
+import com.github.antlrjavaparser.api.stmt.LabeledStmt;
+import com.github.antlrjavaparser.api.stmt.ReturnStmt;
+import com.github.antlrjavaparser.api.stmt.Statement;
+import com.github.antlrjavaparser.api.stmt.SwitchEntryStmt;
+import com.github.antlrjavaparser.api.stmt.SwitchStmt;
+import com.github.antlrjavaparser.api.stmt.SynchronizedStmt;
+import com.github.antlrjavaparser.api.stmt.ThrowStmt;
+import com.github.antlrjavaparser.api.stmt.TryStmt;
+import com.github.antlrjavaparser.api.stmt.TypeDeclarationStmt;
+import com.github.antlrjavaparser.api.stmt.WhileStmt;
 import com.github.antlrjavaparser.api.type.ClassOrInterfaceType;
 import com.github.antlrjavaparser.api.type.PrimitiveType;
 import com.github.antlrjavaparser.api.type.ReferenceType;
@@ -51,11 +118,69 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
-import com.jeroensteenbeeke.andalite.java.analyzer.annotation.*;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.AnnotationValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.ArrayValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BooleanValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.CharValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.ClassValue;
-import com.jeroensteenbeeke.andalite.java.analyzer.expression.*;
-import com.jeroensteenbeeke.andalite.java.analyzer.statements.*;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.DoubleValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.FieldAccessValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.IntegerValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.LongValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.AnnotationExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.ArrayAccessExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.ArrayCreationExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.ArrayInitializerExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.AssignExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.BinaryExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.BooleanLiteralExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.CastExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.CharLiteralExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.ClassExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.ConditionalExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.DeclareVariableExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.DoubleLiteralExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.EnclosedExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.FieldAccessExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.InstanceOfExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.IntegerLiteralExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.LambdaExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.LongLiteralExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.MethodCallExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.MethodReferenceExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.NameReferenceExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.NullExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.ObjectCreationExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.StringLiteralExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.SuperExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.ThisExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.UnaryExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.expression.VariableDeclarationExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.AssertStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.BlockStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.BreakStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.CatchStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.ConstructorInvocationStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ConstructorInvocationStatement.InvocationType;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.ContinueStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.DoStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.EmptyStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.ExpressionStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.ForEachStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.ForStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.LabeledStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.ResourceStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.SwitchEntryStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.SwitchStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.SynchronizedStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.ThrowStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.TryStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.TypeDeclarationStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.WhileStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.types.ClassOrInterface;
 import com.jeroensteenbeeke.andalite.java.analyzer.types.Primitive;
 import com.jeroensteenbeeke.andalite.java.analyzer.types.Reference;
@@ -64,8 +189,9 @@ import com.jeroensteenbeeke.andalite.java.analyzer.types.Wildcard;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
 public class ClassAnalyzer {
-	private static final Logger log = LoggerFactory.getLogger(ClassAnalyzer.class);
-	
+	private static final Logger log = LoggerFactory
+			.getLogger(ClassAnalyzer.class);
+
 	private final File targetFile;
 
 	public ClassAnalyzer(@Nonnull File targetFile) {
@@ -112,7 +238,7 @@ public class ClassAnalyzer {
 		} catch (ParseCancellationException e) {
 			log.error(e.getMessage(), e);
 			return TypedActionResult.fail(targetFile.getAbsolutePath());
-		} catch (ParseException |  IOException e) {
+		} catch (ParseException | IOException e) {
 			return TypedActionResult.fail(e.getMessage());
 		}
 	}
@@ -383,7 +509,7 @@ public class ClassAnalyzer {
 		List<ClassOrInterfaceType> extendedClasses = decl.getExtends();
 		if (extendedClasses != null) {
 			for (ClassOrInterfaceType type : extendedClasses) {
-				element.setSuperClass(type.getNameAsString());
+				element.setSuperClass(getTypeNameWithGenerics(type));
 				element.setExtendsLocation(Location.from(type));
 
 				break; // Classes only have single inheritance
@@ -394,7 +520,7 @@ public class ClassAnalyzer {
 		if (implementedInterfaces != null) {
 
 			for (ClassOrInterfaceType type : implementedInterfaces) {
-				element.addInterface(type.getNameAsString());
+				element.addInterface(getTypeNameWithGenerics(type));
 				element.setLastImplementsLocation(Location.from(type));
 			}
 		}
@@ -411,6 +537,27 @@ public class ClassAnalyzer {
 		}
 
 		element.setBodyLocation(new Location(start, end));
+	}
+
+	private String getTypeNameWithGenerics(@Nullable ClassOrInterfaceType type) {
+		if (type == null) {
+			return null;
+		}
+		List<Type> typeArgs = type.getTypeArgs();
+		String typeName = type.getNameAsString();
+		ClassOrInterfaceType scope = type.getScope();
+		String prefix = "";
+		if (scope != null) {
+			prefix = getTypeNameWithGenerics(scope).concat(".");
+		}
+
+		if (typeArgs != null && !typeArgs.isEmpty()) {
+			return prefix.concat(typeName.concat(typeArgs.stream()
+					.map(t -> t.toString())
+					.collect(Collectors.joining(", ", "<", ">"))));
+		}
+
+		return prefix.concat(typeName);
 	}
 
 	private void processInterfaceDeclaration(ClassOrInterfaceDeclaration decl,
@@ -430,7 +577,7 @@ public class ClassAnalyzer {
 		List<ClassOrInterfaceType> extendedClasses = decl.getExtends();
 		if (extendedClasses != null) {
 			for (ClassOrInterfaceType type : extendedClasses) {
-				element.addInterface(type.getNameAsString());
+				element.addInterface(getTypeNameWithGenerics(type));
 				element.setLastImplementsLocation(Location.from(type));
 			}
 		}

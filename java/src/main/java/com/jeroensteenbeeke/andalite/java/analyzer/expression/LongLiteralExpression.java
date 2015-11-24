@@ -38,6 +38,6 @@ public class LongLiteralExpression extends LiteralExpression<Long> {
 
 	@Override
 	public String toJavaString() {
-		return Long.toString(getValue());
+		return Long.toString(getValue()).concat("L");
 	}
 }

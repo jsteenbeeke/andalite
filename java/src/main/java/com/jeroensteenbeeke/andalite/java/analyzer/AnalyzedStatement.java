@@ -36,7 +36,7 @@ public abstract class AnalyzedStatement extends Locatable {
 	 * @non.public
 	 */
 	public void addComment(String comment) {
-		this.comments.add(comment);
+		this.comments.add(comment.trim());
 	}
 
 	public List<String> getComments() {

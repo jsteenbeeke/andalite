@@ -36,6 +36,10 @@ public class JavaRecipe {
 		this.steps = steps;
 	}
 
+	public List<JavaRecipeStep<?>> getSteps() {
+		return steps;
+	}
+
 	public ActionResult applyTo(File file) {
 		logger.debug("Applying transformation ({} steps) to {}", steps.size(),
 				file.getName());
@@ -66,6 +70,20 @@ public class JavaRecipe {
 				return stepResult;
 			} else {
 				logger.debug("OK: {}", step.toString());
+			}
+
+			result = new ClassAnalyzer(file).analyze();
+
+			if (!result.isOk()) {
+				logger.error("ERROR: transformation rendered file unparseable");
+				return ActionResult.error(result.getMessage());
+			}
+
+			ActionResult verify = step.verify(result.getObject());
+
+			if (!verify.isOk()) {
+				logger.error("ERROR: recipe step failed verification");
+				return ActionResult.error(verify.getMessage());
 			}
 
 			prev = step;
