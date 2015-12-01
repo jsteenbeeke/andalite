@@ -60,7 +60,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<scope>test</scope>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -124,13 +124,6 @@
 				<directory>src/test/resources</directory>
 				<includes>
 					<include>**</include>
-				</includes>
-			</testResource>
-			<testResource>
-				<filtering>false</filtering>
-				<directory>src/dummy/java</directory>
-				<includes>
-					<include>**/*.java</include>
 				</includes>
 			</testResource>
 		</testResources>

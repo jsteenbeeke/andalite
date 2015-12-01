@@ -59,7 +59,7 @@
 			<groupId>com.jeroensteenbeeke.andalite</groupId>
 			<artifactId>andalite-java</artifactId>
 		</dependency>
-	
+
 		<!-- Test Dependencies -->
 		<dependency>
 			<groupId>junit</groupId>

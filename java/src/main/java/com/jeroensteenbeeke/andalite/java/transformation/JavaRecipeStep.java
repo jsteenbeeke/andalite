@@ -91,4 +91,12 @@ public class JavaRecipeStep<T extends ILocatable> {
 					.error("Verification failed: %s", e.getMessage());
 		}
 	}
+
+	public String navigationToString() {
+		return navigation.getDescription();
+	}
+
+	public String operationToString() {
+		return operation.getDescription();
+	}
 }

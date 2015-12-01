@@ -188,4 +188,8 @@ public final class AnalyzedAnnotation extends Locatable {
 					.toJavaString());
 		}
 	}
+
+	public Object getValueRaw(String name) {
+		return this.annotationValues.get(name).getValue();
+	}
 }

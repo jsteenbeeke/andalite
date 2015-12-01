@@ -23,4 +23,5 @@ public class CharValueCondition extends BaseValueCondition<Character> {
 			@Nullable final Character value) {
 		super(name, CharValue.class, value);
 	}
+
 }

@@ -20,7 +20,20 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.*;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.BooleanArrayValueCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.BooleanValueCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.CharValueCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.DoubleArrayValueCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.DoubleValueCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.InnerAnnotationCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.IntegerArrayValueCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.IntegerValueCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.LongArrayValueCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.LongValueCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.MatchesAllCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.NoValueCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.StringArrayValueCondition;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.StringValueCondition;
 
 public abstract class InnerAnnotationConditionBuilder<T extends InnerAnnotationConditionBuilder<T, R>, R> {
 	private final ImmutableList.Builder<InnerAnnotationCondition> conditions;
@@ -108,8 +121,9 @@ public abstract class InnerAnnotationConditionBuilder<T extends InnerAnnotationC
 
 	@SuppressWarnings("unchecked")
 	@Nonnull
-	public T noValue(@Nonnull final String name) {
-		conditions.add(new NoValueCondition(name));
+	public <O> T noValueOrEquals(@Nonnull final String name,
+			@Nonnull final O expectedRawValue) {
+		conditions.add(new NoValueCondition<O>(name, expectedRawValue));
 		return (T) this;
 	}
 

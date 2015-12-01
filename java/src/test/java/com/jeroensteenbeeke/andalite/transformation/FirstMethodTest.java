@@ -25,8 +25,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import com.jeroensteenbeeke.andalite.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.Operations;
@@ -43,7 +43,7 @@ public class FirstMethodTest extends DummyAwareTest {
 
 		JavaRecipe recipe = builder.build();
 
-		File bare = getDummy("BareClass");
+		File bare = getDummy(BaseDummies.BareClass);
 
 		ActionResult result = recipe.applyTo(bare);
 

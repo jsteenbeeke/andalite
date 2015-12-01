@@ -25,8 +25,8 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.jeroensteenbeeke.andalite.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
@@ -41,7 +41,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 public class IfStatementTest extends DummyAwareTest {
 	@Test
 	public void testIfBlockWithEmptyStatement() throws IOException {
-		File file = getDummy("IfStatements");
+		File file = getDummy(BaseDummies.IfStatements);
 		ClassAnalyzer analyzer = new ClassAnalyzer(file);
 		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
 
@@ -125,7 +125,7 @@ public class IfStatementTest extends DummyAwareTest {
 
 	@Test
 	public void testIfElseBlockWithEmptyStatement() throws IOException {
-		File file = getDummy("IfStatements");
+		File file = getDummy(BaseDummies.IfStatements);
 		ClassAnalyzer analyzer = new ClassAnalyzer(file);
 		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
 

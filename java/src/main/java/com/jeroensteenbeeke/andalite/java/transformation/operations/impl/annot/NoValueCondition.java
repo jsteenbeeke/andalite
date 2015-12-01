@@ -16,17 +16,21 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.AnnotationValue;
 
-public class NoValueCondition implements InnerAnnotationCondition {
+public class NoValueCondition<T> implements InnerAnnotationCondition {
 	private final String name;
 
-	public NoValueCondition(String name) {
+	private final T expectedValue;
+
+	public NoValueCondition(String name, T expectedValue) {
 		super();
 		this.name = name;
+		this.expectedValue = expectedValue;
 	}
 
 	@Override
 	public boolean isSatisfiedBy(AnnotationValue value) {
-		return !value.getValue().hasValueNamed(name);
+		return !value.getValue().hasValueNamed(name)
+				|| expectedValue.equals(value.getValue().getValueRaw(name));
 	}
 
 	@Override

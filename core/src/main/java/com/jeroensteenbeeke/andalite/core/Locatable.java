@@ -36,7 +36,8 @@ public abstract class Locatable implements ILocatable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((location == null) ? 0 : location.hashCode());
+
+		+ ((location == null) ? 0 : location.hashCode());
 		return result;
 	}
 
@@ -56,5 +57,4 @@ public abstract class Locatable implements ILocatable {
 			return false;
 		return true;
 	}
-
 }

@@ -71,7 +71,7 @@ public class EnsureInnerAnnotationField implements IAnnotationOperation {
 									String.format(", @%s()}", type)));
 				} else {
 					return ImmutableList.of(Transformation.replace(value,
-							String.format("%s=@%s()", actualName, type)));
+							String.format("%s=@%s(%s)", actualName, type)));
 				}
 			}
 		} else if (allowArray && input.hasValueOfType(ArrayValue.class, name)) {
@@ -145,11 +145,6 @@ public class EnsureInnerAnnotationField implements IAnnotationOperation {
 							.error("Annotation value %s has incorrect type @%s, expected %s",
 									name, value.getValue().getType(), type);
 				}
-				if (!condition.isSatisfiedBy(value)) {
-					return ActionResult
-							.error("Annotation value %s does not satisfy condition %s",
-									name, condition.toString());
-				}
 
 				return ActionResult.ok();
 			} else if (allowArray
@@ -159,9 +154,11 @@ public class EnsureInnerAnnotationField implements IAnnotationOperation {
 				for (BaseValue<?> baseValue : value.getValue()) {
 					if (baseValue instanceof AnnotationValue) {
 						AnnotationValue annot = (AnnotationValue) baseValue;
-						if (condition.isSatisfiedBy(annot)) {
+
+						if (annot.getValue().getType().equals(type)) {
 							return ActionResult.ok();
 						}
+
 					}
 				}
 				return ActionResult.error(

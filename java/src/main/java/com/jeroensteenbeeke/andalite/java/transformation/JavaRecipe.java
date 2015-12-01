@@ -58,7 +58,10 @@ public class JavaRecipe {
 					logger.error("Previous action: {}", prev.toString());
 				}
 
-				return ActionResult.error(result.getMessage());
+				return ActionResult.error(String.format(
+						"Navigation: %s\nOperation: %s\nParse result: %s",
+						step.navigationToString(), step.operationToString(),
+						result.getMessage()));
 
 			}
 
@@ -67,7 +70,12 @@ public class JavaRecipe {
 			if (!stepResult.isOk()) {
 				logger.error("ERROR: {} {}", result.getMessage(),
 						step.toString());
-				return stepResult;
+				return ActionResult
+						.error(String
+								.format("Navigation: %s\nOperation: %s\nTransformation result: %s",
+										step.navigationToString(),
+										step.operationToString(),
+										result.getMessage()));
 			} else {
 				logger.debug("OK: {}", step.toString());
 			}
@@ -76,14 +84,22 @@ public class JavaRecipe {
 
 			if (!result.isOk()) {
 				logger.error("ERROR: transformation rendered file unparseable");
-				return ActionResult.error(result.getMessage());
+				return ActionResult.error(String.format(
+						"Navigation: %s\nOperation: %s\nParse result: %s",
+						step.navigationToString(), step.operationToString(),
+						result.getMessage()));
 			}
 
 			ActionResult verify = step.verify(result.getObject());
 
 			if (!verify.isOk()) {
 				logger.error("ERROR: recipe step failed verification");
-				return ActionResult.error(verify.getMessage());
+				return ActionResult
+						.error(String
+								.format("Navigation: %s\nOperation: %s\nVerification result: %s",
+										step.navigationToString(),
+										step.operationToString(),
+										verify.getMessage()));
 			}
 
 			prev = step;

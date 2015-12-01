@@ -14,9 +14,27 @@
  */
 package com.jeroensteenbeeke.andalite;
 
-import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasClasses;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasInterfaces;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasMethods;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasModifier;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasName;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasNoClasses;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasNoConstructors;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasNoFields;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasNoImports;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasNoInnerClasses;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasNoInterfaces;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasNoMethods;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasNoSuperClass;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.implementsInterface;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.importsClass;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.inPackage;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +43,16 @@ import java.util.List;
 import org.junit.Test;
 
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
-import com.jeroensteenbeeke.andalite.java.analyzer.*;
+import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
+import com.jeroensteenbeeke.andalite.core.test.IDummyDescriptor;
+import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedEnum;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.AnnotationValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.ArrayValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
@@ -115,7 +142,7 @@ public class AnalyzerTest extends DummyAwareTest {
 
 	@Test
 	public void testEmptyJava() throws IOException {
-		ClassAnalyzer analyzer = analyzeDummy("Empty");
+		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.Empty);
 		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
 
 		assertTrue(result.isOk());
@@ -132,7 +159,7 @@ public class AnalyzerTest extends DummyAwareTest {
 
 	@Test
 	public void testBareClass() throws IOException {
-		ClassAnalyzer analyzer = analyzeDummy("BareClass");
+		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.BareClass);
 
 		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
 		assertTrue(result.isOk());
@@ -155,9 +182,14 @@ public class AnalyzerTest extends DummyAwareTest {
 
 	}
 
+	private ClassAnalyzer analyzeDummy(IDummyDescriptor descriptor)
+			throws IOException {
+		return new ClassAnalyzer(getDummy(descriptor));
+	}
+
 	@Test
 	public void testBareInterface() throws IOException {
-		ClassAnalyzer analyzer = analyzeDummy("BareInterface");
+		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.BareInterface);
 
 		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
 		assertTrue(result.isOk());
@@ -180,7 +212,7 @@ public class AnalyzerTest extends DummyAwareTest {
 
 	@Test
 	public void testBareEnum() throws IOException {
-		ClassAnalyzer analyzer = analyzeDummy("BareEnum");
+		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.BareEnum);
 
 		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
 		assertTrue(result.isOk());
@@ -204,7 +236,7 @@ public class AnalyzerTest extends DummyAwareTest {
 
 	@Test
 	public void testReverseIntComparator() throws IOException {
-		ClassAnalyzer analyzer = analyzeDummy("ReverseIntComparator");
+		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.ReverseIntComparator);
 
 		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
 
@@ -230,7 +262,7 @@ public class AnalyzerTest extends DummyAwareTest {
 		assertThat(analyzedClass, hasNoConstructors());
 		assertThat(analyzedClass, hasNoInnerClasses());
 		assertThat(analyzedClass, hasInterfaces(1));
-		assertThat(analyzedClass, implementsInterface("Comparator"));
+		assertThat(analyzedClass, implementsInterface("Comparator<Integer>"));
 
 		assertThat(analyzedClass, hasNoSuperClass());
 

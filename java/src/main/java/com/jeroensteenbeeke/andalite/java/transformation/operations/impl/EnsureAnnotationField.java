@@ -132,6 +132,17 @@ public abstract class EnsureAnnotationField<T> implements IAnnotationOperation {
 			return ActionResult.error(
 					"Value mismatch. Expected %s but found %s", expected,
 					observed);
+		} else if (input.hasValueOfType(ArrayValue.class, name)) {
+			ArrayValue arrayValue = input.getValue(ArrayValue.class, name);
+			for (BaseValue<?> value : arrayValue.getValue()) {
+				String observed = format((T) value.getValue());
+				String expected = format(expectedValue);
+
+				if (observed.equals(expected)) {
+					return ActionResult.ok();
+				}
+
+			}
 		}
 
 		return ActionResult.error("Input has no value named %s of type %s",

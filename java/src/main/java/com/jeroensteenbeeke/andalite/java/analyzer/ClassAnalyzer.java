@@ -25,7 +25,6 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.slf4j.Logger;
@@ -201,11 +200,14 @@ public class ClassAnalyzer {
 
 	@Nonnull
 	public TypedActionResult<AnalyzedSourceFile> analyze() {
+		RecordingBailErrorStrategy errorStrategy = new RecordingBailErrorStrategy(
+				targetFile);
+
 		try {
 			CompilationUnit compilationUnit = JavaParser.parse(
 					new FileInputStream(targetFile), new ParserConfigurator() {
 						public void configure(Java8Parser parser) {
-							parser.setErrorHandler(new BailErrorStrategy());
+							parser.setErrorHandler(errorStrategy);
 						}
 					});
 
@@ -237,8 +239,16 @@ public class ClassAnalyzer {
 			return TypedActionResult.ok(sourceFile);
 		} catch (ParseCancellationException e) {
 			log.error(e.getMessage(), e);
+			String exceptionMessage = errorStrategy.getExceptionMessage();
+			if (exceptionMessage != null) {
+				return TypedActionResult.fail(exceptionMessage);
+			}
 			return TypedActionResult.fail(targetFile.getAbsolutePath());
 		} catch (ParseException | IOException e) {
+			String exceptionMessage = errorStrategy.getExceptionMessage();
+			if (exceptionMessage != null) {
+				return TypedActionResult.fail(exceptionMessage);
+			}
 			return TypedActionResult.fail(e.getMessage());
 		}
 	}

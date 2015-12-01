@@ -23,5 +23,4 @@ public class BooleanArrayValueCondition extends ArrayValueCondition<Boolean> {
 			@Nonnull final Boolean... values) {
 		super(name, BooleanValue.class, values);
 	}
-
 }

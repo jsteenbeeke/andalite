@@ -15,12 +15,26 @@
 
 package com.jeroensteenbeeke.andalite.transformation;
 
-import static com.jeroensteenbeeke.andalite.core.ResultMatchers.*;
-import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.*;
-import static com.jeroensteenbeeke.andalite.java.transformation.ClassLocator.*;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.extendsClass;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasAnnotation;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasClasses;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasValue;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.importsClass;
+import static com.jeroensteenbeeke.andalite.java.transformation.ClassLocator.publicClass;
+import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasAnnotationValue;
+import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasClassAnnotation;
+import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasField;
+import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasFieldAnnotation;
+import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasPublicClass;
+import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasStatement;
+import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasStringValue;
+import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasSuperclass;
+import static com.jeroensteenbeeke.andalite.java.transformation.Operations.imports;
+import static com.jeroensteenbeeke.andalite.java.transformation.Operations.returnsAsLastStatement;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,9 +42,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.jeroensteenbeeke.andalite.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
@@ -77,7 +91,7 @@ public class RecipeTest extends DummyAwareTest {
 						.arrayValue("columnNames", "bar").get());
 		builder.inClass(publicClass()).forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").inArray()
-				.noValue("name").then()
+				.noValueOrEquals("name", "U_BARE_BAR").then()
 				.ensure(hasStringValue("name", "U_BARE_BAR"));
 		builder.inClass(publicClass()).forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").inArray()
@@ -133,7 +147,7 @@ public class RecipeTest extends DummyAwareTest {
 
 		JavaRecipe recipe = builder.build();
 
-		File bare = getDummy("BareClass");
+		File bare = getDummy(BaseDummies.BareClass);
 
 		ActionResult result = recipe.applyTo(bare);
 

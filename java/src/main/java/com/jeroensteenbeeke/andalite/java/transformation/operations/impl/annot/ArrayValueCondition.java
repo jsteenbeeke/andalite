@@ -59,6 +59,10 @@ public abstract class ArrayValueCondition<T> implements
 				}
 
 				return required.isEmpty();
+			} else if (expectedValue.length == 1
+					&& annotation.hasValueOfType(expectedType, name)) {
+				return annotation.getValue(expectedType, name).getValue()
+						.equals(expectedValue[0]);
 			}
 		}
 
