@@ -14,13 +14,13 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.CompilationUnit;
 import com.github.antlrjavaparser.api.ImportDeclaration;
 import com.github.antlrjavaparser.api.body.TypeDeclaration;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class CompilationUnitContextAdapter implements Adapter<CompilationUnit, Java8Parser.CompilationUnitContext> {
     public CompilationUnit adapt(Java8Parser.CompilationUnitContext context, AdapterParameters adapterParameters) {

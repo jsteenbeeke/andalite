@@ -14,16 +14,17 @@
  */
 package com.github.antlrjavaparser;
 
-import com.github.antlrjavaparser.api.CompilationUnit;
-import org.antlr.v4.runtime.BailErrorStrategy;
-import org.antlr.v4.runtime.DiagnosticErrorListener;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import static org.junit.Assert.fail;
+import org.antlr.v4.runtime.BailErrorStrategy;
+import org.antlr.v4.runtime.DiagnosticErrorListener;
+import org.junit.Test;
+
+import com.github.antlrjavaparser.api.CompilationUnit;
 
 /**
  * Created with IntelliJ IDEA.

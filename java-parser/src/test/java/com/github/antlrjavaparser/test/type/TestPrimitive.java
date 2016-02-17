@@ -14,6 +14,10 @@
  */
 package com.github.antlrjavaparser.test.type;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 import com.github.antlrjavaparser.JavaParser;
 import com.github.antlrjavaparser.api.CompilationUnit;
 import com.github.antlrjavaparser.api.body.FieldDeclaration;
@@ -23,10 +27,6 @@ import com.github.antlrjavaparser.api.expr.IntegerLiteralExpr;
 import com.github.antlrjavaparser.api.expr.LongLiteralExpr;
 import com.github.antlrjavaparser.api.type.PrimitiveType;
 import com.github.antlrjavaparser.api.type.ReferenceType;
-import org.junit.Test;
-
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.

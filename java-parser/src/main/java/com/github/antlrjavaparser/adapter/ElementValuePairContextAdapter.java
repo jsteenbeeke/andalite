@@ -15,7 +15,6 @@
 package com.github.antlrjavaparser.adapter;
 
 import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.Node;
 import com.github.antlrjavaparser.api.expr.MemberValuePair;
 
 public class ElementValuePairContextAdapter implements Adapter<MemberValuePair, Java8Parser.ElementValuePairContext> {

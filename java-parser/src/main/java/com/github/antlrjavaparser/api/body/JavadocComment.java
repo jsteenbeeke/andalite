@@ -15,8 +15,6 @@
 package com.github.antlrjavaparser.api.body;
 
 import com.github.antlrjavaparser.api.Comment;
-import com.github.antlrjavaparser.api.visitor.GenericVisitor;
-import com.github.antlrjavaparser.api.visitor.VoidVisitor;
 
 /**
  * @author Julio Vilmar Gesser

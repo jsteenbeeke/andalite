@@ -16,20 +16,7 @@ package com.github.antlrjavaparser.adapter;
 
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.expr.Expression;
-import com.github.antlrjavaparser.api.stmt.AssertStmt;
-import com.github.antlrjavaparser.api.stmt.BreakStmt;
-import com.github.antlrjavaparser.api.stmt.ContinueStmt;
-import com.github.antlrjavaparser.api.stmt.DoStmt;
-import com.github.antlrjavaparser.api.stmt.EmptyStmt;
-import com.github.antlrjavaparser.api.stmt.ExpressionStmt;
-import com.github.antlrjavaparser.api.stmt.IfStmt;
-import com.github.antlrjavaparser.api.stmt.LabeledStmt;
-import com.github.antlrjavaparser.api.stmt.ReturnStmt;
-import com.github.antlrjavaparser.api.stmt.Statement;
-import com.github.antlrjavaparser.api.stmt.SwitchStmt;
-import com.github.antlrjavaparser.api.stmt.SynchronizedStmt;
-import com.github.antlrjavaparser.api.stmt.ThrowStmt;
-import com.github.antlrjavaparser.api.stmt.WhileStmt;
+import com.github.antlrjavaparser.api.stmt.*;
 
 public class StatementContextAdapter implements Adapter<Statement, Java8Parser.StatementContext> {
     /**

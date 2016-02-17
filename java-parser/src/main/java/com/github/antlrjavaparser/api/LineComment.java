@@ -14,8 +14,6 @@
  */
 package com.github.antlrjavaparser.api;
 
-import com.github.antlrjavaparser.api.visitor.GenericVisitor;
-import com.github.antlrjavaparser.api.visitor.VoidVisitor;
 
 /**
  * <p>

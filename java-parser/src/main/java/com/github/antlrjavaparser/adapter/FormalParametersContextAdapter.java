@@ -14,10 +14,10 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.List;
+
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.body.Parameter;
-
-import java.util.List;
 
 public class FormalParametersContextAdapter implements Adapter<List<Parameter>, Java8Parser.FormalParametersContext> {
     public List<Parameter> adapt(Java8Parser.FormalParametersContext context, AdapterParameters adapterParameters) {

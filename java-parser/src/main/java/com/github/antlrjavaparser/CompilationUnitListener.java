@@ -14,10 +14,11 @@
  */
 package com.github.antlrjavaparser;
 
+import org.antlr.v4.runtime.BufferedTokenStream;
+
 import com.github.antlrjavaparser.adapter.AdapterParameters;
 import com.github.antlrjavaparser.adapter.Adapters;
 import com.github.antlrjavaparser.api.CompilationUnit;
-import org.antlr.v4.runtime.BufferedTokenStream;
 
 /**
  * Created with IntelliJ IDEA.

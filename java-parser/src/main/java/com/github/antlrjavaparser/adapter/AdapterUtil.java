@@ -14,6 +14,14 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.antlr.v4.runtime.BufferedTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.github.antlrjavaparser.ASTHelper;
 import com.github.antlrjavaparser.Java8Lexer;
 import com.github.antlrjavaparser.Java8Parser;
@@ -21,17 +29,7 @@ import com.github.antlrjavaparser.api.BlockComment;
 import com.github.antlrjavaparser.api.Comment;
 import com.github.antlrjavaparser.api.LineComment;
 import com.github.antlrjavaparser.api.Node;
-import com.github.antlrjavaparser.api.body.AnnotationMemberDeclaration;
-import com.github.antlrjavaparser.api.body.BodyDeclaration;
-import com.github.antlrjavaparser.api.body.CatchParameter;
-import com.github.antlrjavaparser.api.body.ConstructorDeclaration;
-import com.github.antlrjavaparser.api.body.FieldDeclaration;
-import com.github.antlrjavaparser.api.body.JavadocComment;
-import com.github.antlrjavaparser.api.body.MethodDeclaration;
-import com.github.antlrjavaparser.api.body.ModifierSet;
-import com.github.antlrjavaparser.api.body.Parameter;
-import com.github.antlrjavaparser.api.body.Resource;
-import com.github.antlrjavaparser.api.body.TypeDeclaration;
+import com.github.antlrjavaparser.api.body.*;
 import com.github.antlrjavaparser.api.expr.AnnotationExpr;
 import com.github.antlrjavaparser.api.expr.BinaryExpr;
 import com.github.antlrjavaparser.api.expr.Expression;
@@ -39,14 +37,6 @@ import com.github.antlrjavaparser.api.expr.NameExpr;
 import com.github.antlrjavaparser.api.type.ClassOrInterfaceType;
 import com.github.antlrjavaparser.api.type.ReferenceType;
 import com.github.antlrjavaparser.api.type.Type;
-import org.antlr.v4.runtime.BufferedTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
-import java.lang.reflect.Method;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

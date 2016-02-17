@@ -14,10 +14,10 @@
  */
 package com.github.antlrjavaparser.api.stmt;
 
+import java.util.List;
+
 import com.github.antlrjavaparser.api.visitor.GenericVisitor;
 import com.github.antlrjavaparser.api.visitor.VoidVisitor;
-
-import java.util.List;
 
 /**
  * @author Julio Vilmar Gesser

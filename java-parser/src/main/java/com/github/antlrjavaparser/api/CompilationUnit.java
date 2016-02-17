@@ -14,16 +14,11 @@
  */
 package com.github.antlrjavaparser.api;
 
-import com.github.antlrjavaparser.api.body.AnnotationDeclaration;
-import com.github.antlrjavaparser.api.body.ClassOrInterfaceDeclaration;
-import com.github.antlrjavaparser.api.body.EmptyTypeDeclaration;
-import com.github.antlrjavaparser.api.body.EnumDeclaration;
-import com.github.antlrjavaparser.api.body.JavadocComment;
-import com.github.antlrjavaparser.api.body.TypeDeclaration;
+import java.util.List;
+
+import com.github.antlrjavaparser.api.body.*;
 import com.github.antlrjavaparser.api.visitor.GenericVisitor;
 import com.github.antlrjavaparser.api.visitor.VoidVisitor;
-
-import java.util.List;
 
 /**
  * This class represents the entire compilation unit. Each java file denotes a

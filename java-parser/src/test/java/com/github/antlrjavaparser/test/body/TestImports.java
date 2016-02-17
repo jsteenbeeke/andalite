@@ -14,13 +14,14 @@
  */
 package com.github.antlrjavaparser.test.body;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 import com.github.antlrjavaparser.JavaParser;
 import com.github.antlrjavaparser.api.CompilationUnit;
 import com.github.antlrjavaparser.api.ImportDeclaration;
 import com.github.antlrjavaparser.api.expr.QualifiedNameExpr;
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created with IntelliJ IDEA.

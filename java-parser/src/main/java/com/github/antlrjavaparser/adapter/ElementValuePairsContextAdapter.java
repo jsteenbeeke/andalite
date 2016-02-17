@@ -14,12 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.Node;
-import com.github.antlrjavaparser.api.expr.MemberValuePair;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.api.expr.MemberValuePair;
 
 public class ElementValuePairsContextAdapter implements Adapter<List<MemberValuePair>, Java8Parser.ElementValuePairsContext> {
     public List<MemberValuePair> adapt(Java8Parser.ElementValuePairsContext context, AdapterParameters adapterParameters) {

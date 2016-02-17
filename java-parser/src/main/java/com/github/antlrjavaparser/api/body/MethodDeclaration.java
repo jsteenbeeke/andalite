@@ -14,6 +14,8 @@
  */
 package com.github.antlrjavaparser.api.body;
 
+import java.util.List;
+
 import com.github.antlrjavaparser.api.TypeParameter;
 import com.github.antlrjavaparser.api.expr.AnnotationExpr;
 import com.github.antlrjavaparser.api.expr.NameExpr;
@@ -21,8 +23,6 @@ import com.github.antlrjavaparser.api.stmt.BlockStmt;
 import com.github.antlrjavaparser.api.type.Type;
 import com.github.antlrjavaparser.api.visitor.GenericVisitor;
 import com.github.antlrjavaparser.api.visitor.VoidVisitor;
-
-import java.util.List;
 
 /**
  * @author Julio Vilmar Gesser

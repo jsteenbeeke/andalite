@@ -14,12 +14,12 @@
  */
 package com.github.antlrjavaparser.api;
 
+import java.util.List;
+
 import com.github.antlrjavaparser.api.visitor.DumpVisitor;
 import com.github.antlrjavaparser.api.visitor.EqualsVisitor;
 import com.github.antlrjavaparser.api.visitor.GenericVisitor;
 import com.github.antlrjavaparser.api.visitor.VoidVisitor;
-
-import java.util.List;
 
 /**
  * Abstract class for all nodes of the AST.

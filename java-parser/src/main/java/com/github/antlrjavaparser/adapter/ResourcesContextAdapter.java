@@ -14,11 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.body.Resource;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.api.body.Resource;
 
 public class ResourcesContextAdapter implements Adapter<List<Resource>, Java8Parser.ResourcesContext> {
     public List<Resource> adapt(Java8Parser.ResourcesContext context, AdapterParameters adapterParameters) {

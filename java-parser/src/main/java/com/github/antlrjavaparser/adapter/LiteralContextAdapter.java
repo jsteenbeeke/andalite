@@ -15,14 +15,7 @@
 package com.github.antlrjavaparser.adapter;
 
 import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.expr.BooleanLiteralExpr;
-import com.github.antlrjavaparser.api.expr.CharLiteralExpr;
-import com.github.antlrjavaparser.api.expr.DoubleLiteralExpr;
-import com.github.antlrjavaparser.api.expr.IntegerLiteralExpr;
-import com.github.antlrjavaparser.api.expr.LiteralExpr;
-import com.github.antlrjavaparser.api.expr.LongLiteralExpr;
-import com.github.antlrjavaparser.api.expr.NullLiteralExpr;
-import com.github.antlrjavaparser.api.expr.StringLiteralExpr;
+import com.github.antlrjavaparser.api.expr.*;
 
 public class LiteralContextAdapter implements Adapter<LiteralExpr, Java8Parser.LiteralContext> {
     public LiteralExpr adapt(Java8Parser.LiteralContext context, AdapterParameters adapterParameters) {

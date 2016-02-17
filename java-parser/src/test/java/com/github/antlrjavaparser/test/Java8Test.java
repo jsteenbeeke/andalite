@@ -14,17 +14,14 @@
  */
 package com.github.antlrjavaparser.test;
 
-import com.github.antlrjavaparser.JavaParser;
-import com.github.antlrjavaparser.api.CompilationUnit;
-import com.github.antlrjavaparser.api.body.TypeDeclaration;
-import org.junit.Test;
+import static org.junit.Assert.*;
 
 import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
+
+import com.github.antlrjavaparser.JavaParser;
+import com.github.antlrjavaparser.api.CompilationUnit;
 
 /**
  * User: mdehaan

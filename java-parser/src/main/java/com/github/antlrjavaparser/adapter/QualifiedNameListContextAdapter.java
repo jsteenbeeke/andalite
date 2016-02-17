@@ -14,11 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.expr.NameExpr;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.api.expr.NameExpr;
 
 public class QualifiedNameListContextAdapter implements Adapter<List<NameExpr>, Java8Parser.QualifiedNameListContext> {
     public List<NameExpr> adapt(Java8Parser.QualifiedNameListContext context, AdapterParameters adapterParameters) {

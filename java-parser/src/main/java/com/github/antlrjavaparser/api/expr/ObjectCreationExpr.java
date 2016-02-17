@@ -14,13 +14,13 @@
  */
 package com.github.antlrjavaparser.api.expr;
 
+import java.util.List;
+
 import com.github.antlrjavaparser.api.body.BodyDeclaration;
 import com.github.antlrjavaparser.api.type.ClassOrInterfaceType;
 import com.github.antlrjavaparser.api.type.Type;
 import com.github.antlrjavaparser.api.visitor.GenericVisitor;
 import com.github.antlrjavaparser.api.visitor.VoidVisitor;
-
-import java.util.List;
 
 /**
  * @author Julio Vilmar Gesser

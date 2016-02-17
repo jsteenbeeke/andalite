@@ -14,6 +14,9 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.body.ModifierSet;
 import com.github.antlrjavaparser.api.body.VariableDeclarator;
@@ -21,9 +24,6 @@ import com.github.antlrjavaparser.api.body.VariableDeclaratorId;
 import com.github.antlrjavaparser.api.expr.AnnotationExpr;
 import com.github.antlrjavaparser.api.expr.VariableDeclarationExpr;
 import com.github.antlrjavaparser.api.stmt.ForeachStmt;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

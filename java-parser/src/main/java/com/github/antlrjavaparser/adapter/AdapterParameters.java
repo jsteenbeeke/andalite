@@ -14,11 +14,10 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import org.antlr.v4.runtime.BufferedTokenStream;
-
-import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import org.antlr.v4.runtime.BufferedTokenStream;
 
 /**
  * Created with IntelliJ IDEA.

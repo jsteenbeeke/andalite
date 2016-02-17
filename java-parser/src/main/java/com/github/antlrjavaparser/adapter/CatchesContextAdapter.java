@@ -14,11 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.stmt.CatchClause;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.api.stmt.CatchClause;
 
 public class CatchesContextAdapter implements Adapter<List<CatchClause>, Java8Parser.CatchesContext> {
     public List<CatchClause> adapt(Java8Parser.CatchesContext context, AdapterParameters adapterParameters) {

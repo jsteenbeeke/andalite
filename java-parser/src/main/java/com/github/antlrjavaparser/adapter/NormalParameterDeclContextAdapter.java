@@ -17,7 +17,6 @@ package com.github.antlrjavaparser.adapter;
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.body.Parameter;
 import com.github.antlrjavaparser.api.body.VariableDeclaratorId;
-import com.github.antlrjavaparser.api.type.ReferenceType;
 
 public class NormalParameterDeclContextAdapter implements Adapter<Parameter, Java8Parser.NormalParameterDeclContext> {
     public Parameter adapt(Java8Parser.NormalParameterDeclContext context, AdapterParameters adapterParameters) {

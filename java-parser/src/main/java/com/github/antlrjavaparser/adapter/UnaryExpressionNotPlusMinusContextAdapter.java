@@ -14,18 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.expr.ArrayAccessExpr;
-import com.github.antlrjavaparser.api.expr.Expression;
-import com.github.antlrjavaparser.api.expr.FieldAccessExpr;
-import com.github.antlrjavaparser.api.expr.MethodCallExpr;
-import com.github.antlrjavaparser.api.expr.ObjectCreationExpr;
-import com.github.antlrjavaparser.api.expr.SuperExpr;
-import com.github.antlrjavaparser.api.expr.ThisExpr;
-import com.github.antlrjavaparser.api.expr.UnaryExpr;
-import com.github.antlrjavaparser.api.type.Type;
-
 import java.util.List;
+
+import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.api.expr.*;
+import com.github.antlrjavaparser.api.type.Type;
 
 public class UnaryExpressionNotPlusMinusContextAdapter implements Adapter<Expression, Java8Parser.UnaryExpressionNotPlusMinusContext> {
     public Expression adapt(Java8Parser.UnaryExpressionNotPlusMinusContext context, AdapterParameters adapterParameters) {

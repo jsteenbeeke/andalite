@@ -14,11 +14,12 @@
  */
 package com.github.antlrjavaparser.test.visitor;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.github.antlrjavaparser.api.Comment;
 import com.github.antlrjavaparser.api.body.JavadocComment;
 import com.github.antlrjavaparser.api.visitor.CommentFormatter;
-import org.junit.Assert;
-import org.junit.Test;
 
 /**
  * @author Mike De Haan

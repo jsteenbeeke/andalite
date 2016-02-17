@@ -14,12 +14,12 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.body.FieldDeclaration;
 import com.github.antlrjavaparser.api.body.VariableDeclarator;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class FieldDeclarationContextAdapter implements Adapter<FieldDeclaration, Java8Parser.FieldDeclarationContext> {
     public FieldDeclaration adapt(Java8Parser.FieldDeclarationContext context, AdapterParameters adapterParameters) {

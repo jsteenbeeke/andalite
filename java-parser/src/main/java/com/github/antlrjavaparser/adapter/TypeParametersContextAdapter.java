@@ -14,11 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.TypeParameter;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.api.TypeParameter;
 
 public class TypeParametersContextAdapter implements Adapter<List<TypeParameter>, Java8Parser.TypeParametersContext> {
     public List<TypeParameter> adapt(Java8Parser.TypeParametersContext context, AdapterParameters adapterParameters) {

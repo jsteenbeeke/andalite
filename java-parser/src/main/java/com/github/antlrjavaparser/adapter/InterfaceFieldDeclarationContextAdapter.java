@@ -14,13 +14,13 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.body.BodyDeclaration;
 import com.github.antlrjavaparser.api.body.FieldDeclaration;
 import com.github.antlrjavaparser.api.body.VariableDeclarator;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class InterfaceFieldDeclarationContextAdapter implements Adapter<BodyDeclaration, Java8Parser.InterfaceFieldDeclarationContext> {
     public BodyDeclaration adapt(Java8Parser.InterfaceFieldDeclarationContext context, AdapterParameters adapterParameters) {

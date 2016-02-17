@@ -14,11 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.body.BodyDeclaration;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.api.body.BodyDeclaration;
 
 public class AnnotationTypeBodyContextAdapter implements Adapter<List<BodyDeclaration>, Java8Parser.AnnotationTypeBodyContext> {
     public List<BodyDeclaration> adapt(Java8Parser.AnnotationTypeBodyContext context, AdapterParameters adapterParameters) {

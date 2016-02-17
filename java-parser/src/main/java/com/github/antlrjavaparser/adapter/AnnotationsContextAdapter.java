@@ -14,11 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.expr.AnnotationExpr;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.api.expr.AnnotationExpr;
 
 public class AnnotationsContextAdapter implements Adapter<List<AnnotationExpr>, Java8Parser.AnnotationsContext> {
     public List<AnnotationExpr> adapt(Java8Parser.AnnotationsContext context, AdapterParameters adapterParameters) {

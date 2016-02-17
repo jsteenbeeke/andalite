@@ -14,12 +14,12 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.stmt.BlockStmt;
 import com.github.antlrjavaparser.api.stmt.Statement;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.

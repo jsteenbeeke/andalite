@@ -14,11 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.expr.Expression;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.api.expr.Expression;
 
 public class ExpressionListContextAdapter implements Adapter<List<Expression>, Java8Parser.ExpressionListContext> {
     public List<Expression> adapt(Java8Parser.ExpressionListContext context, AdapterParameters adapterParameters) {

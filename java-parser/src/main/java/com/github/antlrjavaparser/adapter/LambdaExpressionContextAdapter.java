@@ -16,7 +16,6 @@ package com.github.antlrjavaparser.adapter;
 
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.ParseException;
-import com.github.antlrjavaparser.api.expr.AssignExpr;
 import com.github.antlrjavaparser.api.expr.Expression;
 import com.github.antlrjavaparser.api.expr.LambdaExpr;
 

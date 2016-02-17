@@ -14,11 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.body.Parameter;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.api.body.Parameter;
 
 public class FormalParameterDeclsContextAdapter implements Adapter<List<Parameter>, Java8Parser.FormalParameterDeclsContext> {
     public List<Parameter> adapt(Java8Parser.FormalParameterDeclsContext context, AdapterParameters adapterParameters) {

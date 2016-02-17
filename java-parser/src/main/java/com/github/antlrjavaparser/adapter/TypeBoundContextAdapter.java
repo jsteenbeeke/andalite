@@ -14,12 +14,12 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.type.ClassOrInterfaceType;
 import com.github.antlrjavaparser.api.type.Type;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class TypeBoundContextAdapter implements Adapter<List<ClassOrInterfaceType>, Java8Parser.TypeBoundContext> {
     public List<ClassOrInterfaceType> adapt(Java8Parser.TypeBoundContext context, AdapterParameters adapterParameters) {

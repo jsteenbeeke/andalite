@@ -14,14 +14,14 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.body.ModifierSet;
 import com.github.antlrjavaparser.api.body.VariableDeclarator;
 import com.github.antlrjavaparser.api.expr.AnnotationExpr;
 import com.github.antlrjavaparser.api.expr.VariableDeclarationExpr;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class LocalVariableDeclarationContextAdapter implements Adapter<VariableDeclarationExpr, Java8Parser.LocalVariableDeclarationContext> {
     public VariableDeclarationExpr adapt(Java8Parser.LocalVariableDeclarationContext context, AdapterParameters adapterParameters) {

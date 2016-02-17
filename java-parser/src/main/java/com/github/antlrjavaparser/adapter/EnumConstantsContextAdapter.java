@@ -14,11 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.body.EnumConstantDeclaration;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.api.body.EnumConstantDeclaration;
 
 public class EnumConstantsContextAdapter implements Adapter<List<EnumConstantDeclaration>, Java8Parser.EnumConstantsContext> {
     public List<EnumConstantDeclaration> adapt(Java8Parser.EnumConstantsContext context, AdapterParameters adapterParameters) {

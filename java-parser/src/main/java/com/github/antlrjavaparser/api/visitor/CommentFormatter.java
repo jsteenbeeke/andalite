@@ -14,12 +14,12 @@
  */
 package com.github.antlrjavaparser.api.visitor;
 
-import com.github.antlrjavaparser.api.Comment;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.github.antlrjavaparser.api.Comment;
 
 /**
  * @author Mike De Haan

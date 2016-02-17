@@ -14,10 +14,10 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.List;
+
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.expr.Expression;
-
-import java.util.List;
 
 public class ArgumentsContextAdapter implements Adapter<List<Expression>, Java8Parser.ArgumentsContext> {
     public List<Expression> adapt(Java8Parser.ArgumentsContext context, AdapterParameters adapterParameters) {

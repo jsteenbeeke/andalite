@@ -14,12 +14,12 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.expr.ArrayCreationExpr;
 import com.github.antlrjavaparser.api.expr.Expression;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class ArrayCreatorContextAdapter implements Adapter<Expression, Java8Parser.ArrayCreatorContext> {
     public Expression adapt(Java8Parser.ArrayCreatorContext context, AdapterParameters adapterParameters) {

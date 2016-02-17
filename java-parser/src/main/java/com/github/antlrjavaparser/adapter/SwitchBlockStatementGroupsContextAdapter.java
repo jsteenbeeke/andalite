@@ -14,11 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
-import com.github.antlrjavaparser.Java8Parser;
-import com.github.antlrjavaparser.api.stmt.SwitchEntryStmt;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.api.stmt.SwitchEntryStmt;
 
 public class SwitchBlockStatementGroupsContextAdapter implements Adapter<List<SwitchEntryStmt>, Java8Parser.SwitchBlockStatementGroupsContext> {
     public List<SwitchEntryStmt> adapt(Java8Parser.SwitchBlockStatementGroupsContext context, AdapterParameters adapterParameters) {

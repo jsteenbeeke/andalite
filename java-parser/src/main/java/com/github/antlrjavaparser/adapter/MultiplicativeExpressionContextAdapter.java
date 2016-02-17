@@ -14,11 +14,11 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.List;
+
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.expr.BinaryExpr;
 import com.github.antlrjavaparser.api.expr.Expression;
-
-import java.util.List;
 
 public class MultiplicativeExpressionContextAdapter implements Adapter<Expression, Java8Parser.MultiplicativeExpressionContext> {
     public Expression adapt(Java8Parser.MultiplicativeExpressionContext context, AdapterParameters adapterParameters) {

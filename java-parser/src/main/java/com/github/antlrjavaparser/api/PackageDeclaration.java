@@ -14,12 +14,12 @@
  */
 package com.github.antlrjavaparser.api;
 
+import java.util.List;
+
 import com.github.antlrjavaparser.api.expr.AnnotationExpr;
 import com.github.antlrjavaparser.api.expr.NameExpr;
 import com.github.antlrjavaparser.api.visitor.GenericVisitor;
 import com.github.antlrjavaparser.api.visitor.VoidVisitor;
-
-import java.util.List;
 
 /**
  * This class represents the package declaration. The package declaration is

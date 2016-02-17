@@ -14,10 +14,10 @@
  */
 package com.github.antlrjavaparser.api.body;
 
+import java.util.List;
+
 import com.github.antlrjavaparser.api.Node;
 import com.github.antlrjavaparser.api.expr.AnnotationExpr;
-
-import java.util.List;
 
 /**
  * @author Julio Vilmar Gesser
