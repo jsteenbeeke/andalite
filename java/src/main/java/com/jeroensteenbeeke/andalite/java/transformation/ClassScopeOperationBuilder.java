@@ -34,7 +34,7 @@ public class ClassScopeOperationBuilder extends
 
 	public ClassScopeOperationBuilder forInnerClass(String name) {
 		return new ClassScopeOperationBuilder(getCollector(),
-				new InnerClassNavigation(getNavigation(), name));
+				new InnerClassNavigation<AnalyzedClass>(getNavigation(), name));
 	}
 
 	public AnnotatableOperationBuilder<AnalyzedClass> forAnnotation(String type) {
