@@ -28,6 +28,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.internal.RecipeSelectionQuestion;
+import com.jeroensteenbeeke.andalite.maven.ui.Completed;
 import com.jeroensteenbeeke.andalite.maven.ui.MavenQuestionRenderer;
 
 @Mojo(name = "forge", aggregator = true, requiresDirectInvocation = true)
@@ -46,6 +47,8 @@ public class ForgeMojo extends RecipeMojo {
 		Action next = new RecipeSelectionQuestion(recipeList);
 
 		while (next instanceof Question) {
+			getLog().debug(String.format("Next action: %s", next.toString()));
+			
 			Question<?> q = (Question<?>) next;
 			TypedActionResult<Action> result = renderer.renderQuestion(q);
 			if (!result.isOk()) {
@@ -54,6 +57,8 @@ public class ForgeMojo extends RecipeMojo {
 
 			next = result.getObject();
 		}
+		
+		getLog().debug(String.format("Next action: %s", next.toString()));
 
 		if (next instanceof Failure) {
 			throw new MojoFailureException("Forge Recipe returned failure");
@@ -63,6 +68,8 @@ public class ForgeMojo extends RecipeMojo {
 			if (!result.isOk()) {
 				throw new MojoFailureException(result.getMessage());
 			}
+			getLog().info("Recipe completed, continuing");
+			execute();
 		} else {
 			getLog().info("Forge completed");
 		}
