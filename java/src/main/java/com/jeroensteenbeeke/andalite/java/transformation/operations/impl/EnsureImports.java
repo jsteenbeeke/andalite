@@ -17,6 +17,8 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
@@ -25,10 +27,17 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilationUnitOperation;
 
 public class EnsureImports implements ICompilationUnitOperation {
+	private static final String WILDCARD = "*";
 	private final String fqdn;
 
-	public EnsureImports(String fqdn) {
-		super();
+	public EnsureImports(@Nonnull String fqdn) {
+		// Assume developers follow Java conventions and don't use
+		// lowercase class names
+		if (fqdn.toLowerCase().equals(fqdn) && !fqdn.endsWith(WILDCARD)) {
+			throw new IllegalArgumentException(
+					"Invalid fully qualified domain name: " + fqdn);
+		}
+
 		this.fqdn = fqdn;
 	}
 
