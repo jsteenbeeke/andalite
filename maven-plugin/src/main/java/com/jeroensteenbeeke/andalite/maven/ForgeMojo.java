@@ -28,7 +28,6 @@ import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.internal.RecipeSelectionQuestion;
-import com.jeroensteenbeeke.andalite.maven.ui.Completed;
 import com.jeroensteenbeeke.andalite.maven.ui.MavenQuestionRenderer;
 
 @Mojo(name = "forge", aggregator = true, requiresDirectInvocation = true)
