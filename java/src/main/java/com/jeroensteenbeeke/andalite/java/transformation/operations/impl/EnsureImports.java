@@ -37,6 +37,11 @@ public class EnsureImports implements ICompilationUnitOperation {
 			throw new IllegalArgumentException(
 					"Invalid fully qualified domain name: " + fqdn);
 		}
+		
+		if (!fqdn.contains(".")) {
+			throw new IllegalArgumentException(
+					"Invalid fully qualified domain name: " + fqdn);
+		}
 
 		this.fqdn = fqdn;
 	}
