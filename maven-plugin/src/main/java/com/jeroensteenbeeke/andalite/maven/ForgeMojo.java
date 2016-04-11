@@ -37,7 +37,7 @@ import com.jeroensteenbeeke.andalite.maven.ui.MavenQuestionRenderer;
 
 @Mojo(name = "forge", aggregator = true, requiresDirectInvocation = true)
 public class ForgeMojo extends RecipeMojo {
-	@Parameter(required=false, property="forge.input")
+	@Parameter(required = false, property = "forge.input")
 	private File inputFile;
 
 	@Override
@@ -51,7 +51,8 @@ public class ForgeMojo extends RecipeMojo {
 
 		QuestionRenderer renderer;
 		try {
-			renderer = inputFile != null ? new FileInputRenderer(inputFile) : new MavenQuestionRenderer();
+			renderer = inputFile != null ? new FileInputRenderer(inputFile)
+					: new MavenQuestionRenderer();
 		} catch (IOException e) {
 			throw new MojoFailureException("Could not read input file", e);
 		}
@@ -59,7 +60,7 @@ public class ForgeMojo extends RecipeMojo {
 
 		while (next instanceof Question) {
 			getLog().debug(String.format("Next action: %s", next.toString()));
-			
+
 			Question<?> q = (Question<?>) next;
 			TypedActionResult<Action> result = renderer.renderQuestion(q);
 			if (!result.isOk()) {
@@ -68,7 +69,7 @@ public class ForgeMojo extends RecipeMojo {
 
 			next = result.getObject();
 		}
-		
+
 		getLog().debug(String.format("Next action: %s", next.toString()));
 
 		if (next instanceof Failure) {
@@ -79,8 +80,12 @@ public class ForgeMojo extends RecipeMojo {
 			if (!result.isOk()) {
 				throw new MojoFailureException(result.getMessage());
 			}
-			getLog().info("Recipe completed, continuing");
-			execute();
+			if (inputFile != null) {
+				getLog().info("Scripted mode, not continuing");
+			} else {
+				getLog().info("Recipe completed, continuing");
+				execute();
+			}
 		} else {
 			getLog().info("Forge completed");
 		}
