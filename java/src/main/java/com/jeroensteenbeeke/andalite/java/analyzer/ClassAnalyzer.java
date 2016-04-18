@@ -364,16 +364,28 @@ public class ClassAnalyzer {
 			}
 		}
 
+		List<EnumConstantDeclaration> entries = decl.getEntries();
+		if (entries != null) {
+			for (EnumConstantDeclaration constDecl : entries) {
+				if (constDecl != null) {
+					analyzeEnumConstant(element, analyzerContext, constDecl);
+				}
+			}
+		}
+
 		element.setBodyLocation(new Location(start, end));
 	}
 
 	private void processEnumConstantDeclaration(EnumConstantDeclaration decl,
 			AnalyzerContext analyzerContext, AnalyzedEnumConstant element) {
-		for (AnnotationExpr expr : decl.getAnnotations()) {
-			AnalyzedAnnotation annotation = analyze(expr, element,
-					analyzerContext);
-			if (annotation != null) {
-				element.addAnnotation(annotation);
+		List<AnnotationExpr> annotations = decl.getAnnotations();
+		if (annotations != null) {
+			for (AnnotationExpr expr : annotations) {
+				AnalyzedAnnotation annotation = analyze(expr, element,
+						analyzerContext);
+				if (annotation != null) {
+					element.addAnnotation(annotation);
+				}
 			}
 		}
 
@@ -419,16 +431,7 @@ public class ClassAnalyzer {
 			if (element instanceof AnalyzedEnum) {
 				EnumConstantDeclaration enumDecl = (EnumConstantDeclaration) member;
 
-				AnalyzedEnumConstant constant = new AnalyzedEnumConstant(
-						Location.from(enumDecl), ModifierSet.PUBLIC,
-						String.format("%s.%s", element.getPackageName(),
-								element.getDenominationName()),
-						enumDecl.getName());
-
-				processEnumConstantDeclaration(enumDecl, analyzerContext,
-						constant);
-
-				((AnalyzedEnum) element).addConstant(constant);
+				analyzeEnumConstant(element, analyzerContext, enumDecl);
 			}
 
 		} else if (member instanceof ConstructorDeclaration) {
@@ -491,6 +494,18 @@ public class ClassAnalyzer {
 
 			element.addInnerDenomination(elem);
 		}
+	}
+
+	private void analyzeEnumConstant(ContainingDenomination element,
+			AnalyzerContext analyzerContext, EnumConstantDeclaration enumDecl) {
+		AnalyzedEnumConstant constant = new AnalyzedEnumConstant(
+				Location.from(enumDecl), ModifierSet.PUBLIC, String.format(
+						"%s.%s", element.getPackageName(),
+						element.getDenominationName()), enumDecl.getName());
+
+		processEnumConstantDeclaration(enumDecl, analyzerContext, constant);
+
+		((AnalyzedEnum) element).addConstant(constant);
 	}
 
 	private void addConstructor(ContainingDenomination element,
