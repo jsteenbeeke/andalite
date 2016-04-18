@@ -14,73 +14,32 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import java.util.List;
-
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 
-public abstract class AbstractMethodBuilder<T> {
-	private final Builder<ParameterDescriptor> descriptors;
+public abstract class AbstractMethodBuilder<T, B extends AbstractMethodBuilder<T, B>>
+		extends AbstractParameterizedBuilder<T, B> {
 
 	private String type;
 
-	private AccessModifier modifier;
-
-	protected AbstractMethodBuilder(String defaultType,
+	public AbstractMethodBuilder(String defaultType,
 			AccessModifier defaultAccess) {
-		this.descriptors = ImmutableList.builder();
+		super(defaultAccess);
 		this.type = defaultType;
-		this.modifier = defaultAccess;
 	}
 
-	public ParameterDescriber<T> withParameter(@Nonnull String name) {
-		return new ParameterDescriber<T>(this, name);
-	}
-
-	protected List<ParameterDescriptor> getDescriptors() {
-		return descriptors.build();
-	}
-
-	protected String getType() {
-		return type;
-	}
-
-	protected AccessModifier getModifier() {
-		return modifier;
-	}
-
-	public AbstractMethodBuilder<T> withReturnType(@Nonnull String returnType) {
+	@SuppressWarnings("unchecked")
+	public B withReturnType(String returnType) {
 		this.type = returnType;
-		return this;
+		return (B) this;
 	}
 
-	public AbstractMethodBuilder<T> withModifier(
-			@Nonnull AccessModifier modifier) {
-		this.modifier = modifier;
-		return this;
+	public String getType() {
+		return type;
 	}
 
 	@CheckForNull
 	public abstract T named(@Nonnull String name);
-
-	public static class ParameterDescriber<T> {
-		private final AbstractMethodBuilder<T> builder;
-
-		private final String name;
-
-		private ParameterDescriber(AbstractMethodBuilder<T> builder, String name) {
-			this.builder = builder;
-			this.name = name;
-		}
-
-		public AbstractMethodBuilder<T> ofType(@Nonnull String type) {
-			builder.descriptors.add(new ParameterDescriptor(type, name));
-			return builder;
-		}
-
-	}
 }

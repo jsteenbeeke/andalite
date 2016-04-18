@@ -12,21 +12,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.java.transformation;
+package com.jeroensteenbeeke.andalite.java.transformation.operations;
 
-import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureClassMethod;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 
-public class EnsureClassMethodBuilder extends
-		AbstractMethodBuilder<IClassOperation, EnsureClassMethodBuilder> {
-	EnsureClassMethodBuilder() {
-		super("void", AccessModifier.PUBLIC);
-	}
+public interface IConstructorOperation extends
+		IJavaOperation<AnalyzedConstructor> {
 
-	@Override
-	public IClassOperation named(String name) {
-		return new EnsureClassMethod(name, getType(), getModifier(),
-				getDescriptors());
-	}
 }

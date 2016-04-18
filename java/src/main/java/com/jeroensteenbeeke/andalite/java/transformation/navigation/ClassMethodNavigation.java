@@ -79,7 +79,7 @@ public class ClassMethodNavigation extends
 								"Method %s found, but has incorrect access type %s (expected %s)",
 								AnalyzeUtil.getMethodSignature(name,
 										descriptors), analyzedMethod
-										.getReturnType(), modifier);
+										.getAccessModifier(), modifier);
 					}
 
 					return analyzedMethod;

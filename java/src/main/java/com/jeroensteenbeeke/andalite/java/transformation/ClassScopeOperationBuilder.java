@@ -45,4 +45,8 @@ public class ClassScopeOperationBuilder extends
 	public ClassMethodLocator forMethod() {
 		return new ClassMethodLocator(getCollector(), getNavigation());
 	}
+
+	public ClassConstructorLocator forConstructor() {
+		return new ClassConstructorLocator(getCollector(), getNavigation());
+	}
 }

@@ -17,11 +17,11 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ClassMethodNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 
 public class ClassMethodLocator extends
-		AbstractMethodBuilder<MethodOperationBuilder> {
+		AbstractMethodBuilder<MethodOperationBuilder, ClassMethodLocator> {
 
 	private final IStepCollector collector;
 

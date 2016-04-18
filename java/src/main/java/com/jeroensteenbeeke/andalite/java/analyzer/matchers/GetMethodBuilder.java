@@ -20,8 +20,9 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.ContainingDenomination;
 import com.jeroensteenbeeke.andalite.java.transformation.AbstractMethodBuilder;
 
-public class GetMethodBuilder extends
-		AbstractMethodBuilder<Matcher<ContainingDenomination>> {
+public class GetMethodBuilder
+		extends
+		AbstractMethodBuilder<Matcher<ContainingDenomination>, GetMethodBuilder> {
 	public GetMethodBuilder() {
 		super("void", AccessModifier.PUBLIC);
 	}
