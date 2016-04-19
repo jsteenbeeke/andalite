@@ -21,8 +21,9 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInterfaceMethod;
 
-public class EnsureInterfaceMethodBuilder extends
-		AbstractMethodBuilder<IInterfaceOperation> {
+public class EnsureInterfaceMethodBuilder
+		extends
+		AbstractMethodBuilder<IInterfaceOperation, EnsureInterfaceMethodBuilder> {
 	private static final Logger log = LoggerFactory
 			.getLogger(EnsureInterfaceMethodBuilder.class);
 
@@ -31,13 +32,13 @@ public class EnsureInterfaceMethodBuilder extends
 	}
 
 	@Override
-	public AbstractMethodBuilder<IInterfaceOperation> withModifier(
-			AccessModifier modifier) {
+	public EnsureInterfaceMethodBuilder withModifier(AccessModifier modifier) {
 		if (modifier != AccessModifier.PUBLIC) {
 			log.warn("Access modifier {} ignored on interface", modifier.name());
 		}
 
-		return super.withModifier(AccessModifier.PUBLIC);
+		return (EnsureInterfaceMethodBuilder) super
+				.withModifier(AccessModifier.PUBLIC);
 	}
 
 	@Override

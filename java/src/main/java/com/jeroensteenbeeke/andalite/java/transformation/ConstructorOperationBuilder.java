@@ -14,21 +14,21 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.BodyContainerNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.ConstructorParameterNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
-import com.jeroensteenbeeke.andalite.java.transformation.navigation.MethodParameterNavigation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
 
-public class MethodOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedMethod, IMethodOperation> {
+public class ConstructorOperationBuilder extends
+		AbstractOperationBuilder<AnalyzedConstructor, IConstructorOperation> {
 
 	public static class ParameterLocator {
-		private final MethodOperationBuilder parent;
+		private final ConstructorOperationBuilder parent;
 
 		private final String name;
 
-		private ParameterLocator(MethodOperationBuilder parent, String name) {
+		private ParameterLocator(ConstructorOperationBuilder parent, String name) {
 			super();
 			this.parent = parent;
 			this.name = name;
@@ -36,13 +36,13 @@ public class MethodOperationBuilder extends
 
 		public ParameterScopeOperationBuilder ofType(String type) {
 			return new ParameterScopeOperationBuilder(parent.getCollector(),
-					new MethodParameterNavigation(parent.getNavigation(), type,
-							name));
+					new ConstructorParameterNavigation(parent.getNavigation(),
+							type, name));
 		}
 	}
 
-	MethodOperationBuilder(IStepCollector collector,
-			IJavaNavigation<AnalyzedMethod> navigation) {
+	ConstructorOperationBuilder(IStepCollector collector,
+			IJavaNavigation<AnalyzedConstructor> navigation) {
 		super(collector, navigation);
 	}
 
@@ -52,6 +52,7 @@ public class MethodOperationBuilder extends
 
 	public BodyContainerOperationBuilder inBody() {
 		return new BodyContainerOperationBuilder(getCollector(),
-				new BodyContainerNavigation<AnalyzedMethod>(getNavigation()));
+				new BodyContainerNavigation<AnalyzedConstructor>(
+						getNavigation()));
 	}
 }

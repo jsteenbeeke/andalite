@@ -17,7 +17,8 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 import com.jeroensteenbeeke.andalite.java.transformation.AbstractMethodBuilder;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
-public class GetMethodBuilder extends AbstractMethodBuilder<AnalyzedMethod> {
+public class GetMethodBuilder extends
+		AbstractMethodBuilder<AnalyzedMethod, GetMethodBuilder> {
 	private final ContainingDenomination containingDenomination;
 
 	public GetMethodBuilder(ContainingDenomination containingDenomination) {

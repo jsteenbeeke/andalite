@@ -14,31 +14,31 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
-
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
+import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.ClassConstructorNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
-import com.jeroensteenbeeke.andalite.java.transformation.navigation.InterfaceMethodNavigation;
 
-public class InterfaceMethodLocator extends
-		AbstractMethodBuilder<MethodOperationBuilder, InterfaceMethodLocator> {
+public class ClassConstructorLocator
+		extends
+		AbstractParameterizedBuilder<ConstructorOperationBuilder, ClassConstructorLocator> {
 
 	private final IStepCollector collector;
 
-	private final IJavaNavigation<AnalyzedInterface> parentNavigation;
+	private final IJavaNavigation<AnalyzedClass> parentNavigation;
 
-	InterfaceMethodLocator(IStepCollector collector,
-			IJavaNavigation<AnalyzedInterface> parentNavigation) {
-		super(null, null);
+	ClassConstructorLocator(IStepCollector collector,
+			IJavaNavigation<AnalyzedClass> parentNavigation) {
+		super(AccessModifier.PUBLIC);
 		this.collector = collector;
 		this.parentNavigation = parentNavigation;
 
 	}
 
-	public MethodOperationBuilder named(@Nonnull String name) {
-		return new MethodOperationBuilder(collector,
-				new InterfaceMethodNavigation(parentNavigation, name,
-						getType(), getDescriptors()));
+	public ConstructorOperationBuilder get() {
+		return new ConstructorOperationBuilder(collector,
+				new ClassConstructorNavigation(parentNavigation, getModifier(),
+						getDescriptors()));
 	}
 
 }
