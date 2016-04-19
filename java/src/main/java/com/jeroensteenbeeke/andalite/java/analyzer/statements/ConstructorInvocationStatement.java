@@ -89,7 +89,7 @@ public class ConstructorInvocationStatement extends AnalyzedStatement {
 
 		result.append("(");
 		if (!arguments.isEmpty()) {
-			result.append(Joiner.on(",").join(
+			result.append(Joiner.on(", ").join(
 					FluentIterable.from(arguments).transform(
 							AnalyzedExpression.toJavaStringFunction())));
 		}
