@@ -34,6 +34,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOp
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IStatementOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureClassAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureConstructorAnnotation;
@@ -45,6 +46,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureI
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureImports;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInnerAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodAnnotation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureNextStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePackageClass;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureParameterAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePublicClass;
@@ -69,6 +71,10 @@ public class Operations {
 
 	public static IBodyContainerOperation hasStatement(@Nonnull String statement) {
 		return new EnsureStatement(statement);
+	}
+
+	public static IStatementOperation hasNextStatement(@Nonnull String statement) {
+		return new EnsureNextStatement(statement);
 	}
 
 	public static ICompilationUnitOperation hasPublicClass() {

@@ -18,9 +18,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 
 public final class CreateFile extends AbstractCompoundableAction {
+	private static final Logger logger = LoggerFactory
+			.getLogger(CreateFile.class);
+
 	private final File file;
 
 	private String initialContents = null;
@@ -28,6 +34,7 @@ public final class CreateFile extends AbstractCompoundableAction {
 	public CreateFile(File file) {
 		super();
 		this.file = file;
+		logger.info("Create {}", file.getAbsolutePath());
 	}
 
 	public CreateFile withInitialContents(String contents) {

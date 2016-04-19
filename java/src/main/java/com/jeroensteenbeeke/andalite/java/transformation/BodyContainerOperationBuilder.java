@@ -14,8 +14,10 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.AfterStatementNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ReturnStatementNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
@@ -34,5 +36,11 @@ public class BodyContainerOperationBuilder extends
 	public StatementOperationBuilder<ReturnStatement> forReturnStatement() {
 		return new StatementOperationBuilder<ReturnStatement>(getCollector(),
 				new ReturnStatementNavigation(getNavigation()));
+	}
+
+	public StatementOperationBuilder<AnalyzedStatement> afterStatement(
+			String statement) {
+		return new StatementOperationBuilder<AnalyzedStatement>(getCollector(),
+				new AfterStatementNavigation(statement, getNavigation()));
 	}
 }
