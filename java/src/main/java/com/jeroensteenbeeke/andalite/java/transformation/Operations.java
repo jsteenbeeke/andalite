@@ -24,8 +24,35 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.CharValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.FieldAccessValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.IntegerValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.*;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.*;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IAnnotationOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilationUnitOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IFieldOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureAnnotationField;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureClassAnnotation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureConstructorAnnotation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEndReturnStatement;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureField;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureFieldAnnotation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureFieldInitialization;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureImplements;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureImports;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInnerAnnotationField;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodAnnotation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePackageClass;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureParameterAnnotation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePublicClass;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatement;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatementComment;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperClass;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperInterface;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.HasIfStatementOperation;
 
 public class Operations {
 
@@ -165,6 +192,11 @@ public class Operations {
 	public static IMethodOperation hasMethodAnnotation(
 			@Nonnull String annotation) {
 		return new EnsureMethodAnnotation(annotation);
+	}
+
+	public static IConstructorOperation hasConstructorAnnotation(
+			@Nonnull String annotation) {
+		return new EnsureConstructorAnnotation(annotation);
 	}
 
 	public static IParameterOperation hasParameterAnnotation(
