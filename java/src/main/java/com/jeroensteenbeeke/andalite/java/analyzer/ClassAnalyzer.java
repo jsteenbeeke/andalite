@@ -638,6 +638,19 @@ public class ClassAnalyzer {
 				}
 			}
 		}
+
+		BlockStmt blockStmt = member.getBlock();
+		if (blockStmt != null) {
+			BlockStatement statement = analyzeBlockStatement(blockStmt,
+					containingDenomination, analyzerContext);
+			if (statement != null) {
+				List<AnalyzedStatement> body = statement.getStatements();
+				if (body != null) {
+					body.forEach(constructor::addStatement);
+				}
+			}
+		}
+
 		return constructor;
 	}
 
