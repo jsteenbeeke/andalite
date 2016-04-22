@@ -31,6 +31,8 @@ public final class EnumDeclaration extends TypeDeclaration {
 	private List<ClassOrInterfaceType> implementsList;
 
 	private List<EnumConstantDeclaration> entries;
+	
+	private TerminalNode constantAndBodySeparator;
 
 	public EnumDeclaration() {
 	}
@@ -57,6 +59,15 @@ public final class EnumDeclaration extends TypeDeclaration {
 				modifiers, name, members);
 		this.implementsList = implementsList;
 		this.entries = entries;
+	}
+	
+	public TerminalNode getConstantAndBodySeparator() {
+		return constantAndBodySeparator;
+	}
+	
+	public void setConstantAndBodySeparator(
+			TerminalNode constantAndBodySeparator) {
+		this.constantAndBodySeparator = constantAndBodySeparator;
 	}
 
 	@Override

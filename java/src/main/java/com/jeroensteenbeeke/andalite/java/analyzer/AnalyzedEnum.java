@@ -16,6 +16,8 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import java.util.List;
 
+import javax.annotation.CheckForNull;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.google.common.collect.ImmutableList;
@@ -25,6 +27,8 @@ import com.jeroensteenbeeke.andalite.core.Location;
 
 public class AnalyzedEnum extends ConstructableDenomination {
 	private final List<AnalyzedEnumConstant> constants;
+	
+	private Location separatorLocation;
 
 	public AnalyzedEnum(Location location, int modifiers, String packageName,
 			TerminalNode denominationName) {
@@ -34,6 +38,14 @@ public class AnalyzedEnum extends ConstructableDenomination {
 
 	public String getEnumName() {
 		return getDenominationName();
+	}
+	
+	public void setSeparatorLocation(Location separatorLocation) {
+		this.separatorLocation = separatorLocation;
+	}
+	
+	public Location getSeparatorLocation() {
+		return separatorLocation;
 	}
 
 	@Override

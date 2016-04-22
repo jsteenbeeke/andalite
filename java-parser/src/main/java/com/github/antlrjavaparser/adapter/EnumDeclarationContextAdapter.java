@@ -16,6 +16,8 @@ package com.github.antlrjavaparser.adapter;
 
 import java.util.List;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.body.EnumDeclaration;
 import com.github.antlrjavaparser.api.type.Type;
@@ -34,6 +36,11 @@ public class EnumDeclarationContextAdapter implements
 				adapterParameters);
 		AdapterUtil.setComments(enumDeclaration, context, adapterParameters);
 		AdapterUtil.setPosition(enumDeclaration, context);
+
+		if (context.enumBody().enumBodyDeclarations() != null) {
+			enumDeclaration.setConstantAndBodySeparator(context.enumBody()
+					.enumBodyDeclarations().SEMI());
+		}
 
 		enumDeclaration.setName(context.Identifier());
 		List<Type> typeList = Adapters.getTypeListContextAdapter().adapt(

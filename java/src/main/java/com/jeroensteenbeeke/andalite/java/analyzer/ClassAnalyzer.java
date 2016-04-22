@@ -112,6 +112,8 @@ import com.github.antlrjavaparser.api.type.PrimitiveType;
 import com.github.antlrjavaparser.api.type.ReferenceType;
 import com.github.antlrjavaparser.api.type.Type;
 import com.github.antlrjavaparser.api.type.WildcardType;
+import com.github.antlrjavaparser.api.visitor.VoidVisitor;
+import com.github.antlrjavaparser.api.visitor.VoidVisitorAdapter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
@@ -338,6 +340,12 @@ public class ClassAnalyzer {
 			if (annotation != null) {
 				element.addAnnotation(annotation);
 			}
+		}
+
+		TerminalNode separator = decl.getConstantAndBodySeparator();
+
+		if (separator != null) {
+			element.setSeparatorLocation(Location.from(separator));
 		}
 
 		List<ClassOrInterfaceType> implementedInterfaces = decl.getImplements();

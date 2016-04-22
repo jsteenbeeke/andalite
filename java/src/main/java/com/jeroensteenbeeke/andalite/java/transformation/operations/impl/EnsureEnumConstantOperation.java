@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedEnum;
@@ -45,10 +46,21 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 		Transformation t = null;
 
 		if (last == null) {
-			// Tricky
-			t = Transformation.insertAt(input.getBodyLocation().getStart(),
-					String.format("%s(%s)", name, expectedParameterExpressions
-							.stream().collect(Collectors.joining(", "))));
+			Location separatorLocation = input.getSeparatorLocation();
+			final String code = String.format(
+					"%s(%s)",
+					name,
+					expectedParameterExpressions.stream().collect(
+							Collectors.joining(", ")));
+
+			if (separatorLocation == null) {
+				// Insert before body
+				t = Transformation.insertAt(input.getBodyLocation().getStart(),
+						code);
+			} else {
+
+				t = Transformation.insertBefore(separatorLocation, code);
+			}
 		} else {
 			t = Transformation.insertAfter(last, String.format(
 					", %s(%s)",

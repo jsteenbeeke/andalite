@@ -28,7 +28,7 @@ public abstract class DummyAwareTest implements ITempFileRegister {
 	protected enum BaseDummies implements IDummyDescriptor {
 		BareClass("BareClass"), BareInterface("BareInterface"), Empty("Empty"), BareEnum(
 				"BareEnum"), ReverseIntComparator("ReverseIntComparator"), IfStatements(
-				"IfStatements"), OhMyGodThisIsNotARealClass(
+				"IfStatements"), EnumWithStringParam("EnumWithStringParam"), OhMyGodThisIsNotARealClass(
 				"OhMyGodThisIsNotARealClass");
 
 		private final String className;

@@ -48,4 +48,37 @@ public class EnumTest extends DummyAwareTest {
 		assertThat(result, isOk());
 
 	}
+	
+	@Test
+	public void testAddParameter() throws IOException {
+		File enumFile = getDummy(BaseDummies.EnumWithStringParam);
+
+		JavaRecipeBuilder builder = new JavaRecipeBuilder();
+		builder.inEnum(EnumLocator.publicEnum()).ensure(
+				Operations.hasEnumConstant().withStringParameterExpression("This is a test").named("Test"));
+		JavaRecipe addEnumConstant = builder.build();
+
+		ActionResult result = addEnumConstant.applyTo(enumFile);
+
+		assertThat(result, isOk());
+
+		builder = new JavaRecipeBuilder();
+		builder.inEnum(EnumLocator.publicEnum()).ensure(
+				Operations.hasEnumConstant().withStringParameterExpression("This is another test").named("AnotherTest"));
+		addEnumConstant = builder.build();
+		
+		result = addEnumConstant.applyTo(enumFile);
+		
+		assertThat(result, isOk());
+		
+		builder = new JavaRecipeBuilder();
+		builder.inEnum(EnumLocator.publicEnum()).ensure(
+				Operations.hasEnumMethod().named("foo"));
+		addEnumConstant = builder.build();
+		
+		result = addEnumConstant.applyTo(enumFile);
+
+		assertThat(result, isOk());
+
+	}
 }
