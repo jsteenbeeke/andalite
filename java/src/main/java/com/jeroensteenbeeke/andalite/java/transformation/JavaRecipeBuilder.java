@@ -50,5 +50,9 @@ public class JavaRecipeBuilder implements IStepCollector {
 	public InterfaceScopeOperationBuilder inInterface(InterfaceLocator locator) {
 		return new InterfaceScopeOperationBuilder(this, locator.getNavigation());
 	}
+	
+	public EnumScopeOperationBuilder inEnum(EnumLocator locator) {
+		return new EnumScopeOperationBuilder(this, locator.getNavigation());
+	}
 
 }

@@ -498,10 +498,21 @@ public class ClassAnalyzer {
 
 	private void analyzeEnumConstant(ContainingDenomination element,
 			AnalyzerContext analyzerContext, EnumConstantDeclaration enumDecl) {
+		List<Expression> args = enumDecl.getArgs();
+		List<AnalyzedExpression> paramExpressions = Lists.newLinkedList();
+		if (args != null) {
+			for (Expression expression : args) {
+				paramExpressions.add(analyzeExpression(expression, element,
+						analyzerContext));
+			}
+
+		}
+
 		AnalyzedEnumConstant constant = new AnalyzedEnumConstant(
 				Location.from(enumDecl), ModifierSet.PUBLIC, String.format(
 						"%s.%s", element.getPackageName(),
-						element.getDenominationName()), enumDecl.getName());
+						element.getDenominationName()), enumDecl.getName(),
+				paramExpressions);
 
 		processEnumConstantDeclaration(enumDecl, analyzerContext, constant);
 

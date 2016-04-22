@@ -97,6 +97,10 @@ public class Operations {
 		return new EnsureClassMethodBuilder();
 	}
 
+	public static EnsureEnumMethodBuilder hasEnumMethod() {
+		return new EnsureEnumMethodBuilder();
+	}
+	
 	public static IAnnotationOperation hasBooleanValue(@Nonnull String name,
 			boolean value) {
 		return new EnsureAnnotationField<Boolean>(name, BooleanValue.class,
@@ -246,6 +250,10 @@ public class Operations {
 
 	public static HasConstructorBuilder hasConstructor() {
 		return new HasConstructorBuilder();
+	}
+
+	public static HasEnumConstantBuilder hasEnumConstant() {
+		return new HasEnumConstantBuilder();
 	}
 
 }

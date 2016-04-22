@@ -12,8 +12,21 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.jeroensteenbeeke.andalite.dummy;
+package com.jeroensteenbeeke.andalite.java.transformation;
 
-public enum BareEnum {
-	;
+import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEnumMethod;
+
+public class EnsureEnumMethodBuilder extends
+		AbstractMethodBuilder<IEnumOperation, EnsureEnumMethodBuilder> {
+	EnsureEnumMethodBuilder() {
+		super("void", AccessModifier.PUBLIC);
+	}
+
+	@Override
+	public IEnumOperation named(String name) {
+		return new EnsureEnumMethod(name, getType(), getModifier(),
+				getDescriptors());
+	}
 }
