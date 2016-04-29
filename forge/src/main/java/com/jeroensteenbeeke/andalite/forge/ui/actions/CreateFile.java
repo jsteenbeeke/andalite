@@ -17,6 +17,7 @@ package com.jeroensteenbeeke.andalite.forge.ui.actions;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 
 public final class CreateFile extends AbstractCompoundableAction {
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(CreateFile.class);
 
@@ -109,6 +111,38 @@ public final class CreateFile extends AbstractCompoundableAction {
 		initial.append("}\n");
 
 		return new CreateFile(file).withInitialContents(initial.toString());
+	}
+
+	public static CreateFile emptyHtmlFile(File file,
+			IHTMLFileOption... options) {
+
+		final StringBuilder initial = new StringBuilder();
+		initial.append("<html>\n");
+		Arrays.stream(options).forEach(o -> o.applyTo(initial));
+		initial.append("</html>");
+		return new CreateFile(file).withInitialContents(initial.toString());
+	}
+
+	@FunctionalInterface
+	public static interface IHTMLFileOption {
+		void applyTo(StringBuilder target);
+	}
+
+	public enum DefaultHTML implements IHTMLFileOption {
+		HEAD {
+			@Override
+			public void applyTo(StringBuilder target) {
+				target.append("\t<head>\n");
+				target.append("\t</head>\n");
+			}
+		},
+		BODY {
+			@Override
+			public void applyTo(StringBuilder target) {
+				target.append("\t<body>\n");
+				target.append("\t</body>\n");
+			}
+		};
 	}
 
 }
