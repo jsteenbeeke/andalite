@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.forge.ui;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 
+@FunctionalInterface
 public interface PerformableAction extends Action {
 	ActionResult perform();
 }
