@@ -85,6 +85,7 @@ public abstract class DummyProjectTest {
 		AtomicBoolean success = new AtomicBoolean(true);
 
 		baseFolder = Files.createTempDir();
+		
 		context.getFoldersToCreate().forEach(c -> {
 			if (!success.get()) {
 				return;
@@ -122,6 +123,10 @@ public abstract class DummyProjectTest {
 		});
 
 		assertTrue(success.get());
+	}
+	
+	protected final File getBaseFolder() {
+		return baseFolder;
 	}
 
 	public ActionResult validateMainJavaClass(String fqdn, String...disallowedPackages) {
