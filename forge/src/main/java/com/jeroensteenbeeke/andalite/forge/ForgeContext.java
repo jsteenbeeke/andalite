@@ -1,7 +1,6 @@
 package com.jeroensteenbeeke.andalite.forge;
 
 import java.io.File;
-import java.nio.file.Paths;
 
 public final class ForgeContext {
 	private static File workingDirectory = initWorkingDirectory();
@@ -11,7 +10,7 @@ public final class ForgeContext {
 	}
 
 	private static File initWorkingDirectory() {
-		return Paths.get("").toFile();
+		return new File(System.getProperty("user.dir"));
 	}
 
 	public static File getWorkingDirectory() {

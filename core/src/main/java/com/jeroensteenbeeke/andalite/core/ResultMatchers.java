@@ -45,6 +45,7 @@ public final class ResultMatchers {
 				if (!matches) {
 					mismatchDescription.appendText("is not ok: ");
 					mismatchDescription.appendText(item.getMessage());
+
 				}
 
 				return matches;

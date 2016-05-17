@@ -162,8 +162,11 @@ public class FileLocator {
 
 	private static void checkFile(File next) throws FileLocatorException {
 		if (!next.exists()) {
-			throw new FileLocatorException("File %s does not exist",
-					next.getAbsolutePath());
+			if (!next.mkdir()) {
+				throw new FileLocatorException(
+						"Directory %s does not exist and cannot be created",
+						next.getAbsolutePath());
+			}
 		}
 		if (!next.isDirectory()) {
 			throw new FileLocatorException("File %s is not a directory",

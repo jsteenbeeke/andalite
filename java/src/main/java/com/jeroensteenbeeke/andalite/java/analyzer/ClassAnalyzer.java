@@ -112,8 +112,6 @@ import com.github.antlrjavaparser.api.type.PrimitiveType;
 import com.github.antlrjavaparser.api.type.ReferenceType;
 import com.github.antlrjavaparser.api.type.Type;
 import com.github.antlrjavaparser.api.type.WildcardType;
-import com.github.antlrjavaparser.api.visitor.VoidVisitor;
-import com.github.antlrjavaparser.api.visitor.VoidVisitorAdapter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
@@ -248,7 +246,7 @@ public class ClassAnalyzer {
 			return TypedActionResult.fail(targetFile.getAbsolutePath());
 		} catch (ParseException | IOException e) {
 			String exceptionMessage = errorStrategy.getExceptionMessage();
-			if (exceptionMessage != null) {
+			if (exceptionMessage != null && !exceptionMessage.isEmpty()) {
 				return TypedActionResult.fail(exceptionMessage);
 			}
 			return TypedActionResult.fail(e.getMessage());

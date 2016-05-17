@@ -15,6 +15,8 @@
 
 package com.jeroensteenbeeke.andalite.core;
 
+import javax.annotation.Nonnull;
+
 public class ActionResult {
 	private final boolean ok;
 
@@ -33,11 +35,17 @@ public class ActionResult {
 		return message;
 	}
 
+	@Nonnull
 	public static ActionResult ok() {
 		return new ActionResult(true, null);
 	}
 
-	public static ActionResult error(String message, Object... params) {
+	@Nonnull
+	public static ActionResult error(@Nonnull String message, Object... params) {
+		if (message == null || message.trim().isEmpty()) {
+			throw new IllegalArgumentException("Empty error message");
+		}
+
 		if (params.length == 0) {
 			return new ActionResult(false, message);
 		} else {

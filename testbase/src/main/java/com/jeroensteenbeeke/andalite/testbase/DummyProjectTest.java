@@ -7,9 +7,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,6 +24,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
+import com.google.common.util.concurrent.Atomics;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
@@ -44,13 +47,12 @@ public abstract class DummyProjectTest {
 
 	private static final String SRC_TEST_JAVA = String.format(
 			"src%stest%sjava", FILE_SEPARATOR, FILE_SEPARATOR);
-	
+
 	/**
 	 * Imports that, if used without a class or wildcard added, are invalid
 	 */
-	private static String[] DISALLOWED_IMPORTS = {
-		"java.lang", "java.util", "java.math"
-	};
+	private static String[] DISALLOWED_IMPORTS = { "java.lang", "java.util",
+			"java.math" };
 
 	private final DummyProjectContext context;
 
@@ -58,6 +60,10 @@ public abstract class DummyProjectTest {
 
 	protected DummyProjectTest(DummyProjectContext context) {
 		this.context = context;
+	}
+
+	private static String moduleLocation(String moduleName, String sourceName) {
+		return String.format("%s%s%s", moduleName, FILE_SEPARATOR, sourceName);
 	}
 
 	protected void onCreateConfig(Map<String, String> config) {
@@ -83,61 +89,92 @@ public abstract class DummyProjectTest {
 		});
 
 		AtomicBoolean success = new AtomicBoolean(true);
+		AtomicReference<String> result = Atomics.newReference("");
 
 		baseFolder = Files.createTempDir();
-		
-		context.getFoldersToCreate().forEach(c -> {
-			if (!success.get()) {
-				return;
-			}
 
-			File f = new File(baseFolder, c);
-			if (c.contains(FILE_SEPARATOR)) {
-				if (!f.mkdirs()) {
-					success.set(false);
-				} else {
-					log.info("Created folder {}", f.getAbsolutePath());
-				}
-			} else {
-				if (!f.mkdir()) {
-					success.set(false);
-				} else {
-					log.info("Created folder {}", f.getAbsolutePath());
-				}
-			}
+		context.getFoldersToCreate()
+				.forEach(
+						c -> {
+							if (!success.get()) {
+								return;
+							}
 
-			if (packageDummies.containsKey(c)) {
-				packageDummies.get(c).forEach(d -> {
-					File dummy = new File(f, d.getName());
-					try (FileOutputStream fos = new FileOutputStream(dummy)) {
-						for (char e : d.getSource().toCharArray()) {
-							fos.write(e);
-						}
-						fos.flush();
-						log.info("Created file {}", dummy.getAbsolutePath());
-					} catch (IOException ioe) {
-						success.set(false);
-					}
-				});
-			}
-		});
+							File f = new File(baseFolder, c);
+							if (c.contains(FILE_SEPARATOR)) {
+								if (!f.exists() && !f.mkdirs()) {
+									success.set(false);
+									result.set(String.format(
+											"Could not create directory %s",
+											f.getAbsolutePath()));
+								} else {
+									log.info("Created folder {}",
+											f.getAbsolutePath());
+								}
+							} else {
+								if (!f.exists() && !f.mkdir()) {
+									success.set(false);
+									result.set(String.format(
+											"Could not create directory %s",
+											f.getAbsolutePath()));
+								} else {
+									log.info("Created folder {}",
+											f.getAbsolutePath());
+								}
+							}
 
-		assertTrue(success.get());
+							if (packageDummies.containsKey(c)) {
+								packageDummies
+										.get(c)
+										.forEach(
+												d -> {
+													File dummy = new File(f, d
+															.getName());
+													try (FileOutputStream fos = new FileOutputStream(
+															dummy)) {
+														for (char e : d
+																.getSource()
+																.toCharArray()) {
+															fos.write(e);
+														}
+														fos.flush();
+														log.info(
+																"Created file {}",
+																dummy.getAbsolutePath());
+													} catch (IOException ioe) {
+														result.set(ioe
+																.getMessage());
+														success.set(false);
+													}
+												});
+							}
+						});
+
+		assertTrue(result.get(), success.get());
 	}
-	
+
 	protected final File getBaseFolder() {
 		return baseFolder;
 	}
 
-	public ActionResult validateMainJavaClass(String fqdn, String...disallowedPackages) {
+	public ActionResult validateModuleMainJavaClass(String module, String fqdn,
+			String... disallowedPackages) {
+		return validateJavaClass(moduleLocation(module, SRC_MAIN_JAVA), fqdn,
+				disallowedPackages);
+	}
+
+	public ActionResult validateMainJavaClass(String fqdn,
+			String... disallowedPackages) {
 		return validateJavaClass(SRC_MAIN_JAVA, fqdn, disallowedPackages);
 	}
 
-	public ActionResult validateTestJavaClass(String fqdn,String...disallowedPackages) {
+	public ActionResult validateTestJavaClass(String fqdn,
+			String... disallowedPackages) {
 		return validateJavaClass(SRC_TEST_JAVA, fqdn, disallowedPackages);
 	}
 
-	private ActionResult validateJavaClass(String source, String fqdn, String...disallowedPackages) {
+	private ActionResult validateJavaClass(String source, String fqdn,
+			String... disallowedPackages) {
 		String todo = fqdn;
 
 		File base = new File(baseFolder, source);
@@ -161,26 +198,31 @@ public abstract class DummyProjectTest {
 
 		File target = new File(new File(base, path), filename.concat(".java"));
 
-		TypedActionResult<AnalyzedSourceFile> result = new ClassAnalyzer(target).analyze();
-		
+		TypedActionResult<AnalyzedSourceFile> result = new ClassAnalyzer(target)
+				.analyze();
+
 		if (!result.isOk()) {
 			return result;
 		}
-		
+
 		AnalyzedSourceFile sourceFile = result.getObject();
-		
+
 		for (String disallowed : DISALLOWED_IMPORTS) {
 			if (sourceFile.hasImport(disallowed)) {
-				return TypedActionResult.fail("Source file has disallowed import %s (there should be a wildcard or classname after this)", disallowed);
+				return TypedActionResult
+						.fail("Source file has disallowed import %s (there should be a wildcard or classname after this)",
+								disallowed);
 			}
 		}
-		
+
 		for (String disallowed : disallowedPackages) {
 			if (sourceFile.hasImport(disallowed)) {
-				return TypedActionResult.fail("Source file has disallowed import %s (there should be a wildcard or classname after this)", disallowed);
+				return TypedActionResult
+						.fail("Source file has disallowed import %s (there should be a wildcard or classname after this)",
+								disallowed);
 			}
 		}
-		
+
 		return result;
 	}
 
@@ -193,20 +235,87 @@ public abstract class DummyProjectTest {
 		return new MavenContextBuilder();
 	}
 
+	public static ModularMavenContextBuilder withModule(String name) {
+		return new ModularMavenContextBuilder(name, new LinkedList<String>(),
+				new LinkedList<DummyFile>());
+	}
+
+	protected static class ModularMavenContextBuilder {
+		private final List<String> foldersToCreate;
+
+		private final List<DummyFile> dummiesToCreate;
+
+		private final String currentModuleName;
+
+		public ModularMavenContextBuilder(String currentModuleName,
+				List<String> foldersToCreate, List<DummyFile> dummiesToCreate) {
+			this.currentModuleName = currentModuleName;
+			this.foldersToCreate = foldersToCreate;
+			this.dummiesToCreate = dummiesToCreate;
+		}
+
+		public ModularMavenContextFinalizer withContents(
+				MavenContextBuilder builder) {
+			DummyProjectContext context = builder.create();
+			for (String folder : context.getFoldersToCreate()) {
+				foldersToCreate.add(asFolder(currentModuleName.concat(".")
+						.concat(folder)));
+			}
+			for (DummyFile dummyFile : context.getDummyFilesToCreate()) {
+				dummiesToCreate.add(new DummyFile(currentModuleName.concat(".")
+						.concat(dummyFile.getPackageName()), dummyFile
+						.getName(), dummyFile.getSource()));
+			}
+			return new ModularMavenContextFinalizer(foldersToCreate,
+					dummiesToCreate);
+		}
+	}
+
+	protected static class ModularMavenContextFinalizer {
+		private final List<String> foldersToCreate;
+
+		private final List<DummyFile> dummiesToCreate;
+
+		public ModularMavenContextFinalizer(List<String> foldersToCreate,
+				List<DummyFile> dummiesToCreate) {
+			this.foldersToCreate = foldersToCreate;
+			this.dummiesToCreate = dummiesToCreate;
+		}
+
+		public DummyProjectContext create() {
+			return new DummyProjectContext(foldersToCreate, dummiesToCreate);
+		}
+
+		public ModularMavenContextBuilder andModule(String name) {
+			return new ModularMavenContextBuilder(name, foldersToCreate,
+					dummiesToCreate);
+		}
+	}
+
 	protected static class MavenContextBuilder {
 		private static final String SRC_MAIN_JAVA = "src.main.java";
 
 		private static final String SRC_TEST_JAVA = "src.test.java";
 
+		private static final String SRC_MAIN_RESOURCES = "src.main.resources";
+
+		private static final String SRC_TEST_RESOURCES = "src.test.resources";
+
 		private final List<String> packages;
 
 		private final List<String> testPackages;
+
+		private final List<String> resourcePackages;
+
+		private final List<String> testResourcePackages;
 
 		private final List<DummyFile> files;
 
 		private MavenContextBuilder() {
 			this.packages = Lists.newArrayList();
 			this.testPackages = Lists.newArrayList();
+			this.resourcePackages = Lists.newArrayList();
+			this.testResourcePackages = Lists.newArrayList();
 			this.files = Lists.newArrayList();
 		}
 
@@ -218,6 +327,10 @@ public abstract class DummyProjectTest {
 		public MavenContextBuilder withTestPackage(String packageName) {
 			testPackages.add(packageName);
 			return this;
+		}
+
+		public ResourceBuilder withResource(String resourceName) {
+			return new ResourceBuilder(resourceName, this);
 		}
 
 		public SelectPackage withMainFile(String fileName) {
@@ -238,9 +351,55 @@ public abstract class DummyProjectTest {
 				testPackages.forEach(p -> folders.add(joinFolders(
 						SRC_TEST_JAVA, p)));
 			}
+			if (!resourcePackages.isEmpty()) {
+				folders.add(asFolder(SRC_MAIN_RESOURCES));
+				resourcePackages.forEach(p -> folders.add(joinFolders(
+						SRC_MAIN_RESOURCES, p)));
+			}
+
+			if (!testResourcePackages.isEmpty()) {
+				folders.add(asFolder(SRC_TEST_RESOURCES));
+				testResourcePackages.forEach(p -> folders.add(joinFolders(
+						SRC_TEST_RESOURCES, p)));
+
+			}
 
 			return new DummyProjectContext(folders, files);
 
+		}
+
+		public static class ResourceBuilder {
+			private final String name;
+
+			private final MavenContextBuilder builder;
+
+			private String relativePkg = "";
+
+			private ResourceBuilder(String name, MavenContextBuilder builder) {
+				super();
+				this.name = name;
+				this.builder = builder;
+			}
+
+			public ResourceBuilder inPackage(String pkg) {
+				this.relativePkg = pkg;
+				return this;
+			}
+
+			public MavenContextBuilder containing(String contents) {
+				if (relativePkg.isEmpty()) {
+					builder.files.add(new DummyFile(SRC_MAIN_RESOURCES, name,
+							contents));
+					builder.resourcePackages.add(relativePkg);
+				} else {
+					String pkg = SRC_MAIN_RESOURCES.concat(".").concat(
+							relativePkg);
+					builder.files.add(new DummyFile(pkg, name, contents));
+					builder.resourcePackages.add(pkg);
+
+				}
+				return builder;
+			}
 		}
 
 	}
@@ -291,6 +450,11 @@ public abstract class DummyProjectTest {
 			return source;
 		}
 
+		@Override
+		public String toString() {
+			return String.format("File %s in package %s (%d bytes)", name,
+					packageName, source.getBytes().length);
+		}
 	}
 
 	protected static class SelectPackage {

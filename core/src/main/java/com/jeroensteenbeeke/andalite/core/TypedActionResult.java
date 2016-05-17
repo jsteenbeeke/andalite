@@ -15,7 +15,6 @@
 
 package com.jeroensteenbeeke.andalite.core;
 
-
 public class TypedActionResult<T> extends ActionResult {
 	private final T object;
 
@@ -41,13 +40,17 @@ public class TypedActionResult<T> extends ActionResult {
 		return new TypedActionResult<T>(true, null, object);
 	}
 
-	public static final <T> TypedActionResult<T> fail(String format,
+	public static final <T> TypedActionResult<T> fail(String message,
 			Object... params) {
-		if (params.length == 0) {
-			return new TypedActionResult<T>(false, format, null);
+		if (message == null || message.trim().isEmpty()) {
+			throw new IllegalArgumentException("Empty error message");
 		}
 
-		return new TypedActionResult<T>(false, String.format(format, params),
+		if (params.length == 0) {
+			return new TypedActionResult<T>(false, message, null);
+		}
+
+		return new TypedActionResult<T>(false, String.format(message, params),
 				null);
 	}
 
