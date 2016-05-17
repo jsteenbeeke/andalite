@@ -26,6 +26,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.Atomics;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.andalite.core.AndaliteContext;
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
@@ -92,6 +93,7 @@ public abstract class DummyProjectTest {
 		AtomicReference<String> result = Atomics.newReference("");
 
 		baseFolder = Files.createTempDir();
+		AndaliteContext.setWorkingDirectory(baseFolder);
 
 		context.getFoldersToCreate()
 				.forEach(

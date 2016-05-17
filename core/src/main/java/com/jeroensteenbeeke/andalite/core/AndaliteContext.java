@@ -1,11 +1,11 @@
-package com.jeroensteenbeeke.andalite.forge;
+package com.jeroensteenbeeke.andalite.core;
 
 import java.io.File;
 
-public final class ForgeContext {
+public final class AndaliteContext {
 	private static File workingDirectory = initWorkingDirectory();
 
-	private ForgeContext() {
+	private AndaliteContext() {
 
 	}
 
