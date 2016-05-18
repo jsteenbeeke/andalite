@@ -71,7 +71,7 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 
 	private TypedActionResult<Action> renderRecipeSelectQuestion(
 			RecipeSelectionQuestion question) throws ForgeException {
-		TypedActionResult<Integer> response = TypedActionResult.fail("");
+		TypedActionResult<Integer> response = TypedActionResult.fail("Invalid choice");
 
 		final int exit = question.getRecipes().size() + 1;
 
