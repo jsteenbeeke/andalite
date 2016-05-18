@@ -73,7 +73,8 @@ public class ForgeMojo extends RecipeMojo {
 		getLog().debug(String.format("Next action: %s", next.toString()));
 
 		if (next instanceof Failure) {
-			throw new MojoFailureException("Forge Recipe returned failure");
+			Failure failure = (Failure) next;
+			throw new MojoFailureException(String.format("Forge Recipe returned failure: %s", failure.getReason()));
 		} else if (next instanceof PerformableAction) {
 			PerformableAction action = (PerformableAction) next;
 			ActionResult result = action.perform();
