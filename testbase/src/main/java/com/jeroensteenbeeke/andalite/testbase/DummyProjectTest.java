@@ -74,8 +74,7 @@ public abstract class DummyProjectTest {
 	protected final Map<String, String> createConfig() {
 		Map<String, String> config = Maps.newHashMap();
 
-		config.put(KEY_SOURCE_PATH,
-				new File(baseFolder, SRC_MAIN_JAVA).getAbsolutePath());
+		config.put(KEY_SOURCE_PATH, SRC_MAIN_JAVA);
 		onCreateConfig(config);
 
 		return ImmutableMap.copyOf(config);
@@ -199,6 +198,8 @@ public abstract class DummyProjectTest {
 		String filename = todo;
 
 		File target = new File(new File(base, path), filename.concat(".java"));
+		
+		log.info("Target: {} (\n\tbase {}, \n\tpath {}, \n\tfilename {})", target.getAbsolutePath(), base, path, filename);
 
 		TypedActionResult<AnalyzedSourceFile> result = new ClassAnalyzer(target)
 				.analyze();
