@@ -1469,9 +1469,13 @@ public class ClassAnalyzer {
 			ArrayCreationExpression creationExpression = new ArrayCreationExpression(
 					location, type, initializer);
 
-			for (Expression expression : arrayCreationExpr.getDimensions()) {
-				creationExpression.addDimension(analyzeExpression(expression,
-						containingDenomination, analyzerContext));
+			List<Expression> dimensions = arrayCreationExpr.getDimensions();
+			if (dimensions != null) {
+				for (Expression expression : dimensions) {
+					creationExpression
+							.addDimension(analyzeExpression(expression,
+									containingDenomination, analyzerContext));
+				}
 			}
 
 			return creationExpression;
