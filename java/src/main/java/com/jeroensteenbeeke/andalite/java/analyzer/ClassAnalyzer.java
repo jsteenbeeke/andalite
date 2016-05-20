@@ -200,6 +200,8 @@ public class ClassAnalyzer {
 
 	@Nonnull
 	public TypedActionResult<AnalyzedSourceFile> analyze() {
+		log.debug("Starting analysis of {}", targetFile.getAbsolutePath());
+		
 		RecordingBailErrorStrategy errorStrategy = new RecordingBailErrorStrategy(
 				targetFile);
 
@@ -948,12 +950,16 @@ public class ClassAnalyzer {
 		if (statement instanceof ReturnStmt) {
 			ReturnStmt returnStmt = (ReturnStmt) statement;
 
-			AnalyzedExpression returnExpression = analyzeExpression(
-					returnStmt.getExpr(), containingDenomination,
-					analyzerContext);
+			Expression expr = returnStmt.getExpr();
+			AnalyzedExpression returnExpression = null;
+			if (expr != null) {
+				returnExpression = analyzeExpression(expr,
+						containingDenomination, analyzerContext);
+			}
 
 			return addComments(statement, new ReturnStatement(location,
 					returnExpression));
+
 		} else if (statement instanceof IfStmt) {
 			IfStmt ifStmt = (IfStmt) statement;
 
@@ -1334,9 +1340,10 @@ public class ClassAnalyzer {
 			SwitchEntryStmt switchEntryStmt,
 			ContainingDenomination containingDenomination,
 			AnalyzerContext analyzerContext) {
-		AnalyzedExpression value = analyzeExpression(
-				switchEntryStmt.getLabel(), containingDenomination,
-				analyzerContext);
+		Expression label = switchEntryStmt.getLabel();
+		AnalyzedExpression value = label != null ? analyzeExpression(
+				label, containingDenomination,
+				analyzerContext) : null;
 
 		SwitchEntryStatement switchEntry = new SwitchEntryStatement(
 				Location.from(switchEntryStmt), value);

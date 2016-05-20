@@ -14,9 +14,14 @@
  */
 package com.github.antlrjavaparser.adapter;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.github.antlrjavaparser.Java8Parser;
+import com.github.antlrjavaparser.Java8Parser.AnnotationContext;
 import com.github.antlrjavaparser.api.body.BodyDeclaration;
 import com.github.antlrjavaparser.api.body.MethodDeclaration;
+import com.github.antlrjavaparser.api.expr.AnnotationExpr;
 import com.github.antlrjavaparser.api.type.ReferenceType;
 import com.github.antlrjavaparser.api.type.Type;
 import com.github.antlrjavaparser.api.type.VoidType;
@@ -32,6 +37,24 @@ public class DefaultInterfaceMethodDeclarationContextAdapter implements Adapter<
         AdapterUtil.setModifiers(context.modifiers(), methodDeclaration, adapterParameters);
         AdapterUtil.setComments(methodDeclaration, context, adapterParameters);
         AdapterUtil.setPosition(methodDeclaration, context);
+        
+        List<AnnotationExpr> modifierAnnotations = methodDeclaration.getAnnotations();
+        List<AnnotationExpr> finalAnnotations = new LinkedList<>();
+        if (modifierAnnotations != null) {
+        	finalAnnotations.addAll(modifierAnnotations);
+        }
+        
+        List<AnnotationContext> annotation = context.annotation();
+        if (annotation != null) {
+        	for (AnnotationContext annotationContext : annotation) {
+        		AnnotationExpr expr = Adapters.getAnnotationContextAdapter().adapt(annotationContext, adapterParameters);
+        		if (expr != null) {
+        			finalAnnotations.add(expr);
+        		}
+			}
+        }
+        
+        methodDeclaration.setAnnotations(finalAnnotations);
 
         if (context.typeParameters() != null) {
             methodDeclaration.setTypeParameters(Adapters.getTypeParametersContextAdapter().adapt(context.typeParameters(), adapterParameters));

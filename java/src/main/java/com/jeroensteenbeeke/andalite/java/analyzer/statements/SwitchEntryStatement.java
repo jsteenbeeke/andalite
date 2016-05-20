@@ -16,6 +16,9 @@ package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
 import java.util.List;
 
+import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
+
 import com.google.common.base.Joiner;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
@@ -29,12 +32,13 @@ public class SwitchEntryStatement extends AnalyzedStatement {
 
 	private final List<AnalyzedStatement> statements;
 
-	public SwitchEntryStatement(Location from, AnalyzedExpression value) {
+	public SwitchEntryStatement(Location from, @Nullable AnalyzedExpression value) {
 		super(from);
 		this.value = value;
 		this.statements = Lists.newArrayList();
 	}
 
+	@CheckForNull 
 	public AnalyzedExpression getValue() {
 		return value;
 	}

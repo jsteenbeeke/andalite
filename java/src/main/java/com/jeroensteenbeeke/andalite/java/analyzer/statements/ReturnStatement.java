@@ -14,7 +14,9 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -24,18 +26,19 @@ public class ReturnStatement extends AnalyzedStatement {
 	private final AnalyzedExpression returnExpression;
 
 	public ReturnStatement(@Nonnull final Location location,
-			@Nonnull final AnalyzedExpression returnExpression) {
+			@Nullable final AnalyzedExpression returnExpression) {
 		super(location);
 		this.returnExpression = returnExpression;
 	}
 
+	@CheckForNull
 	public AnalyzedExpression getReturnExpression() {
 		return returnExpression;
 	}
 
 	@Override
 	public String toJavaString() {
-		return String.format("return %s", returnExpression.toJavaString());
+		return String.format("return %s", returnExpression != null ? returnExpression.toJavaString() : "");
 	}
 
 }

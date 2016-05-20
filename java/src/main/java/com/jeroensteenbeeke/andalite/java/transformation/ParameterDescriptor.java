@@ -69,13 +69,13 @@ public class ParameterDescriptor {
 	}
 
 	public boolean appliesTo(AnalyzedParameter parameter) {
-		return name.equals(parameter.getName())
+		return (name == null || name.equals(parameter.getName()))
 				&& type.equals(parameter.getType());
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s %s", type, name);
+		return String.format("%s %s", type, name != null ? name : "*ANY*");
 	}
 
 	public static Function<ParameterDescriptor, String> getTypeFunction() {

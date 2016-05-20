@@ -57,6 +57,7 @@ public class RecordingBailErrorStrategy extends BailErrorStrategy {
 								offendingToken.getCharPositionInLine(),
 								expected);
 
+				log.warn("File: {}", inputFile.getAbsoluteFile());
 				log.warn("--- Offending lines:");
 				try (BufferedReader br = new BufferedReader(new FileReader(
 						inputFile))) {

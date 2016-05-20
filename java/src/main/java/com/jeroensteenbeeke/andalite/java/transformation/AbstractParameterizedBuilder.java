@@ -23,6 +23,12 @@ public abstract class AbstractParameterizedBuilder<T, B extends AbstractParamete
 	public ParameterDescriber<T, B> withParameter(@Nonnull String name) {
 		return new ParameterDescriber<T, B>((B) this, name);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public B withParameterOfType(@Nonnull String type) {
+		descriptors.add(new ParameterDescriptor(type, null));
+		return (B) this;
+	}
 
 	protected List<ParameterDescriptor> getDescriptors() {
 		return descriptors.build();

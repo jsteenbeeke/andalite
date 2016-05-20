@@ -542,7 +542,7 @@ interfaceMethodDeclaration
     ;
 
 defaultInterfaceMethodDeclaration
-    :    ((DEFAULT modifiers) | (modifiers DEFAULT)) typeParameters? (type | VOID) Identifier formalParameters (LBRACKET RBRACKET)* (THROWS qualifiedNameList)? (block | SEMI)
+    :    annotation* ((DEFAULT modifiers) | (modifiers DEFAULT)) typeParameters? (type | VOID) Identifier formalParameters (LBRACKET RBRACKET)* (THROWS qualifiedNameList)? (block | SEMI)
     ;
 
 /**
