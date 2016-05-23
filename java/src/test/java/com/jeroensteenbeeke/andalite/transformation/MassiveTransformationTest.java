@@ -34,7 +34,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.Operations;
 
 public class MassiveTransformationTest extends DummyAwareTest {
-	private static final int OPERATIONS = 15;
+	private static final int OPERATIONS = 500;
 
 	@Test
 	public void testMassiveTransformation() throws IOException {
