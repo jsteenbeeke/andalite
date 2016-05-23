@@ -37,6 +37,7 @@ import com.github.antlrjavaparser.ParserConfigurator;
 import com.github.antlrjavaparser.api.Comment;
 import com.github.antlrjavaparser.api.CompilationUnit;
 import com.github.antlrjavaparser.api.ImportDeclaration;
+import com.github.antlrjavaparser.api.Node;
 import com.github.antlrjavaparser.api.PackageDeclaration;
 import com.github.antlrjavaparser.api.body.AnnotationDeclaration;
 import com.github.antlrjavaparser.api.body.BodyDeclaration;
@@ -46,6 +47,7 @@ import com.github.antlrjavaparser.api.body.ConstructorDeclaration;
 import com.github.antlrjavaparser.api.body.EnumConstantDeclaration;
 import com.github.antlrjavaparser.api.body.EnumDeclaration;
 import com.github.antlrjavaparser.api.body.FieldDeclaration;
+import com.github.antlrjavaparser.api.body.JavadocComment;
 import com.github.antlrjavaparser.api.body.MethodDeclaration;
 import com.github.antlrjavaparser.api.body.ModifierSet;
 import com.github.antlrjavaparser.api.body.Parameter;
@@ -201,7 +203,7 @@ public class ClassAnalyzer {
 	@Nonnull
 	public TypedActionResult<AnalyzedSourceFile> analyze() {
 		log.debug("Starting analysis of {}", targetFile.getAbsolutePath());
-		
+
 		RecordingBailErrorStrategy errorStrategy = new RecordingBailErrorStrategy(
 				targetFile);
 
@@ -273,7 +275,7 @@ public class ClassAnalyzer {
 					sourceFile.addInterface(element);
 				}
 
-				return element;
+				return setJavadoc(decl, element);
 			} else {
 				AnalyzedClass element = new AnalyzedClass(Location.from(decl),
 						decl.getModifiers(), context.getScope(), decl.getName());
@@ -285,7 +287,7 @@ public class ClassAnalyzer {
 					sourceFile.addClass(element);
 				}
 
-				return element;
+				return setJavadoc(decl, element);
 			}
 		} else if (typeDeclaration instanceof EnumDeclaration) {
 			EnumDeclaration decl = (EnumDeclaration) typeDeclaration;
@@ -300,7 +302,7 @@ public class ClassAnalyzer {
 				sourceFile.addEnum(element);
 			}
 
-			return element;
+			return setJavadoc(decl, element);
 		} else if (typeDeclaration instanceof AnnotationDeclaration) {
 			AnnotationDeclaration decl = (AnnotationDeclaration) typeDeclaration;
 
@@ -314,7 +316,7 @@ public class ClassAnalyzer {
 				sourceFile.addAnnotation(element);
 			}
 
-			return element;
+			return setJavadoc(decl, element);
 		}
 
 		return null;
@@ -704,7 +706,7 @@ public class ClassAnalyzer {
 			}, containingDenomination, analyzerContext);
 		}
 
-		return method;
+		return addComments(member, setJavadoc(member, method));
 	}
 
 	private AnalyzedParameter analyze(Parameter parameter,
@@ -1298,23 +1300,49 @@ public class ClassAnalyzer {
 				"Unhandled statement type! Go slap the andalite developers!");
 	}
 
-	private AnalyzedStatement addComments(Statement stmt,
-			AnalyzedStatement statement) {
-		List<Comment> beginComments = stmt.getBeginComments();
+	private <T extends Commentable> T addComments(Node node, T commentable) {
+		List<Comment> beginComments = node.getBeginComments();
 		if (beginComments != null) {
 			for (Comment comment : beginComments) {
-				statement.addComment(comment.getContent());
+				checkJavadoc(commentable, comment);
+				commentable.addComment(comment.getContent());
 			}
 		}
 
-		List<Comment> endComments = stmt.getEndComments();
+		List<Comment> endComments = node.getEndComments();
 		if (endComments != null) {
 			for (Comment comment : endComments) {
-				statement.addComment(comment.getContent());
+				checkJavadoc(commentable, comment);
+				commentable.addComment(comment.getContent());
 			}
 		}
 
-		return statement;
+		return commentable;
+	}
+
+	private <T extends Commentable> void checkJavadoc(T commentable,
+			Comment comment) {
+		if (comment instanceof JavadocComment
+				&& commentable instanceof Javadocable) {
+			JavadocComment jdc = (JavadocComment) comment;
+			Javadocable jda = (Javadocable) commentable;
+
+			if (jda.getJavadoc() == null) {
+				jda.setJavadoc(jdc.getContent());
+			}
+		}
+	}
+
+	private <T extends Javadocable> T setJavadoc(BodyDeclaration node,
+			T javadocable) {
+		if (node != null) {
+			JavadocComment comment = node.getJavaDoc();
+			if (comment != null && javadocable != null) {
+				javadocable.setJavadoc(comment.getContent());
+			}
+		}
+
+		return javadocable;
 	}
 
 	private BlockStatement analyzeBlockStatement(BlockStmt blockStmt,
@@ -1341,9 +1369,8 @@ public class ClassAnalyzer {
 			ContainingDenomination containingDenomination,
 			AnalyzerContext analyzerContext) {
 		Expression label = switchEntryStmt.getLabel();
-		AnalyzedExpression value = label != null ? analyzeExpression(
-				label, containingDenomination,
-				analyzerContext) : null;
+		AnalyzedExpression value = label != null ? analyzeExpression(label,
+				containingDenomination, analyzerContext) : null;
 
 		SwitchEntryStatement switchEntry = new SwitchEntryStatement(
 				Location.from(switchEntryStmt), value);

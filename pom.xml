@@ -324,7 +324,7 @@
 
 	<properties>
 		<andalite.version>1.0-SNAPSHOT</andalite.version>
-		<antlr.version>4.5</antlr.version>
+		<antlr.version>4.5.3</antlr.version>
 
 		<!-- Dependency Versions -->
 		<guava.version>18.0</guava.version>
@@ -336,7 +336,7 @@
 		<slf4j.api.version>1.7.10</slf4j.api.version>
 
 		<!-- Plugin Versions -->
-		<maven.antlr.plugin.version>4.5.1-1</maven.antlr.plugin.version>
+		<maven.antlr.plugin.version>4.5.3</maven.antlr.plugin.version>
 		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
 		<maven.eclipse.plugin.version>2.9</maven.eclipse.plugin.version>
 		<maven.javadoc.plugin.version>2.10.3</maven.javadoc.plugin.version>

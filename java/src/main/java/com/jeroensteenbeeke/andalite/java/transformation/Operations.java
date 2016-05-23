@@ -46,6 +46,8 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureI
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureImports;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInnerAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodAnnotation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodComment;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodJavadoc;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureNextStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePackageClass;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureParameterAnnotation;
@@ -100,7 +102,7 @@ public class Operations {
 	public static EnsureEnumMethodBuilder hasEnumMethod() {
 		return new EnsureEnumMethodBuilder();
 	}
-	
+
 	public static IAnnotationOperation hasBooleanValue(@Nonnull String name,
 			boolean value) {
 		return new EnsureAnnotationField<Boolean>(name, BooleanValue.class,
@@ -254,6 +256,14 @@ public class Operations {
 
 	public static HasEnumConstantBuilder hasEnumConstant() {
 		return new HasEnumConstantBuilder();
+	}
+
+	public static IMethodOperation hasMethodComment(String comment) {
+		return new EnsureMethodComment(comment);
+	}
+
+	public static IMethodOperation hasMethodJavadoc(String comment) {
+		return new EnsureMethodJavadoc(comment);
 	}
 
 }

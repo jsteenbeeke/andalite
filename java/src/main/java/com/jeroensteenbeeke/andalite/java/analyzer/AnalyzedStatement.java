@@ -24,7 +24,8 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Locatable;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public abstract class AnalyzedStatement extends Locatable {
+public abstract class AnalyzedStatement extends Locatable implements
+		Commentable {
 	private final List<String> comments;
 
 	protected AnalyzedStatement(Location location) {
@@ -35,10 +36,12 @@ public abstract class AnalyzedStatement extends Locatable {
 	/**
 	 * @non.public
 	 */
+	@Override
 	public void addComment(String comment) {
 		this.comments.add(comment.trim());
 	}
 
+	@Override
 	public List<String> getComments() {
 		return ImmutableList.copyOf(comments);
 	}

@@ -24,11 +24,18 @@ import javax.annotation.Nonnull;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public abstract class ContainingDenomination extends Denomination {
+public abstract class ContainingDenomination extends Denomination implements
+		Javadocable {
 	private final Map<String, Denomination> innerDenominations;
 
 	private final Multimap<String, AnalyzedMethod> methods;
@@ -40,6 +47,8 @@ public abstract class ContainingDenomination extends Denomination {
 	private Location lastImplementsLocation = null;
 
 	private Location bodyLocation = null;
+
+	private String javadoc;
 
 	protected ContainingDenomination(Location location, int modifiers,
 			String packageName, TerminalNode denominationName) {
@@ -197,4 +206,13 @@ public abstract class ContainingDenomination extends Denomination {
 		return false;
 	}
 
+	@Override
+	public String getJavadoc() {
+		return javadoc;
+	}
+
+	@Override
+	public void setJavadoc(String javadoc) {
+		this.javadoc = javadoc;
+	}
 }

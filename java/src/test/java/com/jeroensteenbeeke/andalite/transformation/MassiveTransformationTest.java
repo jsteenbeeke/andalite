@@ -34,7 +34,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.Operations;
 
 public class MassiveTransformationTest extends DummyAwareTest {
-	private static final int OPERATIONS = 500;
+	private static final int OPERATIONS = 15;
 
 	@Test
 	public void testMassiveTransformation() throws IOException {
@@ -67,8 +67,26 @@ public class MassiveTransformationTest extends DummyAwareTest {
 		builder.atRoot().ensure(Operations.imports("javax.annotation.Nonnull"));
 
 		for (int i = 0; i < OPERATIONS; i++) {
-			System.out.printf("Adding annotation to method %d", i);
+			System.out.printf("Adding comments and annotation to method %d", i);
 			System.out.println();
+			// builder.inClass(ClassLocator.publicClass())
+			// .forMethod()
+			// .withModifier(AccessModifier.PUBLIC)
+			// .withParameter(String.format("foo%d", i))
+			// .ofType("String")
+			// .named(String.format("setFoo%d", i))
+			// .ensure(Operations
+			// .hasMethodComment("This is an automatically generated method"));
+
+			builder.inClass(ClassLocator.publicClass())
+					.forMethod()
+					.withModifier(AccessModifier.PUBLIC)
+					.withParameter(String.format("foo%d", i))
+					.ofType("String")
+					.named(String.format("setFoo%d", i))
+					.ensure(Operations
+							.hasMethodJavadoc("This is an automatically generated method"));
+
 			builder.inClass(ClassLocator.publicClass()).forMethod()
 					.withModifier(AccessModifier.PUBLIC)
 					.withParameter(String.format("foo%d", i)).ofType("String")

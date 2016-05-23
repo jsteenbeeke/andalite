@@ -25,7 +25,7 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
 public final class AnalyzedMethod extends AccessModifiable implements
-		IBodyContainer {
+		IBodyContainer, Commentable, Javadocable {
 	private final String name;
 
 	private final AnalyzedType returnType;
@@ -33,6 +33,10 @@ public final class AnalyzedMethod extends AccessModifiable implements
 	private final List<AnalyzedParameter> parameters;
 
 	private final List<AnalyzedStatement> statements;
+
+	private final List<String> comments;
+
+	private String javadoc;
 
 	public AnalyzedMethod(@Nonnull Location location,
 			@Nonnull AnalyzedType returnType, int modifiers,
@@ -42,6 +46,17 @@ public final class AnalyzedMethod extends AccessModifiable implements
 		this.returnType = returnType;
 		this.parameters = Lists.newArrayList();
 		this.statements = Lists.newArrayList();
+		this.comments = Lists.newArrayList();
+	}
+
+	@Override
+	public void addComment(String comment) {
+		comments.add(comment);
+	}
+
+	@Override
+	public List<String> getComments() {
+		return comments;
 	}
 
 	@Nonnull
@@ -89,5 +104,15 @@ public final class AnalyzedMethod extends AccessModifiable implements
 		callback.decreaseIndentationLevel();
 		callback.newline();
 		callback.write("}");
+	}
+
+	@Override
+	public String getJavadoc() {
+		return javadoc;
+	}
+
+	@Override
+	public void setJavadoc(String javadoc) {
+		this.javadoc = javadoc;
 	}
 }

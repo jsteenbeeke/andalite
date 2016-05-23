@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.core;
 
 import javax.annotation.Nonnull;
 
-import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.github.antlrjavaparser.api.Node;
@@ -57,9 +57,13 @@ public final class Location {
 
 	@Nonnull
 	public static Location from(@Nonnull TerminalNode node) {
-		Token symbol = node.getSymbol();
+		Interval sourceInterval = node.getSourceInterval();
 
-		return new Location(symbol.getStartIndex(), symbol.getStopIndex() + 1);
+		if (sourceInterval == Interval.INVALID) {
+			throw new IllegalStateException("Invalid source interval");
+		}
+
+		return new Location(sourceInterval.a, sourceInterval.b + 1);
 	}
 
 	@Override
