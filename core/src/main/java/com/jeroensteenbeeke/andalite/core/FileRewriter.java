@@ -65,7 +65,6 @@ public class FileRewriter {
 	}
 
 	public ActionResult rewrite() {
-
 		try {
 			final File temp = File.createTempFile("rewrite", ".java");
 			try (final FileInputStream in = new FileInputStream(targetFile);
