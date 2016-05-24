@@ -18,7 +18,6 @@ package com.jeroensteenbeeke.andalite.core;
 import javax.annotation.Nonnull;
 
 import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.misc.Interval;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.github.antlrjavaparser.api.Node;
