@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.BodyContainerNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.ByIndexMethodParameterNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.MethodParameterNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
@@ -53,5 +54,14 @@ public class MethodOperationBuilder extends
 	public BodyContainerOperationBuilder inBody() {
 		return new BodyContainerOperationBuilder(getCollector(),
 				new BodyContainerNavigation<AnalyzedMethod>(getNavigation()));
+	}
+
+	/**
+	 * @param index
+	 *            The 0-based index of the parameter
+	 */
+	public ParameterScopeOperationBuilder forParameterAtIndex(int index) {
+		return new ParameterScopeOperationBuilder(getCollector(),
+				new ByIndexMethodParameterNavigation(getNavigation(), index));
 	}
 }

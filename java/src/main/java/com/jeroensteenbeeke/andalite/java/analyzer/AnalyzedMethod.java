@@ -25,7 +25,7 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
 public final class AnalyzedMethod extends AccessModifiable implements
-		IBodyContainer, Commentable, Javadocable {
+		IBodyContainer, Commentable, Javadocable, IParameterized {
 	private final String name;
 
 	private final AnalyzedType returnType;
@@ -73,6 +73,7 @@ public final class AnalyzedMethod extends AccessModifiable implements
 	}
 
 	@Nonnull
+	@Override
 	public List<AnalyzedParameter> getParameters() {
 		return ImmutableList.copyOf(parameters);
 	}

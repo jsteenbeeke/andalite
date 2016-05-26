@@ -16,8 +16,9 @@ package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedParameter;
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
+import com.jeroensteenbeeke.andalite.java.analyzer.IParameterized;
 
-public abstract class AbstractParameterNavigation<T extends IBodyContainer>
+public abstract class AbstractParameterNavigation<T extends IBodyContainer & IParameterized>
 		extends ChainedNavigation<T, AnalyzedParameter> {
 	protected final String type;
 

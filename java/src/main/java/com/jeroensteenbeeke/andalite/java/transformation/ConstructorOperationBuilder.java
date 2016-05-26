@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.BodyContainerNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.ByIndexConstructorParameterNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ConstructorParameterNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
@@ -48,6 +49,16 @@ public class ConstructorOperationBuilder extends
 
 	public ParameterLocator forParameterNamed(String name) {
 		return new ParameterLocator(this, name);
+	}
+
+	/**
+	 * @param index
+	 *            The 0-based index of the parameter
+	 */
+	public ParameterScopeOperationBuilder forParameterAtIndex(int index) {
+		return new ParameterScopeOperationBuilder(getCollector(),
+				new ByIndexConstructorParameterNavigation(getNavigation(),
+						index));
 	}
 
 	public BodyContainerOperationBuilder inBody() {

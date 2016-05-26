@@ -22,9 +22,11 @@ import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import org.junit.Test;
 
+import com.google.common.collect.Maps;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
@@ -38,50 +40,39 @@ public class MassiveTransformationTest extends DummyAwareTest {
 
 	@Test
 	public void testMassiveTransformation() throws IOException {
+		Map<Integer, String> paramNames = Maps.newHashMap();
+
 		JavaRecipeBuilder builder = new JavaRecipeBuilder();
 
 		builder.atRoot().ensure(hasPublicClass());
 		for (int i = 0; i < OPERATIONS; i++) {
-			System.out.printf("Adding method %d", i);
-			System.out.println();
+			String randomParam = Randomizer.random(Randomizer.randomLength(20,
+					40));
+			paramNames.put(i, randomParam);
 			builder.inClass(publicClass()).ensure(
 					Operations.hasMethod().withModifier(AccessModifier.PUBLIC)
-							.withParameter(String.format("foo%d", i))
-							.ofType("String")
+							.withParameter(randomParam).ofType("String")
 							.named(String.format("setFoo%d", i)));
 		}
 
 		JavaRecipe recipe = builder.build();
 
-		File bare = getDummy(BaseDummies.BareClass);
-
-		System.out.print("Applying recipe...");
+		File bare = getDummy(BaseDummies.BareClassWithGenericType);
 
 		ActionResult result = recipe.applyTo(bare);
 
 		assertThat(result, isOk());
 
-		System.out.println("OK");
-
 		builder = new JavaRecipeBuilder();
 		builder.atRoot().ensure(Operations.imports("javax.annotation.Nonnull"));
 
 		for (int i = 0; i < OPERATIONS; i++) {
-			System.out.printf("Adding comments and annotation to method %d", i);
-			System.out.println();
-			// builder.inClass(ClassLocator.publicClass())
-			// .forMethod()
-			// .withModifier(AccessModifier.PUBLIC)
-			// .withParameter(String.format("foo%d", i))
-			// .ofType("String")
-			// .named(String.format("setFoo%d", i))
-			// .ensure(Operations
-			// .hasMethodComment("This is an automatically generated method"));
 
+			String paramName = paramNames.get(i);
 			builder.inClass(ClassLocator.publicClass())
 					.forMethod()
 					.withModifier(AccessModifier.PUBLIC)
-					.withParameter(String.format("foo%d", i))
+					.withParameter(paramName)
 					.ofType("String")
 					.named(String.format("setFoo%d", i))
 					.ensure(Operations
@@ -89,23 +80,16 @@ public class MassiveTransformationTest extends DummyAwareTest {
 
 			builder.inClass(ClassLocator.publicClass()).forMethod()
 					.withModifier(AccessModifier.PUBLIC)
-					.withParameter(String.format("foo%d", i)).ofType("String")
-					.named(String.format("setFoo%d", i))
-					.forParameterNamed(String.format("foo%d", i))
-					.ofType("String")
+					.withParameter(paramName).ofType("String")
+					.named(String.format("setFoo%d", i)).forParameterAtIndex(0)
 					.ensure(Operations.hasParameterAnnotation("Nonnull"));
 			;
 		}
 		recipe = builder.build();
 
-		System.out.print("Applying recipe...");
-
 		result = recipe.applyTo(bare);
 
 		assertThat(result, isOk());
-
-		System.out.println("OK");
-
 	}
 
 }

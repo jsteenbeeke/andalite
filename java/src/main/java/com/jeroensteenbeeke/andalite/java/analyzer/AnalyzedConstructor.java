@@ -25,7 +25,7 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
 public final class AnalyzedConstructor extends AccessModifiable implements
-		IBodyContainer {
+		IBodyContainer, IParameterized {
 	private final List<AnalyzedParameter> parameters;
 
 	private final List<AnalyzedStatement> statements;
@@ -55,6 +55,7 @@ public final class AnalyzedConstructor extends AccessModifiable implements
 	}
 
 	@Nonnull
+	@Override
 	public List<AnalyzedParameter> getParameters() {
 		return ImmutableList.copyOf(parameters);
 	}

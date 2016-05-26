@@ -26,9 +26,11 @@ import com.google.common.collect.Sets;
 
 public abstract class DummyAwareTest implements ITempFileRegister {
 	protected enum BaseDummies implements IDummyDescriptor {
-		BareClass("BareClass"), BareInterface("BareInterface"), Empty("Empty"), BareEnum(
-				"BareEnum"), ReverseIntComparator("ReverseIntComparator"), IfStatements(
-				"IfStatements"), EnumWithStringParam("EnumWithStringParam"), OhMyGodThisIsNotARealClass(
+		BareClass("BareClass"), BareClassWithGenericType(
+				"BareClassWithGenericType"), BareInterface("BareInterface"), Empty(
+				"Empty"), BareEnum("BareEnum"), ReverseIntComparator(
+				"ReverseIntComparator"), IfStatements("IfStatements"), EnumWithStringParam(
+				"EnumWithStringParam"), OhMyGodThisIsNotARealClass(
 				"OhMyGodThisIsNotARealClass");
 
 		private final String className;
