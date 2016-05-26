@@ -108,7 +108,7 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 
 	private TypedActionResult<Action> renderMultipleChoiceQuestion(
 			MultipleChoiceQuestion question) throws ForgeException {
-		TypedActionResult<Integer> response = TypedActionResult.fail("Placeholder");
+		TypedActionResult<Integer> response = createPlaceholder();
 
 		while (!response.isOk()) {
 			String message = response.getMessage();
@@ -133,9 +133,13 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 				.get(response.getObject() - 1), this));
 	}
 
+	private TypedActionResult<Integer> createPlaceholder() {
+		return TypedActionResult.fail("-");
+	}
+
 	private TypedActionResult<Action> renderFileSelectQuestion(
 			FileSelectQuestion question) throws ForgeException {
-		TypedActionResult<Integer> response = TypedActionResult.fail("");
+		TypedActionResult<Integer> response = createPlaceholder();
 
 		while (!response.isOk()) {
 			String message = response.getMessage();
@@ -162,7 +166,7 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 
 	private TypedActionResult<Action> renderYesNoQuestion(YesNoQuestion question)
 			throws ForgeException {
-		TypedActionResult<Integer> response = TypedActionResult.fail("");
+		TypedActionResult<Integer> response = createPlaceholder();
 
 		while (!response.isOk()) {
 			String message = response.getMessage();
