@@ -108,7 +108,7 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 
 	private TypedActionResult<Action> renderMultipleChoiceQuestion(
 			MultipleChoiceQuestion question) throws ForgeException {
-		TypedActionResult<Integer> response = TypedActionResult.fail("");
+		TypedActionResult<Integer> response = TypedActionResult.fail("Placeholder");
 
 		while (!response.isOk()) {
 			String message = response.getMessage();
