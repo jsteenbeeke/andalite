@@ -48,6 +48,9 @@ public final class AnalyzedMethod extends AccessModifiable implements
 		this.statements = Lists.newArrayList();
 		this.comments = Lists.newArrayList();
 	}
+	
+	
+
 
 	@Override
 	public void addComment(String comment) {

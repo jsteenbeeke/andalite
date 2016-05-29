@@ -50,4 +50,25 @@ public class FirstMethodTest extends DummyAwareTest {
 		assertThat(result, isOk());
 	}
 
+	@Test
+	public void testFinalModifier() throws IOException {
+		JavaRecipeBuilder builder = new JavaRecipeBuilder();
+
+		builder.atRoot().ensure(hasPublicClass());
+		builder.inClass(publicClass()).ensure(
+				Operations.hasMethod().withParameter("foo").ofType("String")
+						.named("setFoo"));
+		builder.inClass(publicClass()).forMethod().withParameter("foo")
+				.ofType("String").named("setFoo")
+				.ensure(Operations.ensureMethodFinal());
+
+		JavaRecipe recipe = builder.build();
+
+		File bare = getDummy(BaseDummies.BareClass);
+
+		ActionResult result = recipe.applyTo(bare);
+
+		assertThat(result, isOk());
+	}
+
 }

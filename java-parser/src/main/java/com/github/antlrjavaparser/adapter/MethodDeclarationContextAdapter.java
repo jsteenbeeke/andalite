@@ -39,6 +39,7 @@ public class MethodDeclarationContextAdapter implements Adapter<MethodDeclaratio
 
         if (context.VOID() != null) {
             Type type = new VoidType();
+            AdapterUtil.setPosition(type, context.VOID());
             methodDeclaration.setType(type);
         } else {
             Type type = Adapters.getTypeContextAdapter().adapt(context.type(), adapterParameters);

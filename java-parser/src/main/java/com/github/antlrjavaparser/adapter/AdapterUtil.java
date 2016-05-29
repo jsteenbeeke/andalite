@@ -312,6 +312,24 @@ public final class AdapterUtil {
             }
         }
     }
+    
+    public static void setPosition(Node node, TerminalNode terminalNode) {
+    	Token symbol = terminalNode.getSymbol();
+    	
+    	 int beginLine = symbol.getLine();
+         int beginColumn = symbol.getCharPositionInLine();
+         int endLine = symbol.getLine();
+         int endTokenLength = symbol.getStopIndex() - symbol.getStartIndex();
+         int endColumn = symbol.getCharPositionInLine() + endTokenLength;
+
+         node.setBeginLine(beginLine);
+         node.setBeginColumn(beginColumn);
+         node.setEndLine(endLine);
+         node.setEndColumn(endColumn);
+
+         node.setBeginIndex(symbol.getStartIndex());
+         node.setEndIndex(symbol.getStopIndex());
+    }
 
     public static void setPosition(Node node, ParserRuleContext ctx) {
         int beginLine = ctx.getStart().getLine();
@@ -413,4 +431,6 @@ public final class AdapterUtil {
             }
         }
     }
+
+	
 }

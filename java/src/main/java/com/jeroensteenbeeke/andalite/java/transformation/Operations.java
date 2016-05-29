@@ -47,6 +47,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureI
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInnerAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodComment;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodFinal;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodJavadoc;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureNextStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePackageClass;
@@ -264,6 +265,10 @@ public class Operations {
 
 	public static IMethodOperation hasMethodJavadoc(String comment) {
 		return new EnsureMethodJavadoc(comment);
+	}
+
+	public static IMethodOperation ensureMethodFinal() {
+		return new EnsureMethodFinal();
 	}
 
 }

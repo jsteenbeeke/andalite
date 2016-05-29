@@ -39,7 +39,7 @@ public abstract class AccessModifiable extends Annotatable {
 	private final boolean modifierVolatile;
 
 	private final boolean modifierTransient;
-
+	
 	public AccessModifiable(@Nonnull Location location, int modifiers) {
 		super(location);
 		this.modifier = AccessModifier.fromModifiers(modifiers);
@@ -51,7 +51,6 @@ public abstract class AccessModifiable extends Annotatable {
 		this.modifierNative = ModifierSet.isNative(modifiers);
 		this.modifierVolatile = ModifierSet.isVolatile(modifiers);
 		this.modifierTransient = ModifierSet.isTransient(modifiers);
-		;
 	}
 
 	public AccessModifier getAccessModifier() {
