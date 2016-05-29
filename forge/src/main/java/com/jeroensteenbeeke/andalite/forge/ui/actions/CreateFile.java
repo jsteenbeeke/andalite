@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -115,9 +116,28 @@ public final class CreateFile extends AbstractCompoundableAction {
 
 	public static CreateFile emptyHtmlFile(File file,
 			IHTMLFileOption... options) {
+		return emptyHtmlFile(file, null, options);
+	}
+
+	public static CreateFile emptyHtmlFile(File file,
+			Map<String, String> xmlns, IHTMLFileOption... options) {
 
 		final StringBuilder initial = new StringBuilder();
-		initial.append("<html>\n");
+		initial.append("<html");
+		if (xmlns != null) {
+			initial.append(" ");
+			xmlns.forEach((prefix, url) -> {
+				initial.append("xmlns:");
+				initial.append(prefix);
+				if (url != null) {
+					initial.append("=\"");
+					initial.append(url);
+					initial.append("\"");
+				}
+			});
+		}
+
+		initial.append(">\n");
 		Arrays.stream(options).forEach(o -> o.applyTo(initial));
 		initial.append("</html>");
 		return new CreateFile(file).withInitialContents(initial.toString());
