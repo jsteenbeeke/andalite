@@ -246,10 +246,10 @@ public class ClassAnalyzer {
 		} catch (ParseCancellationException e) {
 			log.error(e.getMessage(), e);
 			String exceptionMessage = errorStrategy.getExceptionMessage();
-			if (exceptionMessage != null) {
+			if (exceptionMessage != null && !exceptionMessage.isEmpty()) {
 				return TypedActionResult.fail(exceptionMessage);
 			}
-			return TypedActionResult.fail(targetFile.getAbsolutePath());
+			return TypedActionResult.fail("Could not parse %s", targetFile.getAbsolutePath());
 		} catch (ParseException | IOException e) {
 			String exceptionMessage = errorStrategy.getExceptionMessage();
 			if (exceptionMessage != null && !exceptionMessage.isEmpty()) {

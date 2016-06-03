@@ -19,12 +19,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.io.Files;
@@ -66,20 +69,35 @@ public class FileRewriter {
 
 	public ActionResult rewrite() {
 		try {
+			logger.debug("Input: {}", targetFile.getAbsolutePath());
 			final File temp = File.createTempFile("rewrite", ".java");
 			try (final FileInputStream in = new FileInputStream(targetFile);
 					final FileOutputStream out = new FileOutputStream(temp)) {
 				int point = FIRST_INDEX;
 				int data;
 				int threshold = FIRST_INDEX - 1;
+				int unicodeBytesRemaining = 0;
+				
+				List<Integer> previous = Lists.newLinkedList();
+
+				StringBuilder output = new StringBuilder();
+				boolean inUnicode = false;
 
 				while ((data = in.read()) != -1) {
+					if (unicodeBytesRemaining == 0 && !inUnicode) {
+						unicodeBytesRemaining = getUnicodeBytesRemaining(data, previous);
+						inUnicode = unicodeBytesRemaining > 0;
+					}
 
 					if (pointIndexes.containsKey(point)) {
 						for (Index index : pointIndexes.get(point)) {
 							if (mutations.containsKey(index)) {
 								for (String insert : mutations.get(index)) {
 									out.write(insert.getBytes());
+
+									output.append("\u001B[33m");
+									output.append(insert);
+									output.append("\u001B[0m");
 
 									threshold = Math.max(index.getTo(),
 											threshold);
@@ -90,12 +108,26 @@ public class FileRewriter {
 
 					if (point >= threshold) {
 						out.write(data);
+						output.append((char) data);
+						previous.add(data);
+						if (previous.size() > 20) {
+							previous.remove(0);
+						}
 					}
 
-					point++;
+					if (unicodeBytesRemaining == 0) {
+						point++;
+						inUnicode = false;
+					} else {
+						unicodeBytesRemaining--;
+
+					}
+
 				}
 
 				out.flush();
+
+				logger.debug("Outputted: {}", output);
 
 				Files.copy(temp, targetFile);
 				temp.deleteOnExit();
@@ -106,6 +138,36 @@ public class FileRewriter {
 			logger.error(e.getMessage(), e);
 			return ActionResult.error(e.getMessage());
 		}
+	}
+
+	private int getUnicodeBytesRemaining(int data, List<Integer> previous) {
+		int byte8 = binaryfy(data, 0x80);
+		int byte7 = binaryfy(data, 0x40);
+		int byte6 = binaryfy(data, 0x20);
+		int byte5 = binaryfy(data, 0x10);
+		int byte4 = binaryfy(data, 0x08);
+
+
+		if (byte8 == 0) {
+			return 0;
+		} else if (byte8 == 1 && byte7 == 1 && byte6 == 0) {
+			return 1;
+		} else if (byte8 == 1 && byte7 == 1 && byte6 == 1 && byte5 == 0) {
+			return 2;
+		} else if (byte8 == 1 && byte7 == 1 && byte6 == 1 && byte5 == 1
+				&& byte4 == 0) {
+			return 3;
+		}
+
+		throw new IllegalArgumentException(
+				String.format(
+						"I have no idea what to do with this character: %s [%d%d%d%d%d] (previous: %s)",
+						(char) data, byte8, byte7, byte6, byte5, byte4, previous.stream().map(Integer::toBinaryString).collect(Collectors.joining(", "))));
+
+	}
+
+	private int binaryfy(int data, int mask) {
+		return (data & mask) == mask ? 1 : 0;
 	}
 
 	private static class Index implements Comparable<Index> {

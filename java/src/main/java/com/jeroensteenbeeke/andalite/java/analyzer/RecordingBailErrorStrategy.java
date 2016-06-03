@@ -34,6 +34,7 @@ public class RecordingBailErrorStrategy extends BailErrorStrategy {
 	@Override
 	public void reportError(Parser recognizer, RecognitionException e) {
 		if (e != null) {
+			log.debug("=== Recording bail error strategy ===");
 			Throwable cause = e.getCause();
 			String exceptionMessage = e.getMessage();
 			while (exceptionMessage == null && cause != null) {
