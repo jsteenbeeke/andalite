@@ -37,6 +37,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 
 public class XMLTransformation<T extends Node> {
 	private static final DocumentBuilderFactory dbFactory = createDocumentBuilderFactory();
@@ -85,7 +86,7 @@ public class XMLTransformation<T extends Node> {
 					file));
 
 			return ActionResult.ok();
-		} catch (ParserConfigurationException | SAXException | IOException
+		} catch (OperationException | ParserConfigurationException | SAXException | IOException
 				| XPathExpressionException | TransformerException cause) {
 			return ActionResult.error("Could not perform transformation: %s",
 					cause.getMessage());

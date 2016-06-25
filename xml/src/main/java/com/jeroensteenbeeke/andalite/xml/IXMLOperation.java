@@ -18,9 +18,11 @@ import javax.annotation.Nonnull;
 
 import org.w3c.dom.Node;
 
+import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
+
 public interface IXMLOperation<T extends Node> {
 	@Nonnull
-	void transform(T node);
+	void transform(T node) throws OperationException;
 
 	@Nonnull
 	String getDescription();
