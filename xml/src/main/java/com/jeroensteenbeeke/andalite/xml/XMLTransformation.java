@@ -31,6 +31,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -45,6 +47,8 @@ public class XMLTransformation<T extends Node> {
 	private static final TransformerFactory tfFactory = createTransformerFactory();
 
 	private static final XPathFactory xpFactory = createXPathFactory();
+	
+	private static final Logger log = LoggerFactory.getLogger(XMLTransformation.class);
 
 	private final IXMLNavigation<T> navigation;
 
@@ -66,6 +70,10 @@ public class XMLTransformation<T extends Node> {
 			NodeList results = (NodeList) xpath.evaluate(
 					navigation.getXPathExpression(), document,
 					XPathConstants.NODESET);
+			
+			if (results.getLength() == 0) {
+				log.warn("XML Transformation does not match any elements: {}", navigation.getXPathExpression());
+			}
 
 			for (int i = 0; i < results.getLength(); i++) {
 				T node = navigation.castNode(results.item(i));
@@ -88,6 +96,7 @@ public class XMLTransformation<T extends Node> {
 			return ActionResult.ok();
 		} catch (OperationException | ParserConfigurationException | SAXException | IOException
 				| XPathExpressionException | TransformerException cause) {
+			cause.printStackTrace(System.err);
 			return ActionResult.error("Could not perform transformation: %s",
 					cause.getMessage());
 		}

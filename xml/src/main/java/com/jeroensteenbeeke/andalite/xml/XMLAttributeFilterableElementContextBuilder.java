@@ -19,7 +19,6 @@ import java.util.Map;
 import org.w3c.dom.Element;
 
 import com.google.common.collect.Maps;
-import com.jeroensteenbeeke.andalite.xml.navigation.IndexNavigation;
 import com.jeroensteenbeeke.andalite.xml.navigation.SubElementNavigation;
 import com.jeroensteenbeeke.andalite.xml.navigation.WithAttributesNavigation;
 
@@ -44,17 +43,6 @@ public class XMLAttributeFilterableElementContextBuilder extends
 		return new XMLAttributeFilterableElementContextBuilder(this,
 				new SubElementNavigation(new WithAttributesNavigation(
 						getNavigation(), attributes), element));
-	}
-	
-	public XMLAttributeFilterableElementContextBuilder withIndex(int index) {
-		if (attributes.isEmpty()) {
-			return new XMLAttributeFilterableElementContextBuilder(this,
-					new IndexNavigation(getNavigation(), index));
-		}
-
-		return new XMLAttributeFilterableElementContextBuilder(this,
-				new IndexNavigation(new WithAttributesNavigation(
-						getNavigation(), attributes), index));
 	}
 
 	@Override
