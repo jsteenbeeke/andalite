@@ -17,6 +17,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ClassConstructorNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.ClassConstructorOfAnySignatureNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 
 public class ClassConstructorLocator
@@ -39,6 +40,12 @@ public class ClassConstructorLocator
 		return new ConstructorOperationBuilder(collector,
 				new ClassConstructorNavigation(parentNavigation, getModifier(),
 						getDescriptors()));
+	}
+
+	public ConstructorOperationBuilder andAnySignature() {
+		return new ConstructorOperationBuilder(collector,
+				new ClassConstructorOfAnySignatureNavigation(parentNavigation,
+						getModifier()));
 	}
 
 }

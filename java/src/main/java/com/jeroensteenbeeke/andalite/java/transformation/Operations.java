@@ -35,6 +35,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperati
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IStatementOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.ConstructorParameterAdditionBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureClassAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureConstructorAnnotation;
@@ -269,6 +270,12 @@ public class Operations {
 
 	public static IMethodOperation ensureMethodFinal() {
 		return new EnsureMethodFinal();
+	}
+
+	public static ConstructorParameterAdditionBuilder hasConstructorParameterNamed(
+			String identifier) {
+
+		return new ConstructorParameterAdditionBuilder(identifier);
 	}
 
 }

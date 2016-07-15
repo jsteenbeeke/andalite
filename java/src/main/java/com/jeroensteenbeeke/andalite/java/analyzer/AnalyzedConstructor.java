@@ -32,12 +32,16 @@ public final class AnalyzedConstructor extends AccessModifiable implements
 
 	private final String className;
 
+	private final Location parametersStartLocation;
+
 	public AnalyzedConstructor(@Nonnull Location location,
-			@Nonnull String className, int modifiers) {
+			@Nonnull String className, int modifiers,
+			@Nonnull Location parametersStartLocation) {
 		super(location, modifiers);
 		this.className = className;
 		this.parameters = Lists.newArrayList();
 		this.statements = Lists.newArrayList();
+		this.parametersStartLocation = parametersStartLocation;
 	}
 
 	@Override
@@ -58,6 +62,10 @@ public final class AnalyzedConstructor extends AccessModifiable implements
 	@Override
 	public List<AnalyzedParameter> getParameters() {
 		return ImmutableList.copyOf(parameters);
+	}
+
+	public Location getParametersStartLocation() {
+		return parametersStartLocation;
 	}
 
 	@Override

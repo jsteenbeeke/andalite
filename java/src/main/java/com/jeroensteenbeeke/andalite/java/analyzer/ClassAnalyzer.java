@@ -114,7 +114,6 @@ import com.github.antlrjavaparser.api.type.PrimitiveType;
 import com.github.antlrjavaparser.api.type.ReferenceType;
 import com.github.antlrjavaparser.api.type.Type;
 import com.github.antlrjavaparser.api.type.WildcardType;
-import com.github.antlrjavaparser.api.visitor.GenericVisitor;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
@@ -215,9 +214,9 @@ public class ClassAnalyzer {
 							parser.setErrorHandler(errorStrategy);
 						}
 					});
-			
+
 			compilationUnit.accept(new DebugVisitor(), log);
-			
+
 			PackageDeclaration packageDefinition = compilationUnit.getPackage();
 
 			final String packageName = determinePackageName(packageDefinition);
@@ -646,8 +645,10 @@ public class ClassAnalyzer {
 			ConstructorDeclaration member,
 			@Nonnull ContainingDenomination containingDenomination,
 			@Nonnull AnalyzerContext analyzerContext) {
+
 		AnalyzedConstructor constructor = new AnalyzedConstructor(
-				Location.from(member), className, member.getModifiers());
+				Location.from(member), className, member.getModifiers(),
+				Location.from(member.getParametersStart()));
 
 		constructor.addAnnotations(determineAnnotations(member,
 				containingDenomination, analyzerContext));

@@ -16,6 +16,8 @@ package com.github.antlrjavaparser.api.body;
 
 import java.util.List;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.github.antlrjavaparser.api.TypeParameter;
 import com.github.antlrjavaparser.api.expr.AnnotationExpr;
 import com.github.antlrjavaparser.api.expr.NameExpr;
@@ -28,107 +30,125 @@ import com.github.antlrjavaparser.api.visitor.VoidVisitor;
  */
 public final class ConstructorDeclaration extends BodyDeclaration {
 
-    private int modifiers;
+	private int modifiers;
 
-    private List<TypeParameter> typeParameters;
+	private List<TypeParameter> typeParameters;
 
-    private String name;
+	private String name;
 
-    private List<Parameter> parameters;
+	private List<Parameter> parameters;
 
-    private List<NameExpr> throws_;
+	private List<NameExpr> throws_;
 
-    private BlockStmt block;
+	private BlockStmt block;
 
-    public ConstructorDeclaration() {
-    }
+	private TerminalNode parametersStart;
 
-    public ConstructorDeclaration(int modifiers, String name) {
-        this.modifiers = modifiers;
-        this.name = name;
-    }
+	public ConstructorDeclaration() {
+	}
 
-    public ConstructorDeclaration(JavadocComment javaDoc, int modifiers, List<AnnotationExpr> annotations, List<TypeParameter> typeParameters, String name, List<Parameter> parameters, List<NameExpr> throws_, BlockStmt block) {
-        super(annotations, javaDoc);
-        this.modifiers = modifiers;
-        this.typeParameters = typeParameters;
-        this.name = name;
-        this.parameters = parameters;
-        this.throws_ = throws_;
-        this.block = block;
-    }
+	public ConstructorDeclaration(int modifiers, String name) {
+		this.modifiers = modifiers;
+		this.name = name;
+	}
 
-    public ConstructorDeclaration(int beginLine, int beginColumn, int endLine, int endColumn, JavadocComment javaDoc, int modifiers, List<AnnotationExpr> annotations, List<TypeParameter> typeParameters, String name, List<Parameter> parameters, List<NameExpr> throws_, BlockStmt block) {
-        super(beginLine, beginColumn, endLine, endColumn, annotations, javaDoc);
-        this.modifiers = modifiers;
-        this.typeParameters = typeParameters;
-        this.name = name;
-        this.parameters = parameters;
-        this.throws_ = throws_;
-        this.block = block;
-    }
+	public ConstructorDeclaration(JavadocComment javaDoc, int modifiers,
+			List<AnnotationExpr> annotations,
+			List<TypeParameter> typeParameters, String name,
+			List<Parameter> parameters, List<NameExpr> throws_, BlockStmt block) {
+		super(annotations, javaDoc);
+		this.modifiers = modifiers;
+		this.typeParameters = typeParameters;
+		this.name = name;
+		this.parameters = parameters;
+		this.throws_ = throws_;
+		this.block = block;
+	}
 
-    @Override
-    public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
-        return v.visit(this, arg);
-    }
+	public ConstructorDeclaration(int beginLine, int beginColumn, int endLine,
+			int endColumn, JavadocComment javaDoc, int modifiers,
+			List<AnnotationExpr> annotations,
+			List<TypeParameter> typeParameters, String name,
+			List<Parameter> parameters, List<NameExpr> throws_, BlockStmt block) {
+		super(beginLine, beginColumn, endLine, endColumn, annotations, javaDoc);
+		this.modifiers = modifiers;
+		this.typeParameters = typeParameters;
+		this.name = name;
+		this.parameters = parameters;
+		this.throws_ = throws_;
+		this.block = block;
+	}
 
-    @Override
-    public <A> void accept(VoidVisitor<A> v, A arg) {
-        v.visit(this, arg);
-    }
+	@Override
+	public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
+		return v.visit(this, arg);
+	}
 
-    public BlockStmt getBlock() {
-        return block;
-    }
+	@Override
+	public <A> void accept(VoidVisitor<A> v, A arg) {
+		v.visit(this, arg);
+	}
 
-    /**
-     * Return the modifiers of this member declaration.
-     *
-     * @see ModifierSet
-     * @return modifiers
-     */
-    public int getModifiers() {
-        return modifiers;
-    }
+	public BlockStmt getBlock() {
+		return block;
+	}
 
-    public String getName() {
-        return name;
-    }
+	/**
+	 * Return the modifiers of this member declaration.
+	 *
+	 * @see ModifierSet
+	 * @return modifiers
+	 */
+	public int getModifiers() {
+		return modifiers;
+	}
 
-    public List<Parameter> getParameters() {
-        return parameters;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public List<NameExpr> getThrows() {
-        return throws_;
-    }
+	public List<Parameter> getParameters() {
+		return parameters;
+	}
 
-    public List<TypeParameter> getTypeParameters() {
-        return typeParameters;
-    }
+	public List<NameExpr> getThrows() {
+		return throws_;
+	}
 
-    public void setBlock(BlockStmt block) {
-        this.block = block;
-    }
+	public List<TypeParameter> getTypeParameters() {
+		return typeParameters;
+	}
 
-    public void setModifiers(int modifiers) {
-        this.modifiers = modifiers;
-    }
+	public void setBlock(BlockStmt block) {
+		this.block = block;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setModifiers(int modifiers) {
+		this.modifiers = modifiers;
+	}
 
-    public void setParameters(List<Parameter> parameters) {
-        this.parameters = parameters;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setThrows(List<NameExpr> throws_) {
-        this.throws_ = throws_;
-    }
+	public void setParameters(List<Parameter> parameters) {
+		this.parameters = parameters;
+	}
 
-    public void setTypeParameters(List<TypeParameter> typeParameters) {
-        this.typeParameters = typeParameters;
-    }
+	public void setThrows(List<NameExpr> throws_) {
+		this.throws_ = throws_;
+	}
+
+	public void setTypeParameters(List<TypeParameter> typeParameters) {
+		this.typeParameters = typeParameters;
+	}
+
+	public TerminalNode getParametersStart() {
+		return parametersStart;
+	}
+
+	public void setParametersStart(TerminalNode parametersStart) {
+		this.parametersStart = parametersStart;
+	}
+
 }

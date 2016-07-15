@@ -20,6 +20,8 @@ public class EnsureConstructorOperation implements IClassOperation {
 
 	private final List<ParameterDescriptor> parameters;
 
+	private boolean checkSignature = true;
+
 	public EnsureConstructorOperation(AccessModifier modifier,
 			List<ParameterDescriptor> parameters) {
 		super();
@@ -33,7 +35,8 @@ public class EnsureConstructorOperation implements IClassOperation {
 		Location last = input.getBodyLocation();
 
 		for (AnalyzedConstructor ctor : input.getConstructors()) {
-			if (AnalyzeUtil.matchesSignature(ctor, parameters)) {
+			if (!checkSignature
+					|| AnalyzeUtil.matchesSignature(ctor, parameters)) {
 
 				if (!modifier.equals(ctor.getAccessModifier())) {
 					throw new OperationException(
@@ -72,6 +75,11 @@ public class EnsureConstructorOperation implements IClassOperation {
 		transforms.add(Transformation.insertAt(l, code.toString()));
 
 		return transforms.build();
+	}
+
+	public EnsureConstructorOperation withAnySignature() {
+		this.checkSignature = false;
+		return this;
 	}
 
 	@Override

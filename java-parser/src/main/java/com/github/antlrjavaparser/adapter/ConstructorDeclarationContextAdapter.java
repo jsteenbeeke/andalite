@@ -17,21 +17,38 @@ package com.github.antlrjavaparser.adapter;
 import com.github.antlrjavaparser.Java8Parser;
 import com.github.antlrjavaparser.api.body.ConstructorDeclaration;
 
-public class ConstructorDeclarationContextAdapter implements Adapter<ConstructorDeclaration, Java8Parser.ConstructorDeclarationContext> {
-    @Override
-    public ConstructorDeclaration adapt(Java8Parser.ConstructorDeclarationContext context, AdapterParameters adapterParameters) {
+public class ConstructorDeclarationContextAdapter
+		implements
+		Adapter<ConstructorDeclaration, Java8Parser.ConstructorDeclarationContext> {
+	@Override
+	public ConstructorDeclaration adapt(
+			Java8Parser.ConstructorDeclarationContext context,
+			AdapterParameters adapterParameters) {
 
-        ConstructorDeclaration constructorDeclaration = new ConstructorDeclaration();
-        AdapterUtil.setModifiers(context.modifiers(), constructorDeclaration, adapterParameters);
-        AdapterUtil.setComments(constructorDeclaration, context, adapterParameters);
-        AdapterUtil.setPosition(constructorDeclaration, context);
+		ConstructorDeclaration constructorDeclaration = new ConstructorDeclaration();
+		AdapterUtil.setModifiers(context.modifiers(), constructorDeclaration,
+				adapterParameters);
+		AdapterUtil.setComments(constructorDeclaration, context,
+				adapterParameters);
+		AdapterUtil.setPosition(constructorDeclaration, context);
 
-        constructorDeclaration.setName(context.Identifier().getText());
-        constructorDeclaration.setTypeParameters(Adapters.getTypeParametersContextAdapter().adapt(context.typeParameters(), adapterParameters));
-        constructorDeclaration.setBlock(Adapters.getConstructorBlockContextAdapter().adapt(context.constructorBlock(), adapterParameters));
-        constructorDeclaration.setThrows(Adapters.getQualifiedNameListContextAdapter().adapt(context.qualifiedNameList(), adapterParameters));
-        constructorDeclaration.setParameters(Adapters.getFormalParametersContextAdapter().adapt(context.formalParameters(), adapterParameters));
+		constructorDeclaration.setName(context.Identifier().getText());
+		constructorDeclaration.setTypeParameters(Adapters
+				.getTypeParametersContextAdapter().adapt(
+						context.typeParameters(), adapterParameters));
+		constructorDeclaration.setBlock(Adapters
+				.getConstructorBlockContextAdapter().adapt(
+						context.constructorBlock(), adapterParameters));
+		constructorDeclaration.setThrows(Adapters
+				.getQualifiedNameListContextAdapter().adapt(
+						context.qualifiedNameList(), adapterParameters));
+		constructorDeclaration.setParameters(Adapters
+				.getFormalParametersContextAdapter().adapt(
+						context.formalParameters(), adapterParameters));
 
-        return constructorDeclaration;
-    }
+		constructorDeclaration.setParametersStart(context.formalParameters()
+				.LPAREN());
+
+		return constructorDeclaration;
+	}
 }
