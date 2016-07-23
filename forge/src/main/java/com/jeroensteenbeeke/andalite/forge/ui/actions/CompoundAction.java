@@ -47,4 +47,12 @@ public class CompoundAction implements CompoundableAction {
 		return new CompoundAction(this, nextAction);
 	}
 
+	@Override
+	public CompoundAction andThenOptionally(boolean condition, PerformableAction nextAction) {
+		if (!condition) {
+			return this;
+		}
+		
+		return new CompoundAction(this, nextAction);
+	}
 }

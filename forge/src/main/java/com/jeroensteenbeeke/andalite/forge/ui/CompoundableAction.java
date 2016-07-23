@@ -21,4 +21,13 @@ import com.jeroensteenbeeke.andalite.forge.ui.actions.CompoundAction;
  */
 public interface CompoundableAction extends PerformableAction {
 	CompoundAction andThen(PerformableAction nextAction);
+
+	default CompoundableAction andThenOptionally(boolean condition,
+			PerformableAction nextAction) {
+		if (!condition) {
+			return this;
+		}
+		
+		return andThen(nextAction);
+	}
 }
