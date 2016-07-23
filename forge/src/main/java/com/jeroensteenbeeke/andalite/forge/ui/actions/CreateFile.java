@@ -18,7 +18,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nonnull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +29,46 @@ import org.slf4j.LoggerFactory;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 
 public final class CreateFile extends AbstractCompoundableAction {
+
+	public static class CreateXMLBuilder {
+		private final File file;
+
+		private final Map<String,String> namespaces;
+		
+		public CreateXMLBuilder(@Nonnull File file) {
+			this.file = file;
+			this.namespaces = new HashMap<>();
+		}
+		
+		public CreateXMLBuilder withXmlNameSpace(@Nonnull String prefix, @Nonnull String url) {
+			this.namespaces.put(prefix, url);
+			return this;
+		}
+		
+		public CreateFile withRootElement(@Nonnull String element) {
+			StringBuilder builder = new StringBuilder();
+			builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+			
+			builder.append("<").append(element);
+			
+			if (!namespaces.isEmpty()) {
+				namespaces.forEach((prefix,url) -> {
+					builder.append("\n\t");
+					builder.append("xmlns:");
+					builder.append(prefix);
+					builder.append("=\"");
+					builder.append(url);
+					builder.append("\"");
+				});
+			}
+			builder.append(">\n\n");
+			builder.append("</").append(element).append(">\n");
+			
+			
+			return new CreateFile(file).withInitialContents(builder.toString());
+		}
+
+	}
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(CreateFile.class);
@@ -114,6 +157,11 @@ public final class CreateFile extends AbstractCompoundableAction {
 		return new CreateFile(file).withInitialContents(initial.toString());
 	}
 
+	
+	public static CreateXMLBuilder emptyXmlFile(@Nonnull File file) {
+		return new CreateXMLBuilder(file);
+	}
+	
 	public static CreateFile emptyHtmlFile(File file,
 			IHTMLFileOption... options) {
 		return emptyHtmlFile(file, null, options);
