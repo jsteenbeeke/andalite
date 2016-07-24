@@ -20,8 +20,10 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,26 +35,52 @@ public final class CreateFile extends AbstractCompoundableAction {
 	public static class CreateXMLBuilder {
 		private final File file;
 
-		private final Map<String,String> namespaces;
-		
+		private final Map<String, String> namespaces;
+
+		private final Map<String, String> xsds;
+
+		private String defaultNamespaceUrl = null;
+
 		public CreateXMLBuilder(@Nonnull File file) {
 			this.file = file;
 			this.namespaces = new HashMap<>();
+			this.xsds = new HashMap<>();
 		}
-		
-		public CreateXMLBuilder withXmlNameSpace(@Nonnull String prefix, @Nonnull String url) {
-			this.namespaces.put(prefix, url);
+
+		public CreateXMLBuilder withDefaultNamespace(@Nonnull String url,
+				@Nullable String xsd) {
+			this.defaultNamespaceUrl = url;
+			if (xsd != null) {
+				xsds.put(url, xsd);
+			}
 			return this;
 		}
-		
+
+		public CreateXMLBuilder withXmlNameSpace(@Nonnull String prefix,
+				@Nonnull String url, @Nullable String xsd) {
+			this.namespaces.put(prefix, url);
+
+			if (xsd != null) {
+				xsds.put(url, xsd);
+			}
+
+			return this;
+		}
+
 		public CreateFile withRootElement(@Nonnull String element) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-			
+
 			builder.append("<").append(element);
-			
+
+			if (defaultNamespaceUrl != null) {
+				builder.append(" xmlns=\"");
+				builder.append(defaultNamespaceUrl);
+				builder.append("\"");
+			}
+
 			if (!namespaces.isEmpty()) {
-				namespaces.forEach((prefix,url) -> {
+				namespaces.forEach((prefix, url) -> {
 					builder.append("\n\t");
 					builder.append("xmlns:");
 					builder.append(prefix);
@@ -61,10 +89,26 @@ public final class CreateFile extends AbstractCompoundableAction {
 					builder.append("\"");
 				});
 			}
+
+			if (!xsds.isEmpty()) {
+				builder.append(
+						"\n\txmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"");
+				builder.append("\n\txsi:schemaLocation=\"");
+				int c = 0;
+				for (Entry<String, String> entry : xsds.entrySet()) {
+					builder.append(entry.getKey());
+					builder.append("\n\t\t");
+					builder.append(entry.getValue());
+					if (++c < xsds.size()) {
+						builder.append("\n\t\t");
+					}
+				}
+
+				builder.append("\"");
+			}
 			builder.append(">\n\n");
 			builder.append("</").append(element).append(">\n");
-			
-			
+
 			return new CreateFile(file).withInitialContents(builder.toString());
 		}
 
@@ -96,9 +140,9 @@ public final class CreateFile extends AbstractCompoundableAction {
 			try {
 				if (!file.getParentFile().exists()) {
 					if (!file.getParentFile().mkdirs()) {
-						return ActionResult
-								.error("Parent directory %s does not exist and could not create",
-										file.getParentFile().getAbsolutePath());
+						return ActionResult.error(
+								"Parent directory %s does not exist and could not create",
+								file.getParentFile().getAbsolutePath());
 					}
 				}
 
@@ -157,18 +201,17 @@ public final class CreateFile extends AbstractCompoundableAction {
 		return new CreateFile(file).withInitialContents(initial.toString());
 	}
 
-	
 	public static CreateXMLBuilder emptyXmlFile(@Nonnull File file) {
 		return new CreateXMLBuilder(file);
 	}
-	
+
 	public static CreateFile emptyHtmlFile(File file,
 			IHTMLFileOption... options) {
 		return emptyHtmlFile(file, null, options);
 	}
 
-	public static CreateFile emptyHtmlFile(File file,
-			Map<String, String> xmlns, IHTMLFileOption... options) {
+	public static CreateFile emptyHtmlFile(File file, Map<String, String> xmlns,
+			IHTMLFileOption... options) {
 
 		final StringBuilder initial = new StringBuilder();
 		initial.append("<html");
