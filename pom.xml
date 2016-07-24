@@ -220,11 +220,6 @@
 								<name>.settings/org.eclipse.wst.html.ui.prefs</name>
 								<location>/org.eclipse.wst.html.ui.prefs</location>
 							</file>
-							<file>
-								<name>.settings/org.eclipse.core.resources.prefs</name>
-								<location>/org.eclipse.core.resources.prefs</location>
-							</file>
-
 						</additionalConfig>
 					</configuration>
 				</plugin>
