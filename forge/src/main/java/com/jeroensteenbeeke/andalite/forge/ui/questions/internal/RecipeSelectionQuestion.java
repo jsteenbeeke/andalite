@@ -16,10 +16,12 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions.internal;
 
 import java.util.List;
 
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.forge.ForgeException;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
+import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.AbstractQuestion;
 
 public class RecipeSelectionQuestion extends AbstractQuestion<ForgeRecipe> {

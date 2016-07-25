@@ -24,6 +24,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import com.google.common.collect.Lists;
+import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 
 public abstract class RecipeMojo extends AbstractMojo {
@@ -50,8 +51,16 @@ public abstract class RecipeMojo extends AbstractMojo {
 						Constructor<?> constructor = recipeClass
 								.getConstructor(Map.class);
 
-						recipeList.add((ForgeRecipe) constructor
-								.newInstance(extraConfiguration));
+						ForgeRecipe recipe = (ForgeRecipe) constructor
+								.newInstance(extraConfiguration);
+						
+						ActionResult configured = recipe.checkCorrectlyConfigured();
+						
+						if (configured.isOk()) {
+							recipeList.add(recipe);
+						} else {
+							getLog().warn(String.format("Recipe %s not correctly configured: %s", className, configured.getMessage()));
+						}
 					} catch (NoSuchMethodException e) {
 						// And if it doesn't exist, go for a default no-argument
 						// constructor
