@@ -164,6 +164,13 @@ public abstract class DummyProjectTest {
 				disallowedPackages);
 	}
 
+	public ActionResult validateModuleTestJavaClass(String module, String fqdn,
+			String... disallowedPackages) {
+		return validateJavaClass(moduleLocation(module, SRC_TEST_JAVA), fqdn,
+				disallowedPackages);
+	}
+
+	
 	public ActionResult validateMainJavaClass(String fqdn,
 			String... disallowedPackages) {
 		return validateJavaClass(SRC_MAIN_JAVA, fqdn, disallowedPackages);
