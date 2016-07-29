@@ -269,6 +269,7 @@ public class ClassAnalyzer {
 				AnalyzedInterface element = new AnalyzedInterface(
 						Location.from(decl), decl.getModifiers(),
 						context.getScope(), decl.getName());
+				element.setSourceFile(sourceFile);
 
 				processInterfaceDeclaration(decl,
 						context.innerDeclaration(decl.getName()), element);
@@ -281,6 +282,7 @@ public class ClassAnalyzer {
 			} else {
 				AnalyzedClass element = new AnalyzedClass(Location.from(decl),
 						decl.getModifiers(), context.getScope(), decl.getName());
+				element.setSourceFile(sourceFile);
 
 				processClassDeclaration(decl,
 						context.innerDeclaration(decl.getName()), element);
@@ -296,7 +298,8 @@ public class ClassAnalyzer {
 
 			AnalyzedEnum element = new AnalyzedEnum(Location.from(decl),
 					decl.getModifiers(), context.getScope(), decl.getName());
-
+			element.setSourceFile(sourceFile);
+			
 			processEnumDeclaration(decl,
 					context.innerDeclaration(decl.getName()), element);
 
@@ -311,6 +314,7 @@ public class ClassAnalyzer {
 			AnalyzedAnnotationType element = new AnalyzedAnnotationType(
 					Location.from(decl), decl.getModifiers(),
 					context.getScope(), decl.getName());
+			element.setSourceFile(sourceFile);
 
 			processAnnotationDeclaration(decl, element);
 
@@ -462,6 +466,7 @@ public class ClassAnalyzer {
 								element.getPackageName(),
 								element.getDenominationName()),
 						innerClassDecl.getName());
+				innerInterface.setSourceFile(element.getSourceFile());
 
 				processInterfaceDeclaration(innerClassDecl,
 						analyzerContext.innerDeclaration(innerClassDecl
@@ -476,6 +481,7 @@ public class ClassAnalyzer {
 								element.getPackageName(),
 								element.getDenominationName()),
 						innerClassDecl.getName());
+				innerClass.setSourceFile(element.getSourceFile());
 
 				processClassDeclaration(innerClassDecl,
 						analyzerContext.innerDeclaration(innerClassDecl
@@ -1682,6 +1688,7 @@ public class ClassAnalyzer {
 							Location.from(objectCreationExpr), 0,
 							analyzerContext.getScope(), objectCreationExpr
 									.getType().getName());
+					innerClass.setSourceFile(containingDenomination.getSourceFile());
 					containingDenomination.addInnerDenomination(innerClass);
 
 					for (BodyDeclaration bodyDeclaration : anonymousClassBody) {

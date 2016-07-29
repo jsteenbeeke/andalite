@@ -14,6 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -29,6 +30,8 @@ public abstract class Denomination extends AccessModifiable {
 	private final TerminalNode rawNameNode;
 
 	private final Location nameLocation;
+	
+	private AnalyzedSourceFile sourceFile;
 
 	public Denomination(@Nonnull Location location, int modifiers,
 			@Nonnull String packageName,
@@ -38,6 +41,15 @@ public abstract class Denomination extends AccessModifiable {
 		this.nameLocation = Location.from(denominationNameNode);
 		this.packageName = packageName;
 		this.denominationName = denominationNameNode.getText();
+	}
+	
+	@CheckForNull
+	public AnalyzedSourceFile getSourceFile() {
+		return sourceFile;
+	}
+	
+	public void setSourceFile(@Nonnull AnalyzedSourceFile sourceFile) {
+		this.sourceFile = sourceFile;
 	}
 
 	public TerminalNode getRawNameNode() {
