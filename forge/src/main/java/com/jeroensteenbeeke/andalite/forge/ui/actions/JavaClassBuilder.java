@@ -103,6 +103,11 @@ public class JavaClassBuilder {
 	}
 
 	private void handleType(String fqdn, Set<String> target, String extra) {
+		if (fqdn == null) {
+			// No operation if not set
+			return;
+		}
+
 		TypeDesc desc = parse(fqdn);
 
 		boolean useFullFQDN = false;
@@ -210,8 +215,8 @@ public class JavaClassBuilder {
 		}
 
 		public JavaClassBuilder named(String typeName, Object... params) {
-			return new JavaClassBuilder(stage1.type, packageName, format(
-					typeName, params));
+			return new JavaClassBuilder(stage1.type, packageName,
+					format(typeName, params));
 		}
 
 	}
