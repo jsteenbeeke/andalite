@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
@@ -25,12 +26,16 @@ public abstract class AbstractRemoveAnnotation<T extends Annotatable>
 
 		for (AnalyzedAnnotation analyzedAnnotation : input.getAnnotations()) {
 			if (analyzedAnnotation.getType().equals(annotation)) {
-				transformations
-						.add(Transformation.replace(analyzedAnnotation, ""));
+				transformations.add(Transformation
+						.replace(getLocation(analyzedAnnotation), ""));
 			}
 		}
 
 		return transformations.build();
+	}
+
+	public Location getLocation(AnalyzedAnnotation annotation) {
+		return annotation.getLocation();
 	}
 
 	@Override
