@@ -59,6 +59,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureS
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperClass;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperInterface;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.HasIfStatementOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.RemoveParameterAnnotation;
 
 public class Operations {
 
@@ -73,11 +74,13 @@ public class Operations {
 		return new EnsureEndReturnStatement(returnValue);
 	}
 
-	public static IBodyContainerOperation hasStatement(@Nonnull String statement) {
+	public static IBodyContainerOperation hasStatement(
+			@Nonnull String statement) {
 		return new EnsureStatement(statement);
 	}
 
-	public static IStatementOperation hasNextStatement(@Nonnull String statement) {
+	public static IStatementOperation hasNextStatement(
+			@Nonnull String statement) {
 		return new EnsureNextStatement(statement);
 	}
 
@@ -89,11 +92,13 @@ public class Operations {
 		return new EnsureImports(fqdn);
 	}
 
-	public static IClassOperation hasClassAnnotation(@Nonnull String annotation) {
+	public static IClassOperation hasClassAnnotation(
+			@Nonnull String annotation) {
 		return new EnsureClassAnnotation(annotation);
 	}
 
-	public static IFieldOperation hasFieldAnnotation(@Nonnull String annotation) {
+	public static IFieldOperation hasFieldAnnotation(
+			@Nonnull String annotation) {
 		return new EnsureFieldAnnotation(annotation);
 	}
 
@@ -116,8 +121,8 @@ public class Operations {
 		};
 	}
 
-	public static IAnnotationOperation hasFieldAccessValue(
-			@Nonnull String name, @Nonnull String fieldAccess) {
+	public static IAnnotationOperation hasFieldAccessValue(@Nonnull String name,
+			@Nonnull String fieldAccess) {
 		return new EnsureAnnotationField<String>(name, FieldAccessValue.class,
 				fieldAccess) {
 			@Override
@@ -130,7 +135,8 @@ public class Operations {
 
 	public static IAnnotationOperation hasStringValue(@Nonnull String name,
 			String value) {
-		return new EnsureAnnotationField<String>(name, StringValue.class, value) {
+		return new EnsureAnnotationField<String>(name, StringValue.class,
+				value) {
 			@Override
 			public String format(String value) {
 				return value != null ? String.format("\"%s\"", value) : NULL;
@@ -199,7 +205,8 @@ public class Operations {
 		}
 	}
 
-	public static IFieldOperation hasInitialization(@Nonnull String expression) {
+	public static IFieldOperation hasInitialization(
+			@Nonnull String expression) {
 		return new EnsureFieldInitialization(expression);
 	}
 
@@ -276,6 +283,10 @@ public class Operations {
 			String identifier) {
 
 		return new ConstructorParameterAdditionBuilder(identifier);
+	}
+
+	public static IParameterOperation removeAnnotation(String annotation) {
+		return new RemoveParameterAnnotation(annotation);
 	}
 
 }
