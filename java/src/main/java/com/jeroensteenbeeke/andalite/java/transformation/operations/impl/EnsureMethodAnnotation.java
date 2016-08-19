@@ -24,8 +24,8 @@ public class EnsureMethodAnnotation extends
 	}
 
 	@Override
-	protected boolean isNewlineAfter() {
-		return true;
+	protected boolean isNewlineAfter(AnalyzedMethod input) {
+		return input.getAnnotations().isEmpty();
 	}
 
 }
