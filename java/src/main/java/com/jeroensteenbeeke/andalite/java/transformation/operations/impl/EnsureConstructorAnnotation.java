@@ -14,6 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
 
@@ -25,8 +27,8 @@ public class EnsureConstructorAnnotation
 	}
 
 	@Override
-	protected boolean isNewlineAfter(AnalyzedConstructor input) {
-		return true;
+	protected boolean isNewlineAfter(@Nonnull AnalyzedConstructor input) {
+		return input.getAnnotations().isEmpty();
 	}
 
 }
