@@ -14,6 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
 
@@ -24,7 +26,7 @@ public class EnsureMethodAnnotation extends
 	}
 
 	@Override
-	protected boolean isNewlineAfter(AnalyzedMethod input) {
+	protected boolean isNewlineAfter(@Nonnull AnalyzedMethod input) {
 		return input.getAnnotations().isEmpty();
 	}
 

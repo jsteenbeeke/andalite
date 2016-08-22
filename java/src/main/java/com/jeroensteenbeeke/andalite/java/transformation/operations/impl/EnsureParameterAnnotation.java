@@ -14,13 +14,15 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedParameter;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
 
-public class EnsureParameterAnnotation extends
-		AbstractEnsureAnnotation<AnalyzedParameter> implements
-		IParameterOperation {
+public class EnsureParameterAnnotation
+		extends AbstractEnsureAnnotation<AnalyzedParameter>
+		implements IParameterOperation {
 
 	public EnsureParameterAnnotation(String type) {
 		super(type);
@@ -34,12 +36,12 @@ public class EnsureParameterAnnotation extends
 	}
 
 	@Override
-	protected boolean isNewlineBefore() {
+	protected boolean isNewlineBefore(@Nonnull AnalyzedParameter input) {
 		return false;
 	}
 
 	@Override
-	protected boolean isNewlineAfter() {
+	protected boolean isNewlineAfter(@Nonnull AnalyzedParameter input) {
 		return false;
 	}
 

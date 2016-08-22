@@ -17,15 +17,15 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
 
-public class EnsureConstructorAnnotation extends
-		AbstractEnsureAnnotation<AnalyzedConstructor> implements
-		IConstructorOperation {
+public class EnsureConstructorAnnotation
+		extends AbstractEnsureAnnotation<AnalyzedConstructor>
+		implements IConstructorOperation {
 	public EnsureConstructorAnnotation(String type) {
 		super(type);
 	}
 
 	@Override
-	protected boolean isNewlineAfter() {
+	protected boolean isNewlineAfter(AnalyzedConstructor input) {
 		return true;
 	}
 
