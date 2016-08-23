@@ -36,7 +36,8 @@ public class FileLocator {
 			this.moduleName = moduleName;
 		}
 
-		public InModuleLocator relativeTo(File root) throws FileLocatorException {
+		public InModuleLocator relativeTo(File root)
+				throws FileLocatorException {
 			File module = new File(root, moduleName);
 			checkFile(module);
 
@@ -65,23 +66,28 @@ public class FileLocator {
 		}
 
 		public InPackageLocator mainSources() throws FileLocatorException {
-			return new InPackageLocator(new File(new File(new File(moduleFolder, SRC), MAIN), JAVA));
+			return new InPackageLocator(new File(
+					new File(new File(moduleFolder, SRC), MAIN), JAVA));
 		}
 
 		public InPackageLocator testSources() throws FileLocatorException {
-			return new InPackageLocator(new File(new File(new File(moduleFolder, SRC), TEST), JAVA));
+			return new InPackageLocator(new File(
+					new File(new File(moduleFolder, SRC), TEST), JAVA));
 		}
 
 		public InPackageLocator mainResources() throws FileLocatorException {
-			return new InPackageLocator(new File(new File(new File(moduleFolder, SRC), MAIN), RESOURCES));
+			return new InPackageLocator(new File(
+					new File(new File(moduleFolder, SRC), MAIN), RESOURCES));
 		}
 
 		public InPackageLocator testResources() throws FileLocatorException {
-			return new InPackageLocator(new File(new File(new File(moduleFolder, SRC), TEST), RESOURCES));
+			return new InPackageLocator(new File(
+					new File(new File(moduleFolder, SRC), TEST), RESOURCES));
 		}
 
 		public InPackageLocator webappSources() throws FileLocatorException {
-			return new InPackageLocator(new File(new File(new File(moduleFolder, SRC), MAIN), WEBAPP));
+			return new InPackageLocator(new File(
+					new File(new File(moduleFolder, SRC), MAIN), WEBAPP));
 		}
 	}
 
@@ -113,11 +119,13 @@ public class FileLocator {
 		}
 
 		public InPackageLocator mainResources() throws FileLocatorException {
-			return new InPackageLocator(new File(new File(root, MAIN), RESOURCES));
+			return new InPackageLocator(
+					new File(new File(root, MAIN), RESOURCES));
 		}
 
 		public InPackageLocator testResources() throws FileLocatorException {
-			return new InPackageLocator(new File(new File(root, TEST), RESOURCES));
+			return new InPackageLocator(
+					new File(new File(root, TEST), RESOURCES));
 		}
 
 		public InPackageLocator webappSources() throws FileLocatorException {
@@ -128,12 +136,14 @@ public class FileLocator {
 	public static class InPackageLocator {
 		private final File contextFolder;
 
-		private InPackageLocator(File contextFolder) throws FileLocatorException {
+		private InPackageLocator(File contextFolder)
+				throws FileLocatorException {
 			this.contextFolder = contextFolder;
 			checkFile(contextFolder);
 		}
 
-		public InPackageLocator inPackage(String packageName) throws FileLocatorException {
+		public InPackageLocator inPackage(String packageName)
+				throws FileLocatorException {
 			String[] packages = packageName.split("\\.");
 			File next = contextFolder;
 			for (String p : packages) {
@@ -152,10 +162,17 @@ public class FileLocator {
 			String[] parts = fqdn.split("\\.");
 			File next = contextFolder;
 			for (String p : parts) {
-				String filename = p.equals(parts[parts.length - 1]) ? p.concat(".java") : p;
-
-				next = new File(next, filename);
-				checkFile(next);
+				if (p.equals(parts[parts.length - 1])) {
+					next = new File(next, p.concat(".java"));
+					if (!next.exists() || next.isDirectory()) {
+						throw new FileLocatorException(
+								"File %s does not exist or is a directory",
+								next.getAbsolutePath());
+					}
+				} else {
+					next = new File(next, p);
+					checkFile(next);
+				}
 			}
 
 			return next;
@@ -166,12 +183,14 @@ public class FileLocator {
 	private static void checkFile(File next) throws FileLocatorException {
 		if (!next.exists()) {
 			if (!next.mkdir()) {
-				throw new FileLocatorException("Directory %s does not exist and cannot be created",
+				throw new FileLocatorException(
+						"Directory %s does not exist and cannot be created",
 						next.getAbsolutePath());
 			}
 		}
 		if (!next.isDirectory()) {
-			throw new FileLocatorException("File %s is not a directory", next.getAbsolutePath());
+			throw new FileLocatorException("File %s is not a directory",
+					next.getAbsolutePath());
 		}
 	}
 }
