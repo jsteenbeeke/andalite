@@ -35,9 +35,8 @@ public class MethodThrowsException implements IMethodOperation {
 		Location rparen = input.getRightParenthesisLocation();
 
 		if (rparen != null) {
-			return ImmutableList
-					.of(Transformation.insertAfter(ex.get(ex.size() - 1),
-							String.format(" throws %s", thrownException)));
+			return ImmutableList.of(Transformation.insertAfter(rparen,
+					String.format(" throws %s", thrownException)));
 		}
 
 		throw new OperationException(
