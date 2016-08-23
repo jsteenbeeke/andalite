@@ -45,7 +45,8 @@ public class MethodThrowsException implements IMethodOperation {
 
 	@Override
 	public ActionResult verify(AnalyzedMethod input) {
-		if (input.getThrownExceptions().contains(thrownException)) {
+		if (input.getThrownExceptions().stream()
+				.anyMatch(e -> e.getException().equals(thrownException))) {
 			return ActionResult.ok();
 		}
 
