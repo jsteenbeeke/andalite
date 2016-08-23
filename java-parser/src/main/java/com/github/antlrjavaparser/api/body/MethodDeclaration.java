@@ -16,6 +16,8 @@ package com.github.antlrjavaparser.api.body;
 
 import java.util.List;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import com.github.antlrjavaparser.api.TypeParameter;
 import com.github.antlrjavaparser.api.expr.AnnotationExpr;
 import com.github.antlrjavaparser.api.expr.NameExpr;
@@ -29,149 +31,169 @@ import com.github.antlrjavaparser.api.visitor.VoidVisitor;
  */
 public final class MethodDeclaration extends BodyDeclaration {
 
-    private int modifiers;
+	private int modifiers;
 
-    private List<TypeParameter> typeParameters;
+	private List<TypeParameter> typeParameters;
 
-    private Type type;
+	private Type type;
 
-    private String name;
+	private String name;
 
-    private List<Parameter> parameters;
+	private List<Parameter> parameters;
 
-    private int arrayCount;
+	private int arrayCount;
 
-    private List<NameExpr> throws_;
+	private List<NameExpr> throws_;
 
-    private BlockStmt body;
+	private BlockStmt body;
 
-    private boolean defaultMethod;
+	private boolean defaultMethod;
 
-    public MethodDeclaration() {
-    }
+	private TerminalNode rightParenthesis;
 
-    public MethodDeclaration(int modifiers, Type type, String name) {
-        this.modifiers = modifiers;
-        this.type = type;
-        this.name = name;
-    }
+	public MethodDeclaration() {
+	}
 
-    public MethodDeclaration(int modifiers, Type type, String name, List<Parameter> parameters) {
-        this.modifiers = modifiers;
-        this.type = type;
-        this.name = name;
-        this.parameters = parameters;
-    }
+	public MethodDeclaration(int modifiers, Type type, String name) {
+		this.modifiers = modifiers;
+		this.type = type;
+		this.name = name;
+	}
 
-    public MethodDeclaration(JavadocComment javaDoc, int modifiers, List<AnnotationExpr> annotations, List<TypeParameter> typeParameters, Type type, String name, List<Parameter> parameters, int arrayCount, List<NameExpr> throws_, BlockStmt block) {
-        super(annotations, javaDoc);
-        this.modifiers = modifiers;
-        this.typeParameters = typeParameters;
-        this.type = type;
-        this.name = name;
-        this.parameters = parameters;
-        this.arrayCount = arrayCount;
-        this.throws_ = throws_;
-        this.body = block;
-    }
+	public MethodDeclaration(int modifiers, Type type, String name,
+			List<Parameter> parameters) {
+		this.modifiers = modifiers;
+		this.type = type;
+		this.name = name;
+		this.parameters = parameters;
+	}
 
-    public MethodDeclaration(int beginLine, int beginColumn, int endLine, int endColumn, JavadocComment javaDoc, int modifiers, List<AnnotationExpr> annotations, List<TypeParameter> typeParameters, Type type, String name, List<Parameter> parameters, int arrayCount, List<NameExpr> throws_, BlockStmt block) {
-        super(beginLine, beginColumn, endLine, endColumn, annotations, javaDoc);
-        this.modifiers = modifiers;
-        this.typeParameters = typeParameters;
-        this.type = type;
-        this.name = name;
-        this.parameters = parameters;
-        this.arrayCount = arrayCount;
-        this.throws_ = throws_;
-        this.body = block;
-    }
+	public MethodDeclaration(JavadocComment javaDoc, int modifiers,
+			List<AnnotationExpr> annotations,
+			List<TypeParameter> typeParameters, Type type, String name,
+			List<Parameter> parameters, int arrayCount, List<NameExpr> throws_,
+			BlockStmt block) {
+		super(annotations, javaDoc);
+		this.modifiers = modifiers;
+		this.typeParameters = typeParameters;
+		this.type = type;
+		this.name = name;
+		this.parameters = parameters;
+		this.arrayCount = arrayCount;
+		this.throws_ = throws_;
+		this.body = block;
+	}
 
-    @Override
-    public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
-        return v.visit(this, arg);
-    }
+	public MethodDeclaration(int beginLine, int beginColumn, int endLine,
+			int endColumn, JavadocComment javaDoc, int modifiers,
+			List<AnnotationExpr> annotations,
+			List<TypeParameter> typeParameters, Type type, String name,
+			List<Parameter> parameters, int arrayCount, List<NameExpr> throws_,
+			BlockStmt block) {
+		super(beginLine, beginColumn, endLine, endColumn, annotations, javaDoc);
+		this.modifiers = modifiers;
+		this.typeParameters = typeParameters;
+		this.type = type;
+		this.name = name;
+		this.parameters = parameters;
+		this.arrayCount = arrayCount;
+		this.throws_ = throws_;
+		this.body = block;
+	}
 
-    @Override
-    public <A> void accept(VoidVisitor<A> v, A arg) {
-        v.visit(this, arg);
-    }
+	@Override
+	public <R, A> R accept(GenericVisitor<R, A> v, A arg) {
+		return v.visit(this, arg);
+	}
 
-    public int getArrayCount() {
-        return arrayCount;
-    }
+	@Override
+	public <A> void accept(VoidVisitor<A> v, A arg) {
+		v.visit(this, arg);
+	}
 
-    public BlockStmt getBody() {
-        return body;
-    }
+	public int getArrayCount() {
+		return arrayCount;
+	}
 
-    /**
-     * Return the modifiers of this member declaration.
-     *
-     * @see ModifierSet
-     * @return modifiers
-     */
-    public int getModifiers() {
-        return modifiers;
-    }
+	public BlockStmt getBody() {
+		return body;
+	}
 
-    public String getName() {
-        return name;
-    }
+	/**
+	 * Return the modifiers of this member declaration.
+	 *
+	 * @see ModifierSet
+	 * @return modifiers
+	 */
+	public int getModifiers() {
+		return modifiers;
+	}
 
-    public List<Parameter> getParameters() {
-        return parameters;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public List<NameExpr> getThrows() {
-        return throws_;
-    }
+	public List<Parameter> getParameters() {
+		return parameters;
+	}
 
-    public Type getType() {
-        return type;
-    }
+	public List<NameExpr> getThrows() {
+		return throws_;
+	}
 
-    public List<TypeParameter> getTypeParameters() {
-        return typeParameters;
-    }
+	public Type getType() {
+		return type;
+	}
 
-    public void setArrayCount(int arrayCount) {
-        this.arrayCount = arrayCount;
-    }
+	public List<TypeParameter> getTypeParameters() {
+		return typeParameters;
+	}
 
-    public void setBody(BlockStmt body) {
-        this.body = body;
-    }
+	public void setArrayCount(int arrayCount) {
+		this.arrayCount = arrayCount;
+	}
 
-    public void setModifiers(int modifiers) {
-        this.modifiers = modifiers;
-    }
+	public void setBody(BlockStmt body) {
+		this.body = body;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setModifiers(int modifiers) {
+		this.modifiers = modifiers;
+	}
 
-    public void setParameters(List<Parameter> parameters) {
-        this.parameters = parameters;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setThrows(List<NameExpr> throws_) {
-        this.throws_ = throws_;
-    }
+	public void setParameters(List<Parameter> parameters) {
+		this.parameters = parameters;
+	}
 
-    public void setType(Type type) {
-        this.type = type;
-    }
+	public void setThrows(List<NameExpr> throws_) {
+		this.throws_ = throws_;
+	}
 
-    public void setTypeParameters(List<TypeParameter> typeParameters) {
-        this.typeParameters = typeParameters;
-    }
+	public void setType(Type type) {
+		this.type = type;
+	}
 
-    public boolean isDefaultMethod() {
-        return defaultMethod;
-    }
+	public void setTypeParameters(List<TypeParameter> typeParameters) {
+		this.typeParameters = typeParameters;
+	}
 
-    public void setDefaultMethod(boolean defaultMethod) {
-        this.defaultMethod = defaultMethod;
-    }
+	public boolean isDefaultMethod() {
+		return defaultMethod;
+	}
+
+	public void setDefaultMethod(boolean defaultMethod) {
+		this.defaultMethod = defaultMethod;
+	}
+
+	public TerminalNode getRightParenthesis() {
+		return rightParenthesis;
+	}
+
+	public void setRightParenthesis(TerminalNode rightParenthesis) {
+		this.rightParenthesis = rightParenthesis;
+	}
 }

@@ -59,6 +59,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureS
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperClass;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperInterface;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.HasIfStatementOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.MethodThrowsException;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.RemoveMethodAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.RemoveParameterAnnotation;
 
@@ -293,6 +294,10 @@ public class Operations {
 
 	public static IMethodOperation removeMethodAnnotation(String annotation) {
 		return new RemoveMethodAnnotation(annotation);
+	}
+
+	public static IMethodOperation methodThrowsException(String exception) {
+		return new MethodThrowsException(exception);
 	}
 
 }

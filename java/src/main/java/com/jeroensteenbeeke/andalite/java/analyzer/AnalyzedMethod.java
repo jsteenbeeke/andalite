@@ -16,16 +16,19 @@
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public final class AnalyzedMethod extends AccessModifiable implements
-		IBodyContainer, Commentable, Javadocable, IParameterized {
+public final class AnalyzedMethod extends AccessModifiable
+		implements IBodyContainer, Commentable, Javadocable, IParameterized {
 	private final String name;
 
 	private final AnalyzedType returnType;
@@ -36,7 +39,11 @@ public final class AnalyzedMethod extends AccessModifiable implements
 
 	private final List<String> comments;
 
+	private final List<AnalyzedThrownException> thrownExceptions;
+
 	private String javadoc;
+
+	private Location rightParenthesisLocation;
 
 	public AnalyzedMethod(@Nonnull Location location,
 			@Nonnull AnalyzedType returnType, int modifiers,
@@ -47,13 +54,30 @@ public final class AnalyzedMethod extends AccessModifiable implements
 		this.parameters = Lists.newArrayList();
 		this.statements = Lists.newArrayList();
 		this.comments = Lists.newArrayList();
+		this.thrownExceptions = Lists.newArrayList();
 	}
-	
-	
 
+	@CheckForNull
+	public Location getRightParenthesisLocation() {
+		return rightParenthesisLocation;
+	}
+
+	public void setRightParenthesisLocation(
+			@Nullable Location rightParenthesisLocation) {
+		this.rightParenthesisLocation = rightParenthesisLocation;
+	}
+
+	public void addThrownException(@Nonnull AnalyzedThrownException exception) {
+		this.thrownExceptions.add(exception);
+	}
+
+	@Nonnull
+	public List<AnalyzedThrownException> getThrownExceptions() {
+		return thrownExceptions;
+	}
 
 	@Override
-	public void addComment(String comment) {
+	public void addComment(@Nonnull String comment) {
 		comments.add(comment);
 	}
 
@@ -101,13 +125,30 @@ public final class AnalyzedMethod extends AccessModifiable implements
 			analyzedParameter.output(callback);
 		}
 
-		callback.write(") {");
+		callback.write(")");
+		if (!getThrownExceptions().isEmpty()) {
+			callback.write(" throws ");
+			callback.write(getThrownExceptions().stream()
+					.map(AnalyzedThrownException::getException)
+					.collect(Collectors.joining(", ")));
+
+		}
+		callback.write(" {");
 		callback.increaseIndentationLevel();
 		callback.newline();
 		// TODO: body
 		callback.decreaseIndentationLevel();
 		callback.newline();
 		callback.write("}");
+	}
+
+	@Override
+	public String toString() {
+
+		return String.format("%s %s %s (%s)", getAccessModifier().getOutput(),
+				returnType.toJavaString(), name,
+				getParameters().stream().map(AnalyzedParameter::getType)
+						.collect(Collectors.joining(", ")));
 	}
 
 	@Override

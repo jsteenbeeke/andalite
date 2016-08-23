@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.annotation.CheckForNull;
@@ -230,8 +231,8 @@ public class ClassAnalyzer {
 			for (ImportDeclaration importDeclaration : compilationUnit
 					.getImports()) {
 				AnalyzedImport imp = new AnalyzedImport(
-						Location.from(importDeclaration), importDeclaration
-								.getName().toString(),
+						Location.from(importDeclaration),
+						importDeclaration.getName().toString(),
 						importDeclaration.isStatic(),
 						importDeclaration.isAsterisk());
 
@@ -249,7 +250,8 @@ public class ClassAnalyzer {
 			if (exceptionMessage != null && !exceptionMessage.isEmpty()) {
 				return TypedActionResult.fail(exceptionMessage);
 			}
-			return TypedActionResult.fail("Could not parse %s", targetFile.getAbsolutePath());
+			return TypedActionResult.fail("Could not parse %s",
+					targetFile.getAbsolutePath());
 		} catch (ParseException | IOException e) {
 			String exceptionMessage = errorStrategy.getExceptionMessage();
 			if (exceptionMessage != null && !exceptionMessage.isEmpty()) {
@@ -281,7 +283,8 @@ public class ClassAnalyzer {
 				return setJavadoc(decl, element);
 			} else {
 				AnalyzedClass element = new AnalyzedClass(Location.from(decl),
-						decl.getModifiers(), context.getScope(), decl.getName());
+						decl.getModifiers(), context.getScope(),
+						decl.getName());
 				element.setSourceFile(sourceFile);
 
 				processClassDeclaration(decl,
@@ -299,7 +302,7 @@ public class ClassAnalyzer {
 			AnalyzedEnum element = new AnalyzedEnum(Location.from(decl),
 					decl.getModifiers(), context.getScope(), decl.getName());
 			element.setSourceFile(sourceFile);
-			
+
 			processEnumDeclaration(decl,
 					context.innerDeclaration(decl.getName()), element);
 
@@ -433,8 +436,8 @@ public class ClassAnalyzer {
 				element.addField(field);
 			}
 		} else if (member instanceof MethodDeclaration) {
-			AnalyzedMethod method = analyze((MethodDeclaration) member,
-					element, analyzerContext);
+			AnalyzedMethod method = analyze((MethodDeclaration) member, element,
+					analyzerContext);
 
 			if (method != null) {
 				if (element.isAutoAbstractMethods()) {
@@ -462,30 +465,30 @@ public class ClassAnalyzer {
 			if (innerClassDecl.isInterface()) {
 				AnalyzedInterface innerInterface = new AnalyzedInterface(
 						Location.from(innerClassDecl),
-						innerClassDecl.getModifiers(), String.format("%s.%s",
-								element.getPackageName(),
+						innerClassDecl.getModifiers(),
+						String.format("%s.%s", element.getPackageName(),
 								element.getDenominationName()),
 						innerClassDecl.getName());
 				innerInterface.setSourceFile(element.getSourceFile());
 
-				processInterfaceDeclaration(innerClassDecl,
-						analyzerContext.innerDeclaration(innerClassDecl
-								.getName()), innerInterface);
+				processInterfaceDeclaration(innerClassDecl, analyzerContext
+						.innerDeclaration(innerClassDecl.getName()),
+						innerInterface);
 
 				element.addInnerDenomination(innerInterface);
 
 			} else {
 				AnalyzedClass innerClass = new AnalyzedClass(
 						Location.from(innerClassDecl),
-						innerClassDecl.getModifiers(), String.format("%s.%s",
-								element.getPackageName(),
+						innerClassDecl.getModifiers(),
+						String.format("%s.%s", element.getPackageName(),
 								element.getDenominationName()),
 						innerClassDecl.getName());
 				innerClass.setSourceFile(element.getSourceFile());
 
-				processClassDeclaration(innerClassDecl,
-						analyzerContext.innerDeclaration(innerClassDecl
-								.getName()), innerClass);
+				processClassDeclaration(innerClassDecl, analyzerContext
+						.innerDeclaration(innerClassDecl.getName()),
+						innerClass);
 
 				element.addInnerDenomination(innerClass);
 			}
@@ -527,10 +530,10 @@ public class ClassAnalyzer {
 		}
 
 		AnalyzedEnumConstant constant = new AnalyzedEnumConstant(
-				Location.from(enumDecl), ModifierSet.PUBLIC, String.format(
-						"%s.%s", element.getPackageName(),
-						element.getDenominationName()), enumDecl.getName(),
-				paramExpressions);
+				Location.from(enumDecl), ModifierSet.PUBLIC,
+				String.format("%s.%s", element.getPackageName(),
+						element.getDenominationName()),
+				enumDecl.getName(), paramExpressions);
 
 		processEnumConstantDeclaration(enumDecl, analyzerContext, constant);
 
@@ -593,7 +596,8 @@ public class ClassAnalyzer {
 		element.setBodyLocation(new Location(start, end));
 	}
 
-	private String getTypeNameWithGenerics(@Nullable ClassOrInterfaceType type) {
+	private String getTypeNameWithGenerics(
+			@Nullable ClassOrInterfaceType type) {
 		if (type == null) {
 			return null;
 		}
@@ -606,9 +610,9 @@ public class ClassAnalyzer {
 		}
 
 		if (typeArgs != null && !typeArgs.isEmpty()) {
-			return prefix.concat(typeName.concat(typeArgs.stream()
-					.map(t -> t.toString())
-					.collect(Collectors.joining(", ", "<", ">"))));
+			return prefix.concat(
+					typeName.concat(typeArgs.stream().map(t -> t.toString())
+							.collect(Collectors.joining(", ", "<", ">"))));
 		}
 
 		return prefix.concat(typeName);
@@ -640,8 +644,8 @@ public class ClassAnalyzer {
 			if (start == classEndMinusOne) {
 				start = member.getBeginIndex();
 			}
-			analyzeBodyElement(decl.getNameAsString(), element,
-					analyzerContext, member);
+			analyzeBodyElement(decl.getNameAsString(), element, analyzerContext,
+					member);
 		}
 
 		element.setBodyLocation(new Location(start, end));
@@ -706,6 +710,15 @@ public class ClassAnalyzer {
 			}
 		}
 
+		List<NameExpr> thrown = member.getThrows();
+		if (thrown != null) {
+			thrown.stream().filter(Objects::nonNull).forEach(nameEx -> {
+				method.addThrownException(new AnalyzedThrownException(
+						Location.from(nameEx), nameEx.getName()));
+
+			});
+		}
+
 		BlockStmt body = member.getBody();
 		if (body != null) {
 			analyzeBodyDeclaration(body, new IStatementAssigner() {
@@ -714,6 +727,11 @@ public class ClassAnalyzer {
 					method.addStatement(statement);
 				}
 			}, containingDenomination, analyzerContext);
+		}
+
+		TerminalNode rparen = member.getRightParenthesis();
+		if (rparen != null) {
+			method.setRightParenthesisLocation(Location.from(rparen));
 		}
 
 		return addComments(member, setJavadoc(member, method));
@@ -875,8 +893,8 @@ public class ClassAnalyzer {
 		} else if (expr instanceof CharLiteralExpr) {
 			CharLiteralExpr charLit = (CharLiteralExpr) expr;
 
-			return new CharValue(Location.from(expr), name, charLit.getValue()
-					.charAt(0));
+			return new CharValue(Location.from(expr), name,
+					charLit.getValue().charAt(0));
 
 		} else if (expr instanceof DoubleLiteralExpr) {
 			DoubleLiteralExpr doubLit = (DoubleLiteralExpr) expr;
@@ -900,8 +918,8 @@ public class ClassAnalyzer {
 		} else if (expr instanceof ClassExpr) {
 			ClassExpr classExpr = (ClassExpr) expr;
 
-			return new ClassValue(Location.from(expr), name, classExpr
-					.getType().toString());
+			return new ClassValue(Location.from(expr), name,
+					classExpr.getType().toString());
 
 		} else if (expr instanceof ArrayInitializerExpr) {
 			ArrayInitializerExpr array = (ArrayInitializerExpr) expr;
@@ -925,7 +943,8 @@ public class ClassAnalyzer {
 					containingDenomination, analyzerContext).toJavaString();
 			final String field = fieldAccess.getField();
 
-			return new FieldAccessValue(Location.from(expr), name, scope, field);
+			return new FieldAccessValue(Location.from(expr), name, scope,
+					field);
 
 		}
 
@@ -969,8 +988,8 @@ public class ClassAnalyzer {
 						containingDenomination, analyzerContext);
 			}
 
-			return addComments(statement, new ReturnStatement(location,
-					returnExpression));
+			return addComments(statement,
+					new ReturnStatement(location, returnExpression));
 
 		} else if (statement instanceof IfStmt) {
 			IfStmt ifStmt = (IfStmt) statement;
@@ -993,33 +1012,27 @@ public class ClassAnalyzer {
 		} else if (statement instanceof AssertStmt) {
 			AssertStmt assertStmt = (AssertStmt) statement;
 
-			return addComments(
-					statement,
+			return addComments(statement,
 					new AssertStatement(Location.from(statement),
 							analyzeExpression(assertStmt.getCheck(),
 									containingDenomination, analyzerContext)));
 		} else if (statement instanceof BlockStmt) {
 			BlockStmt blockStmt = (BlockStmt) statement;
 
-			return addComments(
-					statement,
-					analyzeBlockStatement(blockStmt, containingDenomination,
-							analyzerContext));
+			return addComments(statement, analyzeBlockStatement(blockStmt,
+					containingDenomination, analyzerContext));
 
 		} else if (statement instanceof BreakStmt) {
 			BreakStmt breakStmt = (BreakStmt) statement;
 
-			return addComments(
-					statement,
-					new BreakStatement(Location.from(breakStmt), breakStmt
-							.getId()));
+			return addComments(statement, new BreakStatement(
+					Location.from(breakStmt), breakStmt.getId()));
 
 		} else if (statement instanceof ContinueStmt) {
 			ContinueStmt continueStmt = (ContinueStmt) statement;
 
-			return addComments(statement,
-					new ContinueStatement(Location.from(continueStmt),
-							continueStmt.getId()));
+			return addComments(statement, new ContinueStatement(
+					Location.from(continueStmt), continueStmt.getId()));
 		} else if (statement instanceof DoStmt) {
 			DoStmt doStmt = (DoStmt) statement;
 
@@ -1029,8 +1042,8 @@ public class ClassAnalyzer {
 			AnalyzedStatement body = analyzeStatement(doStmt.getBody(),
 					containingDenomination, analyzerContext);
 
-			return addComments(statement, new DoStatement(
-					Location.from(doStmt), condition, body));
+			return addComments(statement,
+					new DoStatement(Location.from(doStmt), condition, body));
 		} else if (statement instanceof EmptyStmt) {
 			return new EmptyStatement(Location.from(statement));
 		} else if (statement instanceof ExplicitConstructorInvocationStmt) {
@@ -1105,14 +1118,15 @@ public class ClassAnalyzer {
 			ForStmt forStmt = (ForStmt) statement;
 
 			Expression compareExpr = forStmt.getCompare();
-			AnalyzedExpression compare = compareExpr != null ? analyzeExpression(
-					compareExpr, containingDenomination, analyzerContext)
+			AnalyzedExpression compare = compareExpr != null
+					? analyzeExpression(compareExpr, containingDenomination,
+							analyzerContext)
 					: null;
 			AnalyzedStatement body = analyzeStatement(forStmt.getBody(),
 					containingDenomination, analyzerContext);
 
-			ForStatement forStatement = new ForStatement(
-					Location.from(forStmt), body, compare);
+			ForStatement forStatement = new ForStatement(Location.from(forStmt),
+					body, compare);
 
 			List<Expression> init = forStmt.getInit();
 			if (init != null) {
@@ -1151,9 +1165,9 @@ public class ClassAnalyzer {
 			SwitchStmt switchStmt = (SwitchStmt) statement;
 
 			SwitchStatement switchStatement = new SwitchStatement(
-					Location.from(switchStmt), analyzeExpression(
-							switchStmt.getSelector(), containingDenomination,
-							analyzerContext));
+					Location.from(switchStmt),
+					analyzeExpression(switchStmt.getSelector(),
+							containingDenomination, analyzerContext));
 
 			List<SwitchEntryStmt> entries = switchStmt.getEntries();
 			if (entries != null) {
@@ -1167,10 +1181,8 @@ public class ClassAnalyzer {
 		} else if (statement instanceof SwitchEntryStmt) {
 			SwitchEntryStmt switchEntryStmt = (SwitchEntryStmt) statement;
 
-			return addComments(
-					statement,
-					analyzeSwitchEntry(switchEntryStmt, containingDenomination,
-							analyzerContext));
+			return addComments(statement, analyzeSwitchEntry(switchEntryStmt,
+					containingDenomination, analyzerContext));
 
 		} else if (statement instanceof SynchronizedStmt) {
 			SynchronizedStmt synchronizedStmt = (SynchronizedStmt) statement;
@@ -1182,14 +1194,12 @@ public class ClassAnalyzer {
 					synchronizedStmt.getExpr(), containingDenomination,
 					analyzerContext);
 
-			return addComments(statement,
-					new SynchronizedStatement(Location.from(synchronizedStmt),
-							syncExpression, block));
+			return addComments(statement, new SynchronizedStatement(
+					Location.from(synchronizedStmt), syncExpression, block));
 		} else if (statement instanceof ThrowStmt) {
 			ThrowStmt throwStmt = (ThrowStmt) statement;
 
-			return addComments(
-					statement,
+			return addComments(statement,
 					new ThrowStatement(Location.from(throwStmt),
 							analyzeExpression(throwStmt.getExpr(),
 									containingDenomination, analyzerContext)));
@@ -1197,15 +1207,16 @@ public class ClassAnalyzer {
 			TryStmt tryStmt = (TryStmt) statement;
 
 			BlockStmt finallyBlockStmt = tryStmt.getFinallyBlock();
-			BlockStatement finallyBlock = finallyBlockStmt != null ? analyzeBlockStatement(
-					finallyBlockStmt, containingDenomination, analyzerContext)
+			BlockStatement finallyBlock = finallyBlockStmt != null
+					? analyzeBlockStatement(finallyBlockStmt,
+							containingDenomination, analyzerContext)
 					: null;
 			BlockStatement tryBlock = analyzeBlockStatement(
 					tryStmt.getTryBlock(), containingDenomination,
 					analyzerContext);
 
-			TryStatement tryStatement = new TryStatement(
-					Location.from(tryStmt), tryBlock, finallyBlock);
+			TryStatement tryStatement = new TryStatement(Location.from(tryStmt),
+					tryBlock, finallyBlock);
 
 			List<Resource> resources = tryStmt.getResources();
 			if (resources != null) {
@@ -1246,13 +1257,13 @@ public class ClassAnalyzer {
 				for (CatchClause catchClause : catchs) {
 
 					BlockStatement blockStatement = analyzeBlockStatement(
-							catchClause.getCatchBlock(),
-							containingDenomination, analyzerContext);
+							catchClause.getCatchBlock(), containingDenomination,
+							analyzerContext);
 					CatchParameter except = catchClause.getExcept();
 
 					CatchStatement catchStatement = new CatchStatement(
-							Location.from(catchClause), blockStatement, except
-									.getId().getName());
+							Location.from(catchClause), blockStatement,
+							except.getId().getName());
 
 					List<AnnotationExpr> annotations = except.getAnnotations();
 					if (annotations != null) {
@@ -1286,12 +1297,11 @@ public class ClassAnalyzer {
 		} else if (statement instanceof TypeDeclarationStmt) {
 			TypeDeclarationStmt typeDeclarationStmt = (TypeDeclarationStmt) statement;
 
-			return addComments(
-					statement,
-					new TypeDeclarationStatement(Location
-							.from(typeDeclarationStmt), analyze(null,
-							analyzerContext.anonymousInnerClass(),
-							typeDeclarationStmt.getTypeDeclaration())));
+			return addComments(statement,
+					new TypeDeclarationStatement(
+							Location.from(typeDeclarationStmt),
+							analyze(null, analyzerContext.anonymousInnerClass(),
+									typeDeclarationStmt.getTypeDeclaration())));
 		} else if (statement instanceof WhileStmt) {
 			WhileStmt whileStmt = (WhileStmt) statement;
 
@@ -1301,9 +1311,8 @@ public class ClassAnalyzer {
 			AnalyzedStatement body = analyzeStatement(whileStmt.getBody(),
 					containingDenomination, analyzerContext);
 
-			return addComments(statement,
-					new WhileStatement(Location.from(whileStmt), condition,
-							body));
+			return addComments(statement, new WhileStatement(
+					Location.from(whileStmt), condition, body));
 		}
 
 		throw new IllegalStateException(
@@ -1416,8 +1425,8 @@ public class ClassAnalyzer {
 		if (expr instanceof CharLiteralExpr) {
 			CharLiteralExpr charLit = (CharLiteralExpr) expr;
 
-			return new CharLiteralExpression(location, charLit.getValue()
-					.charAt(0));
+			return new CharLiteralExpression(location,
+					charLit.getValue().charAt(0));
 		}
 		if (expr instanceof DoubleLiteralExpr) {
 			DoubleLiteralExpr doubLit = (DoubleLiteralExpr) expr;
@@ -1471,8 +1480,8 @@ public class ClassAnalyzer {
 				}
 			}
 
-			MethodCallExpression expression = new MethodCallExpression(
-					location, methodCall.getName(), analyzedTypeArguments,
+			MethodCallExpression expression = new MethodCallExpression(location,
+					methodCall.getName(), analyzedTypeArguments,
 					analyzedArguments);
 
 			Expression scopeExpr = methodCall.getScope();
@@ -1559,7 +1568,8 @@ public class ClassAnalyzer {
 			CastExpr castExpr = (CastExpr) expr;
 
 			AnalyzedExpression expression = analyzeExpression(
-					castExpr.getExpr(), containingDenomination, analyzerContext);
+					castExpr.getExpr(), containingDenomination,
+					analyzerContext);
 			AnalyzedType type = analyzeType(castExpr.getType());
 
 			return new CastExpression(location, type, expression);
@@ -1652,8 +1662,8 @@ public class ClassAnalyzer {
 		if (expr instanceof ObjectCreationExpr) {
 			ObjectCreationExpr objectCreationExpr = (ObjectCreationExpr) expr;
 
-			ClassOrInterface type = analyzeClassOrInterface(objectCreationExpr
-					.getType());
+			ClassOrInterface type = analyzeClassOrInterface(
+					objectCreationExpr.getType());
 
 			if (type != null) {
 
@@ -1686,14 +1696,17 @@ public class ClassAnalyzer {
 
 					AnalyzedClass innerClass = new AnalyzedClass(
 							Location.from(objectCreationExpr), 0,
-							analyzerContext.getScope(), objectCreationExpr
-									.getType().getName());
-					innerClass.setSourceFile(containingDenomination.getSourceFile());
+							analyzerContext.getScope(),
+							objectCreationExpr.getType().getName());
+					innerClass.setSourceFile(
+							containingDenomination.getSourceFile());
 					containingDenomination.addInnerDenomination(innerClass);
 
 					for (BodyDeclaration bodyDeclaration : anonymousClassBody) {
 						analyzeBodyElement(
-								Integer.toString(innerClassContext.anonymousInnerClassCounter - 1),
+								Integer.toString(
+										innerClassContext.anonymousInnerClassCounter
+												- 1),
 								innerClass, innerClassContext, bodyDeclaration);
 					}
 					creationExpression.setDeclaredAnonymousClass(innerClass);
@@ -1707,8 +1720,10 @@ public class ClassAnalyzer {
 			SuperExpr superExpr = (SuperExpr) expr;
 
 			Expression classExpr = superExpr.getClassExpr();
-			AnalyzedExpression classExpression = classExpr != null ? analyzeExpression(
-					classExpr, containingDenomination, analyzerContext) : null;
+			AnalyzedExpression classExpression = classExpr != null
+					? analyzeExpression(classExpr, containingDenomination,
+							analyzerContext)
+					: null;
 
 			return new SuperExpression(Location.from(superExpr),
 					classExpression);
@@ -1717,8 +1732,10 @@ public class ClassAnalyzer {
 			ThisExpr thisExpr = (ThisExpr) expr;
 
 			Expression classExpr = thisExpr.getClassExpr();
-			AnalyzedExpression classExpression = classExpr != null ? analyzeExpression(
-					classExpr, containingDenomination, analyzerContext) : null;
+			AnalyzedExpression classExpression = classExpr != null
+					? analyzeExpression(classExpr, containingDenomination,
+							analyzerContext)
+					: null;
 
 			return new ThisExpression(Location.from(thisExpr), classExpression);
 		}
@@ -1769,8 +1786,9 @@ public class ClassAnalyzer {
 		if (vars != null) {
 			for (VariableDeclarator var : vars) {
 				Expression initExpr = var.getInit();
-				AnalyzedExpression init = initExpr != null ? analyzeExpression(
-						initExpr, containingDenomination, analyzerContext)
+				AnalyzedExpression init = initExpr != null
+						? analyzeExpression(initExpr, containingDenomination,
+								analyzerContext)
 						: null;
 
 				expression.addDeclareVariable(new DeclareVariableExpression(
@@ -1828,8 +1846,9 @@ public class ClassAnalyzer {
 			WildcardType wildcard = (WildcardType) type;
 
 			ReferenceType superType = wildcard.getSuper();
-			Reference superRef = superType != null ? processReferenceType(
-					Location.from(superType), superType) : null;
+			Reference superRef = superType != null
+					? processReferenceType(Location.from(superType), superType)
+					: null;
 			ReferenceType extendsType = wildcard.getExtends();
 			Reference extendsRef = extendsType != null ? processReferenceType(
 					Location.from(extendsType), extendsType) : null;
@@ -1857,8 +1876,8 @@ public class ClassAnalyzer {
 		if (classOrInterface == null)
 			return null;
 
-		ClassOrInterface scope = analyzeClassOrInterface(classOrInterface
-				.getScope());
+		ClassOrInterface scope = analyzeClassOrInterface(
+				classOrInterface.getScope());
 
 		List<AnalyzedType> analyzedTypeArguments = Lists.newArrayList();
 		List<Type> typeArgs = classOrInterface.getTypeArgs();
@@ -1899,8 +1918,8 @@ public class ClassAnalyzer {
 		}
 
 		public AnalyzerContext anonymousInnerClass() {
-			return new AnalyzerContext(String.format("$%d",
-					++anonymousInnerClassCounter), this);
+			return new AnalyzerContext(
+					String.format("$%d", ++anonymousInnerClassCounter), this);
 		}
 
 		public AnalyzerContext innerDeclaration(TerminalNode name) {

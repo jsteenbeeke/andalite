@@ -20,61 +20,78 @@ import com.github.antlrjavaparser.api.type.ReferenceType;
 import com.github.antlrjavaparser.api.type.Type;
 import com.github.antlrjavaparser.api.type.VoidType;
 
-public class MethodDeclarationContextAdapter implements Adapter<MethodDeclaration, Java8Parser.MethodDeclarationContext> {
-    public MethodDeclaration adapt(Java8Parser.MethodDeclarationContext context, AdapterParameters adapterParameters) {
-        /*
-            methodDeclaration
-                :    modifiers typeParameters? (type | VOID) Identifier formalParameters (LBRACKET RBRACKET)* (THROWS qualifiedNameList)? (block | SEMI)
-                ;
-         */
+public class MethodDeclarationContextAdapter implements
+		Adapter<MethodDeclaration, Java8Parser.MethodDeclarationContext> {
+	public MethodDeclaration adapt(Java8Parser.MethodDeclarationContext context,
+			AdapterParameters adapterParameters) {
+		/*
+		 * methodDeclaration
+		 * : modifiers typeParameters? (type | VOID) Identifier formalParameters
+		 * (LBRACKET RBRACKET)* (THROWS qualifiedNameList)? (block | SEMI)
+		 * ;
+		 */
 
-        MethodDeclaration methodDeclaration = new MethodDeclaration();
-        AdapterUtil.setModifiers(context.modifiers(), methodDeclaration, adapterParameters);
-        AdapterUtil.setComments(methodDeclaration, context, adapterParameters);
-        AdapterUtil.setPosition(methodDeclaration, context);
+		MethodDeclaration methodDeclaration = new MethodDeclaration();
+		AdapterUtil.setModifiers(context.modifiers(), methodDeclaration,
+				adapterParameters);
+		AdapterUtil.setComments(methodDeclaration, context, adapterParameters);
+		AdapterUtil.setPosition(methodDeclaration, context);
 
-        if (context.typeParameters() != null) {
-            methodDeclaration.setTypeParameters(Adapters.getTypeParametersContextAdapter().adapt(context.typeParameters(), adapterParameters));
-        }
+		if (context.typeParameters() != null) {
+			methodDeclaration.setTypeParameters(
+					Adapters.getTypeParametersContextAdapter().adapt(
+							context.typeParameters(), adapterParameters));
+		}
 
-        if (context.VOID() != null) {
-            Type type = new VoidType();
-            AdapterUtil.setPosition(type, context.VOID());
-            methodDeclaration.setType(type);
-        } else {
-            Type type = Adapters.getTypeContextAdapter().adapt(context.type(), adapterParameters);
+		if (context.VOID() != null) {
+			Type type = new VoidType();
+			AdapterUtil.setPosition(type, context.VOID());
+			methodDeclaration.setType(type);
+		} else {
+			Type type = Adapters.getTypeContextAdapter().adapt(context.type(),
+					adapterParameters);
 
-            if (context.LBRACKET() != null && context.LBRACKET().size() > 0) {
-                ReferenceType referenceType = new ReferenceType();
-                if (type instanceof ReferenceType) {
-                    referenceType = (ReferenceType)type;
-                } else {
-                    referenceType = new ReferenceType();
-                    referenceType.setType(type);
-                }
+			if (context.LBRACKET() != null && context.LBRACKET().size() > 0) {
+				ReferenceType referenceType = new ReferenceType();
+				if (type instanceof ReferenceType) {
+					referenceType = (ReferenceType) type;
+				} else {
+					referenceType = new ReferenceType();
+					referenceType.setType(type);
+				}
 
-                int arraySize = referenceType.getArrayCount();
-                arraySize += context.LBRACKET().size();
-                referenceType.setArrayCount(arraySize);
+				int arraySize = referenceType.getArrayCount();
+				arraySize += context.LBRACKET().size();
+				referenceType.setArrayCount(arraySize);
 
-                methodDeclaration.setType(referenceType);
-            } else {
-                methodDeclaration.setType(type);
-            }
-        }
+				methodDeclaration.setType(referenceType);
+			} else {
+				methodDeclaration.setType(type);
+			}
+		}
 
-        methodDeclaration.setName(context.Identifier().getText());
+		methodDeclaration.setName(context.Identifier().getText());
 
-        methodDeclaration.setParameters(Adapters.getFormalParametersContextAdapter().adapt(context.formalParameters(), adapterParameters));
+		methodDeclaration
+				.setParameters(Adapters.getFormalParametersContextAdapter()
+						.adapt(context.formalParameters(), adapterParameters));
 
-        if (context.THROWS() != null) {
-            methodDeclaration.setThrows(Adapters.getQualifiedNameListContextAdapter().adapt(context.qualifiedNameList(), adapterParameters));
-        }
+		if (context.THROWS() != null) {
+			methodDeclaration.setThrows(
+					Adapters.getQualifiedNameListContextAdapter().adapt(
+							context.qualifiedNameList(), adapterParameters));
+		}
 
-        if (context.block() != null) {
-            methodDeclaration.setBody(Adapters.getBlockContextAdapter().adapt(context.block(), adapterParameters));
-        }
+		if (context.block() != null) {
+			methodDeclaration.setBody(Adapters.getBlockContextAdapter()
+					.adapt(context.block(), adapterParameters));
+		}
 
-        return methodDeclaration;
-    }
+		if (context.formalParameters() != null) {
+			methodDeclaration
+					.setRightParenthesis(context.formalParameters().RPAREN());
+		}
+
+		return methodDeclaration;
+	}
 }
