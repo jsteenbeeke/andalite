@@ -26,7 +26,6 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IAnnotationOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IFieldOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
@@ -35,8 +34,6 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.Constru
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureConstructorAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEndReturnStatement;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureFieldAnnotation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureFieldInitialization;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInnerAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodComment;
@@ -73,11 +70,6 @@ public class Operations {
 	public static IStatementOperation hasNextStatement(
 			@Nonnull String statement) {
 		return new EnsureNextStatement(statement);
-	}
-
-	public static IFieldOperation hasFieldAnnotation(
-			@Nonnull String annotation) {
-		return new EnsureFieldAnnotation(annotation);
 	}
 
 	public static IAnnotationOperation hasBooleanValue(@Nonnull String name,
@@ -139,11 +131,6 @@ public class Operations {
 	public static EnsureInnerAnnotationField hasAnnotationValue(
 			@Nonnull String name, @Nonnull String type) {
 		return new EnsureInnerAnnotationField(name, type);
-	}
-
-	public static IFieldOperation hasInitialization(
-			@Nonnull String expression) {
-		return new EnsureFieldInitialization(expression);
 	}
 
 	public static IMethodOperation hasMethodAnnotation(

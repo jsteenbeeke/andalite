@@ -22,7 +22,6 @@ import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatch
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasValue;
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.importsClass;
 import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasAnnotationValue;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasFieldAnnotation;
 import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasStatement;
 import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasStringValue;
 import static com.jeroensteenbeeke.andalite.java.transformation.Operations.returnsAsLastStatement;
@@ -93,10 +92,8 @@ public class RecipeTest extends DummyAwareTest {
 				.withAccess(AccessModifier.PRIVATE);
 		java.inPublicClass().ensureField("bar").typed("String")
 				.withAccess(AccessModifier.PRIVATE);
-		java.inPublicClass().forField("foo")
-				.ensure(hasFieldAnnotation("Column"));
-		java.inPublicClass().forField("bar")
-				.ensure(hasFieldAnnotation("Column"));
+		java.inPublicClass().forField("foo").ensureAnnotation("Column");
+		java.inPublicClass().forField("bar").ensureAnnotation("Column");
 		java.inPublicClass().ensureMethod().withParameter("foo")
 				.ofType("String").named("setFoo");
 		java.inPublicClass().ensureMethod().withParameter("bar")

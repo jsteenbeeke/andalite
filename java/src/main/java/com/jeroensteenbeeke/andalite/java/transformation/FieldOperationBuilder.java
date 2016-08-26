@@ -14,22 +14,35 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.FieldNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IFieldOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureFieldAnnotation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureFieldInitialization;
 
-public class FieldOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedField, IFieldOperation> {
+public class FieldOperationBuilder
+		extends AbstractOperationBuilder<AnalyzedField, IFieldOperation> {
 	FieldOperationBuilder(IStepCollector collector,
 			IJavaNavigation<AnalyzedClass> parentNav, String fieldName) {
 		super(collector, new FieldNavigation(parentNav, fieldName));
 	}
 
-	public AnnotatableOperationBuilder<AnalyzedField> forAnnotation(String type) {
+	public AnnotatableOperationBuilder<AnalyzedField> forAnnotation(
+			String type) {
 		return new AnnotatableOperationBuilder<AnalyzedField>(getCollector(),
 				getNavigation(), type);
+	}
+
+	public void ensureAnnotation(@Nonnull String annotation) {
+		ensure(new EnsureFieldAnnotation(annotation));
+	}
+
+	public void ensureInitialization(@Nonnull String expression) {
+		ensure(new EnsureFieldInitialization(expression));
 	}
 
 }
