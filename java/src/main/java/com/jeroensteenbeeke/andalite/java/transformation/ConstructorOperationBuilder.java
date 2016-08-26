@@ -14,12 +14,16 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.BodyContainerNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ByIndexConstructorParameterNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ConstructorParameterNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.ConstructorParameterAdditionBuilder;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureConstructorAnnotation;
 
 public class ConstructorOperationBuilder extends
 		AbstractOperationBuilder<AnalyzedConstructor, IConstructorOperation> {
@@ -29,25 +33,27 @@ public class ConstructorOperationBuilder extends
 
 		private final String name;
 
-		private ParameterLocator(ConstructorOperationBuilder parent, String name) {
+		private ParameterLocator(@Nonnull ConstructorOperationBuilder parent,
+				@Nonnull String name) {
 			super();
 			this.parent = parent;
 			this.name = name;
 		}
 
-		public ParameterScopeOperationBuilder ofType(String type) {
+		public ParameterScopeOperationBuilder ofType(@Nonnull String type) {
 			return new ParameterScopeOperationBuilder(parent.getCollector(),
 					new ConstructorParameterNavigation(parent.getNavigation(),
 							type, name));
 		}
 	}
 
-	ConstructorOperationBuilder(IStepCollector collector,
-			IJavaNavigation<AnalyzedConstructor> navigation) {
+	ConstructorOperationBuilder(@Nonnull IStepCollector collector,
+			@Nonnull IJavaNavigation<AnalyzedConstructor> navigation) {
 		super(collector, navigation);
 	}
 
-	public ParameterLocator forParameterNamed(String name) {
+	@Nonnull
+	public ParameterLocator forParameterNamed(@Nonnull String name) {
 		return new ParameterLocator(this, name);
 	}
 
@@ -55,15 +61,27 @@ public class ConstructorOperationBuilder extends
 	 * @param index
 	 *            The 0-based index of the parameter
 	 */
+	@Nonnull
 	public ParameterScopeOperationBuilder forParameterAtIndex(int index) {
 		return new ParameterScopeOperationBuilder(getCollector(),
 				new ByIndexConstructorParameterNavigation(getNavigation(),
 						index));
 	}
 
+	@Nonnull
 	public BodyContainerOperationBuilder inBody() {
 		return new BodyContainerOperationBuilder(getCollector(),
 				new BodyContainerNavigation<AnalyzedConstructor>(
 						getNavigation()));
+	}
+
+	@Nonnull
+	public ConstructorParameterAdditionBuilder addConstructorParameter(
+			@Nonnull String name) {
+		return new ConstructorParameterAdditionBuilder(name, o -> ensure(o));
+	}
+
+	public void ensureAnnotation(@Nonnull String annotation) {
+		ensure(new EnsureConstructorAnnotation(annotation));
 	}
 }

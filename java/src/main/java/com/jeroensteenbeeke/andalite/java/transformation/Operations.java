@@ -24,13 +24,10 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.FieldAccessValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.IntegerValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IAnnotationOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IStatementOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.ConstructorParameterAdditionBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureAnnotationField;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureConstructorAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInnerAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureNextStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureParameterAnnotation;
@@ -112,11 +109,6 @@ public class Operations {
 		return new EnsureInnerAnnotationField(name, type);
 	}
 
-	public static IConstructorOperation hasConstructorAnnotation(
-			@Nonnull String annotation) {
-		return new EnsureConstructorAnnotation(annotation);
-	}
-
 	public static IParameterOperation hasParameterAnnotation(
 			@Nonnull String annotation) {
 		return new EnsureParameterAnnotation(annotation);
@@ -130,12 +122,6 @@ public class Operations {
 	public static <S extends AnalyzedStatement> IJavaOperation<S> hasSuffixComment(
 			@Nonnull String comment) {
 		return new EnsureStatementComment<S>(comment, false);
-	}
-
-	public static ConstructorParameterAdditionBuilder hasConstructorParameterNamed(
-			String identifier) {
-
-		return new ConstructorParameterAdditionBuilder(identifier);
 	}
 
 	public static IParameterOperation removeParameterAnnotation(
