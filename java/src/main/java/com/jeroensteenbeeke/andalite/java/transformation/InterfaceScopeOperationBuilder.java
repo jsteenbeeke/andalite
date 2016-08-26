@@ -15,10 +15,13 @@
 
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.InnerClassNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperInterface;
 
 public class InterfaceScopeOperationBuilder extends
 		AbstractOperationBuilder<AnalyzedInterface, IInterfaceOperation> {
@@ -42,5 +45,13 @@ public class InterfaceScopeOperationBuilder extends
 
 	public InterfaceMethodLocator forMethod() {
 		return new InterfaceMethodLocator(getCollector(), getNavigation());
+	}
+
+	public EnsureInterfaceMethodBuilder ensureMethod() {
+		return new EnsureInterfaceMethodBuilder(o -> ensure(o));
+	}
+
+	public void ensureSuperInterface(@Nonnull String iface) {
+		ensure(new EnsureSuperInterface(iface));
 	}
 }

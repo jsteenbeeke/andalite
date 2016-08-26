@@ -27,7 +27,6 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.IAnnotationO
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IFieldOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
@@ -47,7 +46,6 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureN
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureParameterAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatementComment;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperInterface;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.HasIfStatementOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.MethodThrowsException;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.RemoveMethodAnnotation;
@@ -170,11 +168,6 @@ public class Operations {
 	public static IBodyContainerOperation hasIfStatement(
 			@Nonnull String filterCondition) {
 		return new HasIfStatementOperation(filterCondition);
-	}
-
-	public static IInterfaceOperation extendsInterface(
-			@Nonnull String interfaceName) {
-		return new EnsureSuperInterface(interfaceName);
 	}
 
 	public static <S extends AnalyzedStatement> IJavaOperation<S> hasPrefixComment(
