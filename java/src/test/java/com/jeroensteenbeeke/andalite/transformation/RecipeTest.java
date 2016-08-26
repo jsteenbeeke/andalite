@@ -22,12 +22,9 @@ import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatch
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasValue;
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.importsClass;
 import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasAnnotationValue;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasClassAnnotation;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasField;
 import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasFieldAnnotation;
 import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasStatement;
 import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasStringValue;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasSuperclass;
 import static com.jeroensteenbeeke.andalite.java.transformation.Operations.returnsAsLastStatement;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -53,7 +50,6 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
-import com.jeroensteenbeeke.andalite.java.transformation.Operations;
 
 public class RecipeTest extends DummyAwareTest {
 	@Test
@@ -66,8 +62,8 @@ public class RecipeTest extends DummyAwareTest {
 		java.ensureImport("javax.persistence.Column");
 		java.ensureImport("javax.persistence.ManyToOne");
 		java.ensurePublicClass();
-		java.inPublicClass().ensure(hasClassAnnotation("Entity"));
-		java.inPublicClass().ensure(hasClassAnnotation("Table"));
+		java.inPublicClass().ensureAnnotation("Entity");
+		java.inPublicClass().ensureAnnotation("Table");
 		java.inPublicClass().forAnnotation("Table").ensure(
 				hasAnnotationValue("uniqueConstraints", "UniqueConstraint")
 						.whichCouldBeAnArray().ifNotAlreadyPresentWith()
@@ -93,22 +89,22 @@ public class RecipeTest extends DummyAwareTest {
 				.value("name", "U_BARE_BAR").then()
 				.ensure(hasStringValue("columnNames", "bar"));
 
-		java.inPublicClass().ensure(hasField("foo").typed("String")
-				.withAccess(AccessModifier.PRIVATE));
-		java.inPublicClass().ensure(hasField("bar").typed("String")
-				.withAccess(AccessModifier.PRIVATE));
+		java.inPublicClass().ensureField("foo").typed("String")
+				.withAccess(AccessModifier.PRIVATE);
+		java.inPublicClass().ensureField("bar").typed("String")
+				.withAccess(AccessModifier.PRIVATE);
 		java.inPublicClass().forField("foo")
 				.ensure(hasFieldAnnotation("Column"));
 		java.inPublicClass().forField("bar")
 				.ensure(hasFieldAnnotation("Column"));
-		java.inPublicClass().ensure(Operations.hasMethod().withParameter("foo")
-				.ofType("String").named("setFoo"));
-		java.inPublicClass().ensure(Operations.hasMethod().withParameter("bar")
-				.ofType("String").named("setBar"));
-		java.inPublicClass().ensure(Operations.hasMethod()
-				.withReturnType("String").named("getFoo"));
-		java.inPublicClass().ensure(Operations.hasMethod()
-				.withReturnType("String").named("getBar"));
+		java.inPublicClass().ensureMethod().withParameter("foo")
+				.ofType("String").named("setFoo");
+		java.inPublicClass().ensureMethod().withParameter("bar")
+				.ofType("String").named("setBar");
+		java.inPublicClass().ensureMethod().withReturnType("String")
+				.named("getFoo");
+		java.inPublicClass().ensureMethod().withReturnType("String")
+				.named("getBar");
 
 		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
 				.withReturnType("String").named("getFoo").inBody()
@@ -131,7 +127,7 @@ public class RecipeTest extends DummyAwareTest {
 		java.ensureImport(
 				"com.jeroensteenbeeke.hyperion.data.BaseDomainObject");
 
-		java.inPublicClass().ensure(hasSuperclass("BaseDomainObject"));
+		java.inPublicClass().ensureSuperclass("BaseDomainObject");
 
 		JavaRecipe recipe = java.build();
 

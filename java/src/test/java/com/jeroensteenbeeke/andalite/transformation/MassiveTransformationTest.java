@@ -47,11 +47,10 @@ public class MassiveTransformationTest extends DummyAwareTest {
 			String randomParam = Randomizer
 					.random(Randomizer.randomLength(20, 40));
 			paramNames.put(i, randomParam);
-			builder.inPublicClass()
-					.ensure(Operations.hasMethod()
-							.withModifier(AccessModifier.PUBLIC)
-							.withParameter(randomParam).ofType("String")
-							.named(String.format("setFoo%d", i)));
+			builder.inPublicClass().ensureMethod()
+					.withModifier(AccessModifier.PUBLIC)
+					.withParameter(randomParam).ofType("String")
+					.named(String.format("setFoo%d", i));
 		}
 
 		JavaRecipe recipe = builder.build();

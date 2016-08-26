@@ -35,8 +35,8 @@ public class FirstMethodTest extends DummyAwareTest {
 		JavaRecipeBuilder builder = new JavaRecipeBuilder();
 
 		builder.ensurePublicClass();
-		builder.inPublicClass().ensure(Operations.hasMethod()
-				.withParameter("foo").ofType("String").named("setFoo"));
+		builder.inPublicClass().ensureMethod().withParameter("foo")
+				.ofType("String").named("setFoo");
 
 		JavaRecipe recipe = builder.build();
 
@@ -52,8 +52,8 @@ public class FirstMethodTest extends DummyAwareTest {
 		JavaRecipeBuilder builder = new JavaRecipeBuilder();
 
 		builder.ensurePublicClass();
-		builder.inPublicClass().ensure(Operations.hasMethod()
-				.withParameter("foo").ofType("String").named("setFoo"));
+		builder.inPublicClass().ensureMethod().withParameter("foo")
+				.ofType("String").named("setFoo");
 		builder.inPublicClass().forMethod().withParameter("foo")
 				.ofType("String").named("setFoo")
 				.ensure(Operations.ensureMethodFinal());

@@ -17,7 +17,6 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import javax.annotation.Nonnull;
 
-import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BooleanValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.CharValue;
@@ -26,7 +25,6 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.IntegerValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IAnnotationOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IFieldOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
@@ -36,13 +34,10 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOp
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IStatementOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.ConstructorParameterAdditionBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureAnnotationField;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureClassAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureConstructorAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEndReturnStatement;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureFieldAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureFieldInitialization;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureImplements;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInnerAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodComment;
@@ -52,7 +47,6 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureN
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureParameterAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatementComment;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperClass;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperInterface;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.HasIfStatementOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.MethodThrowsException;
@@ -83,18 +77,9 @@ public class Operations {
 		return new EnsureNextStatement(statement);
 	}
 
-	public static IClassOperation hasClassAnnotation(
-			@Nonnull String annotation) {
-		return new EnsureClassAnnotation(annotation);
-	}
-
 	public static IFieldOperation hasFieldAnnotation(
 			@Nonnull String annotation) {
 		return new EnsureFieldAnnotation(annotation);
-	}
-
-	public static EnsureClassMethodBuilder hasMethod() {
-		return new EnsureClassMethodBuilder();
 	}
 
 	public static EnsureEnumMethodBuilder hasEnumMethod() {
@@ -162,40 +147,6 @@ public class Operations {
 		return new EnsureInnerAnnotationField(name, type);
 	}
 
-	public static HasFieldBuilderName hasField(@Nonnull String name) {
-		return new HasFieldBuilderName(name);
-	}
-
-	public static class HasFieldBuilderName {
-		private final String name;
-
-		private HasFieldBuilderName(@Nonnull String name) {
-			super();
-			this.name = name;
-		}
-
-		public HasFieldBuilderNameType typed(@Nonnull String type) {
-			return new HasFieldBuilderNameType(name, type);
-		}
-	}
-
-	public static class HasFieldBuilderNameType {
-		private final String name;
-
-		private final String type;
-
-		private HasFieldBuilderNameType(@Nonnull String name,
-				@Nonnull String type) {
-			super();
-			this.name = name;
-			this.type = type;
-		}
-
-		public EnsureField withAccess(@Nonnull AccessModifier modifier) {
-			return new EnsureField(name, type, modifier);
-		}
-	}
-
 	public static IFieldOperation hasInitialization(
 			@Nonnull String expression) {
 		return new EnsureFieldInitialization(expression);
@@ -221,18 +172,9 @@ public class Operations {
 		return new HasIfStatementOperation(filterCondition);
 	}
 
-	public static IClassOperation hasSuperclass(@Nonnull String superClass) {
-		return new EnsureSuperClass(superClass);
-	}
-
 	public static IInterfaceOperation extendsInterface(
 			@Nonnull String interfaceName) {
 		return new EnsureSuperInterface(interfaceName);
-	}
-
-	public static IClassOperation implementsInterface(
-			@Nonnull String interfaceName) {
-		return new EnsureImplements(interfaceName);
 	}
 
 	public static <S extends AnalyzedStatement> IJavaOperation<S> hasPrefixComment(
@@ -243,10 +185,6 @@ public class Operations {
 	public static <S extends AnalyzedStatement> IJavaOperation<S> hasSuffixComment(
 			@Nonnull String comment) {
 		return new EnsureStatementComment<S>(comment, false);
-	}
-
-	public static HasConstructorBuilder hasConstructor() {
-		return new HasConstructorBuilder();
 	}
 
 	public static HasEnumConstantBuilder hasEnumConstant() {

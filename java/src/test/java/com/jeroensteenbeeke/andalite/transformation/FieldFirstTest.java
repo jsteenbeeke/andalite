@@ -16,7 +16,6 @@
 package com.jeroensteenbeeke.andalite.transformation;
 
 import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasField;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
@@ -36,8 +35,8 @@ public class FieldFirstTest extends DummyAwareTest {
 		JavaRecipeBuilder java = new JavaRecipeBuilder();
 
 		java.ensurePublicClass();
-		java.inPublicClass().ensure(hasField("foo").typed("String")
-				.withAccess(AccessModifier.PRIVATE));
+		java.inPublicClass().ensureField("foo").typed("String")
+				.withAccess(AccessModifier.PRIVATE);
 
 		JavaRecipe recipe = java.build();
 
