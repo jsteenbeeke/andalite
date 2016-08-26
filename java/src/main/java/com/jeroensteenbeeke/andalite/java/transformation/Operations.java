@@ -15,14 +15,6 @@
 
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
-
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IStatementOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureNextStatement;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatementComment;
-
 @Deprecated
 public class Operations {
 
@@ -30,18 +22,4 @@ public class Operations {
 
 	}
 
-	public static IStatementOperation hasNextStatement(
-			@Nonnull String statement) {
-		return new EnsureNextStatement(statement);
-	}
-
-	public static <S extends AnalyzedStatement> IJavaOperation<S> hasPrefixComment(
-			@Nonnull String comment) {
-		return new EnsureStatementComment<S>(comment, true);
-	}
-
-	public static <S extends AnalyzedStatement> IJavaOperation<S> hasSuffixComment(
-			@Nonnull String comment) {
-		return new EnsureStatementComment<S>(comment, false);
-	}
 }
