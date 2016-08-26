@@ -27,7 +27,6 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IAnnotationOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilationUnitOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IFieldOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
@@ -44,16 +43,13 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureF
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureFieldAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureFieldInitialization;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureImplements;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureImports;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInnerAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodComment;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodFinal;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodJavadoc;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureNextStatement;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePackageClass;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureParameterAnnotation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePublicClass;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatementComment;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperClass;
@@ -63,6 +59,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.MethodT
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.RemoveMethodAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.RemoveParameterAnnotation;
 
+@Deprecated
 public class Operations {
 
 	private static final String NULL = "null";
@@ -84,14 +81,6 @@ public class Operations {
 	public static IStatementOperation hasNextStatement(
 			@Nonnull String statement) {
 		return new EnsureNextStatement(statement);
-	}
-
-	public static ICompilationUnitOperation hasPublicClass() {
-		return new EnsurePublicClass();
-	}
-
-	public static ICompilationUnitOperation imports(@Nonnull String fqdn) {
-		return new EnsureImports(fqdn);
 	}
 
 	public static IClassOperation hasClassAnnotation(
@@ -230,11 +219,6 @@ public class Operations {
 	public static IBodyContainerOperation hasIfStatement(
 			@Nonnull String filterCondition) {
 		return new HasIfStatementOperation(filterCondition);
-	}
-
-	public static ICompilationUnitOperation hasPackageClass(
-			@Nonnull String packageClassName) {
-		return new EnsurePackageClass(packageClassName);
 	}
 
 	public static IClassOperation hasSuperclass(@Nonnull String superClass) {

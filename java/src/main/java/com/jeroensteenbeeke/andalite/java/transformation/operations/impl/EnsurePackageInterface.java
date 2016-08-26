@@ -22,68 +22,69 @@ import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.ILocatable;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilationUnitOperation;
 
 /**
- * Ensures that a given compilation unit will have a class with default
+ * Ensures that a given compilation unit will have an interface with default
  * (package) scope and the specified name
  * 
  * @author Jeroen Steenbeeke
  *
  */
-public class EnsurePackageClass implements ICompilationUnitOperation {
-	private final String expectedClassName;
+public class EnsurePackageInterface implements ICompilationUnitOperation {
+	private final String expectedInterfaceName;
 
 	/**
-	 * Create a new EnsurePackageClass operation
+	 * Create a new EnsurePackageInterface operation
 	 * 
-	 * @param expectedClassName
-	 *            The name of the class we want to ensure the existence of.
+	 * @param expectedInterfaceName
+	 *            The name of the interface we want to ensure the existence of.
 	 *            Needs to be a valid Java identifier
 	 */
-	public EnsurePackageClass(String expectedClassName) {
-		if (!isValidJavaIdentifier(expectedClassName)) {
-			throw new IllegalArgumentException(String.format(
-					"%s is not a valid Java identifier", expectedClassName));
+	public EnsurePackageInterface(String expectedInterfaceName) {
+		if (!isValidJavaIdentifier(expectedInterfaceName)) {
+			throw new IllegalArgumentException(
+					String.format("%s is not a valid Java identifier",
+							expectedInterfaceName));
 		}
-		this.expectedClassName = expectedClassName;
+		this.expectedInterfaceName = expectedInterfaceName;
 	}
 
 	@Override
 	public List<Transformation> perform(AnalyzedSourceFile input) {
 		ILocatable last = input;
 
-		for (AnalyzedClass analyzedClass : input.getClasses()) {
-			if (analyzedClass.getAccessModifier() == AccessModifier.DEFAULT
-					&& expectedClassName.equals(analyzedClass.getClassName())) {
+		for (AnalyzedInterface iface : input.getInterfaces()) {
+			if (iface.getAccessModifier() == AccessModifier.DEFAULT
+					&& expectedInterfaceName.equals(iface.getInterfaceName())) {
 				return ImmutableList.of();
 			}
 
-			last = analyzedClass;
+			last = iface;
 		}
 
-		return ImmutableList
-				.of(Transformation.insertAt(last.getLocation().getEnd() + 2,
-						String.format("class %s {\n\n}\n", expectedClassName)));
+		return ImmutableList.of(Transformation.insertAt(
+				last.getLocation().getEnd() + 2,
+				String.format("interface %s {\n\n}\n", expectedInterfaceName)));
 	}
 
 	@Override
 	public String getDescription() {
-		return String.format("presence of a package-level class named %s",
-				expectedClassName);
+		return String.format("presence of a package-level interface named %s",
+				expectedInterfaceName);
 	}
 
 	@Override
 	public ActionResult verify(AnalyzedSourceFile input) {
-		for (AnalyzedClass analyzedClass : input.getClasses()) {
-			if (analyzedClass.getAccessModifier() == AccessModifier.DEFAULT
-					&& expectedClassName.equals(analyzedClass.getClassName())) {
+		for (AnalyzedInterface iface : input.getInterfaces()) {
+			if (iface.getAccessModifier() == AccessModifier.DEFAULT
+					&& expectedInterfaceName.equals(iface.getInterfaceName())) {
 				return ActionResult.ok();
 			}
 		}
-		return ActionResult.error("No package class named %s",
-				expectedClassName);
+		return ActionResult.error("No package interface named %s",
+				expectedInterfaceName);
 	}
 }

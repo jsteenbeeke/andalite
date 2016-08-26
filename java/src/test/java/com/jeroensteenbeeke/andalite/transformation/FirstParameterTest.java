@@ -15,10 +15,8 @@
 
 package com.jeroensteenbeeke.andalite.transformation;
 
-import static com.jeroensteenbeeke.andalite.core.ResultMatchers.*;
-import static com.jeroensteenbeeke.andalite.java.transformation.ClassLocator.*;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.*;
-import static org.junit.Assert.*;
+import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,11 +34,10 @@ public class FirstParameterTest extends DummyAwareTest {
 	public void testBuilder() throws IOException {
 		JavaRecipeBuilder builder = new JavaRecipeBuilder();
 
-		builder.atRoot().ensure(hasPublicClass());
-		builder.inClass(publicClass()).ensure(
-				Operations.hasMethod().withParameter("foo").ofType("String")
-						.named("setFoo"));
-		builder.inClass(publicClass()).forMethod().withParameter("foo")
+		builder.ensurePublicClass();
+		builder.inPublicClass().ensure(Operations.hasMethod()
+				.withParameter("foo").ofType("String").named("setFoo"));
+		builder.inPublicClass().forMethod().withParameter("foo")
 				.ofType("String").named("setFoo")
 				.ensure(Operations.hasMethodAnnotation("Nonnull"));
 

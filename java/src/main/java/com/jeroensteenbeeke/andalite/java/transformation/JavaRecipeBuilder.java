@@ -17,12 +17,31 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.ILocatable;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.CompilationUnitNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.PackageClassNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.PackageEnumNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.PackageInterfaceNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.PublicClassNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.PublicEnumNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.navigation.PublicInterfaceNavigation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilationUnitOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureImports;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePackageClass;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePackageEnum;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePackageInterface;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePublicClass;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePublicEnum;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsurePublicInterface;
 
-public class JavaRecipeBuilder implements IStepCollector {
+public class JavaRecipeBuilder implements IStepCollector,
+		IScopedOperationBuilder<AnalyzedSourceFile, ICompilationUnitOperation> {
 	private final List<JavaRecipeStep<?>> steps;
 
 	public JavaRecipeBuilder() {
@@ -35,24 +54,74 @@ public class JavaRecipeBuilder implements IStepCollector {
 		this.steps.add(new JavaRecipeStep<T>(nav, oper));
 	}
 
-	public CompilationUnitOperationBuilder atRoot() {
-		return new CompilationUnitOperationBuilder(this);
-	}
-
-	public ClassScopeOperationBuilder inClass(ClassLocator locator) {
-		return new ClassScopeOperationBuilder(this, locator.getNavigation());
-	}
-
+	@Nonnull
 	public JavaRecipe build() {
 		return new JavaRecipe(steps);
 	}
 
-	public InterfaceScopeOperationBuilder inInterface(InterfaceLocator locator) {
-		return new InterfaceScopeOperationBuilder(this, locator.getNavigation());
+	@Nonnull
+	public ClassScopeOperationBuilder inPublicClass() {
+		return new ClassScopeOperationBuilder(this,
+				new PublicClassNavigation());
 	}
-	
-	public EnumScopeOperationBuilder inEnum(EnumLocator locator) {
-		return new EnumScopeOperationBuilder(this, locator.getNavigation());
+
+	@Nonnull
+	public ClassScopeOperationBuilder inPackageClass(@Nonnull String name) {
+		return new ClassScopeOperationBuilder(this,
+				new PackageClassNavigation(name));
+	}
+
+	public InterfaceScopeOperationBuilder inPublicInterface() {
+		return new InterfaceScopeOperationBuilder(this,
+				new PublicInterfaceNavigation());
+	}
+
+	public InterfaceScopeOperationBuilder inPackageInterface(
+			@Nonnull String name) {
+		return new InterfaceScopeOperationBuilder(this,
+				new PackageInterfaceNavigation(name));
+	}
+
+	public EnumScopeOperationBuilder inPublicEnum() {
+		return new EnumScopeOperationBuilder(this, new PublicEnumNavigation());
+	}
+
+	public EnumScopeOperationBuilder inPackageEnum(@Nonnull String name) {
+		return new EnumScopeOperationBuilder(this,
+				new PackageEnumNavigation(name));
+	}
+
+	public void ensureImport(@Nonnull String fqdn) {
+		ensure(new EnsureImports(fqdn));
+	}
+
+	public void ensurePublicClass() {
+		ensure(new EnsurePublicClass());
+	}
+
+	public void ensurePackageClass(@Nonnull String name) {
+		ensure(new EnsurePackageClass(name));
+	}
+
+	public void ensurePublicInterface() {
+		ensure(new EnsurePublicInterface());
+	}
+
+	public void ensurePackageInterface(@Nonnull String name) {
+		ensure(new EnsurePackageInterface(name));
+	}
+
+	public void ensurePublicEnum() {
+		ensure(new EnsurePublicEnum());
+	}
+
+	public void ensurePackageEnum(@Nonnull String name) {
+		ensure(new EnsurePackageEnum(name));
+	}
+
+	@Override
+	public void ensure(ICompilationUnitOperation operation) {
+		addStep(CompilationUnitNavigation.getInstance(), operation);
 	}
 
 }

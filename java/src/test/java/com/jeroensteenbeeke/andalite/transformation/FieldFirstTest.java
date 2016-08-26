@@ -16,9 +16,7 @@
 package com.jeroensteenbeeke.andalite.transformation;
 
 import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
-import static com.jeroensteenbeeke.andalite.java.transformation.ClassLocator.publicClass;
 import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasField;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasPublicClass;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
@@ -35,14 +33,13 @@ import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 public class FieldFirstTest extends DummyAwareTest {
 	@Test
 	public void testBuilder() throws IOException {
-		JavaRecipeBuilder builder = new JavaRecipeBuilder();
+		JavaRecipeBuilder java = new JavaRecipeBuilder();
 
-		builder.atRoot().ensure(hasPublicClass());
-		builder.inClass(publicClass()).ensure(
-				hasField("foo").typed("String").withAccess(
-						AccessModifier.PRIVATE));
+		java.ensurePublicClass();
+		java.inPublicClass().ensure(hasField("foo").typed("String")
+				.withAccess(AccessModifier.PRIVATE));
 
-		JavaRecipe recipe = builder.build();
+		JavaRecipe recipe = java.build();
 
 		File bare = getDummy(BaseDummies.BareClass);
 

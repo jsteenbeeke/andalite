@@ -14,10 +14,15 @@
  */
 package com.jeroensteenbeeke.andalite.analyzer;
 
-import static com.jeroensteenbeeke.andalite.core.ResultMatchers.*;
-import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasClasses;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasMethod;
+import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasName;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,9 +39,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.BlockStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
-import com.jeroensteenbeeke.andalite.java.transformation.ClassLocator;
-import com.jeroensteenbeeke.andalite.java.transformation.Operations;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
+import com.jeroensteenbeeke.andalite.java.transformation.Operations;
 
 public class IfStatementTest extends DummyAwareTest {
 	@Test
@@ -73,13 +77,12 @@ public class IfStatementTest extends DummyAwareTest {
 
 		assertThat(ifStatement.getElseStatement(), nullValue());
 
-		JavaRecipeBuilder builder = new JavaRecipeBuilder();
-		builder.inClass(ClassLocator.publicClass()).forMethod()
-				.named("emptyIf").inBody().inIfExpression()
-				.withExpression("1 == 2").thenStatement().body()
-				.ensure(Operations.hasStatement("System.out.println()"));
+		JavaRecipeBuilder java = new JavaRecipeBuilder();
+		java.inPublicClass().forMethod().named("emptyIf").inBody()
+				.inIfExpression().withExpression("1 == 2").thenStatement()
+				.body().ensure(Operations.hasStatement("System.out.println()"));
 
-		builder.build().applyTo(file);
+		java.build().applyTo(file);
 
 		verifyBlockContents(file);
 
@@ -140,8 +143,8 @@ public class IfStatementTest extends DummyAwareTest {
 		assertThat(analyzedClass, hasName("IfStatements"));
 		assertThat(analyzedClass, hasMethod().named("emptyIfElse"));
 
-		AnalyzedMethod emptyIfElse = analyzedClass.getMethod().named(
-				"emptyIfElse");
+		AnalyzedMethod emptyIfElse = analyzedClass.getMethod()
+				.named("emptyIfElse");
 
 		assertThat(emptyIfElse, notNullValue());
 

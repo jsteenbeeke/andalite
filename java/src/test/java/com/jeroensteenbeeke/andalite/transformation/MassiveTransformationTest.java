@@ -16,8 +16,6 @@
 package com.jeroensteenbeeke.andalite.transformation;
 
 import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
-import static com.jeroensteenbeeke.andalite.java.transformation.ClassLocator.publicClass;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasPublicClass;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
@@ -30,7 +28,6 @@ import com.google.common.collect.Maps;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.java.transformation.ClassLocator;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.Operations;
@@ -44,13 +41,15 @@ public class MassiveTransformationTest extends DummyAwareTest {
 
 		JavaRecipeBuilder builder = new JavaRecipeBuilder();
 
-		builder.atRoot().ensure(hasPublicClass());
+		builder.ensurePublicClass();
+		;
 		for (int i = 0; i < OPERATIONS; i++) {
-			String randomParam = Randomizer.random(Randomizer.randomLength(20,
-					40));
+			String randomParam = Randomizer
+					.random(Randomizer.randomLength(20, 40));
 			paramNames.put(i, randomParam);
-			builder.inClass(publicClass()).ensure(
-					Operations.hasMethod().withModifier(AccessModifier.PUBLIC)
+			builder.inPublicClass()
+					.ensure(Operations.hasMethod()
+							.withModifier(AccessModifier.PUBLIC)
 							.withParameter(randomParam).ofType("String")
 							.named(String.format("setFoo%d", i)));
 		}
@@ -64,21 +63,19 @@ public class MassiveTransformationTest extends DummyAwareTest {
 		assertThat(result, isOk());
 
 		builder = new JavaRecipeBuilder();
-		builder.atRoot().ensure(Operations.imports("javax.annotation.Nonnull"));
+		builder.ensureImport("javax.annotation.Nonnull");
 
 		for (int i = 0; i < OPERATIONS; i++) {
 
 			String paramName = paramNames.get(i);
-			builder.inClass(ClassLocator.publicClass())
-					.forMethod()
+			builder.inPublicClass().forMethod()
 					.withModifier(AccessModifier.PUBLIC)
-					.withParameter(paramName)
-					.ofType("String")
+					.withParameter(paramName).ofType("String")
 					.named(String.format("setFoo%d", i))
-					.ensure(Operations
-							.hasMethodJavadoc("This is an automatically generated method"));
+					.ensure(Operations.hasMethodJavadoc(
+							"This is an automatically generated method"));
 
-			builder.inClass(ClassLocator.publicClass()).forMethod()
+			builder.inPublicClass().forMethod()
 					.withModifier(AccessModifier.PUBLIC)
 					.withParameter(paramName).ofType("String")
 					.named(String.format("setFoo%d", i)).forParameterAtIndex(0)
