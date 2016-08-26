@@ -31,8 +31,9 @@ public class FieldOperationBuilder
 		super(collector, new FieldNavigation(parentNav, fieldName));
 	}
 
+	@Nonnull
 	public AnnotatableOperationBuilder<AnalyzedField> forAnnotation(
-			String type) {
+			@Nonnull String type) {
 		return new AnnotatableOperationBuilder<AnalyzedField>(getCollector(),
 				getNavigation(), type);
 	}

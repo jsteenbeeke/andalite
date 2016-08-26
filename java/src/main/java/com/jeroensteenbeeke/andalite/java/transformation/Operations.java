@@ -18,23 +18,13 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
-import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BooleanValue;
-import com.jeroensteenbeeke.andalite.java.analyzer.annotation.CharValue;
-import com.jeroensteenbeeke.andalite.java.analyzer.annotation.FieldAccessValue;
-import com.jeroensteenbeeke.andalite.java.analyzer.annotation.IntegerValue;
-import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IAnnotationOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IStatementOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureAnnotationField;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInnerAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureNextStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatementComment;
 
 @Deprecated
 public class Operations {
-
-	private static final String NULL = "null";
 
 	private Operations() {
 
@@ -43,67 +33,6 @@ public class Operations {
 	public static IStatementOperation hasNextStatement(
 			@Nonnull String statement) {
 		return new EnsureNextStatement(statement);
-	}
-
-	public static IAnnotationOperation hasBooleanValue(@Nonnull String name,
-			boolean value) {
-		return new EnsureAnnotationField<Boolean>(name, BooleanValue.class,
-				value) {
-			@Override
-			public String format(Boolean value) {
-				return value != null ? Boolean.toString(value) : NULL;
-			}
-		};
-	}
-
-	public static IAnnotationOperation hasFieldAccessValue(@Nonnull String name,
-			@Nonnull String fieldAccess) {
-		return new EnsureAnnotationField<String>(name, FieldAccessValue.class,
-				fieldAccess) {
-			@Override
-			public String format(String value) {
-				return value;
-			}
-		};
-
-	}
-
-	public static IAnnotationOperation hasStringValue(@Nonnull String name,
-			String value) {
-		return new EnsureAnnotationField<String>(name, StringValue.class,
-				value) {
-			@Override
-			public String format(String value) {
-				return value != null ? String.format("\"%s\"", value) : NULL;
-			}
-		};
-	}
-
-	public static IAnnotationOperation hasIntegerValue(@Nonnull String name,
-			Integer value) {
-		return new EnsureAnnotationField<Integer>(name, IntegerValue.class,
-				value) {
-			@Override
-			public String format(Integer value) {
-				return value != null ? Integer.toString(value) : NULL;
-			}
-		};
-	}
-
-	public static IAnnotationOperation hasCharValue(@Nonnull String name,
-			Character value) {
-		return new EnsureAnnotationField<Character>(name, CharValue.class,
-				value) {
-			@Override
-			public String format(Character value) {
-				return value != null ? String.format("'%c'", value) : NULL;
-			}
-		};
-	}
-
-	public static EnsureInnerAnnotationField hasAnnotationValue(
-			@Nonnull String name, @Nonnull String type) {
-		return new EnsureInnerAnnotationField(name, type);
 	}
 
 	public static <S extends AnalyzedStatement> IJavaOperation<S> hasPrefixComment(

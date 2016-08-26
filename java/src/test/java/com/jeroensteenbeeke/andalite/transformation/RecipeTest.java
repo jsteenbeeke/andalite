@@ -21,8 +21,6 @@ import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatch
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasClasses;
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasValue;
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.importsClass;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasAnnotationValue;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasStringValue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
@@ -61,30 +59,30 @@ public class RecipeTest extends DummyAwareTest {
 		java.ensurePublicClass();
 		java.inPublicClass().ensureAnnotation("Entity");
 		java.inPublicClass().ensureAnnotation("Table");
-		java.inPublicClass().forAnnotation("Table").ensure(
-				hasAnnotationValue("uniqueConstraints", "UniqueConstraint")
-						.whichCouldBeAnArray().ifNotAlreadyPresentWith()
-						.value("name", "U_BARE_FOO")
-						.arrayValue("columnNames", "foo").get());
+		java.inPublicClass().forAnnotation("Table")
+				.ensureAnnotationValue("uniqueConstraints", "UniqueConstraint")
+				.whichCouldBeAnArray().ifNotAlreadyPresentWith()
+				.value("name", "U_BARE_FOO").arrayValue("columnNames", "foo")
+				.get();
 		java.inPublicClass().forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").ifNotAnArray()
-				.ensure(hasStringValue("name", "U_BARE_FOO"));
+				.ensureStringValue("name", "U_BARE_FOO");
 		java.inPublicClass().forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").ifNotAnArray()
-				.ensure(hasStringValue("columnNames", "foo"));
-		java.inPublicClass().forAnnotation("Table").ensure(
-				hasAnnotationValue("uniqueConstraints", "UniqueConstraint")
-						.whichCouldBeAnArray().ifNotAlreadyPresentWith()
-						.value("name", "U_BARE_BAR")
-						.arrayValue("columnNames", "bar").get());
+				.ensureStringValue("columnNames", "foo");
+		java.inPublicClass().forAnnotation("Table")
+				.ensureAnnotationValue("uniqueConstraints", "UniqueConstraint")
+				.whichCouldBeAnArray().ifNotAlreadyPresentWith()
+				.value("name", "U_BARE_BAR").arrayValue("columnNames", "bar")
+				.get();
 		java.inPublicClass().forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").inArray()
 				.noValueOrEquals("name", "U_BARE_BAR").then()
-				.ensure(hasStringValue("name", "U_BARE_BAR"));
+				.ensureStringValue("name", "U_BARE_BAR");
 		java.inPublicClass().forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").inArray()
 				.value("name", "U_BARE_BAR").then()
-				.ensure(hasStringValue("columnNames", "bar"));
+				.ensureStringValue("columnNames", "bar");
 
 		java.inPublicClass().ensureField("foo").typed("String")
 				.withAccess(AccessModifier.PRIVATE);

@@ -19,7 +19,9 @@ import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigat
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IAnnotationOperation;
 
 public class AnnotationFieldOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedAnnotation, IAnnotationOperation> {
+		AbstractOperationBuilder<AnalyzedAnnotation, IAnnotationOperation>
+		implements
+		IAnnotationOperationBuilder<AnalyzedAnnotation, IAnnotationOperation> {
 	public AnnotationFieldOperationBuilder(IStepCollector collector,
 			IJavaNavigation<AnalyzedAnnotation> navigation) {
 		super(collector, navigation);

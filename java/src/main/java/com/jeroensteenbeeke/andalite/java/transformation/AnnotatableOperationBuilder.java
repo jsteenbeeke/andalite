@@ -24,14 +24,18 @@ public class AnnotatableOperationBuilder<T extends Annotatable> extends
 		AbstractOperationBuilder<AnalyzedAnnotation, IAnnotationOperation>
 		implements
 		IAnnotationOperationBuilder<AnalyzedAnnotation, IAnnotationOperation> {
+
 	AnnotatableOperationBuilder(IStepCollector collector,
 			IJavaNavigation<T> parentNav, String annotationName) {
-		super(collector, new AnnotationNavigation<T>(parentNav, annotationName));
+		super(collector,
+				new AnnotationNavigation<T>(parentNav, annotationName));
 	}
 
-	public AnnotationFieldOperationBuilderBuilder forAnnotationField(String name) {
+	public AnnotationFieldOperationBuilderBuilder forAnnotationField(
+			String name) {
 
 		return new AnnotationFieldOperationBuilderBuilder(getCollector(),
 				getNavigation(), name);
 	}
+
 }

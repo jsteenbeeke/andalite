@@ -53,6 +53,13 @@ public class ConstructorOperationBuilder extends
 	}
 
 	@Nonnull
+	public AnnotatableOperationBuilder<AnalyzedConstructor> forAnnotation(
+			@Nonnull String type) {
+		return new AnnotatableOperationBuilder<AnalyzedConstructor>(
+				getCollector(), getNavigation(), type);
+	}
+
+	@Nonnull
 	public ParameterLocator forParameterNamed(@Nonnull String name) {
 		return new ParameterLocator(this, name);
 	}

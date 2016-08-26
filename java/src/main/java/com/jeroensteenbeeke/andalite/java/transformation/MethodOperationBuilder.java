@@ -55,6 +55,13 @@ public class MethodOperationBuilder
 		super(collector, navigation);
 	}
 
+	@Nonnull
+	public AnnotatableOperationBuilder<AnalyzedMethod> forAnnotation(
+			@Nonnull String type) {
+		return new AnnotatableOperationBuilder<AnalyzedMethod>(getCollector(),
+				getNavigation(), type);
+	}
+
 	public ParameterLocator forParameterNamed(String name) {
 		return new ParameterLocator(this, name);
 	}
