@@ -30,7 +30,6 @@ import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
-import com.jeroensteenbeeke.andalite.java.transformation.Operations;
 
 public class MassiveTransformationTest extends DummyAwareTest {
 	private static final int OPERATIONS = 100;
@@ -77,7 +76,7 @@ public class MassiveTransformationTest extends DummyAwareTest {
 					.withModifier(AccessModifier.PUBLIC)
 					.withParameter(paramName).ofType("String")
 					.named(String.format("setFoo%d", i)).forParameterAtIndex(0)
-					.ensure(Operations.hasParameterAnnotation("Nonnull"));
+					.ensureAnnotation("Nonnull");
 			;
 		}
 		recipe = builder.build();

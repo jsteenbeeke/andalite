@@ -25,14 +25,11 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.IntegerValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IAnnotationOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IStatementOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInnerAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureNextStatement;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureParameterAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatementComment;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.RemoveParameterAnnotation;
 
 @Deprecated
 public class Operations {
@@ -109,11 +106,6 @@ public class Operations {
 		return new EnsureInnerAnnotationField(name, type);
 	}
 
-	public static IParameterOperation hasParameterAnnotation(
-			@Nonnull String annotation) {
-		return new EnsureParameterAnnotation(annotation);
-	}
-
 	public static <S extends AnalyzedStatement> IJavaOperation<S> hasPrefixComment(
 			@Nonnull String comment) {
 		return new EnsureStatementComment<S>(comment, true);
@@ -122,10 +114,5 @@ public class Operations {
 	public static <S extends AnalyzedStatement> IJavaOperation<S> hasSuffixComment(
 			@Nonnull String comment) {
 		return new EnsureStatementComment<S>(comment, false);
-	}
-
-	public static IParameterOperation removeParameterAnnotation(
-			String annotation) {
-		return new RemoveParameterAnnotation(annotation);
 	}
 }
