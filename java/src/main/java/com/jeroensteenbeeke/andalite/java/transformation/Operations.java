@@ -27,7 +27,6 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.IAnnotationO
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IStatementOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.ConstructorParameterAdditionBuilder;
@@ -35,17 +34,11 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureA
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureConstructorAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEndReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInnerAnnotationField;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodAnnotation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodComment;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodFinal;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodJavadoc;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureNextStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureParameterAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatementComment;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.HasIfStatementOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.MethodThrowsException;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.RemoveMethodAnnotation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.RemoveParameterAnnotation;
 
 @Deprecated
@@ -133,11 +126,6 @@ public class Operations {
 		return new EnsureInnerAnnotationField(name, type);
 	}
 
-	public static IMethodOperation hasMethodAnnotation(
-			@Nonnull String annotation) {
-		return new EnsureMethodAnnotation(annotation);
-	}
-
 	public static IConstructorOperation hasConstructorAnnotation(
 			@Nonnull String annotation) {
 		return new EnsureConstructorAnnotation(annotation);
@@ -163,18 +151,6 @@ public class Operations {
 		return new EnsureStatementComment<S>(comment, false);
 	}
 
-	public static IMethodOperation hasMethodComment(String comment) {
-		return new EnsureMethodComment(comment);
-	}
-
-	public static IMethodOperation hasMethodJavadoc(String comment) {
-		return new EnsureMethodJavadoc(comment);
-	}
-
-	public static IMethodOperation ensureMethodFinal() {
-		return new EnsureMethodFinal();
-	}
-
 	public static ConstructorParameterAdditionBuilder hasConstructorParameterNamed(
 			String identifier) {
 
@@ -185,13 +161,4 @@ public class Operations {
 			String annotation) {
 		return new RemoveParameterAnnotation(annotation);
 	}
-
-	public static IMethodOperation removeMethodAnnotation(String annotation) {
-		return new RemoveMethodAnnotation(annotation);
-	}
-
-	public static IMethodOperation methodThrowsException(String exception) {
-		return new MethodThrowsException(exception);
-	}
-
 }

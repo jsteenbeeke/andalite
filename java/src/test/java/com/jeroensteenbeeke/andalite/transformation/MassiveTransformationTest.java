@@ -71,8 +71,7 @@ public class MassiveTransformationTest extends DummyAwareTest {
 					.withModifier(AccessModifier.PUBLIC)
 					.withParameter(paramName).ofType("String")
 					.named(String.format("setFoo%d", i))
-					.ensure(Operations.hasMethodJavadoc(
-							"This is an automatically generated method"));
+					.ensureJavadoc("This is an automatically generated method");
 
 			builder.inPublicClass().forMethod()
 					.withModifier(AccessModifier.PUBLIC)

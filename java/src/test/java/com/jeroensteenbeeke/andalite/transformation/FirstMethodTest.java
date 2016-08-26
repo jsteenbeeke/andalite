@@ -27,7 +27,6 @@ import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
-import com.jeroensteenbeeke.andalite.java.transformation.Operations;
 
 public class FirstMethodTest extends DummyAwareTest {
 	@Test
@@ -55,8 +54,7 @@ public class FirstMethodTest extends DummyAwareTest {
 		builder.inPublicClass().ensureMethod().withParameter("foo")
 				.ofType("String").named("setFoo");
 		builder.inPublicClass().forMethod().withParameter("foo")
-				.ofType("String").named("setFoo")
-				.ensure(Operations.ensureMethodFinal());
+				.ofType("String").named("setFoo").ensureFinal();
 
 		JavaRecipe recipe = builder.build();
 
