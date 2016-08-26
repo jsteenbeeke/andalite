@@ -21,17 +21,6 @@ import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatch
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasClasses;
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasValue;
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.importsClass;
-import static com.jeroensteenbeeke.andalite.java.transformation.ClassLocator.publicClass;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasAnnotationValue;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasClassAnnotation;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasField;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasFieldAnnotation;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasPublicClass;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasStatement;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasStringValue;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasSuperclass;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.imports;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.returnsAsLastStatement;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
@@ -56,96 +45,82 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
-import com.jeroensteenbeeke.andalite.java.transformation.Operations;
 
 public class RecipeTest extends DummyAwareTest {
 	@Test
 	public void testBuilder() throws IOException {
-		JavaRecipeBuilder builder = new JavaRecipeBuilder();
+		JavaRecipeBuilder java = new JavaRecipeBuilder();
 
-		builder.atRoot().ensure(imports("javax.persistence.Entity"));
-		builder.atRoot().ensure(imports("javax.persistence.Table"));
-		builder.atRoot().ensure(imports("javax.persistence.UniqueConstraint"));
-		builder.atRoot().ensure(imports("javax.persistence.Column"));
-		builder.atRoot().ensure(imports("javax.persistence.ManyToOne"));
-		builder.atRoot().ensure(hasPublicClass());
-		builder.inClass(publicClass()).ensure(hasClassAnnotation("Entity"));
-		builder.inClass(publicClass()).ensure(hasClassAnnotation("Table"));
-		builder.inClass(publicClass())
-				.forAnnotation("Table")
-				.ensure(hasAnnotationValue("uniqueConstraints",
-						"UniqueConstraint").whichCouldBeAnArray()
-						.ifNotAlreadyPresentWith().value("name", "U_BARE_FOO")
-						.arrayValue("columnNames", "foo").get());
-		builder.inClass(publicClass()).forAnnotation("Table")
+		java.ensureImport("javax.persistence.Entity");
+		java.ensureImport("javax.persistence.Table");
+		java.ensureImport("javax.persistence.UniqueConstraint");
+		java.ensureImport("javax.persistence.Column");
+		java.ensureImport("javax.persistence.ManyToOne");
+		java.ensurePublicClass();
+		java.inPublicClass().ensureAnnotation("Entity");
+		java.inPublicClass().ensureAnnotation("Table");
+		java.inPublicClass().forAnnotation("Table")
+				.ensureAnnotationValue("uniqueConstraints", "UniqueConstraint")
+				.whichCouldBeAnArray().ifNotAlreadyPresentWith()
+				.value("name", "U_BARE_FOO").arrayValue("columnNames", "foo")
+				.get();
+		java.inPublicClass().forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").ifNotAnArray()
-				.ensure(hasStringValue("name", "U_BARE_FOO"));
-		builder.inClass(publicClass()).forAnnotation("Table")
+				.ensureStringValue("name", "U_BARE_FOO");
+		java.inPublicClass().forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").ifNotAnArray()
-				.ensure(hasStringValue("columnNames", "foo"));
-		builder.inClass(publicClass())
-				.forAnnotation("Table")
-				.ensure(hasAnnotationValue("uniqueConstraints",
-						"UniqueConstraint").whichCouldBeAnArray()
-						.ifNotAlreadyPresentWith().value("name", "U_BARE_BAR")
-						.arrayValue("columnNames", "bar").get());
-		builder.inClass(publicClass()).forAnnotation("Table")
+				.ensureStringValue("columnNames", "foo");
+		java.inPublicClass().forAnnotation("Table")
+				.ensureAnnotationValue("uniqueConstraints", "UniqueConstraint")
+				.whichCouldBeAnArray().ifNotAlreadyPresentWith()
+				.value("name", "U_BARE_BAR").arrayValue("columnNames", "bar")
+				.get();
+		java.inPublicClass().forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").inArray()
 				.noValueOrEquals("name", "U_BARE_BAR").then()
-				.ensure(hasStringValue("name", "U_BARE_BAR"));
-		builder.inClass(publicClass()).forAnnotation("Table")
+				.ensureStringValue("name", "U_BARE_BAR");
+		java.inPublicClass().forAnnotation("Table")
 				.forAnnotationField("uniqueConstraints").inArray()
 				.value("name", "U_BARE_BAR").then()
-				.ensure(hasStringValue("columnNames", "bar"));
+				.ensureStringValue("columnNames", "bar");
 
-		builder.inClass(publicClass()).ensure(
-				hasField("foo").typed("String").withAccess(
-						AccessModifier.PRIVATE));
-		builder.inClass(publicClass()).ensure(
-				hasField("bar").typed("String").withAccess(
-						AccessModifier.PRIVATE));
-		builder.inClass(publicClass()).forField("foo")
-				.ensure(hasFieldAnnotation("Column"));
-		builder.inClass(publicClass()).forField("bar")
-				.ensure(hasFieldAnnotation("Column"));
-		builder.inClass(publicClass()).ensure(
-				Operations.hasMethod().withParameter("foo").ofType("String")
-						.named("setFoo"));
-		builder.inClass(publicClass()).ensure(
-				Operations.hasMethod().withParameter("bar").ofType("String")
-						.named("setBar"));
-		builder.inClass(publicClass())
-				.ensure(Operations.hasMethod().withReturnType("String")
-						.named("getFoo"));
-		builder.inClass(publicClass())
-				.ensure(Operations.hasMethod().withReturnType("String")
-						.named("getBar"));
+		java.inPublicClass().ensureField("foo").typed("String")
+				.withAccess(AccessModifier.PRIVATE);
+		java.inPublicClass().ensureField("bar").typed("String")
+				.withAccess(AccessModifier.PRIVATE);
+		java.inPublicClass().forField("foo").ensureAnnotation("Column");
+		java.inPublicClass().forField("bar").ensureAnnotation("Column");
+		java.inPublicClass().ensureMethod().withParameter("foo")
+				.ofType("String").named("setFoo");
+		java.inPublicClass().ensureMethod().withParameter("bar")
+				.ofType("String").named("setBar");
+		java.inPublicClass().ensureMethod().withReturnType("String")
+				.named("getFoo");
+		java.inPublicClass().ensureMethod().withReturnType("String")
+				.named("getBar");
 
-		builder.inClass(publicClass()).forMethod()
-				.withModifier(AccessModifier.PUBLIC).withReturnType("String")
-				.named("getFoo").inBody().ensure(returnsAsLastStatement("foo"));
+		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
+				.withReturnType("String").named("getFoo").inBody()
+				.ensureReturnAsLastStatement("foo");
 
-		builder.inClass(publicClass()).forMethod()
-				.withModifier(AccessModifier.PUBLIC).withReturnType("String")
-				.named("getBar").inBody().ensure(hasStatement("return bar;"));
+		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
+				.withReturnType("String").named("getBar").inBody()
+				.ensureStatement("return bar;");
 
-		builder.inClass(publicClass()).forMethod()
-				.withModifier(AccessModifier.PUBLIC).withReturnType("void")
-				.withParameter("foo").ofType("String").named("setFoo").inBody()
-				.ensure(hasStatement("this.foo = foo;"));
+		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
+				.withReturnType("void").withParameter("foo").ofType("String")
+				.named("setFoo").inBody().ensureStatement("this.foo = foo;");
 
-		builder.inClass(publicClass()).forMethod()
-				.withModifier(AccessModifier.PUBLIC).withReturnType("void")
-				.withParameter("bar").ofType("String").named("setBar").inBody()
-				.ensure(hasStatement("this.bar = bar;"));
+		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
+				.withReturnType("void").withParameter("bar").ofType("String")
+				.named("setBar").inBody().ensureStatement("this.bar = bar;");
 
-		builder.atRoot().ensure(
-				imports("com.jeroensteenbeeke.hyperion.data.BaseDomainObject"));
+		java.ensureImport(
+				"com.jeroensteenbeeke.hyperion.data.BaseDomainObject");
 
-		builder.inClass(publicClass())
-				.ensure(hasSuperclass("BaseDomainObject"));
+		java.inPublicClass().ensureSuperclass("BaseDomainObject");
 
-		JavaRecipe recipe = builder.build();
+		JavaRecipe recipe = java.build();
 
 		File bare = getDummy(BaseDummies.BareClass);
 
@@ -165,9 +140,8 @@ public class RecipeTest extends DummyAwareTest {
 				importsClass("javax.persistence.UniqueConstraint"));
 		assertThat(sourceFile, importsClass("javax.persistence.Table"));
 		assertThat(sourceFile, importsClass("javax.persistence.Column"));
-		assertThat(
-				sourceFile,
-				importsClass("com.jeroensteenbeeke.hyperion.data.BaseDomainObject"));
+		assertThat(sourceFile, importsClass(
+				"com.jeroensteenbeeke.hyperion.data.BaseDomainObject"));
 		assertThat(sourceFile, hasClasses(1));
 
 		AnalyzedClass analyzedClass = sourceFile.getClasses().get(0);
@@ -183,8 +157,8 @@ public class RecipeTest extends DummyAwareTest {
 		assertThat(tableAnnotation,
 				hasValue("uniqueConstraints", ArrayValue.class));
 
-		ArrayValue uniqueConstraints = tableAnnotation.getValue(
-				ArrayValue.class, "uniqueConstraints");
+		ArrayValue uniqueConstraints = tableAnnotation
+				.getValue(ArrayValue.class, "uniqueConstraints");
 
 		List<BaseValue<?>> values = uniqueConstraints.getValue();
 
@@ -207,21 +181,22 @@ public class RecipeTest extends DummyAwareTest {
 		assertThat(firstConstraint, hasValue("name", StringValue.class));
 		assertThat(firstConstraint, hasValue("columnNames", StringValue.class));
 
-		StringValue firstConstraintName = firstConstraint.getValue(
-				StringValue.class, "name");
-		StringValue firstConstraintColumnNames = firstConstraint.getValue(
-				StringValue.class, "columnNames");
+		StringValue firstConstraintName = firstConstraint
+				.getValue(StringValue.class, "name");
+		StringValue firstConstraintColumnNames = firstConstraint
+				.getValue(StringValue.class, "columnNames");
 
 		assertThat(firstConstraintName.getValue(), equalTo("U_BARE_FOO"));
 		assertThat(firstConstraintColumnNames.getValue(), equalTo("foo"));
 
 		assertThat(secondConstraint, hasValue("name", StringValue.class));
-		assertThat(secondConstraint, hasValue("columnNames", StringValue.class));
+		assertThat(secondConstraint,
+				hasValue("columnNames", StringValue.class));
 
-		StringValue secondConstraintName = secondConstraint.getValue(
-				StringValue.class, "name");
-		StringValue secondConstraintColumnNames = secondConstraint.getValue(
-				StringValue.class, "columnNames");
+		StringValue secondConstraintName = secondConstraint
+				.getValue(StringValue.class, "name");
+		StringValue secondConstraintColumnNames = secondConstraint
+				.getValue(StringValue.class, "columnNames");
 
 		assertThat(secondConstraintName.getValue(), equalTo("U_BARE_BAR"));
 		assertThat(secondConstraintColumnNames.getValue(), equalTo("bar"));

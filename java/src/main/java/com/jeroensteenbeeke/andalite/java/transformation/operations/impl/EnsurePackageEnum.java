@@ -22,68 +22,67 @@ import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.ILocatable;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedEnum;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilationUnitOperation;
 
 /**
- * Ensures that a given compilation unit will have a class with default
+ * Ensures that a given compilation unit will have a enum with default
  * (package) scope and the specified name
  * 
  * @author Jeroen Steenbeeke
  *
  */
-public class EnsurePackageClass implements ICompilationUnitOperation {
-	private final String expectedClassName;
+public class EnsurePackageEnum implements ICompilationUnitOperation {
+	private final String expectedEnumName;
 
 	/**
-	 * Create a new EnsurePackageClass operation
+	 * Create a new EnsurePackageEnum operation
 	 * 
-	 * @param expectedClassName
+	 * @param expectedEnumName
 	 *            The name of the class we want to ensure the existence of.
 	 *            Needs to be a valid Java identifier
 	 */
-	public EnsurePackageClass(String expectedClassName) {
-		if (!isValidJavaIdentifier(expectedClassName)) {
+	public EnsurePackageEnum(String expectedEnumName) {
+		if (!isValidJavaIdentifier(expectedEnumName)) {
 			throw new IllegalArgumentException(String.format(
-					"%s is not a valid Java identifier", expectedClassName));
+					"%s is not a valid Java identifier", expectedEnumName));
 		}
-		this.expectedClassName = expectedClassName;
+		this.expectedEnumName = expectedEnumName;
 	}
 
 	@Override
 	public List<Transformation> perform(AnalyzedSourceFile input) {
 		ILocatable last = input;
 
-		for (AnalyzedClass analyzedClass : input.getClasses()) {
-			if (analyzedClass.getAccessModifier() == AccessModifier.DEFAULT
-					&& expectedClassName.equals(analyzedClass.getClassName())) {
+		for (AnalyzedEnum analyzedEnum : input.getEnums()) {
+			if (analyzedEnum.getAccessModifier() == AccessModifier.DEFAULT
+					&& expectedEnumName.equals(analyzedEnum.getEnumName())) {
 				return ImmutableList.of();
 			}
 
-			last = analyzedClass;
+			last = analyzedEnum;
 		}
 
 		return ImmutableList
 				.of(Transformation.insertAt(last.getLocation().getEnd() + 2,
-						String.format("class %s {\n\n}\n", expectedClassName)));
+						String.format("enum %s {\n\n}\n", expectedEnumName)));
 	}
 
 	@Override
 	public String getDescription() {
 		return String.format("presence of a package-level class named %s",
-				expectedClassName);
+				expectedEnumName);
 	}
 
 	@Override
 	public ActionResult verify(AnalyzedSourceFile input) {
-		for (AnalyzedClass analyzedClass : input.getClasses()) {
-			if (analyzedClass.getAccessModifier() == AccessModifier.DEFAULT
-					&& expectedClassName.equals(analyzedClass.getClassName())) {
+		for (AnalyzedEnum analyzedEnum : input.getEnums()) {
+			if (analyzedEnum.getAccessModifier() == AccessModifier.DEFAULT
+					&& expectedEnumName.equals(analyzedEnum.getEnumName())) {
 				return ActionResult.ok();
 			}
 		}
-		return ActionResult.error("No package class named %s",
-				expectedClassName);
+		return ActionResult.error("No package enum named %s", expectedEnumName);
 	}
 }

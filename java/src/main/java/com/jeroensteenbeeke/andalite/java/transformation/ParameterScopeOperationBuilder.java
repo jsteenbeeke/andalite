@@ -14,15 +14,28 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedParameter;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureParameterAnnotation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.RemoveParameterAnnotation;
 
-public class ParameterScopeOperationBuilder extends AbstractOperationBuilder<AnalyzedParameter, IParameterOperation> {
+public class ParameterScopeOperationBuilder extends
+		AbstractOperationBuilder<AnalyzedParameter, IParameterOperation> {
 
 	ParameterScopeOperationBuilder(IStepCollector collector,
 			IJavaNavigation<AnalyzedParameter> navigation) {
 		super(collector, navigation);
+	}
+
+	public void ensureAnnotation(@Nonnull String annotation) {
+		ensure(new EnsureParameterAnnotation(annotation));
+	}
+
+	public void removeAnnotation(@Nonnull String annotation) {
+		ensure(new RemoveParameterAnnotation(annotation));
 	}
 
 }

@@ -14,19 +14,28 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import java.util.function.Consumer;
+
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureClassMethod;
 
 public class EnsureClassMethodBuilder extends
 		AbstractMethodBuilder<IClassOperation, EnsureClassMethodBuilder> {
-	EnsureClassMethodBuilder() {
+	private final Consumer<IClassOperation> onCreate;
+
+	EnsureClassMethodBuilder(@Nonnull Consumer<IClassOperation> onCreate) {
 		super("void", AccessModifier.PUBLIC);
+		this.onCreate = onCreate;
 	}
 
 	@Override
-	public IClassOperation named(String name) {
-		return new EnsureClassMethod(name, getType(), getModifier(),
-				getDescriptors());
+	public EnsureClassMethod named(String name) {
+		EnsureClassMethod classMethod = new EnsureClassMethod(name, getType(),
+				getModifier(), getDescriptors());
+		onCreate.accept(classMethod);
+		return classMethod;
 	}
 }

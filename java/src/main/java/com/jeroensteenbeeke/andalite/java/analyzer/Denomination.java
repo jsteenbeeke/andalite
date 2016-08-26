@@ -30,7 +30,7 @@ public abstract class Denomination extends AccessModifiable {
 	private final TerminalNode rawNameNode;
 
 	private final Location nameLocation;
-	
+
 	private AnalyzedSourceFile sourceFile;
 
 	public Denomination(@Nonnull Location location, int modifiers,
@@ -42,28 +42,32 @@ public abstract class Denomination extends AccessModifiable {
 		this.packageName = packageName;
 		this.denominationName = denominationNameNode.getText();
 	}
-	
+
 	@CheckForNull
 	public AnalyzedSourceFile getSourceFile() {
 		return sourceFile;
 	}
-	
+
 	public void setSourceFile(@Nonnull AnalyzedSourceFile sourceFile) {
 		this.sourceFile = sourceFile;
 	}
 
+	@Nonnull
 	public TerminalNode getRawNameNode() {
 		return rawNameNode;
 	}
 
+	@Nonnull
 	public Location getNameLocation() {
 		return nameLocation;
 	}
 
+	@Nonnull
 	public String getDenominationName() {
 		return denominationName;
 	}
 
+	@Nonnull
 	public String getPackageName() {
 		return packageName;
 	}

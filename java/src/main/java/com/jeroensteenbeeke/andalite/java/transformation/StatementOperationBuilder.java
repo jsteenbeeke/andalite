@@ -14,13 +14,17 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.StatementAsBodyNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureNextStatement;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatementComment;
 
-public class StatementOperationBuilder<S extends AnalyzedStatement> extends
-		AbstractOperationBuilder<S, IJavaOperation<S>> {
+public class StatementOperationBuilder<S extends AnalyzedStatement>
+		extends AbstractOperationBuilder<S, IJavaOperation<S>> {
 
 	public StatementOperationBuilder(IStepCollector collector,
 			IJavaNavigation<S> navigation) {
@@ -30,6 +34,22 @@ public class StatementOperationBuilder<S extends AnalyzedStatement> extends
 	public BodyContainerOperationBuilder body() {
 		return new BodyContainerOperationBuilder(getCollector(),
 				new StatementAsBodyNavigation<S>(getNavigation()));
+	}
+
+	@SuppressWarnings("unchecked")
+	public void ensureNextStatement(@Nonnull String statement) {
+		ensure((IJavaOperation<S>) new EnsureNextStatement(statement));
+	}
+
+	@SuppressWarnings("unchecked")
+	public void ensurePrefixComment(@Nonnull String comment) {
+		ensure((IJavaOperation<S>) new EnsureStatementComment<>(comment, true));
+	}
+
+	@SuppressWarnings("unchecked")
+	public void ensureSuffixComment(@Nonnull String comment) {
+		ensure((IJavaOperation<S>) new EnsureStatementComment<>(comment,
+				false));
 	}
 
 }

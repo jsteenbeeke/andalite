@@ -19,5 +19,5 @@ import com.jeroensteenbeeke.andalite.core.ILocatable;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 
 public interface IScopedOperationBuilder<T extends ILocatable, O extends IJavaOperation<T>> {
-	public void ensure(O operation);
+	void ensure(O operation);
 }

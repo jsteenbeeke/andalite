@@ -14,6 +14,10 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import java.util.function.Consumer;
+
+import javax.annotation.Nonnull;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,28 +25,35 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInterfaceMethod;
 
-public class EnsureInterfaceMethodBuilder
-		extends
+public class EnsureInterfaceMethodBuilder extends
 		AbstractMethodBuilder<IInterfaceOperation, EnsureInterfaceMethodBuilder> {
 	private static final Logger log = LoggerFactory
 			.getLogger(EnsureInterfaceMethodBuilder.class);
 
-	EnsureInterfaceMethodBuilder() {
+	private final Consumer<IInterfaceOperation> onCreate;
+
+	EnsureInterfaceMethodBuilder(
+			@Nonnull Consumer<IInterfaceOperation> onCreate) {
 		super("void", AccessModifier.PUBLIC);
+		this.onCreate = onCreate;
 	}
 
 	@Override
 	public EnsureInterfaceMethodBuilder withModifier(AccessModifier modifier) {
 		if (modifier != AccessModifier.PUBLIC) {
-			log.warn("Access modifier {} ignored on interface", modifier.name());
+			log.warn("Access modifier {} ignored on interface",
+					modifier.name());
 		}
 
-		return (EnsureInterfaceMethodBuilder) super
-				.withModifier(AccessModifier.PUBLIC);
+		return (EnsureInterfaceMethodBuilder) super.withModifier(
+				AccessModifier.PUBLIC);
 	}
 
 	@Override
 	public IInterfaceOperation named(String name) {
-		return new EnsureInterfaceMethod(name, getType(), getDescriptors());
+		EnsureInterfaceMethod ensureInterfaceMethod = new EnsureInterfaceMethod(
+				name, getType(), getDescriptors());
+		onCreate.accept(ensureInterfaceMethod);
+		return ensureInterfaceMethod;
 	}
 }

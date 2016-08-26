@@ -14,15 +14,23 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.BodyContainerNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ByIndexMethodParameterNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.MethodParameterNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodAnnotation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodComment;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodFinal;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureMethodJavadoc;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.MethodThrowsException;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.RemoveMethodAnnotation;
 
-public class MethodOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedMethod, IMethodOperation> {
+public class MethodOperationBuilder
+		extends AbstractOperationBuilder<AnalyzedMethod, IMethodOperation> {
 
 	public static class ParameterLocator {
 		private final MethodOperationBuilder parent;
@@ -47,6 +55,13 @@ public class MethodOperationBuilder extends
 		super(collector, navigation);
 	}
 
+	@Nonnull
+	public AnnotatableOperationBuilder<AnalyzedMethod> forAnnotation(
+			@Nonnull String type) {
+		return new AnnotatableOperationBuilder<AnalyzedMethod>(getCollector(),
+				getNavigation(), type);
+	}
+
 	public ParameterLocator forParameterNamed(String name) {
 		return new ParameterLocator(this, name);
 	}
@@ -63,5 +78,29 @@ public class MethodOperationBuilder extends
 	public ParameterScopeOperationBuilder forParameterAtIndex(int index) {
 		return new ParameterScopeOperationBuilder(getCollector(),
 				new ByIndexMethodParameterNavigation(getNavigation(), index));
+	}
+
+	public void ensureFinal() {
+		ensure(new EnsureMethodFinal());
+	}
+
+	public void ensureAnnotation(@Nonnull String annotation) {
+		ensure(new EnsureMethodAnnotation(annotation));
+	}
+
+	public void ensureComment(@Nonnull String comment) {
+		ensure(new EnsureMethodComment(comment));
+	}
+
+	public void ensureJavadoc(@Nonnull String javadoc) {
+		ensure(new EnsureMethodJavadoc(javadoc));
+	}
+
+	public void ensureException(@Nonnull String exception) {
+		ensure(new MethodThrowsException(exception));
+	}
+
+	public void removeAnnotation(@Nonnull String annotation) {
+		ensure(new RemoveMethodAnnotation(annotation));
 	}
 }

@@ -14,6 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
@@ -21,6 +23,9 @@ import com.jeroensteenbeeke.andalite.java.transformation.navigation.AfterStateme
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ReturnStatementNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEndReturnStatement;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatement;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.HasIfStatementOperation;
 
 public class BodyContainerOperationBuilder extends
 		AbstractOperationBuilder<IBodyContainer, IBodyContainerOperation> {
@@ -29,18 +34,33 @@ public class BodyContainerOperationBuilder extends
 		super(collector, navigation);
 	}
 
+	@Nonnull
 	public IfStatementLocator inIfExpression() {
 		return new IfStatementLocator(this);
 	}
 
+	@Nonnull
 	public StatementOperationBuilder<ReturnStatement> forReturnStatement() {
 		return new StatementOperationBuilder<ReturnStatement>(getCollector(),
 				new ReturnStatementNavigation(getNavigation()));
 	}
 
+	@Nonnull
 	public StatementOperationBuilder<AnalyzedStatement> afterStatement(
 			String statement) {
 		return new StatementOperationBuilder<AnalyzedStatement>(getCollector(),
 				new AfterStatementNavigation(statement, getNavigation()));
+	}
+
+	public void ensureReturnAsLastStatement(@Nonnull String expression) {
+		ensure(new EnsureEndReturnStatement(expression));
+	}
+
+	public void ensureStatement(@Nonnull String statement) {
+		ensure(new EnsureStatement(statement));
+	}
+
+	public void ensureIfStatement(@Nonnull String condition) {
+		ensure(new HasIfStatementOperation(condition));
 	}
 }

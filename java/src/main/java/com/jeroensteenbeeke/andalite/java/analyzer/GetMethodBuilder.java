@@ -17,8 +17,8 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 import com.jeroensteenbeeke.andalite.java.transformation.AbstractMethodBuilder;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
-public class GetMethodBuilder extends
-		AbstractMethodBuilder<AnalyzedMethod, GetMethodBuilder> {
+public class GetMethodBuilder
+		extends AbstractMethodBuilder<AnalyzedMethod, GetMethodBuilder> {
 	private final ContainingDenomination containingDenomination;
 
 	public GetMethodBuilder(ContainingDenomination containingDenomination) {
@@ -34,8 +34,8 @@ public class GetMethodBuilder extends
 				if (AnalyzeUtil.matchesSignature(analyzedMethod,
 						getDescriptors())) {
 					AnalyzedType returnType = analyzedMethod.getReturnType();
-					final String returnTypeAsString = returnType != null ? returnType
-							.toJavaString() : "void";
+					final String returnTypeAsString = returnType != null
+							? returnType.toJavaString() : "void";
 
 					if (!getType().equals(returnTypeAsString)) {
 						continue;

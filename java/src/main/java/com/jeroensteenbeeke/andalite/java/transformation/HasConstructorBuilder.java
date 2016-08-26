@@ -1,17 +1,23 @@
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import java.util.function.Consumer;
+
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureConstructorOperation;
 
 public class HasConstructorBuilder {
 	private final Builder<ParameterDescriptor> descriptors;
 
-	HasConstructorBuilder() {
+	private final Consumer<IClassOperation> onCreate;
+
+	HasConstructorBuilder(@Nonnull Consumer<IClassOperation> onCreate) {
 		this.descriptors = ImmutableList.builder();
+		this.onCreate = onCreate;
 	}
 
 	public ParameterDescriber withParameter(@Nonnull String name) {
@@ -20,8 +26,10 @@ public class HasConstructorBuilder {
 
 	public EnsureConstructorOperation withAccessModifier(
 			@Nonnull AccessModifier constructorModifier) {
-		return new EnsureConstructorOperation(constructorModifier,
-				descriptors.build());
+		EnsureConstructorOperation ensureConstructorOperation = new EnsureConstructorOperation(
+				constructorModifier, descriptors.build());
+		onCreate.accept(ensureConstructorOperation);
+		return ensureConstructorOperation;
 	}
 
 	public static class ParameterDescriber {

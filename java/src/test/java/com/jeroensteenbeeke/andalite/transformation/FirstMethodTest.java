@@ -15,10 +15,8 @@
 
 package com.jeroensteenbeeke.andalite.transformation;
 
-import static com.jeroensteenbeeke.andalite.core.ResultMatchers.*;
-import static com.jeroensteenbeeke.andalite.java.transformation.ClassLocator.*;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.*;
-import static org.junit.Assert.*;
+import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,17 +27,15 @@ import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
-import com.jeroensteenbeeke.andalite.java.transformation.Operations;
 
 public class FirstMethodTest extends DummyAwareTest {
 	@Test
 	public void testBuilder() throws IOException {
 		JavaRecipeBuilder builder = new JavaRecipeBuilder();
 
-		builder.atRoot().ensure(hasPublicClass());
-		builder.inClass(publicClass()).ensure(
-				Operations.hasMethod().withParameter("foo").ofType("String")
-						.named("setFoo"));
+		builder.ensurePublicClass();
+		builder.inPublicClass().ensureMethod().withParameter("foo")
+				.ofType("String").named("setFoo");
 
 		JavaRecipe recipe = builder.build();
 
@@ -54,13 +50,11 @@ public class FirstMethodTest extends DummyAwareTest {
 	public void testFinalModifier() throws IOException {
 		JavaRecipeBuilder builder = new JavaRecipeBuilder();
 
-		builder.atRoot().ensure(hasPublicClass());
-		builder.inClass(publicClass()).ensure(
-				Operations.hasMethod().withParameter("foo").ofType("String")
-						.named("setFoo"));
-		builder.inClass(publicClass()).forMethod().withParameter("foo")
-				.ofType("String").named("setFoo")
-				.ensure(Operations.ensureMethodFinal());
+		builder.ensurePublicClass();
+		builder.inPublicClass().ensureMethod().withParameter("foo")
+				.ofType("String").named("setFoo");
+		builder.inPublicClass().forMethod().withParameter("foo")
+				.ofType("String").named("setFoo").ensureFinal();
 
 		JavaRecipe recipe = builder.build();
 
