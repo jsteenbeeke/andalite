@@ -40,7 +40,6 @@ import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.BlockStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
-import com.jeroensteenbeeke.andalite.java.transformation.Operations;
 
 public class IfStatementTest extends DummyAwareTest {
 	@Test
@@ -80,7 +79,7 @@ public class IfStatementTest extends DummyAwareTest {
 		JavaRecipeBuilder java = new JavaRecipeBuilder();
 		java.inPublicClass().forMethod().named("emptyIf").inBody()
 				.inIfExpression().withExpression("1 == 2").thenStatement()
-				.body().ensure(Operations.hasStatement("System.out.println()"));
+				.body().ensureStatement("System.out.println()");
 
 		java.build().applyTo(file);
 

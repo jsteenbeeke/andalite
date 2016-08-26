@@ -24,7 +24,6 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.FieldAccessValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.IntegerValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IAnnotationOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
@@ -32,13 +31,10 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.IStatementOp
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.ConstructorParameterAdditionBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureConstructorAnnotation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEndReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureInnerAnnotationField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureNextStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureParameterAnnotation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatementComment;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.HasIfStatementOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.RemoveParameterAnnotation;
 
 @Deprecated
@@ -48,16 +44,6 @@ public class Operations {
 
 	private Operations() {
 
-	}
-
-	public static IBodyContainerOperation returnsAsLastStatement(
-			@Nonnull String returnValue) {
-		return new EnsureEndReturnStatement(returnValue);
-	}
-
-	public static IBodyContainerOperation hasStatement(
-			@Nonnull String statement) {
-		return new EnsureStatement(statement);
 	}
 
 	public static IStatementOperation hasNextStatement(
@@ -134,11 +120,6 @@ public class Operations {
 	public static IParameterOperation hasParameterAnnotation(
 			@Nonnull String annotation) {
 		return new EnsureParameterAnnotation(annotation);
-	}
-
-	public static IBodyContainerOperation hasIfStatement(
-			@Nonnull String filterCondition) {
-		return new HasIfStatementOperation(filterCondition);
 	}
 
 	public static <S extends AnalyzedStatement> IJavaOperation<S> hasPrefixComment(

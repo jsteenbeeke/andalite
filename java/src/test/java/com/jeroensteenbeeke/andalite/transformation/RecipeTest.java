@@ -22,9 +22,7 @@ import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatch
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasValue;
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.importsClass;
 import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasAnnotationValue;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasStatement;
 import static com.jeroensteenbeeke.andalite.java.transformation.Operations.hasStringValue;
-import static com.jeroensteenbeeke.andalite.java.transformation.Operations.returnsAsLastStatement;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
@@ -105,21 +103,19 @@ public class RecipeTest extends DummyAwareTest {
 
 		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
 				.withReturnType("String").named("getFoo").inBody()
-				.ensure(returnsAsLastStatement("foo"));
+				.ensureReturnAsLastStatement("foo");
 
 		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
 				.withReturnType("String").named("getBar").inBody()
-				.ensure(hasStatement("return bar;"));
+				.ensureStatement("return bar;");
 
 		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
 				.withReturnType("void").withParameter("foo").ofType("String")
-				.named("setFoo").inBody()
-				.ensure(hasStatement("this.foo = foo;"));
+				.named("setFoo").inBody().ensureStatement("this.foo = foo;");
 
 		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
 				.withReturnType("void").withParameter("bar").ofType("String")
-				.named("setBar").inBody()
-				.ensure(hasStatement("this.bar = bar;"));
+				.named("setBar").inBody().ensureStatement("this.bar = bar;");
 
 		java.ensureImport(
 				"com.jeroensteenbeeke.hyperion.data.BaseDomainObject");
