@@ -14,19 +14,26 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import java.util.function.Consumer;
+
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEnumMethod;
 
-public class EnsureEnumMethodBuilder extends
-		AbstractMethodBuilder<IEnumOperation, EnsureEnumMethodBuilder> {
-	EnsureEnumMethodBuilder() {
+public class EnsureEnumMethodBuilder
+		extends AbstractMethodBuilder<IEnumOperation, EnsureEnumMethodBuilder> {
+	private final Consumer<IEnumOperation> onCreate;
+
+	EnsureEnumMethodBuilder(Consumer<IEnumOperation> onCreate) {
 		super("void", AccessModifier.PUBLIC);
+		this.onCreate = onCreate;
 	}
 
 	@Override
 	public IEnumOperation named(String name) {
-		return new EnsureEnumMethod(name, getType(), getModifier(),
-				getDescriptors());
+		EnsureEnumMethod ensureEnumMethod = new EnsureEnumMethod(name,
+				getType(), getModifier(), getDescriptors());
+		onCreate.accept(ensureEnumMethod);
+		return ensureEnumMethod;
 	}
 }

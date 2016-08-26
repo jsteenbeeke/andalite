@@ -80,10 +80,6 @@ public class Operations {
 		return new EnsureFieldAnnotation(annotation);
 	}
 
-	public static EnsureEnumMethodBuilder hasEnumMethod() {
-		return new EnsureEnumMethodBuilder();
-	}
-
 	public static IAnnotationOperation hasBooleanValue(@Nonnull String name,
 			boolean value) {
 		return new EnsureAnnotationField<Boolean>(name, BooleanValue.class,
@@ -178,10 +174,6 @@ public class Operations {
 	public static <S extends AnalyzedStatement> IJavaOperation<S> hasSuffixComment(
 			@Nonnull String comment) {
 		return new EnsureStatementComment<S>(comment, false);
-	}
-
-	public static HasEnumConstantBuilder hasEnumConstant() {
-		return new HasEnumConstantBuilder();
 	}
 
 	public static IMethodOperation hasMethodComment(String comment) {
