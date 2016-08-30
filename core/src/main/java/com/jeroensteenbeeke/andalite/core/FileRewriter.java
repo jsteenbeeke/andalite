@@ -108,7 +108,7 @@ public class FileRewriter {
 					final FileOutputStream out = new FileOutputStream(temp)) {
 				int point = FIRST_INDEX; // The current index
 				int data;
-				int threshold = FIRST_INDEX - 1;
+				int threshold = FIRST_INDEX - 1; // Helper variable to keep track of replace operations
 
 				StringBuilder debugOutput = new StringBuilder();
 
@@ -118,17 +118,25 @@ public class FileRewriter {
 				List<Integer> previous = Lists.newLinkedList();
 
 				while ((data = in.read()) != -1) {
+					// If we are not already reading the additional bytes of a unicode character, see if the next
+					// character marks the start of one
 					if (unicodeBytesRemaining == 0 && !inUnicode) {
 						unicodeBytesRemaining = getUnicodeBytesRemaining(data, previous);
-						inUnicode = unicodeBytesRemaining > 0;
+						inUnicode = unicodeBytesRemaining > 0; // If there is at least 1 more byte of unicode, set the flag to true
 					}
 
+					// Check if the current point in the file has any ranges registered
 					if (pointIndexes.containsKey(point)) {
+						// If so, get all ranges for the current point
 						for (IndexRange index : pointIndexes.get(point)) {
+							// Then check if there are any changes scheduled at this range
 							if (mutations.containsKey(index)) {
+								// If so, get all changes
 								for (String insert : mutations.get(index)) {
+									// And write this to the output stream
 									out.write(insert.getBytes());
 
+									// Include it in the debug output
 									debugOutput.append("\u001B[33m");
 									debugOutput.append(insert);
 									debugOutput.append("\u001B[0m");
@@ -139,6 +147,8 @@ public class FileRewriter {
 						}
 					}
 
+					// The only times when poin is lower than threshold is when a fragment replaces an existing fragment. In these
+					// cases we want to skip writing data
 					if (point >= threshold) {
 						out.write(data);
 						debugOutput.append((char) data);
@@ -148,6 +158,7 @@ public class FileRewriter {
 						}
 					}
 
+					// Only increment the point variable if we are not currently parsing a unicode character
 					if (unicodeBytesRemaining == 0) {
 						point++;
 						inUnicode = false;
