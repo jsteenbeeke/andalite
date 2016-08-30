@@ -27,11 +27,23 @@ import com.google.common.collect.Sets;
 public abstract class DummyAwareTest implements ITempFileRegister {
 	protected enum BaseDummies implements IDummyDescriptor {
 		BareClass("BareClass"), BareClassWithGenericType(
-				"BareClassWithGenericType"), BareInterface("BareInterface"), Empty(
-				"Empty"), BareEnum("BareEnum"), ReverseIntComparator(
-				"ReverseIntComparator"), IfStatements("IfStatements"), EnumWithStringParam(
-				"EnumWithStringParam"), OhMyGodThisIsNotARealClass(
-				"OhMyGodThisIsNotARealClass");
+				"BareClassWithGenericType"), BareInterface(
+						"BareInterface"), Empty("Empty"), BareEnum(
+								"BareEnum"), ReverseIntComparator(
+										"ReverseIntComparator"), IfStatements(
+												"IfStatements"), EnumWithStringParam(
+														"EnumWithStringParam"), OhMyGodThisIsNotARealClass(
+																"OhMyGodThisIsNotARealClass"), Unicode(
+																		"unicode") {
+																	// @Override
+																	// public
+																	// String
+																	// getExtension()
+																	// {
+																	// return
+																	// "txt";
+																	// }
+																};
 
 		private final String className;
 
@@ -39,18 +51,25 @@ public abstract class DummyAwareTest implements ITempFileRegister {
 			this.className = className;
 		}
 
+		public String getExtension() {
+			return "java";
+		}
+
 		@Override
 		public File getDummy(ITempFileRegister tempFiles) throws IOException {
-			File tempFile = File.createTempFile(className, ".java");
+			File tempFile = File.createTempFile(className,
+					".".concat(getExtension()));
 			tempFiles.add(tempFile);
 
+			String dummyLocation = "/com/jeroensteenbeeke/andalite/dummy/"
+					.concat(String.format("%s.%s", className, getExtension()));
 			try (InputStream stream = DummyAwareTest.class
-					.getResourceAsStream("/com/jeroensteenbeeke/andalite/dummy/"
-							.concat(String.format("%s.java", className)));
+					.getResourceAsStream(dummyLocation);
 					FileOutputStream fos = new FileOutputStream(tempFile)) {
 				if (stream == null) {
-					throw new IllegalArgumentException(String.format(
-							"Invalid class name %s", className));
+					throw new IllegalArgumentException(
+							String.format("Invalid dummy name %s.%s", className,
+									getExtension()));
 				}
 
 				int in;

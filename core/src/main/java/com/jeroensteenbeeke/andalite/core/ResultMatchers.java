@@ -24,12 +24,29 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com.google.common.collect.Lists;
 
+/**
+ * Convenience class containing a number of Hamcrest-style matchers for use in
+ * unit tests
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public final class ResultMatchers {
 
+	/**
+	 * Ensures people don't instantiate this class
+	 */
 	private ResultMatchers() {
 
 	}
 
+	/**
+	 * Creates Matcher for {@code ActionResult} objects that are marked as being
+	 * ok
+	 * 
+	 * @return A Matcher that matches {@code ActionResult.isOk() == true}
+	 *         results
+	 */
 	public static Matcher<ActionResult> isOk() {
 		return new TypeSafeDiagnosingMatcher<ActionResult>() {
 			@Override
@@ -53,12 +70,23 @@ public final class ResultMatchers {
 		};
 	}
 
-	public static Matcher<ActionResult> hasError(@Nonnull final String message) {
+	/**
+	 * Creates Matcher for {@code ActionResult} objects that are not marked as
+	 * being
+	 * ok, with the indicated error message
+	 * 
+	 * @param message
+	 *            The expected error message
+	 * @return A Matcher that matches {@code ActionResult.isOk() == true}
+	 *         results
+	 */
+	public static Matcher<ActionResult> hasError(
+			@Nonnull final String message) {
 		return new TypeSafeDiagnosingMatcher<ActionResult>() {
 			@Override
 			public void describeTo(Description description) {
-				description.appendText("is not ok, with error ").appendText(
-						message);
+				description.appendText("is not ok, with error ")
+						.appendText(message);
 			}
 
 			@Override
@@ -68,16 +96,25 @@ public final class ResultMatchers {
 				boolean messageEqual = message.equals(item.getMessage());
 				boolean matches = !ok && messageEqual;
 
+				// The result deviates from our expectations, let's figure out
+				// how so we can give a meaningful error
 				if (!matches) {
 					List<String> messages = Lists.newLinkedList();
 
+					// Action did not yield an error
 					if (ok) {
 						messages.add("is ok");
 					}
+
+					// Deviating error message
 					if (!messageEqual) {
 						if (item.getMessage() != null) {
-							messages.add(String.format("error is %s"));
+							// Error message present, but wrong value, report
+							messages.add(String.format("error is %s",
+									item.getMessage()));
 						} else {
+							// No error message, usually coincides with
+							// unexpected OK value
 							messages.add("no error");
 						}
 					}

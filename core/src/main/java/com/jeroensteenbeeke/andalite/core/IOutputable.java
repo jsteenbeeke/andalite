@@ -15,6 +15,19 @@
 
 package com.jeroensteenbeeke.andalite.core;
 
+import javax.annotation.Nonnull;
+
+/**
+ * Interface for anything that can be outputted back to a console
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public interface IOutputable {
-	void output(IOutputCallback callback);
+	/**
+	 * Output the implementing class
+	 * 
+	 * @param callback
+	 *            The callback to output to
+	 */
+	void output(@Nonnull IOutputCallback callback);
 }

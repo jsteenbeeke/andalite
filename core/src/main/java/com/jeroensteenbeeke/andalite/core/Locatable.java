@@ -17,9 +17,20 @@ package com.jeroensteenbeeke.andalite.core;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Basic implementation of the ILocatable interface
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public abstract class Locatable implements ILocatable {
 	private final Location location;
 
+	/**
+	 * Creates a new locatable based on the given location
+	 * 
+	 * @param location
+	 *            The location of this locatable
+	 */
 	public Locatable(@Nonnull Location location) {
 		super();
 		this.location = location;
@@ -36,8 +47,7 @@ public abstract class Locatable implements ILocatable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-
-		+ ((location == null) ? 0 : location.hashCode());
+				+ ((location == null) ? 0 : location.hashCode());
 		return result;
 	}
 

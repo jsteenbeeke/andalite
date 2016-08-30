@@ -38,17 +38,20 @@ import com.google.common.io.Files;
  * @author Jeroen Steenbeeke
  */
 public class FileRewriter {
-	private static final Logger logger = LoggerFactory.getLogger(FileRewriter.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(FileRewriter.class);
 
 	private static final int FIRST_INDEX = 1;
 
 	// The file that should be rewritten
 	private final File targetFile;
 
-	// A map that stores all fragments (value) based on where they should be placed (key)
+	// A map that stores all fragments (value) based on where they should be
+	// placed (key)
 	private final Multimap<IndexRange, String> mutations;
 
-	// A map that stores all IndexRange objects (values; from-to pairs) based on their starting (key; the from part of the index) location
+	// A map that stores all IndexRange objects (values; from-to pairs) based on
+	// their starting (key; the from part of the index) location
 	private final Multimap<Integer, IndexRange> pointIndexes;
 
 	/**
@@ -66,8 +69,12 @@ public class FileRewriter {
 
 	/**
 	 * Sets a given fragment to be inserted at the specified index
-	 * @param index The 1-based index (character) where the fragment should be placed in the file
-	 * @param fragment The fragment to place in the file
+	 * 
+	 * @param index
+	 *            The 1-based index (character) where the fragment should be
+	 *            placed in the file
+	 * @param fragment
+	 *            The fragment to place in the file
 	 * @return The current {@code FileRewriter}
 	 */
 	@Nonnull
@@ -79,10 +86,15 @@ public class FileRewriter {
 	}
 
 	/**
-	 * Sets a given fragment to replace a specified range of characters in the file
-	 * @param from The starting (1-based) index of the location to be replaced
-	 * @param to The ending (0-based) index of the location to be replaced
-	 * @param fragment The fragment to replace the given range
+	 * Sets a given fragment to replace a specified range of characters in the
+	 * file
+	 * 
+	 * @param from
+	 *            The starting (1-based) index of the location to be replaced
+	 * @param to
+	 *            The ending (0-based) index of the location to be replaced
+	 * @param fragment
+	 *            The fragment to replace the given range
 	 * @return The current {@code FileRewriter}
 	 */
 	@Nonnull
@@ -95,20 +107,27 @@ public class FileRewriter {
 
 	/**
 	 * Perform all set actions on the file that was passed to the constructor
-	 * @return An {@code ActionResult} indicated success, or the reason for failure
+	 * 
+	 * @return An {@code ActionResult} indicated success, or the reason for
+	 *         failure
 	 */
 	public ActionResult rewrite() {
 		try {
 			logger.debug("Input: {}", targetFile.getAbsolutePath());
 			// Make changes to a temp file first
 			final File temp = File.createTempFile("rewrite", ".java");
-			
+
 			// Create read and write streams
 			try (final FileInputStream in = new FileInputStream(targetFile);
 					final FileOutputStream out = new FileOutputStream(temp)) {
 				int point = FIRST_INDEX; // The current index
 				int data;
-				int threshold = FIRST_INDEX - 1; // Helper variable to keep track of replace operations
+				int threshold = FIRST_INDEX - 1; // Helper variable to keep
+													// track of replace
+													// operations
+				int lastInsert = FIRST_INDEX - 1; // Helper variable to keep
+													// track of last position
+													// something was added
 
 				StringBuilder debugOutput = new StringBuilder();
 
@@ -118,36 +137,54 @@ public class FileRewriter {
 				List<Integer> previous = Lists.newLinkedList();
 
 				while ((data = in.read()) != -1) {
-					// If we are not already reading the additional bytes of a unicode character, see if the next
+					// If we are not already reading the additional bytes of a
+					// unicode character, see if the next
 					// character marks the start of one
 					if (unicodeBytesRemaining == 0 && !inUnicode) {
-						unicodeBytesRemaining = getUnicodeBytesRemaining(data, previous);
-						inUnicode = unicodeBytesRemaining > 0; // If there is at least 1 more byte of unicode, set the flag to true
+						unicodeBytesRemaining = getUnicodeBytesRemaining(data,
+								previous);
+						inUnicode = unicodeBytesRemaining > 0; // If there is at
+																// least 1 more
+																// byte of
+																// unicode, set
+																// the flag to
+																// true
 					}
 
-					// Check if the current point in the file has any ranges registered
-					if (pointIndexes.containsKey(point)) {
-						// If so, get all ranges for the current point
-						for (IndexRange index : pointIndexes.get(point)) {
-							// Then check if there are any changes scheduled at this range
-							if (mutations.containsKey(index)) {
-								// If so, get all changes
-								for (String insert : mutations.get(index)) {
-									// And write this to the output stream
-									out.write(insert.getBytes());
+					// Check if we did not already insert something at this
+					// point (can happen when inserting something just before a
+					// unicode character)
+					if (point > lastInsert) {
+						// Check if the current point in the file has any ranges
+						// registered
+						if (pointIndexes.containsKey(point)) {
+							// If so, get all ranges for the current point
+							for (IndexRange index : pointIndexes.get(point)) {
+								// Then check if there are any changes scheduled
+								// at
+								// this range
+								if (mutations.containsKey(index)) {
+									// If so, get all changes
+									for (String insert : mutations.get(index)) {
+										// And write this to the output stream
+										out.write(insert.getBytes());
+										lastInsert = point;
 
-									// Include it in the debug output
-									debugOutput.append("\u001B[33m");
-									debugOutput.append(insert);
-									debugOutput.append("\u001B[0m");
+										// Include it in the debug output
+										debugOutput.append("\u001B[33m");
+										debugOutput.append(insert);
+										debugOutput.append("\u001B[0m");
 
-									threshold = Math.max(index.getTo(), threshold);
+										threshold = Math.max(index.getTo(),
+												threshold);
+									}
 								}
 							}
 						}
 					}
 
-					// The only times when point is lower than threshold is when a fragment replaces an existing fragment. In these
+					// The only times when point is lower than threshold is when
+					// a fragment replaces an existing fragment. In these
 					// cases we want to skip writing data
 					if (point >= threshold) {
 						out.write(data);
@@ -158,7 +195,8 @@ public class FileRewriter {
 						}
 					}
 
-					// Only increment the point variable if we are not currently parsing a unicode character
+					// Only increment the point variable if we are not currently
+					// parsing a unicode character
 					if (unicodeBytesRemaining == 0) {
 						point++;
 						inUnicode = false;
@@ -218,7 +256,8 @@ public class FileRewriter {
 		} else if (bit8 == 1 && bit7 == 1 && bit6 == 1 && bit5 == 0) {
 			// Byte has mask 1110xxxx, meaning this is a 3-byte character
 			return 2;
-		} else if (bit8 == 1 && bit7 == 1 && bit6 == 1 && bit5 == 1 && bit4 == 0) {
+		} else if (bit8 == 1 && bit7 == 1 && bit6 == 1 && bit5 == 1
+				&& bit4 == 0) {
 			// Byte has mask 11110xxx, meaning this is a 4-byte character
 			return 3;
 		}
@@ -228,10 +267,11 @@ public class FileRewriter {
 		// this means that an earlier result of this method was not handled
 		// properly, and that a non-leading
 		// byte is being passed to this method
-		throw new IllegalArgumentException(
-				String.format("I have no idea what to do with this character: %s [%d%d%d%d%d] (previous: %s)",
-						(char) data, bit8, bit7, bit6, bit5, bit4,
-						previous.stream().map(Integer::toBinaryString).collect(Collectors.joining(", "))));
+		throw new IllegalArgumentException(String.format(
+				"I have no idea what to do with this character: %s [%d%d%d%d%d] (previous: %s)",
+				(char) data, bit8, bit7, bit6, bit5, bit4,
+				previous.stream().map(Integer::toBinaryString)
+						.collect(Collectors.joining(", "))));
 
 	}
 
@@ -259,6 +299,16 @@ public class FileRewriter {
 
 		private final int to;
 
+		/**
+		 * Creates a new IndexRange
+		 * 
+		 * @param from
+		 *            The start of the range. Indexes are 1-based, so should be
+		 *            1 or more
+		 * @param to
+		 *            The end of the range. Index are 1-based, so should be 1 or
+		 *            more
+		 */
 		private IndexRange(int from, int to) {
 			super();
 			this.from = from;

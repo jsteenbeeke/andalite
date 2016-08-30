@@ -15,12 +15,36 @@
 
 package com.jeroensteenbeeke.andalite.core;
 
+import javax.annotation.Nonnull;
+
+/**
+ * Abstracted output mechanism. Gives fine-grained control over how debug
+ * information is outputted
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public interface IOutputCallback {
+	/**
+	 * Increases the indentation level
+	 */
 	void increaseIndentationLevel();
 
-	void write(String data);
+	/**
+	 * Writes the given data to the output
+	 * 
+	 * @param data
+	 *            The data to write
+	 */
+	void write(@Nonnull String data);
 
+	/**
+	 * Adds a newline to the output
+	 */
 	void newline();
 
+	/**
+	 * Decreases the indentation level
+	 */
 	void decreaseIndentationLevel();
 }

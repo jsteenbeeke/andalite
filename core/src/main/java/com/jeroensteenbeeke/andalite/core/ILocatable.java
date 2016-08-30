@@ -14,6 +14,20 @@
  */
 package com.jeroensteenbeeke.andalite.core;
 
+import javax.annotation.Nonnull;
+
+/**
+ * An ILocatable is used to describe anything that has a location in a file
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public interface ILocatable extends IOutputable {
+	/**
+	 * Get the location of this ILocatable
+	 * 
+	 * @return A {@code Location} object representing the position of the
+	 *         implementing class
+	 */
+	@Nonnull
 	Location getLocation();
 }
