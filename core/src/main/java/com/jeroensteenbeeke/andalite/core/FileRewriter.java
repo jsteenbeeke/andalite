@@ -147,7 +147,7 @@ public class FileRewriter {
 						}
 					}
 
-					// The only times when poin is lower than threshold is when a fragment replaces an existing fragment. In these
+					// The only times when point is lower than threshold is when a fragment replaces an existing fragment. In these
 					// cases we want to skip writing data
 					if (point >= threshold) {
 						out.write(data);
