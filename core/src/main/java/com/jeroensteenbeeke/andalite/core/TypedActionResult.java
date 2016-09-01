@@ -15,6 +15,15 @@
 
 package com.jeroensteenbeeke.andalite.core;
 
+/**
+ * Specialized version of ActionResult. In addition to having a boolean that
+ * indicates success or failure and an error-message detailing the reason for
+ * failure, it takes an object parameter on success
+ * 
+ * @author Jeroen Steenbeeke
+ * @param <T>
+ *            The type of return object
+ */
 public class TypedActionResult<T> extends ActionResult {
 	private final T object;
 
@@ -29,8 +38,7 @@ public class TypedActionResult<T> extends ActionResult {
 
 	public static final <T> TypedActionResult<T> fail(ActionResult failure) {
 		if (failure.isOk())
-			throw new IllegalArgumentException(
-					"Cannot turn a successful result into a failure");
+			throw new IllegalArgumentException("Cannot turn a successful result into a failure");
 
 		return fail(failure.getMessage());
 
@@ -40,8 +48,7 @@ public class TypedActionResult<T> extends ActionResult {
 		return new TypedActionResult<T>(true, null, object);
 	}
 
-	public static final <T> TypedActionResult<T> fail(String message,
-			Object... params) {
+	public static final <T> TypedActionResult<T> fail(String message, Object... params) {
 		if (message == null || message.trim().isEmpty()) {
 			throw new IllegalArgumentException("Empty error message");
 		}
@@ -50,8 +57,7 @@ public class TypedActionResult<T> extends ActionResult {
 			return new TypedActionResult<T>(false, message, null);
 		}
 
-		return new TypedActionResult<T>(false, String.format(message, params),
-				null);
+		return new TypedActionResult<T>(false, String.format(message, params), null);
 	}
 
 }
