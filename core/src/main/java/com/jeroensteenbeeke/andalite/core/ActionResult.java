@@ -88,6 +88,8 @@ public class ActionResult {
 	 *            but may not be null
 	 * @return An {@code ActionResult} object with the indicated message, and
 	 *         {@code isOk()} returning {@code false}
+	 * @throws IllegalArgumentException
+	 *             When the error message is {@code null} or empty
 	 */
 	@Nonnull
 	public static ActionResult error(@Nonnull String message,

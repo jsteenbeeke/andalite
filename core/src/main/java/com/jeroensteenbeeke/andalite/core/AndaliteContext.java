@@ -21,7 +21,9 @@ public final class AndaliteContext {
 	}
 
 	/**
-	 * Initializes the working directory to {@code System.getProperty("user.dir")}
+	 * Initializes the working directory to
+	 * {@code System.getProperty("user.dir")}
+	 * 
 	 * @return A File object pointing to {@code System.getProperty("user.dir")}
 	 */
 	private static File initWorkingDirectory() {
@@ -42,11 +44,16 @@ public final class AndaliteContext {
 
 	/**
 	 * Sets the working directory to the indicated file
-	 * @param file The file to use as a working directory
+	 * 
+	 * @param file
+	 *            The file to use as a working directory
+	 * @throws IllegalArgumentException
+	 *             If the given file is not a directory
 	 */
 	public static void setWorkingDirectory(@Nonnull File file) {
 		if (!file.isDirectory()) {
-			throw new IllegalArgumentException("Working directory should be a file!");
+			throw new IllegalArgumentException(
+					"Working directory should be a file!");
 		}
 		workingDirectory = file;
 	}

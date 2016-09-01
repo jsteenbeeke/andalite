@@ -237,6 +237,12 @@ public class FileRewriter {
 	 *            debugging purposes
 	 * @return The number of bytes to expect after this one, that comprise the
 	 *         same character
+	 * @throws IllegalArgumentException
+	 *             If the data passed cannot be identified as a valid unicode
+	 *             leading character. This generally means that you're not
+	 *             passing the first
+	 *             byte of a unicode sequence, or that you're reading a file
+	 *             with incompatible encoding
 	 */
 	private int getUnicodeBytesRemaining(int data, List<Integer> previous) {
 		int bit8 = binaryfy(data, 0x80);
@@ -317,6 +323,7 @@ public class FileRewriter {
 
 		/**
 		 * Get the lower-bound index of this range
+		 * 
 		 * @return A 1-based index
 		 */
 		public int getFrom() {
@@ -325,6 +332,7 @@ public class FileRewriter {
 
 		/**
 		 * Gets the upper-bound index of this range
+		 * 
 		 * @return A 1-based index
 		 */
 		public int getTo() {
@@ -338,7 +346,9 @@ public class FileRewriter {
 
 		/**
 		 * Create a new insertion range at the given index
-		 * @param point A 1-based index
+		 * 
+		 * @param point
+		 *            A 1-based index
 		 * @return An {@code IndexRange} that does not span any characters
 		 */
 		public static IndexRange insertion(int point) {
@@ -347,8 +357,11 @@ public class FileRewriter {
 
 		/**
 		 * Creates a new insertion range for the given lower and upper bound
-		 * @param from The lower-bound 1-based index
-		 * @param to The upper-bound 1-based index
+		 * 
+		 * @param from
+		 *            The lower-bound 1-based index
+		 * @param to
+		 *            The upper-bound 1-based index
 		 * @return An {@code IndexRange} that spans the given interval
 		 */
 		public static IndexRange replacement(int from, int to) {

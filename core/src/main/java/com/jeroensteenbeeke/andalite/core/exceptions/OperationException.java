@@ -14,16 +14,32 @@
  */
 package com.jeroensteenbeeke.andalite.core.exceptions;
 
-import javax.xml.parsers.ParserConfigurationException;
-
+/**
+ * Exception thrown when performing an operation
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public class OperationException extends Exception {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Create a new OperationException with the given message
+	 * 
+	 * @param message
+	 *            The exception message
+	 */
 	public OperationException(String message) {
 		super(message);
 	}
 
-	public OperationException(Exception cause) {
+	/**
+	 * Create a new OperationException with the given Throwable as cause
+	 * 
+	 * @param cause
+	 *            The cause of the exception
+	 */
+	public OperationException(Throwable cause) {
 		super(cause);
 	}
 
