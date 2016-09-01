@@ -86,8 +86,7 @@ public class Transformation {
 	 * @return A transformation that inserts the code before the given locatable
 	 */
 	@Nonnull
-	public static Transformation insertBefore(@Nonnull ILocatable locatable,
-			@Nonnull String code) {
+	public static Transformation insertBefore(@Nonnull ILocatable locatable, @Nonnull String code) {
 		return insertBefore(locatable.getLocation(), code);
 	}
 
@@ -101,8 +100,7 @@ public class Transformation {
 	 * @return A transformation that inserts the code before the given location
 	 */
 	@Nonnull
-	public static Transformation insertBefore(@Nonnull Location location,
-			@Nonnull String code) {
+	public static Transformation insertBefore(@Nonnull Location location, @Nonnull String code) {
 		return new Transformation(location.getStart(), code);
 	}
 
@@ -120,29 +118,63 @@ public class Transformation {
 		return new Transformation(index, code);
 	}
 
+	/**
+	 * Creates a transformation that inserts code after a given
+	 * {@code ILocatable}
+	 * 
+	 * @param locatable
+	 *            The construct to place the code after
+	 * @param code
+	 *            The code to place
+	 * @return A transformation that inserts the code after the given construct
+	 */
 	@Nonnull
-	public static Transformation insertAfter(@Nonnull ILocatable locatable,
-			@Nonnull String code) {
+	public static Transformation insertAfter(@Nonnull ILocatable locatable, @Nonnull String code) {
 		return insertAfter(locatable.getLocation(), code);
 	}
 
+	/**
+	 * Creates a transformation that inserts code after a given {@code Location}
+	 * 
+	 * @param location
+	 *            The location to place the code after
+	 * @param code
+	 *            The code to place
+	 * @return A transformation that inserts the code after the given location
+	 */
+
 	@Nonnull
-	public static Transformation insertAfter(@Nonnull Location location,
-			@Nonnull String code) {
+	public static Transformation insertAfter(@Nonnull Location location, @Nonnull String code) {
 		return new Transformation(location.getEnd() + 1, code);
 	}
 
+	/**
+	 * Replaces the given construct with the given code
+	 * 
+	 * @param locatable
+	 *            The source construct to replace
+	 * @param code
+	 *            The code to replace it with
+	 * @return A transformation that will replace the given construct
+	 */
 	@Nonnull
-	public static Transformation replace(@Nonnull ILocatable locatable,
-			@Nonnull String code) {
+	public static Transformation replace(@Nonnull ILocatable locatable, @Nonnull String code) {
 		return replace(locatable.getLocation(), code);
 	}
 
+	/**
+	 * Replaces whatever is at the given location, with the given code
+	 * 
+	 * @param location
+	 *            The location where we want to place the code
+	 * @param code
+	 *            The code to place
+	 * @return A transformation that will replace the given location with the
+	 *         given code
+	 */
 	@Nonnull
-	public static Transformation replace(@Nonnull Location location,
-			@Nonnull String code) {
-		return new Transformation(location.getStart(), location.getEnd() + 1,
-				code);
+	public static Transformation replace(@Nonnull Location location, @Nonnull String code) {
+		return new Transformation(location.getStart(), location.getEnd() + 1, code);
 	}
 
 }

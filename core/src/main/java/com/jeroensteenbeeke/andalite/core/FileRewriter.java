@@ -315,10 +315,18 @@ public class FileRewriter {
 			this.to = to;
 		}
 
+		/**
+		 * Get the lower-bound index of this range
+		 * @return A 1-based index
+		 */
 		public int getFrom() {
 			return from;
 		}
 
+		/**
+		 * Gets the upper-bound index of this range
+		 * @return A 1-based index
+		 */
 		public int getTo() {
 			return to;
 		}
@@ -328,10 +336,21 @@ public class FileRewriter {
 			return Integer.compare(from, o.getFrom());
 		}
 
+		/**
+		 * Create a new insertion range at the given index
+		 * @param point A 1-based index
+		 * @return An {@code IndexRange} that does not span any characters
+		 */
 		public static IndexRange insertion(int point) {
 			return new IndexRange(point, point);
 		}
 
+		/**
+		 * Creates a new insertion range for the given lower and upper bound
+		 * @param from The lower-bound 1-based index
+		 * @param to The upper-bound 1-based index
+		 * @return An {@code IndexRange} that spans the given interval
+		 */
 		public static IndexRange replacement(int from, int to) {
 			return new IndexRange(from, to);
 		}
