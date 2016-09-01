@@ -44,7 +44,7 @@ import org.junit.Test;
 
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
-import com.jeroensteenbeeke.andalite.core.test.IDummyDescriptor;
+import com.jeroensteenbeeke.andalite.core.test.IDummyProvider;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
@@ -182,7 +182,7 @@ public class AnalyzerTest extends DummyAwareTest {
 
 	}
 
-	private ClassAnalyzer analyzeDummy(IDummyDescriptor descriptor)
+	private ClassAnalyzer analyzeDummy(IDummyProvider descriptor)
 			throws IOException {
 		return new ClassAnalyzer(getDummy(descriptor));
 	}
