@@ -15,6 +15,8 @@
 
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
+import javax.annotation.Nonnull;
+
 import com.github.antlrjavaparser.api.body.ModifierSet;
 
 public enum AccessModifier {
@@ -35,6 +37,7 @@ public enum AccessModifier {
 		return name().toLowerCase();
 	}
 
+	@Nonnull
 	public static AccessModifier fromModifiers(int modifiers) {
 		if (ModifierSet.isPrivate(modifiers)) {
 			return PRIVATE;

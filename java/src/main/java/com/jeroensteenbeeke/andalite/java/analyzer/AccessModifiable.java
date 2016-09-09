@@ -21,6 +21,12 @@ import com.github.antlrjavaparser.api.body.ModifierSet;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
+/**
+ * Java language element that can have access- and other modifiers
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public abstract class AccessModifiable extends Annotatable {
 	private final AccessModifier modifier;
 
@@ -39,7 +45,16 @@ public abstract class AccessModifiable extends Annotatable {
 	private final boolean modifierVolatile;
 
 	private final boolean modifierTransient;
-	
+
+	/**
+	 * Creates a new access modifiable element
+	 * 
+	 * @param location
+	 *            The location in the source file
+	 * @param modifiers
+	 *            The modifiers that indicate the access of this element.
+	 * @see java.lang.reflect.Modifier
+	 */
 	public AccessModifiable(@Nonnull Location location, int modifiers) {
 		super(location);
 		this.modifier = AccessModifier.fromModifiers(modifiers);
@@ -53,43 +68,109 @@ public abstract class AccessModifiable extends Annotatable {
 		this.modifierTransient = ModifierSet.isTransient(modifiers);
 	}
 
+	/**
+	 * Get the access level of this element (public, package/default, protected,
+	 * private)
+	 * 
+	 * @return An AccessModifier variable
+	 */
+	@Nonnull
 	public AccessModifier getAccessModifier() {
 		return modifier;
 	}
 
-	public boolean isStatic() {
+	/**
+	 * Determines whether or not the element has the {@code static} modifier
+	 * 
+	 * @return {@code true} if the element has the {@code static} modifier,
+	 *         {@code false} otherwise
+	 */
+	public final boolean isStatic() {
 		return modifierStatic;
 	}
 
+	/**
+	 * Determines whether or not the element has the {@code final} modifier
+	 * 
+	 * @return {@code true} if the element has the {@code final} modifier,
+	 *         {@code false} otherwise
+	 */
 	public final boolean isFinal() {
 		return modifierFinal;
 	}
 
-	public boolean isAbstract() {
+	/**
+	 * Determines whether or not the element has the {@code abstract} modifier
+	 * 
+	 * @return {@code true} if the element has the {@code abstract} modifier,
+	 *         {@code false} otherwise
+	 */
+
+	public final boolean isAbstract() {
 		return modifierAbstract;
 	}
 
-	public boolean isNative() {
+	/**
+	 * Determines whether or not the element has the {@code native} modifier
+	 * 
+	 * @return {@code true} if the element has the {@code native} modifier,
+	 *         {@code false} otherwise
+	 */
+
+	public final boolean isNative() {
 		return modifierNative;
 	}
 
-	public boolean isStrictFp() {
+	/**
+	 * Determines whether or not the element has the {@code strictfp} modifier
+	 * 
+	 * @return {@code true} if the element has the {@code strictfp} modifier,
+	 *         {@code false} otherwise
+	 */
+	public final boolean isStrictFp() {
 		return modifierStrictFp;
 	}
 
-	public boolean isSynchronized() {
+	/**
+	 * Determines whether or not the element has the {@code synchronized}
+	 * modifier
+	 * 
+	 * @return {@code true} if the element has the {@code synchronized}
+	 *         modifier,
+	 *         {@code false} otherwise
+	 */
+	public final boolean isSynchronized() {
 		return modifierSynchronized;
 	}
 
-	public boolean isTransient() {
+	/**
+	 * Determines whether or not the element has the {@code transient} modifier
+	 * 
+	 * @return {@code true} if the element has the {@code transient} modifier,
+	 *         {@code false} otherwise
+	 */
+	public final boolean isTransient() {
 		return modifierTransient;
 	}
 
-	public boolean isVolatile() {
+	/**
+	 * Determines whether or not the element has the {@code volatile} modifier
+	 * 
+	 * @return {@code true} if the element has the {@code volatile} modifier,
+	 *         {@code false} otherwise
+	 */
+	public final boolean isVolatile() {
 		return modifierVolatile;
 	}
 
-	protected void setAbstract(boolean modifierAbstract) {
+	/**
+	 * Modifies the abstract modifier of this element. This is generally needed
+	 * for elements that are implicitly abstract, and don't have a modifier
+	 * 
+	 * @param modifierAbstract
+	 *            Whether or not the element is abstract
+	 */
+	protected final void setAbstract(boolean modifierAbstract) {
 		this.modifierAbstract = modifierAbstract;
 	}
 
@@ -125,6 +206,13 @@ public abstract class AccessModifiable extends Annotatable {
 		onModifierOutputted(callback);
 	}
 
+	/**
+	 * Continues the output of this element now that modifiers have been
+	 * outputted
+	 * 
+	 * @param callback
+	 *            The callback for writing the output
+	 */
 	public abstract void onModifierOutputted(IOutputCallback callback);
 
 }

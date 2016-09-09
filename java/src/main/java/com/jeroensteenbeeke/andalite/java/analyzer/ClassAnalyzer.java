@@ -190,6 +190,14 @@ import com.jeroensteenbeeke.andalite.java.analyzer.types.TypeVoid;
 import com.jeroensteenbeeke.andalite.java.analyzer.types.Wildcard;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
+/**
+ * Java class analyzer. Parses a file and then interprets the abstract syntax
+ * tree, transforming it into
+ * {@code Locatable} elements.
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public class ClassAnalyzer {
 	private static final Logger log = LoggerFactory
 			.getLogger(ClassAnalyzer.class);

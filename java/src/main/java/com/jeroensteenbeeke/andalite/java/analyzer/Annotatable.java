@@ -27,39 +27,83 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Locatable;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public abstract class Annotatable extends Locatable implements
-		IAnnotatable {
+/**
+ * Java language element that can have annotations
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
+public abstract class Annotatable extends Locatable implements IAnnotatable {
 	private final Map<String, AnalyzedAnnotation> annotations;
 
+	/**
+	 * Create a new element that can have annotations
+	 * 
+	 * @param location
+	 *            The location of the element
+	 */
 	protected Annotatable(Location location) {
 		super(location);
 		this.annotations = Maps.newHashMap();
 	}
 
+	/**
+	 * Get the annotations on this element
+	 * 
+	 * @return An immutable list of the annotations on this element
+	 */
 	@Nonnull
 	public final List<AnalyzedAnnotation> getAnnotations() {
 		return ImmutableList.copyOf(annotations.values());
 	}
 
+	@Override
 	public final boolean hasAnnotation(@Nonnull String type) {
 		return annotations.containsKey(type);
 	}
 
 	@CheckForNull
+	@Override
 	public final AnalyzedAnnotation getAnnotation(@Nonnull String type) {
 		return annotations.get(type);
 	}
 
+	/**
+	 * Internal method for adding an annotation to this element
+	 * 
+	 * @param annotation
+	 *            The annotation to add
+	 */
 	void addAnnotation(@Nonnull AnalyzedAnnotation annotation) {
 		this.annotations.put(annotation.getType(), annotation);
 	}
 
+	/**
+	 * Internal method for adding multiple annotations to this element
+	 * 
+	 * @param annots
+	 *            An iterable containing annotations. May not contain null
+	 * @throws IllegalArgumentException
+	 *             If you did not read the above warning and you didn't filter
+	 *             out null-values
+	 */
 	void addAnnotations(@Nonnull Iterable<AnalyzedAnnotation> annots) {
 		for (AnalyzedAnnotation analyzedAnnotation : annots) {
+			if (analyzedAnnotation == null) {
+				throw new IllegalArgumentException(
+						"Iterable contains null values");
+			}
+
 			addAnnotation(analyzedAnnotation);
 		}
 	}
 
+	/**
+	 * Determines whether or not annotations should be followed by a newline
+	 * 
+	 * @return {@code true} if a newline should follow the annotation,
+	 *         {@code false} otherwise
+	 */
 	public boolean isPrintNewlineAfterAnnotation() {
 		return true;
 	}
@@ -76,5 +120,11 @@ public abstract class Annotatable extends Locatable implements
 		onOutput(callback);
 	}
 
+	/**
+	 * Called after the annotations have been outputted
+	 * 
+	 * @param callback
+	 *            The callback to write output to
+	 */
 	public abstract void onOutput(IOutputCallback callback);
 }
