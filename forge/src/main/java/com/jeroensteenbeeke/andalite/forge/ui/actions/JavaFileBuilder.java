@@ -18,23 +18,53 @@ import java.util.Set;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
+import com.jeroensteenbeeke.andalite.core.util.Strings;
 
-public class JavaClassBuilder {
+/**
+ * Builder class for quickly creating Java files
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
+public class JavaFileBuilder {
+	/**
+	 * Convenience class for storing a type (class, interface, enum) name and
+	 * package
+	 * 
+	 * @author Jeroen Steenbeeke
+	 */
 	public static class TypeDesc {
 		private final String packageName;
 
 		private final String name;
 
+		/**
+		 * Creates a new TypeDesc for the given package and type
+		 * 
+		 * @param packageName
+		 *            The package name
+		 * @param name
+		 *            The type name
+		 */
 		private TypeDesc(String packageName, String name) {
-			super();
 			this.packageName = packageName;
 			this.name = name;
 		}
 
+		/**
+		 * Returns the type name
+		 * 
+		 * @return A String
+		 */
 		public String getName() {
 			return name;
 		}
 
+		/**
+		 * Returns the package name
+		 * 
+		 * @return A String
+		 */
 		public String getPackageName() {
 			return packageName;
 		}
@@ -46,7 +76,7 @@ public class JavaClassBuilder {
 
 	private final String typeName;
 
-	private final Set<String> superClasses = Sets.newTreeSet();
+	private final Set<String> extendedTypes = Sets.newTreeSet();
 
 	private final Set<String> implementedInterfaces = Sets.newTreeSet();
 
@@ -54,32 +84,75 @@ public class JavaClassBuilder {
 
 	private final Set<String> initialAnnotations = Sets.newTreeSet();
 
-	private JavaClassBuilder(String type, String packageName, String typeName) {
+	/**
+	 * Creates a new JavaClassBuilder with the given configuration
+	 * 
+	 * @param type
+	 *            The type of java file (class, interface, enum, annotation)
+	 * @param packageName
+	 *            The package in which to place the file
+	 * @param typeName
+	 *            The name of the type
+	 */
+	private JavaFileBuilder(String type, String packageName, String typeName) {
 		this.type = type;
 		this.packageName = packageName;
 		this.typeName = typeName;
 	}
 
-	public JavaClassBuilder importing(String fqdn) {
+	/**
+	 * Add an import tot the list of imports
+	 * 
+	 * @param fqdn
+	 *            The fully qualified domain name of the type to import
+	 * @return This builder
+	 */
+	public JavaFileBuilder importing(String fqdn) {
 		this.imported.add(fqdn);
 
 		return this;
 	}
 
-	public JavaClassBuilder withSuperclass(String fqdn) {
-		handleType(fqdn, this.superClasses);
+	/**
+	 * Add a supertype to the list of supertypes
+	 * 
+	 * @param fqdn
+	 *            The fully qualified domain name of the supertype
+	 * @return This builder
+	 */
+	public JavaFileBuilder withSupertype(String fqdn) {
+		handleType(fqdn, this.extendedTypes);
 
 		return this;
 	}
 
-	public JavaClassBuilder withImplementedInterface(String fqdn) {
+	/**
+	 * Add an interface to the list of implemented interfaces
+	 * 
+	 * @param fqdn
+	 *            The fully qualified domain name of the interface
+	 * @return This builder
+	 */
+	public JavaFileBuilder withImplementedInterface(String fqdn) {
 		handleType(fqdn, this.implementedInterfaces);
 
 		return this;
 	}
 
-	public JavaClassBuilder withAnnotation(String format, Object... params) {
-		String annotation = format(format, params);
+	/**
+	 * Add an annotation to be added to the created type
+	 * 
+	 * @param format
+	 *            The String describing the annotation, without prefixed
+	 *            {@literal @}. Can be used as {@code String.format} if
+	 *            parameters are given
+	 * @param params
+	 *            The parameters to use if the previous parameter is a format
+	 *            String
+	 * @return This builder
+	 */
+	public JavaFileBuilder withAnnotation(String format, Object... params) {
+		String annotation = Strings.conditionalFormat(format, params);
 		int lparen = annotation.indexOf('(');
 		String fqdn = lparen != -1 ? annotation.substring(0, lparen)
 				: annotation;
@@ -88,14 +161,6 @@ public class JavaClassBuilder {
 		handleType(fqdn, this.initialAnnotations, extra);
 
 		return this;
-	}
-
-	private static String format(String format, Object[] params) {
-		if (params.length == 0) {
-			return format;
-		}
-
-		return String.format(format, params);
 	}
 
 	private void handleType(String fqdn, Set<String> target) {
@@ -156,9 +221,9 @@ public class JavaClassBuilder {
 		}
 		java.append("public ").append(type).append(" ").append(typeName);
 
-		if (!superClasses.isEmpty()) {
+		if (!extendedTypes.isEmpty()) {
 			java.append(" extends ");
-			Joiner.on(", ").appendTo(java, superClasses);
+			Joiner.on(", ").appendTo(java, extendedTypes);
 		}
 
 		if (!implementedInterfaces.isEmpty()) {
@@ -199,7 +264,8 @@ public class JavaClassBuilder {
 		}
 
 		public Stage2 inPackage(String packageName, Object... params) {
-			return new Stage2(this, format(packageName, params));
+			return new Stage2(this,
+					Strings.conditionalFormat(packageName, params));
 		}
 	}
 
@@ -214,9 +280,9 @@ public class JavaClassBuilder {
 			this.packageName = packageName;
 		}
 
-		public JavaClassBuilder named(String typeName, Object... params) {
-			return new JavaClassBuilder(stage1.type, packageName,
-					format(typeName, params));
+		public JavaFileBuilder named(String typeName, Object... params) {
+			return new JavaFileBuilder(stage1.type, packageName,
+					Strings.conditionalFormat(typeName, params));
 		}
 
 	}

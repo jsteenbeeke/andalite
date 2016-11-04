@@ -14,20 +14,51 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.forge.ui.actions.CompoundAction;
 
 /**
- * Syntactic sugar interface
+ * A Compoundable action is a performable action that can be combined with
+ * another action
+ * to create a CompoundAction.
+ * 
+ * @author Jeroen Steenbeeke
  */
 public interface CompoundableAction extends PerformableAction {
-	CompoundAction andThen(PerformableAction nextAction);
+	/**
+	 * Combine this action with another action
+	 * 
+	 * @param nextAction
+	 *            The action to undertake if the current action completes
+	 *            successfully
+	 * @return A CompoundAction that performs both the current action and the
+	 *         given action
+	 */
+	@Nonnull
+	CompoundAction andThen(@Nonnull PerformableAction nextAction);
 
+	/**
+	 * Combine this action with another action, but only if the given condition
+	 * holds
+	 * 
+	 * @param condition
+	 *            The condition under which the current action can be followed
+	 *            by the given action
+	 * @param nextAction
+	 *            The action to undertake if current action completes
+	 *            successfully, but only if the condition holds
+	 * @return A CompoundAction that performs both the current action and
+	 *         (optionally) the
+	 *         given action
+	 */
+	@Nonnull
 	default CompoundableAction andThenOptionally(boolean condition,
-			PerformableAction nextAction) {
+			@Nonnull PerformableAction nextAction) {
 		if (!condition) {
 			return this;
 		}
-		
+
 		return andThen(nextAction);
 	}
 }

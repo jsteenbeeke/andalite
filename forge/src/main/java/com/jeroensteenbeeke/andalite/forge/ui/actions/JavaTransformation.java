@@ -16,15 +16,33 @@ package com.jeroensteenbeeke.andalite.forge.ui.actions;
 
 import java.io.File;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 
+/**
+ * Compoundable action that performs a Java transformation on the given file
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public class JavaTransformation extends AbstractCompoundableAction {
 	private final File targetFile;
 
 	private final JavaRecipe recipe;
 
-	public JavaTransformation(File targetFile, JavaRecipe recipe) {
+	/**
+	 * Create a new Java transformation to apply the given recipe to the target
+	 * file
+	 * 
+	 * @param targetFile
+	 *            The file to apply the recipe to
+	 * @param recipe
+	 *            The recipe to apply
+	 */
+	public JavaTransformation(@Nonnull File targetFile,
+			@Nonnull JavaRecipe recipe) {
 		this.targetFile = targetFile;
 		this.recipe = recipe;
 	}

@@ -15,20 +15,27 @@
 package com.jeroensteenbeeke.andalite.forge.ui.actions;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.forge.ui.CompoundableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 
-public class CompoundAction implements CompoundableAction {
+/**
+ * A CompoundAction is a set of one or more actions that will be executed in
+ * sequence
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
+public class CompoundAction extends AbstractCompoundableAction {
 	private final PerformableAction[] actions;
-	
-	
-	
+
+	/**
+	 * Create a new CompoundAction with the given sub-actions
+	 * 
+	 * @param actions
+	 *            An array of actions to perform in sequence
+	 */
 	CompoundAction(PerformableAction... actions) {
-		super();
 		this.actions = actions;
 	}
-
-
 
 	@Override
 	public ActionResult perform() {
@@ -38,21 +45,7 @@ public class CompoundAction implements CompoundableAction {
 				return result;
 			}
 		}
-		
-		return ActionResult.ok();
-	}
-	
-	@Override
-	public CompoundAction andThen(PerformableAction nextAction) {
-		return new CompoundAction(this, nextAction);
-	}
 
-	@Override
-	public CompoundAction andThenOptionally(boolean condition, PerformableAction nextAction) {
-		if (!condition) {
-			return this;
-		}
-		
-		return new CompoundAction(this, nextAction);
+		return ActionResult.ok();
 	}
 }

@@ -14,9 +14,25 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 
+/**
+ * An Action that can be performed. Usually this is an operation that can
+ * succeed or fail, such as a code transformation
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 @FunctionalInterface
 public interface PerformableAction extends Action {
+	/**
+	 * Attempts to perform the action
+	 * 
+	 * @return An ActionResult indicating success or failure (including the
+	 *         reason for failure)
+	 */
+	@Nonnull
 	ActionResult perform();
 }

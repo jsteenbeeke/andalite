@@ -14,10 +14,39 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.forge.ForgeException;
 
+/**
+ * A Question is an action that requests user feedback.
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ * @param <T>
+ *            The type of answer this question expects
+ */
 public interface Question<T> extends Action {
+	/**
+	 * The question to ask the user
+	 * 
+	 * @return A String containing the question
+	 */
+	@Nonnull
 	String getQuestion();
 
-	Action onAnswer(T answer, FeedbackHandler handler) throws ForgeException;
+	/**
+	 * The action to undertake upon a given answer
+	 * 
+	 * @param answer
+	 *            The answer given by the user
+	 * @param handler
+	 *            A callback for processing feedback
+	 * @return The next action to undertake after this action
+	 * @throws ForgeException
+	 *             If handling the answer creates an unrecoverable error
+	 */
+	@Nonnull
+	Action onAnswer(@Nonnull T answer, @Nonnull FeedbackHandler handler)
+			throws ForgeException;
 }

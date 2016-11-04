@@ -17,12 +17,13 @@ package com.jeroensteenbeeke.andalite.forge.ui.actions;
 import com.jeroensteenbeeke.andalite.forge.ui.CompoundableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 
+/**
+ * Default implementation of a {@code CompoundableAction}
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public abstract class AbstractCompoundableAction implements CompoundableAction {
-
-	public AbstractCompoundableAction() {
-		super();
-	}
-
 	@Override
 	public final CompoundAction andThen(PerformableAction nextAction) {
 		return new CompoundAction(this, nextAction);

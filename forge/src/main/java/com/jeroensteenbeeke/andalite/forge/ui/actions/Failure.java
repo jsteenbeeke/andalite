@@ -16,13 +16,30 @@ package com.jeroensteenbeeke.andalite.forge.ui.actions;
 
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
 
+/**
+ * Action indicating recipe execution has failed.
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public final class Failure implements Action {
 	private final String reason;
 
+	/**
+	 * Create a new failure with the given reason
+	 * 
+	 * @param reason
+	 *            The reason for failure
+	 */
 	public Failure(String reason) {
 		this.reason = reason;
 	}
 
+	/**
+	 * Get the reason for failure
+	 * 
+	 * @return A String containing the reason
+	 */
 	public String getReason() {
 		return reason;
 	}

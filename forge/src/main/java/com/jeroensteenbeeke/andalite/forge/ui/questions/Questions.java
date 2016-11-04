@@ -18,25 +18,48 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import javax.annotation.Nonnull;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.jeroensteenbeeke.andalite.forge.ForgeException;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
 
+/**
+ * Utility class for quickly constructing a chain of questions that trigger
+ * recipes
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public class Questions {
 	private Questions() {
 
 	}
 
-	public static QuestionStage forKey(String key) {
+	/**
+	 * Start creating a new question, whose answer will be tied to the given key
+	 * 
+	 * @param key
+	 *            The key to tie the answer to
+	 * @return A builder for creating a question
+	 */
+	@Nonnull
+	public static QuestionStage forKey(@Nonnull String key) {
 		return new QuestionStage(key);
 	}
 
+	/**
+	 * Answer storage class. Essentially a wrapper around java.util.Map that
+	 * allows
+	 * for extra type-checking.
+	 * 
+	 * @author Jeroen Steenbeeke
+	 */
 	public static class Answers {
 		private final Map<String, Object> answers;
 
-		private Answers(Map<String, Object> answers) {
+		private Answers() {
 			this.answers = Maps.newLinkedHashMap();
 		}
 
@@ -47,15 +70,15 @@ public class Questions {
 
 				if (!type.isAssignableFrom(object.getClass())) {
 					throw new IllegalStateException("Answer with key " + key
-							+ " not of type " + type.getName()
-							+ " but of type " + object.getClass().getName());
+							+ " not of type " + type.getName() + " but of type "
+							+ object.getClass().getName());
 				}
 
 				return (T) object;
 			}
 
-			throw new IllegalArgumentException("No answer registered with key "
-					+ key);
+			throw new IllegalArgumentException(
+					"No answer registered with key " + key);
 		}
 
 		private void register(String key, Object answer) {
@@ -234,8 +257,7 @@ public class Questions {
 
 		public Action initiate(List<QuestionInitiator> next,
 				Function<Answers, Action> answersToAction) {
-			return initiate(new Answers(Maps.newLinkedHashMap()), next,
-					answersToAction);
+			return initiate(new Answers(), next, answersToAction);
 		}
 
 		private Action initiate(Answers answers, List<QuestionInitiator> next,

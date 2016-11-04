@@ -18,11 +18,22 @@ import java.io.File;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 
+/**
+ * Compoundable action that ensures a directory exists
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public final class EnsureDirectoryExists extends AbstractCompoundableAction {
 	private final File file;
 
+	/**
+	 * Creates a new EnsureDirectoryExists action
+	 * 
+	 * @param directory
+	 *            The wanted directory
+	 */
 	public EnsureDirectoryExists(File directory) {
-		super();
 		this.file = directory;
 	}
 

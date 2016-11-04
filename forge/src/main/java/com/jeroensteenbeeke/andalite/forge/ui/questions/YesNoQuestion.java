@@ -14,10 +14,21 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
+import javax.annotation.Nonnull;
 
+/**
+ * A YesNoQuestion is a question that can be answered with either yes or no
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public abstract class YesNoQuestion extends AbstractQuestion<Boolean> {
-
-	protected YesNoQuestion(String question) {
+	/**
+	 * Create a new YesNoQuestion with the given question
+	 * 
+	 * @param question
+	 *            The question to ask
+	 */
+	protected YesNoQuestion(@Nonnull String question) {
 		super(question);
 	}
 

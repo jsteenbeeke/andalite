@@ -14,5 +14,14 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui;
 
+/**
+ * Parent interface for all things that can be done by a Forge recipe. Generally
+ * speaking
+ * you do not want to inherit directly from this interface (as this only works
+ * in a few specific cases), but rather one of its subinterfaces.
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public interface Action {
 }

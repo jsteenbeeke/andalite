@@ -14,12 +14,47 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui;
 
+import javax.annotation.Nonnull;
+
+/**
+ * Callback interface for dealing with feedback.
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public interface FeedbackHandler {
 
-	void error(String messsage, Object... args);
+	/**
+	 * Register an error-level message
+	 * 
+	 * @param messageFormat
+	 *            Either a simple message (if {@code params} has 0 elements), or
+	 *            a message format as used by {@code String.format}
+	 * @param params
+	 *            The parameters to pass to {@code String.format}, optional
+	 */
+	void error(@Nonnull String messsageFormat, @Nonnull Object... params);
 
-	void warning(String message, Object... args);
+	/**
+	 * Register an warning-level message
+	 * 
+	 * @param messageFormat
+	 *            Either a simple message (if {@code params} has 0 elements), or
+	 *            a message format as used by {@code String.format}
+	 * @param params
+	 *            The parameters to pass to {@code String.format}, optional
+	 */
+	void warning(@Nonnull String messsageFormat, @Nonnull Object... params);
 
-	void info(String message, Object... args);
+	/**
+	 * Register an info-level message
+	 * 
+	 * @param messageFormat
+	 *            Either a simple message (if {@code params} has 0 elements), or
+	 *            a message format as used by {@code String.format}
+	 * @param params
+	 *            The parameters to pass to {@code String.format}, optional
+	 */
+	void info(@Nonnull String messsageFormat, @Nonnull Object... params);
 
 }

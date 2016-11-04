@@ -20,9 +20,21 @@ import java.nio.file.Files;
 
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 
+/**
+ * Compoundable action that deletes a given file
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public final class DeleteFile extends AbstractCompoundableAction {
 	private final File file;
 
+	/**
+	 * Create a new DeleteFile action
+	 * 
+	 * @param file
+	 *            The target file
+	 */
 	public DeleteFile(File file) {
 		super();
 		this.file = file;

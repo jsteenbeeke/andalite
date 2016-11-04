@@ -16,12 +16,33 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
+/**
+ * Question that has a limited set of valid answers, and requires the user to
+ * select one
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public abstract class MultipleChoiceQuestion extends AbstractQuestion<String> {
 
-	protected MultipleChoiceQuestion(String question) {
+	/**
+	 * Creates a new MultipleChoiceQuestion for the given question
+	 * 
+	 * @param question
+	 *            The question to ask the user
+	 */
+	protected MultipleChoiceQuestion(@Nonnull String question) {
 		super(question);
 	}
 
+	/**
+	 * Create a list of valid choices for this question
+	 * 
+	 * @return A list of answers
+	 */
+	@Nonnull
 	public abstract List<String> getChoices();
 
 }

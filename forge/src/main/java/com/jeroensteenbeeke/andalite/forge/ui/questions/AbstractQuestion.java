@@ -14,13 +14,28 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 
+/**
+ * Abstract base class for the Question interface
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ * @param <T>
+ *            The type of answer the question expects
+ */
 public abstract class AbstractQuestion<T> implements Question<T> {
 	private final String question;
 
-	protected AbstractQuestion(String question) {
-		super();
+	/**
+	 * Create a new question with the given question String
+	 * 
+	 * @param question
+	 *            The question to ask the user
+	 */
+	protected AbstractQuestion(@Nonnull String question) {
 		this.question = question;
 	}
 

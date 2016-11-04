@@ -17,12 +17,31 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions;
 import java.io.File;
 import java.util.List;
 
-public abstract class FileSelectQuestion extends AbstractQuestion<File> {
+import javax.annotation.Nonnull;
 
-	protected FileSelectQuestion(String question) {
+/**
+ * Question that requires the user to select a file
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
+public abstract class FileSelectQuestion extends AbstractQuestion<File> {
+	/**
+	 * Create a new FileSelectQuestion with the given question
+	 * 
+	 * @param question
+	 *            The question to ask
+	 */
+	protected FileSelectQuestion(@Nonnull String question) {
 		super(question);
 	}
 
+	/**
+	 * Give a selection of files the user can choose from
+	 * 
+	 * @return A list of files
+	 */
+	@Nonnull
 	public abstract List<File> getChoices();
 
 }

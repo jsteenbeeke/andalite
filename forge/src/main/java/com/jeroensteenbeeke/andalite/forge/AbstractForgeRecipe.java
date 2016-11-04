@@ -14,10 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.forge;
 
-import java.io.File;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -26,43 +24,72 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 
 /**
  * Base implementation of ForgeRecipe that enforces the {@code extraSettings}
  * parameter and takes care of name handling
  */
 public abstract class AbstractForgeRecipe implements ForgeRecipe {
-	private final Map<String, String> extraSettings;
+	private final Map<String, String> settings;
 
-	private final String identifier;
+	private final String name;
 
-	protected AbstractForgeRecipe(String name, Map<String, String> extraSettings) {
-		super();
-		this.extraSettings = ImmutableMap.copyOf(extraSettings);
-		this.identifier = name;
+	/**
+	 * Create a new AbstractForgeRecipe with the given name and settings
+	 * 
+	 * @param name
+	 *            The name of the recipe
+	 * @param settings
+	 *            The settings defined for all recipes
+	 */
+	protected AbstractForgeRecipe(@Nonnull String name,
+			@Nonnull Map<String, String> settings) {
+		this.settings = ImmutableMap.copyOf(settings);
+		this.name = name;
 	}
 
 	@Override
-	public String getName() {
-		return identifier;
-	}
-
 	@Nonnull
-	public final Map<String, String> getExtraSettings() {
-		return extraSettings;
+	public String getName() {
+		return name;
 	}
 
+	/**
+	 * Return all recipe settings
+	 * 
+	 * @return An immutable map containing all recipe settings
+	 */
+	@Nonnull
+	public final Map<String, String> getSettings() {
+		return settings;
+	}
+
+	/**
+	 * Get the given setting
+	 * 
+	 * @param key
+	 *            The key for the settings
+	 * @return The setting associated with the key, if it exists
+	 */
 	@CheckForNull
-	public final String getSetting(String key) {
-		return extraSettings.get(key);
+	public final String getSetting(@Nonnull String key) {
+		return settings.get(key);
 	}
 
-	protected final ActionResult ensureSettings(String... keys) {
+	/**
+	 * Convenience method for determining if required settings are present
+	 * 
+	 * @param keys
+	 *            The settings that should be present
+	 * @return An ActionResult that indicates success, or if not: a list of keys
+	 *         that were not present
+	 */
+	@Nonnull
+	protected final ActionResult ensureSettings(@Nonnull String... keys) {
 		Set<String> missing = Sets.newTreeSet();
 
 		for (String key : keys) {
-			if (!extraSettings.containsKey(key)) {
+			if (!settings.containsKey(key)) {
 				missing.add(key);
 			}
 		}
@@ -73,21 +100,5 @@ public abstract class AbstractForgeRecipe implements ForgeRecipe {
 		}
 
 		return ActionResult.ok();
-	}
-
-	protected final ActionResult ensureFiles(String type, File path,
-			Predicate<AnalyzedSourceFile> condition) {
-		if (countFiles(path, condition) == 0) {
-			return ActionResult.error("No %s found", type);
-		}
-
-		return ActionResult.ok();
-	}
-
-	private final int countFiles(File path,
-			Predicate<AnalyzedSourceFile> condition) {
-		int count = 0;
-
-		return count;
 	}
 }

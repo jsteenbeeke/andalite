@@ -178,6 +178,10 @@ public abstract class DummyAwareTest implements ITempFileRegistry {
 		dummyFiles.add(tempFile);
 	}
 
+	/**
+	 * Removes all created dummy files, unless system property
+	 * {@code dummies.retain} is set (to any value)
+	 */
 	@After
 	public void cleanUpDummies() {
 		if (System.getProperty("dummies.retain") == null) {

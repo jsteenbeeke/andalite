@@ -14,9 +14,21 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
+import javax.annotation.Nonnull;
 
+/**
+ * A SimpleQuestion is an open question, that takes any String value as answer
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public abstract class SimpleQuestion extends AbstractQuestion<String> {
-	protected SimpleQuestion(String question) {
+	/**
+	 * Create a new SimpleQuestion with the given question
+	 * 
+	 * @param question
+	 *            The question to ask
+	 */
+	protected SimpleQuestion(@Nonnull String question) {
 		super(question);
 	}
 }

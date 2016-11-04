@@ -14,24 +14,47 @@
  */
 package com.jeroensteenbeeke.andalite.forge;
 
+import javax.annotation.Nonnull;
+
+import com.jeroensteenbeeke.andalite.core.util.Strings;
+
+/**
+ * Exception thrown by Forge recipes on execution failure
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public class ForgeException extends Exception {
 	private static final long serialVersionUID = 1L;
 
-	public ForgeException(String messageFormat, Object... params) {
-		super(format(messageFormat, params));
+	/**
+	 * Creates a new ForgeException with the given message
+	 * 
+	 * @param messageFormat
+	 *            Either a simple message (if {@code params} has 0 elements), or
+	 *            a message format as used by {@code String.format}
+	 * @param params
+	 *            The parameters to pass to {@code String.format}, optional
+	 */
+	public ForgeException(@Nonnull String messageFormat,
+			@Nonnull Object... params) {
+		super(Strings.conditionalFormat(messageFormat, params));
 	}
 
-	public ForgeException(Throwable cause, String messageFormat,
-			Object... params) {
-		super(format(messageFormat, params), cause);
-	}
-
-	private static String format(String messageFormat, Object[] params) {
-		if (params.length == 0) {
-			return messageFormat;
-		}
-
-		return String.format(messageFormat, params);
+	/**
+	 * Creates a new ForgeException with the given cause message
+	 * 
+	 * @param cause
+	 *            The exception that caused this message
+	 * @param messageFormat
+	 *            Either a simple message (if {@code params} has 0 elements), or
+	 *            a message format as used by {@code String.format}
+	 * @param params
+	 *            The parameters to pass to {@code String.format}, optional
+	 */
+	public ForgeException(@Nonnull Throwable cause,
+			@Nonnull String messageFormat, @Nonnull Object... params) {
+		super(Strings.conditionalFormat(messageFormat, params), cause);
 	}
 
 }
