@@ -63,6 +63,19 @@ public class Questions {
 			this.answers = Maps.newLinkedHashMap();
 		}
 
+		/**
+		 * Return the answer with the given key
+		 * 
+		 * @param type
+		 *            The expected type of the answer
+		 * @param key
+		 *            The key the answer is tied to
+		 * @return The given answer, cast to the given type
+		 * @throws IllegalStateException
+		 *             If the answer is not of the given type
+		 * @throws IllegalArgumentException
+		 *             If no answer is registered with the given key
+		 */
 		@SuppressWarnings("unchecked")
 		public <T> T getAnswer(Class<T> type, String key) {
 			if (answers.containsKey(key)) {
@@ -81,6 +94,14 @@ public class Questions {
 					"No answer registered with key " + key);
 		}
 
+		/**
+		 * Add an answer with the given key
+		 * 
+		 * @param key
+		 *            The key with which to find the answer
+		 * @param answer
+		 *            The answer to add
+		 */
 		private void register(String key, Object answer) {
 			if (answers.containsKey(key)) {
 				throw new IllegalArgumentException("Duplicate key " + key);
@@ -90,26 +111,58 @@ public class Questions {
 		}
 	}
 
+	/**
+	 * DSL builder stage for adding a question to a given key
+	 * 
+	 * @author Jeroen Steenbeeke
+	 */
 	public static class QuestionStage {
 		private final String key;
 
 		private final List<QuestionInitiator> initiators;
 
+		/**
+		 * Create the stage for the given key
+		 * 
+		 * @param key
+		 *            The key to tie the answer to
+		 */
 		private QuestionStage(String key) {
 			this.key = key;
 			this.initiators = Lists.newArrayList();
 		}
 
+		/**
+		 * Create the stage for the given key, with the given initiators for
+		 * previous questions
+		 * 
+		 * @param key
+		 *            The key to tie the answer to
+		 * @param initiators
+		 *            A list of objects that will initiate earlier questions
+		 */
 		private QuestionStage(String key, List<QuestionInitiator> initiators) {
 			this.key = key;
 			this.initiators = initiators;
 		}
 
+		/**
+		 * Set the question to ask for the given key
+		 * 
+		 * @param question
+		 *            The key
+		 * @return A builder object for specifying the type of question
+		 */
 		public TypeStage ask(String question) {
 			return new TypeStage(initiators, key, question);
 		}
 	}
 
+	/**
+	 * DSL builder stage for specifying the question type
+	 * 
+	 * @author Jeroen Steenbeeke
+	 */
 	public static class TypeStage {
 
 		private final List<QuestionInitiator> initiators;
@@ -118,6 +171,18 @@ public class Questions {
 
 		private final String question;
 
+		/**
+		 * Create a new type stage for the given key and question, with optional
+		 * list
+		 * of previous questions
+		 * 
+		 * @param initiators
+		 *            Initiators for previous questions
+		 * @param key
+		 *            The key this question's answer is tied to
+		 * @param question
+		 *            The question to ask
+		 */
 		private TypeStage(List<QuestionInitiator> initiators, String key,
 				String question) {
 			this.initiators = initiators;
@@ -125,6 +190,11 @@ public class Questions {
 			this.question = question;
 		}
 
+		/**
+		 * Create a question with a simple (String) answer
+		 * 
+		 * @return The next builder stage
+		 */
 		public FinalizerStage withSimpleAnswer() {
 			return new FinalizerStage(initiators, key, question, (q, a, s) -> {
 				return new SimpleQuestion(q) {
@@ -139,6 +209,15 @@ public class Questions {
 			});
 		}
 
+		/**
+		 * Create a question with a String answer that must match the given
+		 * pattern
+		 *
+		 * @param pattern
+		 *            The pattern to which the question must adhere
+		 * @return The next builder stage
+		 * @see java.util.regex.Pattern
+		 */
 		public FinalizerStage withSimpleAnswerMatching(String pattern) {
 			return new FinalizerStage(initiators, key, question, (q, a, s) -> {
 				return new SimpleQuestion(q) {
@@ -157,30 +236,44 @@ public class Questions {
 			});
 		}
 
+		/**
+		 * Create a question that has either yes or no as an answer
+		 * 
+		 * @return The next builder stage
+		 */
 		public FinalizerStage withYesNoAnswer() {
-			return new FinalizerStage(initiators, key, question, (q, a, s) -> {
+			return new FinalizerStage(initiators, key, question, (q, a, cf) -> {
 				return new YesNoQuestion(q) {
 
 					@Override
 					public Action onAnswer(Boolean answer,
 							FeedbackHandler handler) throws ForgeException {
 
-						return s.apply(answer);
+						return cf.apply(answer);
 					}
 				};
 			});
 		}
 
+		/**
+		 * Create a multiple choice question with a dynamic set of available
+		 * choices
+		 * 
+		 * @param choices
+		 *            A function that determines the list of available choices
+		 *            based on earlier answers
+		 * @return The next builder stage
+		 */
 		public FinalizerStage withMultipleChoiceAnswer(
 				Function<Answers, List<String>> choices) {
-			return new FinalizerStage(initiators, key, question, (q, a, s) -> {
+			return new FinalizerStage(initiators, key, question, (q, a, cf) -> {
 				return new MultipleChoiceQuestion(q) {
 
 					@Override
 					public Action onAnswer(String answer,
 							FeedbackHandler handler) throws ForgeException {
 
-						return s.apply(answer);
+						return cf.apply(answer);
 					}
 
 					@Override
@@ -191,15 +284,24 @@ public class Questions {
 			});
 		}
 
+		/**
+		 * Create a multiple choice question with a predetermined set of
+		 * available
+		 * choices
+		 * 
+		 * @param choices
+		 *            The available choices
+		 * @return The next builder stage
+		 */
 		public FinalizerStage withMultipleChoiceAnswer(List<String> choices) {
-			return new FinalizerStage(initiators, key, question, (q, a, s) -> {
+			return new FinalizerStage(initiators, key, question, (q, a, cf) -> {
 				return new MultipleChoiceQuestion(q) {
 
 					@Override
 					public Action onAnswer(String answer,
 							FeedbackHandler handler) throws ForgeException {
 
-						return s.apply(answer);
+						return cf.apply(answer);
 					}
 
 					@Override
@@ -210,6 +312,15 @@ public class Questions {
 			});
 		}
 
+		/**
+		 * Create a custom question type
+		 * 
+		 * @param nextQuestion
+		 *            A factory for creating the next question. This is a
+		 *            functional interface
+		 *            so can be written as a Lambda-expression
+		 * @return The next builder stage
+		 */
 		public FinalizerStage withCustomAnswer(QuestionFactory nextQuestion) {
 			return new FinalizerStage(initiators, key, question, nextQuestion);
 		}
@@ -217,12 +328,6 @@ public class Questions {
 
 	public static class FinalizerStage {
 		private final List<QuestionInitiator> initiators;
-
-		private FinalizerStage(String key, String question,
-				QuestionFactory nextQuestion) {
-			initiators = Lists.newArrayList();
-			initiators.add(new QuestionInitiator(key, question, nextQuestion));
-		}
 
 		private FinalizerStage(List<QuestionInitiator> initiators, String key,
 				String question, QuestionFactory nextQuestion) {
@@ -277,8 +382,32 @@ public class Questions {
 
 	}
 
+	/**
+	 * Factory for the creation of questions
+	 * 
+	 * @author Jeroen Steenbeeke
+	 */
 	@FunctionalInterface
 	public interface QuestionFactory {
+		/**
+		 * Create an action based on the given question and previous answers
+		 * 
+		 * @param question
+		 *            The question to ask
+		 * @param previousAnswers
+		 *            All answers given until this point
+		 * @param chainFinalizer
+		 *            A callback mechanism for registering answers and invoking
+		 *            the next question. Once
+		 *            a question has been properly answered its answer should be
+		 *            passed to this finalizer, and its result returned as this
+		 *            method return value
+		 * @return In case of success: the result of
+		 *         {@code chainFinalizer.apply}, otherwise: any further action
+		 *         that can be taken instead (usually graceful termination by
+		 *         returning
+		 *         {@code com.jeroensteenbeeke.andalite.forge.ui.actions.Failure}).
+		 */
 		Action initialize(String question, Answers previousAnswers,
 				Function<Object, Action> chainFinalizer);
 	}
