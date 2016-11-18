@@ -40,6 +40,7 @@ public abstract class AbstractQuestion<T> implements Question<T> {
 	}
 
 	@Override
+	@Nonnull
 	public String getQuestion() {
 		return question;
 	}

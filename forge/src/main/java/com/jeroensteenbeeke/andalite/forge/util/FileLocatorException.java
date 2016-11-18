@@ -14,9 +14,24 @@
  */
 package com.jeroensteenbeeke.andalite.forge.util;
 
+/**
+ * Checked exception used by FileLocator
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public class FileLocatorException extends Exception {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Create a new file locator exception with the given message
+	 * 
+	 * @param message
+	 *            A format String
+	 * @param params
+	 *            The parameters for the format strings
+	 * @see java.lang.String.format
+	 */
 	public FileLocatorException(String message, Object... params) {
 		super(String.format(message, params));
 	}

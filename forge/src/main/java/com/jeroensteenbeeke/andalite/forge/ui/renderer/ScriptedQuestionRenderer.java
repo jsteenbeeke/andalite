@@ -14,9 +14,13 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.renderer;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.core.TypedActionResult;
 import com.jeroensteenbeeke.andalite.forge.ForgeException;
@@ -28,11 +32,26 @@ import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
 
+/**
+ * QuestionRenderer implementation that doesn't actually display the questions,
+ * but feeds them with prescripted answers.
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public class ScriptedQuestionRenderer implements QuestionRenderer {
 	private final List<Object> answers;
 
 	private final FeedbackHandler feedbackHandler;
 
+	/**
+	 * Create a new scripted renderer with the given answers
+	 * 
+	 * @param answers
+	 *            The answers to feed to the questions
+	 * @param feedbackHandler
+	 *            The feedback handler for the renderer
+	 */
 	private ScriptedQuestionRenderer(List<Object> answers,
 			FeedbackHandler feedbackHandler) {
 		this.answers = answers;
@@ -43,17 +62,23 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 	@Override
 	public <T> TypedActionResult<Action> renderQuestion(Question<T> question) {
 		try {
+
+			// The number of answers should be greater than or equal to the
+			// number of questions
 			if (answers.isEmpty()) {
 				throw new IllegalStateException(
 						"Scenario incorrect, no answers left but questions remaining");
 			}
+
 			T answer = (T) answers.remove(0);
 			feedbackHandler.info("Question: %s?", question.getQuestion());
+
+			// If multiple choice, log available choices
 			if (question instanceof MultipleChoiceQuestion) {
 				MultipleChoiceQuestion mcq = (MultipleChoiceQuestion) question;
 
-				mcq.getChoices().forEach(
-						c -> feedbackHandler.info("\t\t - %s", c));
+				mcq.getChoices()
+						.forEach(c -> feedbackHandler.info("\t\t - %s", c));
 			}
 
 			feedbackHandler.info("\tAnswer: %s", answer.toString());
@@ -66,16 +91,30 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 		}
 	}
 
+	/**
+	 * Create a new builder for a scripted question handler
+	 * 
+	 * @param first
+	 *            The first answer. This parameter is to enforce a minimum of 1
+	 *            answer given
+	 * @param rest
+	 *            The rest of the answers
+	 * @return A Builder for creating a ScriptedQuestionRenderer
+	 */
 	public static Builder forAnswers(Object first, Object... rest) {
-		List<Object> answers = Lists.newLinkedList();
-		answers.add(first);
-		for (Object object : rest) {
-			answers.add(object);
-		}
-
-		return new Builder(answers);
+		Stream.Builder<Object> builder = Stream.builder();
+		builder.add(first);
+		Arrays.stream(rest).forEach(builder::add);
+		return new Builder(builder.build().collect(Collectors.toList()));
 	}
 
+	/**
+	 * Builder for assigning a feedback handler to a set of answers and creating
+	 * a ScriptedQuestionRenderer
+	 * 
+	 * @author Jeroen Steenbeeke
+	 *
+	 */
 	public static class Builder {
 		private final List<Object> answers;
 
@@ -83,12 +122,28 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 			this.answers = answers;
 		}
 
+		/**
+		 * Create a ScriptedQuestionRenderer with the given FeedbackHandler
+		 * 
+		 * @param handler
+		 *            The feedbackhandler to use
+		 * @return A ScriptedQuestionRenderer
+		 */
 		public ScriptedQuestionRenderer withHandler(FeedbackHandler handler) {
 			return new ScriptedQuestionRenderer(answers, handler);
 		}
 	}
 
-	public ActionResult execute(ForgeRecipe recipe) {
+	/**
+	 * Execute the given recipe with the answers given to this renderer
+	 * 
+	 * @param recipe
+	 *            The recipe to execute
+	 * @return An ActionResult object indicating either success or failure (with
+	 *         the reason for failure)
+	 */
+	@Nonnull
+	public ActionResult execute(@Nonnull ForgeRecipe recipe) {
 		ActionResult result = recipe.checkCorrectlyConfigured();
 		if (!result.isOk()) {
 			return result;

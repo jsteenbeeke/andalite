@@ -20,6 +20,23 @@ import com.jeroensteenbeeke.andalite.core.TypedActionResult;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 
+/**
+ * View object for displaying questions to the user
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public interface QuestionRenderer {
+	/**
+	 * Display the given question to the user, and return the resulting action
+	 * 
+	 * @param question
+	 *            The question to display
+	 * @return The result of displaying the question. Success indicates the
+	 *         question was properly answered, failure means it could not be
+	 *         displayed for some reason (which will be indicated by the
+	 *         ActionResult's message)
+	 */
+	@Nonnull
 	<T> TypedActionResult<Action> renderQuestion(@Nonnull Question<T> question);
 }

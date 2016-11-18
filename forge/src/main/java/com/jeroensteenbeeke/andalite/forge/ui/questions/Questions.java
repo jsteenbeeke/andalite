@@ -77,7 +77,8 @@ public class Questions {
 		 *             If no answer is registered with the given key
 		 */
 		@SuppressWarnings("unchecked")
-		public <T> T getAnswer(Class<T> type, String key) {
+		@Nonnull
+		public <T> T getAnswer(@Nonnull Class<T> type, @Nonnull String key) {
 			if (answers.containsKey(key)) {
 				Object object = answers.get(key);
 
@@ -101,8 +102,10 @@ public class Questions {
 		 *            The key with which to find the answer
 		 * @param answer
 		 *            The answer to add
+		 * @throws IllegalArgumentException
+		 *             If there is already an answer registered to the given key
 		 */
-		private void register(String key, Object answer) {
+		private void register(@Nonnull String key, @Nonnull Object answer) {
 			if (answers.containsKey(key)) {
 				throw new IllegalArgumentException("Duplicate key " + key);
 			}
@@ -119,7 +122,7 @@ public class Questions {
 	public static class QuestionStage {
 		private final String key;
 
-		private final List<QuestionInitiator> initiators;
+		private final List<QuestionInitializer> initializers;
 
 		/**
 		 * Create the stage for the given key
@@ -127,9 +130,9 @@ public class Questions {
 		 * @param key
 		 *            The key to tie the answer to
 		 */
-		private QuestionStage(String key) {
+		private QuestionStage(@Nonnull String key) {
 			this.key = key;
-			this.initiators = Lists.newArrayList();
+			this.initializers = Lists.newArrayList();
 		}
 
 		/**
@@ -138,12 +141,13 @@ public class Questions {
 		 * 
 		 * @param key
 		 *            The key to tie the answer to
-		 * @param initiators
-		 *            A list of objects that will initiate earlier questions
+		 * @param initializers
+		 *            The list of questions that have already been defined
 		 */
-		private QuestionStage(String key, List<QuestionInitiator> initiators) {
+		private QuestionStage(@Nonnull String key,
+				@Nonnull List<QuestionInitializer> initializers) {
 			this.key = key;
-			this.initiators = initiators;
+			this.initializers = initializers;
 		}
 
 		/**
@@ -153,8 +157,9 @@ public class Questions {
 		 *            The key
 		 * @return A builder object for specifying the type of question
 		 */
-		public TypeStage ask(String question) {
-			return new TypeStage(initiators, key, question);
+		@Nonnull
+		public TypeStage ask(@Nonnull String question) {
+			return new TypeStage(initializers, key, question);
 		}
 	}
 
@@ -165,7 +170,7 @@ public class Questions {
 	 */
 	public static class TypeStage {
 
-		private final List<QuestionInitiator> initiators;
+		private final List<QuestionInitializer> initializers;
 
 		private final String key;
 
@@ -176,16 +181,16 @@ public class Questions {
 		 * list
 		 * of previous questions
 		 * 
-		 * @param initiators
+		 * @param initializers
 		 *            Initiators for previous questions
 		 * @param key
 		 *            The key this question's answer is tied to
 		 * @param question
 		 *            The question to ask
 		 */
-		private TypeStage(List<QuestionInitiator> initiators, String key,
-				String question) {
-			this.initiators = initiators;
+		private TypeStage(@Nonnull List<QuestionInitializer> initializers,
+				@Nonnull String key, @Nonnull String question) {
+			this.initializers = initializers;
 			this.key = key;
 			this.question = question;
 		}
@@ -195,18 +200,21 @@ public class Questions {
 		 * 
 		 * @return The next builder stage
 		 */
+		@Nonnull
 		public FinalizerStage withSimpleAnswer() {
-			return new FinalizerStage(initiators, key, question, (q, a, s) -> {
-				return new SimpleQuestion(q) {
+			return new FinalizerStage(initializers, key, question,
+					(q, a, s) -> {
+						return new SimpleQuestion(q) {
 
-					@Override
-					public Action onAnswer(String answer,
-							FeedbackHandler handler) throws ForgeException {
+							@Override
+							public Action onAnswer(String answer,
+									FeedbackHandler handler)
+									throws ForgeException {
 
-						return s.apply(answer);
-					}
-				};
-			});
+								return s.apply(answer);
+							}
+						};
+					});
 		}
 
 		/**
@@ -218,22 +226,26 @@ public class Questions {
 		 * @return The next builder stage
 		 * @see java.util.regex.Pattern
 		 */
-		public FinalizerStage withSimpleAnswerMatching(String pattern) {
-			return new FinalizerStage(initiators, key, question, (q, a, s) -> {
-				return new SimpleQuestion(q) {
+		@Nonnull
+		public FinalizerStage withSimpleAnswerMatching(
+				@Nonnull String pattern) {
+			return new FinalizerStage(initializers, key, question,
+					(q, a, s) -> {
+						return new SimpleQuestion(q) {
 
-					@Override
-					public Action onAnswer(String answer,
-							FeedbackHandler handler) throws ForgeException {
-						if (!answer.matches(pattern)) {
-							handler.error("Invalid input");
-							return this;
-						}
+							@Override
+							public Action onAnswer(String answer,
+									FeedbackHandler handler)
+									throws ForgeException {
+								if (!answer.matches(pattern)) {
+									handler.error("Invalid input");
+									return this;
+								}
 
-						return s.apply(answer);
-					}
-				};
-			});
+								return s.apply(answer);
+							}
+						};
+					});
 		}
 
 		/**
@@ -241,18 +253,21 @@ public class Questions {
 		 * 
 		 * @return The next builder stage
 		 */
+		@Nonnull
 		public FinalizerStage withYesNoAnswer() {
-			return new FinalizerStage(initiators, key, question, (q, a, cf) -> {
-				return new YesNoQuestion(q) {
+			return new FinalizerStage(initializers, key, question,
+					(q, a, cf) -> {
+						return new YesNoQuestion(q) {
 
-					@Override
-					public Action onAnswer(Boolean answer,
-							FeedbackHandler handler) throws ForgeException {
+							@Override
+							public Action onAnswer(Boolean answer,
+									FeedbackHandler handler)
+									throws ForgeException {
 
-						return cf.apply(answer);
-					}
-				};
-			});
+								return cf.apply(answer);
+							}
+						};
+					});
 		}
 
 		/**
@@ -264,24 +279,27 @@ public class Questions {
 		 *            based on earlier answers
 		 * @return The next builder stage
 		 */
+		@Nonnull
 		public FinalizerStage withMultipleChoiceAnswer(
-				Function<Answers, List<String>> choices) {
-			return new FinalizerStage(initiators, key, question, (q, a, cf) -> {
-				return new MultipleChoiceQuestion(q) {
+				@Nonnull Function<Answers, List<String>> choices) {
+			return new FinalizerStage(initializers, key, question,
+					(q, a, cf) -> {
+						return new MultipleChoiceQuestion(q) {
 
-					@Override
-					public Action onAnswer(String answer,
-							FeedbackHandler handler) throws ForgeException {
+							@Override
+							public Action onAnswer(String answer,
+									FeedbackHandler handler)
+									throws ForgeException {
 
-						return cf.apply(answer);
-					}
+								return cf.apply(answer);
+							}
 
-					@Override
-					public List<String> getChoices() {
-						return choices.apply(a);
-					}
-				};
-			});
+							@Override
+							public List<String> getChoices() {
+								return choices.apply(a);
+							}
+						};
+					});
 		}
 
 		/**
@@ -293,23 +311,27 @@ public class Questions {
 		 *            The available choices
 		 * @return The next builder stage
 		 */
-		public FinalizerStage withMultipleChoiceAnswer(List<String> choices) {
-			return new FinalizerStage(initiators, key, question, (q, a, cf) -> {
-				return new MultipleChoiceQuestion(q) {
+		@Nonnull
+		public FinalizerStage withMultipleChoiceAnswer(
+				@Nonnull List<String> choices) {
+			return new FinalizerStage(initializers, key, question,
+					(q, a, cf) -> {
+						return new MultipleChoiceQuestion(q) {
 
-					@Override
-					public Action onAnswer(String answer,
-							FeedbackHandler handler) throws ForgeException {
+							@Override
+							public Action onAnswer(String answer,
+									FeedbackHandler handler)
+									throws ForgeException {
 
-						return cf.apply(answer);
-					}
+								return cf.apply(answer);
+							}
 
-					@Override
-					public List<String> getChoices() {
-						return choices;
-					}
-				};
-			});
+							@Override
+							public List<String> getChoices() {
+								return choices;
+							}
+						};
+					});
 		}
 
 		/**
@@ -321,61 +343,171 @@ public class Questions {
 		 *            so can be written as a Lambda-expression
 		 * @return The next builder stage
 		 */
-		public FinalizerStage withCustomAnswer(QuestionFactory nextQuestion) {
-			return new FinalizerStage(initiators, key, question, nextQuestion);
+		@Nonnull
+		public FinalizerStage withCustomAnswer(
+				@Nonnull QuestionFactory nextQuestion) {
+			return new FinalizerStage(initializers, key, question,
+					nextQuestion);
 		}
 	}
 
+	/**
+	 * DSL builder stage for either building the set of questions, or adding
+	 * another question
+	 * 
+	 * @author Jeroen Steenbeeke
+	 *
+	 */
 	public static class FinalizerStage {
-		private final List<QuestionInitiator> initiators;
+		private final List<QuestionInitializer> initializers;
 
-		private FinalizerStage(List<QuestionInitiator> initiators, String key,
-				String question, QuestionFactory nextQuestion) {
-			this.initiators = initiators;
-			initiators.add(new QuestionInitiator(key, question, nextQuestion));
+		/**
+		 * Create a new finalizer stage, with the given set of question
+		 * initiators, and new question
+		 * descriptor
+		 * 
+		 * @param initializers
+		 *            The list of previous questions
+		 * @param key
+		 *            The key to tie to the current question's answer
+		 * @param question
+		 *            The question to ask
+		 * @param nextQuestionFactory
+		 *            The factory to instantiate the next question
+		 */
+		private FinalizerStage(@Nonnull List<QuestionInitializer> initializers,
+				@Nonnull String key, @Nonnull String question,
+				@Nonnull QuestionFactory nextQuestionFactory) {
+			this.initializers = initializers;
+			initializers.add(new QuestionInitializer(key, question,
+					nextQuestionFactory));
 		}
 
-		public QuestionStage andForKey(String key) {
-			return new QuestionStage(key, initiators);
+		/**
+		 * Add another question, with the given key
+		 * 
+		 * @param key
+		 *            The key to tie the answer to
+		 * @return A builder for creating a question
+		 */
+		@Nonnull
+		public QuestionStage andForKey(@Nonnull String key) {
+			return new QuestionStage(key, initializers);
 		}
 
-		public Action andThen(Function<Answers, Action> answersToAction) {
-			QuestionInitiator initiator = initiators.remove(0);
+		/**
+		 * Finalize the set of questions. The parameter given is a function that
+		 * specifies the action to take based on the given answers once all
+		 * questions have been answered. Generally
+		 * speaking, this will
+		 * be one or more actions that perform a transformation. For example:
+		 * 
+		 * <pre>
+		 * {@code
+		 * 		return new JavaTransformation(targetFile, javaRecipe)
+		 * 			.andThen(new JavaTransformation(targetFile2, javaRecipe2))
+		 * 			.andThen(CreateFile.emptyXMLFile(targetFile3).withRootElement("example"))
+		 * 			.andThen(new XMLTransformation(targetFile3, javaRecipe3));
+		 * }
+		 * </pre>
+		 * 
+		 * @param onAllAnswersGiven
+		 *            A function that creates the resulting action based on the
+		 *            given
+		 *            answers
+		 * @return The first action as specified by the builder just completed
+		 */
+		@Nonnull
+		public Action andThen(
+				@Nonnull Function<Answers, Action> onAllAnswersGiven) {
+			QuestionInitializer initiator = initializers.remove(0);
 
-			return initiator.initiate(initiators, answersToAction);
+			return initiator.initiate(initializers, onAllAnswersGiven);
 		}
 	}
 
-	private static class QuestionInitiator {
+	/**
+	 * Helper class for creating question objects
+	 * 
+	 * @author Jeroen Steenbeeke
+	 *
+	 */
+	private static class QuestionInitializer {
 		private final String key;
 
 		private final String question;
 
-		private final QuestionFactory questionMaker;
+		private final QuestionFactory questionFactory;
 
-		private QuestionInitiator(String key, String question,
-				QuestionFactory questionMaker) {
+		/**
+		 * Create a new initializer for the given key, question and factory
+		 * 
+		 * @param key
+		 *            The key to tie the answer to
+		 * @param question
+		 *            The question to ask
+		 * @param questionFactory
+		 *            The factory to create the question instance
+		 */
+		private QuestionInitializer(@Nonnull String key,
+				@Nonnull String question,
+				@Nonnull QuestionFactory questionFactory) {
 			this.key = key;
 			this.question = question;
-			this.questionMaker = questionMaker;
+			this.questionFactory = questionFactory;
 		}
 
-		public Action initiate(List<QuestionInitiator> next,
-				Function<Answers, Action> answersToAction) {
-			return initiate(new Answers(), next, answersToAction);
+		/**
+		 * Create the next action based on the given list of available
+		 * initializers and finalizer step
+		 * 
+		 * @param availableInitializers
+		 *            The list of available initializers
+		 * @param onAllAnswersGiven
+		 *            The function to transform answers to a next action
+		 * @return The next action to perform
+		 */
+		@Nonnull
+		public Action initiate(
+				@Nonnull List<QuestionInitializer> availableInitializers,
+				@Nonnull Function<Answers, Action> onAllAnswersGiven) {
+			return instantiate(new Answers(), availableInitializers,
+					onAllAnswersGiven);
 		}
 
-		private Action initiate(Answers answers, List<QuestionInitiator> next,
-				Function<Answers, Action> answersToAction) {
-			return questionMaker.initialize(question, answers, s -> {
+		/**
+		 * Create the next action based on the given list of available
+		 * initializers and finalizer step
+		 * 
+		 * @param answers
+		 *            The answers given so far
+		 * @param availableInitializers
+		 *            The list of available initializers
+		 * @param onAllAnswersGiven
+		 *            The function to transform answers to a next action
+		 * @return The next action to perform
+		 */
+		@Nonnull
+		private Action instantiate(@Nonnull Answers answers,
+				@Nonnull List<QuestionInitializer> availableInitializers,
+				@Nonnull Function<Answers, Action> onAllAnswersGiven) {
+
+			return questionFactory.initialize(question, answers, s -> {
+				// Register the given answer
 				answers.register(key, s);
 
-				if (next.isEmpty()) {
-					return answersToAction.apply(answers);
+				// If there are no more initializers, then run the callback for
+				// all answers given
+				if (availableInitializers.isEmpty()) {
+					return onAllAnswersGiven.apply(answers);
 				}
-				QuestionInitiator initiator = next.remove(0);
+				// If there are more initializers, get the next one
+				QuestionInitializer initializer = availableInitializers
+						.remove(0);
 
-				return initiator.initiate(answers, next, answersToAction);
+				// And use it to instantiate the next question
+				return initializer.instantiate(answers, availableInitializers,
+						onAllAnswersGiven);
 
 			});
 		}
@@ -396,7 +528,7 @@ public class Questions {
 		 *            The question to ask
 		 * @param previousAnswers
 		 *            All answers given until this point
-		 * @param chainFinalizer
+		 * @param onAnswerCallback
 		 *            A callback mechanism for registering answers and invoking
 		 *            the next question. Once
 		 *            a question has been properly answered its answer should be
@@ -408,7 +540,9 @@ public class Questions {
 		 *         returning
 		 *         {@code com.jeroensteenbeeke.andalite.forge.ui.actions.Failure}).
 		 */
-		Action initialize(String question, Answers previousAnswers,
-				Function<Object, Action> chainFinalizer);
+		@Nonnull
+		Action initialize(@Nonnull String question,
+				@Nonnull Answers previousAnswers,
+				@Nonnull Function<Object, Action> onAnswerCallback);
 	}
 }

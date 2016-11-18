@@ -16,29 +16,42 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions.internal;
 
 import java.util.List;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.forge.ForgeException;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
-import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.AbstractQuestion;
 
+/**
+ * Multiple choice recipe selection question. For internal use only
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public class RecipeSelectionQuestion extends AbstractQuestion<ForgeRecipe> {
 	private final List<ForgeRecipe> recipes;
 
-	public RecipeSelectionQuestion(List<ForgeRecipe> recipes) {
+	public RecipeSelectionQuestion(@Nonnull List<ForgeRecipe> recipes) {
 		super("Select recipe:");
 		this.recipes = recipes;
 	}
 
+	/**
+	 * Get the available recipes
+	 * 
+	 * @return A list of available recipes
+	 */
+	@Nonnull
 	public List<ForgeRecipe> getRecipes() {
 		return recipes;
 	}
 
 	@Override
-	public Action onAnswer(ForgeRecipe answer, FeedbackHandler feedbackHandler)
-			throws ForgeException {
+	@Nonnull
+	public Action onAnswer(@Nonnull ForgeRecipe answer,
+			@Nonnull FeedbackHandler feedbackHandler) throws ForgeException {
 		return answer.onSelected();
 	}
 
