@@ -61,6 +61,10 @@ public final class AnalyzedClass extends ConstructableDenomination {
 		return extendsLocation;
 	}
 
+	/**
+	 * 
+	 * @param extendsLocation
+	 */
 	void setExtendsLocation(@Nonnull Location extendsLocation) {
 		this.extendsLocation = extendsLocation;
 	}
