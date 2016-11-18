@@ -23,8 +23,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.AnnotationValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.ArrayValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
 
-public abstract class ArrayValueCondition<T> implements
-		InnerAnnotationCondition {
+public abstract class ArrayValueCondition<T>
+		implements InnerAnnotationCondition {
 	private final String name;
 
 	private final Class<? extends BaseValue<T>> expectedType;

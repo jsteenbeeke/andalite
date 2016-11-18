@@ -15,6 +15,7 @@
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.antlrjavaparser.api.body.ModifierSet;
 import com.google.common.base.Joiner;
@@ -72,11 +73,8 @@ public class VariableDeclarationExpression extends AnalyzedExpression {
 		StringBuilder sb = new StringBuilder();
 
 		if (!annotations.isEmpty()) {
-			Joiner.on(" ").appendTo(
-					sb,
-					FluentIterable.from(annotations).transform(
-							AnalyzedAnnotation.toJavaStringFunction()));
-			sb.append(" ");
+			sb.append(annotations.stream().map(AnalyzedAnnotation::toJavaString)
+					.collect(Collectors.joining(" ", "", " ")));
 		}
 
 		if (isDeclaredFinal()) {
@@ -87,10 +85,8 @@ public class VariableDeclarationExpression extends AnalyzedExpression {
 
 		if (!variables.isEmpty()) {
 			sb.append(" ");
-			Joiner.on(", ").appendTo(
-					sb,
-					FluentIterable.from(variables).transform(
-							AnalyzedExpression.toJavaStringFunction()));
+			Joiner.on(", ").appendTo(sb, FluentIterable.from(variables)
+					.transform(AnalyzedExpression.toJavaStringFunction()));
 		}
 
 		return sb.toString();

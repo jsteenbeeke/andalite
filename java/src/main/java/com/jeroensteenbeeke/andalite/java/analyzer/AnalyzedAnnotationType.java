@@ -21,13 +21,25 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
+/**
+ * Representation of an annotation type definition
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public class AnalyzedAnnotationType extends ContainingDenomination {
 
-	protected AnalyzedAnnotationType(@Nonnull Location location, int modifiers,
-			@Nonnull String packageName, @Nonnull TerminalNode denominationName) {
+	AnalyzedAnnotationType(@Nonnull Location location, int modifiers,
+			@Nonnull String packageName,
+			@Nonnull TerminalNode denominationName) {
 		super(location, modifiers, packageName, denominationName);
 	}
 
+	/**
+	 * Get the name of the annotation
+	 * 
+	 * @return The name of the annotation
+	 */
+	@Nonnull
 	public String getAnnotationName() {
 		return getDenominationName();
 	}

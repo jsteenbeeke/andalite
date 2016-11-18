@@ -19,6 +19,12 @@ import javax.annotation.Nonnull;
 
 import com.github.antlrjavaparser.api.body.ModifierSet;
 
+/**
+ * Enum representing the default Java access modifiers
+ * 
+ * @author Jeroen Steenbeeke
+ *
+ */
 public enum AccessModifier {
 	PUBLIC, DEFAULT {
 		@Override
@@ -28,6 +34,12 @@ public enum AccessModifier {
 	},
 	PROTECTED, PRIVATE;
 
+	/**
+	 * Renders the access modifier as it would be outputted in a definition
+	 * 
+	 * @return The access modifier with a trailing space
+	 */
+	@Nonnull
 	public String getOutput() {
 		return String.format("%s ", name().toLowerCase());
 	}
@@ -37,6 +49,14 @@ public enum AccessModifier {
 		return name().toLowerCase();
 	}
 
+	/**
+	 * Determines the AccessModifier based on the modifiers property used by
+	 * antlr-java-parser
+	 * 
+	 * @param modifiers
+	 *            The modifiers as specified by antlr-java-parser
+	 * @return The AccessModifier corresponding to the given modifiers
+	 */
 	@Nonnull
 	public static AccessModifier fromModifiers(int modifiers) {
 		if (ModifierSet.isPrivate(modifiers)) {
