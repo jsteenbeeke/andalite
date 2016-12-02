@@ -15,11 +15,10 @@
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
@@ -45,11 +44,8 @@ public class ArrayInitializerExpression extends AnalyzedExpression {
 
 	@Override
 	public String toJavaString() {
-		return String.format(
-				"{%s}",
-				Joiner.on(", ").join(
-						FluentIterable.from(values).transform(
-								toJavaStringFunction())));
+		return values.stream().map(AnalyzedExpression::toJavaString)
+				.collect(Collectors.joining(", ", "{", "}"));
 	}
 
 }

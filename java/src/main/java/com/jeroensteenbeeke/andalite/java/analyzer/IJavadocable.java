@@ -3,7 +3,12 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
-public interface Javadocable {
+/**
+ * Element that can have Javadoc comments
+ * 
+ * @author Jeroen Steenbeeke
+ */
+public interface IJavadocable {
 	/**
 	 * @return Any javadoc for this element, or {@code null} if none is present
 	 */
@@ -11,6 +16,8 @@ public interface Javadocable {
 	String getJavadoc();
 
 	/**
+	 * Set the javadoc for this element
+	 * 
 	 * @non.public
 	 */
 	void setJavadoc(@Nonnull String javadoc);

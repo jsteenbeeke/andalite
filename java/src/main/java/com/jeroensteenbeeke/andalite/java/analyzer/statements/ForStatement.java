@@ -15,9 +15,8 @@
 package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -70,19 +69,17 @@ public class ForStatement extends AnalyzedStatement {
 		StringBuilder java = new StringBuilder();
 
 		java.append("for (");
-		Joiner.on(",").appendTo(
-				java,
-				FluentIterable.from(initializerExpressions).transform(
-						AnalyzedExpression.toJavaStringFunction()));
+		java.append(initializerExpressions.stream()
+				.map(AnalyzedExpression::toJavaString)
+				.collect(Collectors.joining(", ")));
 		java.append(";");
 		if (compare != null) {
 			java.append(compare.toJavaString());
 		}
 		java.append(";");
-		Joiner.on(",").appendTo(
-				java,
-				FluentIterable.from(updateExpressions).transform(
-						AnalyzedExpression.toJavaStringFunction()));
+		java.append(
+				updateExpressions.stream().map(AnalyzedExpression::toJavaString)
+						.collect(Collectors.joining(", ")));
 		java.append(") ");
 		java.append(body.toJavaString());
 

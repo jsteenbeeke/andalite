@@ -21,6 +21,11 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Locatable;
 import com.jeroensteenbeeke.andalite.core.Location;
 
+/**
+ * Representation of an import statement
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public final class AnalyzedImport extends Locatable {
 	private static final String ASTERISK = "*";
 
@@ -30,7 +35,19 @@ public final class AnalyzedImport extends Locatable {
 
 	private final boolean asterisk;
 
-	public AnalyzedImport(@Nonnull Location location,
+	/**
+	 * Create a new AnalyzedImport
+	 * 
+	 * @param location
+	 *            The location of the import
+	 * @param statement
+	 *            The import statement
+	 * @param staticImport
+	 *            Whether or not this is a static import
+	 * @param asterisk
+	 *            Whether or not this is a wildcard import
+	 */
+	protected AnalyzedImport(@Nonnull Location location,
 			@Nonnull String statement, boolean staticImport, boolean asterisk) {
 		super(location);
 		this.statement = statement;
@@ -38,10 +55,20 @@ public final class AnalyzedImport extends Locatable {
 		this.asterisk = asterisk;
 	}
 
+	/**
+	 * Check if a given method is imported statically
+	 * 
+	 * @param fqdn
+	 *            The fully qualified name of the method. Should not end in an
+	 *            asterisk
+	 * @return {@code true} if the method is imported statically, {@code false}
+	 *         otherwise
+	 */
 	public boolean importsMethodStatically(@Nonnull String fqdn) {
 		ClassDefinition def = ClassDefinition.fromFQDN(fqdn);
 
 		if (ASTERISK.equals(def.getClassName())) {
+			// Someone didn't read the Javadoc
 			return false;
 		}
 
@@ -70,10 +97,20 @@ public final class AnalyzedImport extends Locatable {
 
 	}
 
+	/**
+	 * Checks if this import matches the given fully qualified domain name
+	 * 
+	 * @param fqdn
+	 *            The fully qualified domain name of the class to check. Should
+	 *            not end in an asterisk
+	 * @return {@code true} if the class is imported, {@code false}
+	 *         otherwise
+	 */
 	public boolean matchesClass(@Nonnull String fqdn) {
 		ClassDefinition def = ClassDefinition.fromFQDN(fqdn);
 
 		if (ASTERISK.equals(def.getClassName())) {
+			// Someone didn't read the Javadoc
 			return false;
 		}
 
@@ -91,15 +128,32 @@ public final class AnalyzedImport extends Locatable {
 
 	}
 
+	/**
+	 * Get the import statement
+	 * 
+	 * @return The import statement
+	 */
 	@Nonnull
 	public String getStatement() {
 		return statement;
 	}
 
+	/**
+	 * Check if the import is a static import
+	 * 
+	 * @return {@code true} if the import is a static import, {@code false}
+	 *         otherwise
+	 */
 	public boolean isStaticImport() {
 		return staticImport;
 	}
 
+	/**
+	 * Check if the import is a wildcard import
+	 * 
+	 * @return {@code true} if the import is a wildcard import, {@code false}
+	 *         otherwise
+	 */
 	public boolean isAsterisk() {
 		return asterisk;
 	}

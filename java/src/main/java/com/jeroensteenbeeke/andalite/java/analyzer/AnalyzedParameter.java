@@ -20,22 +20,49 @@ import javax.annotation.Nonnull;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
+/**
+ * Representation of a method/constructor parameter
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public class AnalyzedParameter extends Annotatable {
 	private final String type;
 
 	private final String name;
 
-	public AnalyzedParameter(@Nonnull Location location, @Nonnull String type,
+	/**
+	 * Create a new AnalyzedParameter
+	 * 
+	 * @param location
+	 *            The location of the parameter
+	 * @param type
+	 *            The type of the parameter
+	 * @param name
+	 *            The name of the parameter
+	 */
+	AnalyzedParameter(@Nonnull Location location, @Nonnull String type,
 			@Nonnull String name) {
 		super(location);
 		this.type = type;
 		this.name = name;
 	}
 
+	/**
+	 * Get name of the parameter
+	 * 
+	 * @return The name of the parameter
+	 */
+	@Nonnull
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Get the type of the parameter
+	 * 
+	 * @return The type of the parameter (String representation)
+	 */
+	@Nonnull
 	public String getType() {
 		return type;
 	}

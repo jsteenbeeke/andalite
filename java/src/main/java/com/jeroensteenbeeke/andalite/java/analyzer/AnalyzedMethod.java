@@ -27,8 +27,13 @@ import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
+/**
+ * Representation of a Java method
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public final class AnalyzedMethod extends AccessModifiable
-		implements IBodyContainer, Commentable, Javadocable, IParameterized {
+		implements IBodyContainer, Commentable, IJavadocable, IParameterized {
 	private final String name;
 
 	private final AnalyzedType returnType;
@@ -45,9 +50,21 @@ public final class AnalyzedMethod extends AccessModifiable
 
 	private Location rightParenthesisLocation;
 
-	public AnalyzedMethod(@Nonnull Location location,
-			@Nonnull AnalyzedType returnType, int modifiers,
-			@Nonnull String name) {
+	/**
+	 * Create a new AnalyzedMethod
+	 * 
+	 * @param location
+	 *            The location of the method
+	 * @param returnType
+	 *            The return type of the method. Should equal TypeVoid if it has
+	 *            no return type
+	 * @param modifiers
+	 *            The modifiers of the method, indicating what keywords it has
+	 * @param name
+	 *            The name of the method
+	 */
+	AnalyzedMethod(@Nonnull Location location, @Nonnull AnalyzedType returnType,
+			int modifiers, @Nonnull String name) {
 		super(location, modifiers);
 		this.name = name;
 		this.returnType = returnType;
@@ -57,23 +74,48 @@ public final class AnalyzedMethod extends AccessModifiable
 		this.thrownExceptions = Lists.newArrayList();
 	}
 
+	/**
+	 * Get the location of the right parenthesis of the method (the one after
+	 * parameters
+	 * 
+	 * @return The location of the right parenthesis, if set. {@code null}
+	 *         otherwise
+	 */
 	@CheckForNull
 	public Location getRightParenthesisLocation() {
 		return rightParenthesisLocation;
 	}
 
-	public void setRightParenthesisLocation(
+	/**
+	 * Set the location of the right parenthesis, that is located after method
+	 * parameters
+	 * 
+	 * @param rightParenthesisLocation
+	 *            The location of the right parenthesis
+	 */
+	void setRightParenthesisLocation(
 			@Nullable Location rightParenthesisLocation) {
 		this.rightParenthesisLocation = rightParenthesisLocation;
 	}
 
-	public void addThrownException(@Nonnull AnalyzedThrownException exception) {
+	/**
+	 * Add an exception to the list of thrown exceptions
+	 * 
+	 * @param exception
+	 *            The exception that might be thrown
+	 */
+	void addThrownException(@Nonnull AnalyzedThrownException exception) {
 		this.thrownExceptions.add(exception);
 	}
 
+	/**
+	 * Get the list of thrown exceptions
+	 * 
+	 * @return An immutable list of thrown exceptions
+	 */
 	@Nonnull
 	public List<AnalyzedThrownException> getThrownExceptions() {
-		return thrownExceptions;
+		return ImmutableList.copyOf(thrownExceptions);
 	}
 
 	@Override
@@ -83,18 +125,36 @@ public final class AnalyzedMethod extends AccessModifiable
 
 	@Override
 	public List<String> getComments() {
-		return comments;
+		return ImmutableList.copyOf(comments);
 	}
 
+	/**
+	 * Get the name of the method
+	 * 
+	 * @return The name of the method
+	 */
 	@Nonnull
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Get the return type of this method
+	 * 
+	 * @return The return type of the method. If the method has no return type,
+	 *         this is an instance of TypeVoid
+	 */
+	@Nonnull
 	public AnalyzedType getReturnType() {
 		return returnType;
 	}
 
+	/**
+	 * Add a parameter to the method
+	 * 
+	 * @param analyzedParameter
+	 *            The parameter to add
+	 */
 	void addParameter(@Nonnull AnalyzedParameter analyzedParameter) {
 		this.parameters.add(analyzedParameter);
 	}
@@ -108,10 +168,16 @@ public final class AnalyzedMethod extends AccessModifiable
 	@Override
 	@Nonnull
 	public final List<AnalyzedStatement> getStatements() {
-		return statements;
+		return ImmutableList.copyOf(statements);
 	}
 
-	void addStatement(AnalyzedStatement statement) {
+	/**
+	 * Add a statement to the list of statements
+	 * 
+	 * @param statement
+	 *            The statement to add
+	 */
+	void addStatement(@Nonnull AnalyzedStatement statement) {
 		this.statements.add(statement);
 	}
 
@@ -157,7 +223,7 @@ public final class AnalyzedMethod extends AccessModifiable
 	}
 
 	@Override
-	public void setJavadoc(String javadoc) {
+	public void setJavadoc(@Nonnull String javadoc) {
 		this.javadoc = javadoc;
 	}
 }

@@ -16,10 +16,29 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import com.jeroensteenbeeke.andalite.core.ILocatable;
 
+/**
+ * Element that can have a body
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public interface IBodyContainer extends ILocatable {
+	/**
+	 * Get a list of statements within the body
+	 * 
+	 * @return The list of statements, possibly immutable
+	 */
+	@Nonnull
 	List<AnalyzedStatement> getStatements();
 
+	/**
+	 * Check if this body container is abstract (i.e. it could have a body but
+	 * doesn't)
+	 * 
+	 * @return {@code true} if the element is abstract, {@code false} otherwise
+	 */
 	boolean isAbstract();
 }

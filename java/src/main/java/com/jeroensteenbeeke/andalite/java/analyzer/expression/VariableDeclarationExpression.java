@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.antlrjavaparser.api.body.ModifierSet;
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
@@ -85,8 +83,8 @@ public class VariableDeclarationExpression extends AnalyzedExpression {
 
 		if (!variables.isEmpty()) {
 			sb.append(" ");
-			Joiner.on(", ").appendTo(sb, FluentIterable.from(variables)
-					.transform(AnalyzedExpression.toJavaStringFunction()));
+			sb.append(variables.stream().map(AnalyzedExpression::toJavaString)
+					.collect(Collectors.joining(", ")));
 		}
 
 		return sb.toString();

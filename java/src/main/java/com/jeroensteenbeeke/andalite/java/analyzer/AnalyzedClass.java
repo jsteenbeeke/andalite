@@ -35,6 +35,18 @@ public final class AnalyzedClass extends ConstructableDenomination {
 
 	private String superClass = null;
 
+	/**
+	 * Create a new AnalyzedClass
+	 * 
+	 * @param location
+	 *            The location of the class definition
+	 * @param modifiers
+	 *            The modifiers of the class, indicating what keywords it has
+	 * @param packageName
+	 *            The name of the package the class is in
+	 * @param className
+	 *            The node containing the name of the class
+	 */
 	AnalyzedClass(@Nonnull Location location, int modifiers,
 			@Nonnull String packageName, @Nonnull TerminalNode className) {
 		super(location, modifiers, packageName, className);
@@ -62,19 +74,35 @@ public final class AnalyzedClass extends ConstructableDenomination {
 	}
 
 	/**
+	 * Sets the location of the extends declaration
 	 * 
 	 * @param extendsLocation
+	 *            The location of the extends declaration
 	 */
 	void setExtendsLocation(@Nonnull Location extendsLocation) {
 		this.extendsLocation = extendsLocation;
 	}
 
+	/**
+	 * Return the superclass of this analyzed class, if it is not
+	 * {@code java.lang.Object}
+	 * 
+	 * @return The class's superclass
+	 */
 	@CheckForNull
 	public String getSuperClass() {
 		return superClass;
 	}
 
-	void setSuperClass(String superClass) {
+	/**
+	 * Sets the superclass of this analyzed class. Should not be called if there
+	 * is no extends declaration (i.e. the superclass is
+	 * {@code java.lang.Object}
+	 * 
+	 * @param superClass
+	 *            The superclass of this class
+	 */
+	void setSuperClass(@Nonnull String superClass) {
 		this.superClass = superClass;
 	}
 

@@ -15,13 +15,12 @@
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
@@ -66,9 +65,9 @@ public class ArrayCreationExpression extends AnalyzedExpression {
 		builder.append(type.toJavaString());
 		builder.append("[");
 		if (!dimensions.isEmpty()) {
-			builder.append(Joiner.on("][").join(
-					FluentIterable.from(getDimensions()).transform(
-							toJavaStringFunction())));
+			builder.append(getDimensions().stream()
+					.map(AnalyzedExpression::toJavaString)
+					.collect(Collectors.joining("][")));
 		}
 
 		builder.append("]");

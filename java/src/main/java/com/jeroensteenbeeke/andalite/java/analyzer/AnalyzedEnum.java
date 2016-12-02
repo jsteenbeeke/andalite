@@ -26,29 +26,85 @@ import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
+/**
+ * Representation of a Java Enum
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public class AnalyzedEnum extends ConstructableDenomination {
 	private final List<AnalyzedEnumConstant> constants;
 
 	private Location separatorLocation;
 
-	public AnalyzedEnum(Location location, int modifiers, String packageName,
-			TerminalNode denominationName) {
-		super(location, modifiers, packageName, denominationName);
+	/**
+	 * Create a new AnalyzedEnum
+	 * 
+	 * @param location
+	 *            The location of the enum definition
+	 * @param modifiers
+	 *            The modifiers of the class, indicating what keywords it has
+	 * @param packageName
+	 *            The name of the package the enum is in
+	 * @param enumName
+	 *            The node containing the name of the enum
+	 */
+	AnalyzedEnum(@Nonnull Location location, int modifiers,
+			@Nonnull String packageName, @Nonnull TerminalNode enumName) {
+		super(location, modifiers, packageName, enumName);
 		this.constants = Lists.newArrayList();
 	}
 
+	/**
+	 * Get the name of the enum
+	 * 
+	 * @return The name of the enum
+	 */
 	@Nonnull
 	public String getEnumName() {
 		return getDenominationName();
 	}
 
-	public void setSeparatorLocation(@Nonnull Location separatorLocation) {
+	/**
+	 * Set the location of the semicolon that separates the enum constants from
+	 * the generic class body
+	 * 
+	 * @param separatorLocation
+	 *            The location of the semicolon
+	 */
+	void setSeparatorLocation(@Nonnull Location separatorLocation) {
 		this.separatorLocation = separatorLocation;
 	}
 
+	/**
+	 * Get the location of the semicolon that separates enum constants from the
+	 * generic class body
+	 * 
+	 * @return The location of the semicolon, if it exists, or {@code null}
+	 *         otherwise
+	 */
 	@CheckForNull
 	public Location getSeparatorLocation() {
 		return separatorLocation;
+	}
+
+	/**
+	 * Add an enum constant to this enum definition
+	 * 
+	 * @param constant
+	 *            The enum constant to add
+	 */
+	void addConstant(@Nonnull AnalyzedEnumConstant constant) {
+		constants.add(constant);
+	}
+
+	/**
+	 * Get all enum constants defined for this enum
+	 * 
+	 * @return An immutable list of enum constants
+	 */
+	@Nonnull
+	public List<AnalyzedEnumConstant> getConstants() {
+		return ImmutableList.copyOf(constants);
 	}
 
 	@Override
@@ -82,15 +138,6 @@ public class AnalyzedEnum extends ConstructableDenomination {
 		callback.write("}");
 		callback.newline();
 
-	}
-
-	void addConstant(@Nonnull AnalyzedEnumConstant constant) {
-		constants.add(constant);
-	}
-
-	@Nonnull
-	public List<AnalyzedEnumConstant> getConstants() {
-		return ImmutableList.copyOf(constants);
 	}
 
 }

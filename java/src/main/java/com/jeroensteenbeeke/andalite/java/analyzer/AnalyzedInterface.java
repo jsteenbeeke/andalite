@@ -19,13 +19,35 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
+/**
+ * Representation of a Java interface
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public class AnalyzedInterface extends ContainingDenomination {
-
-	public AnalyzedInterface(Location location, int modifiers,
-			String packageName, TerminalNode denominationName) {
-		super(location, modifiers, packageName, denominationName);
+	/**
+	 * Create a new AnalyzedInterface
+	 * 
+	 * @param location
+	 *            The location of the interface definition
+	 * @param modifiers
+	 *            The modifiers of the interface, indicating what keywords it
+	 *            has
+	 * @param packageName
+	 *            The name of the package the interface is in
+	 * @param interfaceName
+	 *            The node containing the name of the interface
+	 */
+	AnalyzedInterface(Location location, int modifiers, String packageName,
+			TerminalNode interfaceName) {
+		super(location, modifiers, packageName, interfaceName);
 	}
 
+	/**
+	 * Get the name of the interface
+	 * 
+	 * @return The name of the interface
+	 */
 	public String getInterfaceName() {
 		return getDenominationName();
 	}

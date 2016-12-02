@@ -1350,9 +1350,9 @@ public class ClassAnalyzer {
 	private <T extends Commentable> void checkJavadoc(T commentable,
 			Comment comment) {
 		if (comment instanceof JavadocComment
-				&& commentable instanceof Javadocable) {
+				&& commentable instanceof IJavadocable) {
 			JavadocComment jdc = (JavadocComment) comment;
-			Javadocable jda = (Javadocable) commentable;
+			IJavadocable jda = (IJavadocable) commentable;
 
 			if (jda.getJavadoc() == null) {
 				jda.setJavadoc(jdc.getContent());
@@ -1360,7 +1360,7 @@ public class ClassAnalyzer {
 		}
 	}
 
-	private <T extends Javadocable> T setJavadoc(BodyDeclaration node,
+	private <T extends IJavadocable> T setJavadoc(BodyDeclaration node,
 			T javadocable) {
 		if (node != null) {
 			JavadocComment comment = node.getJavaDoc();

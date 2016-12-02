@@ -16,6 +16,19 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
+/**
+ * Element that can have parameters
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public interface IParameterized {
+	/**
+	 * Get a list of parameters
+	 * 
+	 * @return The list of parameters, possibly immutable
+	 */
+	@Nonnull
 	List<AnalyzedParameter> getParameters();
 }

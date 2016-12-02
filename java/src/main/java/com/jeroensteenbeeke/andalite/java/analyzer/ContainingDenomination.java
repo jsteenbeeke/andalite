@@ -35,7 +35,7 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
 public abstract class ContainingDenomination extends Denomination implements
-		Javadocable {
+		IJavadocable {
 	private final Map<String, Denomination> innerDenominations;
 
 	private final Multimap<String, AnalyzedMethod> methods;

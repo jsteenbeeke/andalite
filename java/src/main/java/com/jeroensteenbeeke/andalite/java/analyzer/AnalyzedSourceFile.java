@@ -26,6 +26,11 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Locatable;
 import com.jeroensteenbeeke.andalite.core.Location;
 
+/**
+ * Representation of a Java source file
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public final class AnalyzedSourceFile extends Locatable {
 	private final List<AnalyzedClass> classes;
 
@@ -42,11 +47,24 @@ public final class AnalyzedSourceFile extends Locatable {
 	private final Location packageDefinitionLocation;
 
 	private final File originalFile;
-	
+
 	private final String compilationUnitName;
 
-	public AnalyzedSourceFile(@Nonnull Location location,
-			@Nonnull File originalFile, @Nonnull String packageName,
+	/**
+	 * Create a new AnalyzedSourceFile
+	 * 
+	 * @param location
+	 *            The location of the source file (generally speaking this is
+	 *            the full length of the file)
+	 * @param originalFile
+	 *            The file this representation was parsed from
+	 * @param packageName
+	 *            The name of the package this class file is in
+	 * @param packageDefinitionLocation
+	 *            The location of the package definition
+	 */
+	AnalyzedSourceFile(@Nonnull Location location, @Nonnull File originalFile,
+			@Nonnull String packageName,
 			@Nonnull Location packageDefinitionLocation) {
 		super(location);
 		this.originalFile = originalFile;
@@ -60,73 +78,163 @@ public final class AnalyzedSourceFile extends Locatable {
 		this.imports = Lists.newArrayList();
 	}
 
-	private static String extractCompilationUnitName(File file) {
+	@Nonnull
+	private static String extractCompilationUnitName(@Nonnull File file) {
 		final String fileName = file.getName();
-		
-		return fileName.substring(0, fileName.length()-5);
+
+		return fileName.substring(0, fileName.length() - 5);
 	}
 
+	/**
+	 * Get the name of the compilation unit. This is generally the name of the
+	 * primary class, interface, annotation or enum defined in this file
+	 * 
+	 * @return The compilation unit name
+	 */
+	@Nonnull
 	public String getCompilationUnitName() {
 		return compilationUnitName;
 	}
-	
+
+	/**
+	 * Get the location of the package declaration
+	 * 
+	 * @return The location of the package declaration
+	 */
+	@Nonnull
 	public Location getPackageDefinitionLocation() {
 		return packageDefinitionLocation;
 	}
 
+	/**
+	 * Get the packagename of this source file
+	 * 
+	 * @return The name of the package
+	 */
 	@Nonnull
 	public String getPackageName() {
 		return packageName;
 	}
 
+	/**
+	 * Get all classes defined in this source file
+	 * 
+	 * @return An immutable list of classes
+	 */
 	@Nonnull
 	public List<AnalyzedClass> getClasses() {
 		return ImmutableList.copyOf(classes);
 	}
 
+	/**
+	 * Get all annotations defined in this source file
+	 * 
+	 * @return An immutable list of annotations
+	 */
+	@Nonnull
 	public List<AnalyzedAnnotationType> getAnnotations() {
 		return ImmutableList.copyOf(annotations);
 	}
 
+	/**
+	 * Get all enums defined in this source file
+	 * 
+	 * @return An immutable list of enums
+	 */
+	@Nonnull
 	public List<AnalyzedEnum> getEnums() {
 		return ImmutableList.copyOf(enums);
 	}
 
+	/**
+	 * Get all interfaces defined in this source file
+	 * 
+	 * @return An immutable list of interfaces
+	 */
+	@Nonnull
 	public List<AnalyzedInterface> getInterfaces() {
 		return ImmutableList.copyOf(interfaces);
 	}
 
+	/**
+	 * Get a list of all imports made in this source file
+	 * 
+	 * @return An immutable list of imports
+	 */
 	@Nonnull
 	public List<AnalyzedImport> getImports() {
 		return ImmutableList.copyOf(imports);
 	}
 
-	public boolean hasImport(@Nonnull String fqdn) {
-		for (AnalyzedImport analyzedImport : imports) {
-			if (analyzedImport.matchesClass(fqdn)) {
-				return true;
-			}
-		}
-
-		return false;
+	/**
+	 * Get the original file this representation was parsed from
+	 * 
+	 * @return The file
+	 */
+	@Nonnull
+	public File getOriginalFile() {
+		return originalFile;
 	}
 
+	/**
+	 * Checks if this source file has an import of the given fully qualified
+	 * domain name
+	 * 
+	 * @param fqdn
+	 *            The fully qualified domain name to check for
+	 * @return {@code true} if the import is present in this file, {@code false}
+	 *         otherwise
+	 */
+	public boolean hasImport(@Nonnull String fqdn) {
+		return imports.stream().anyMatch(i -> i.matchesClass(fqdn));
+	}
+
+	/**
+	 * Add a class to this source file
+	 * 
+	 * @param analyzedClass
+	 *            the class to add
+	 */
 	void addClass(@Nonnull AnalyzedClass analyzedClass) {
 		this.classes.add(analyzedClass);
 	}
 
+	/**
+	 * Add an interface to this source file
+	 * 
+	 * @param analyzedInterface
+	 *            the interface to add
+	 */
 	void addInterface(@Nonnull AnalyzedInterface analyzedInterface) {
 		this.interfaces.add(analyzedInterface);
 	}
 
+	/**
+	 * Add an enum to this source file
+	 * 
+	 * @param analyzedEnum
+	 *            the enum to add
+	 */
 	void addEnum(@Nonnull AnalyzedEnum analyzedEnum) {
 		this.enums.add(analyzedEnum);
 	}
 
-	void addAnnotation(@Nonnull AnalyzedAnnotationType analyzedType) {
-		this.annotations.add(analyzedType);
+	/**
+	 * Add an annotation to this source file
+	 * 
+	 * @param annotation
+	 *            the annotation to add
+	 */
+	void addAnnotation(@Nonnull AnalyzedAnnotationType annotation) {
+		this.annotations.add(annotation);
 	}
 
+	/**
+	 * Add an import to this source file
+	 * 
+	 * @param importStatement
+	 *            The import statement to add
+	 */
 	void addImport(@Nonnull AnalyzedImport importStatement) {
 		this.imports.add(importStatement);
 	}
@@ -147,9 +255,5 @@ public final class AnalyzedSourceFile extends Locatable {
 			analyzedClass.output(callback);
 		}
 
-	}
-
-	public File getOriginalFile() {
-		return originalFile;
 	}
 }

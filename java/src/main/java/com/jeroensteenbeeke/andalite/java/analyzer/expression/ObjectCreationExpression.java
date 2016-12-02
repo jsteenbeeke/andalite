@@ -15,6 +15,7 @@
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
@@ -122,18 +123,14 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 		java.append(type.toJavaString());
 		if (!typeArguments.isEmpty()) {
 			java.append("<");
-			Joiner.on(",").appendTo(
-					java,
-					FluentIterable.from(typeArguments).transform(
-							AnalyzedType.toJavaStringFunction()));
+			Joiner.on(",").appendTo(java, FluentIterable.from(typeArguments)
+					.transform(AnalyzedType.toJavaStringFunction()));
 			java.append(">");
 		}
 		java.append("(");
 		if (!arguments.isEmpty()) {
-			Joiner.on(",").appendTo(
-					java,
-					FluentIterable.from(arguments).transform(
-							AnalyzedExpression.toJavaStringFunction()));
+			java.append(arguments.stream().map(AnalyzedExpression::toJavaString)
+					.collect(Collectors.joining(",")));
 		}
 		java.append(")");
 

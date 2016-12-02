@@ -13,7 +13,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.jeroensteenbeeke.andalite.analyzer;
+package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import static org.junit.Assert.*;
 

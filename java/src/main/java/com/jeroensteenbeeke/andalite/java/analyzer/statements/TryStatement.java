@@ -15,13 +15,12 @@
 package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
@@ -81,10 +80,8 @@ public class TryStatement extends AnalyzedStatement {
 
 		java.append("try ");
 		java.append(block.toJavaString());
-		Joiner.on(' ').appendTo(
-				java,
-				FluentIterable.from(catchClauses).transform(
-						AnalyzedStatement.toJavaStringFunction()));
+		java.append(catchClauses.stream().map(AnalyzedStatement::toJavaString)
+				.collect(Collectors.joining(" ")));
 		if (finallyStatement != null) {
 			java.append(finallyStatement.toJavaString());
 		}

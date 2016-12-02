@@ -15,9 +15,8 @@
 package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -49,11 +48,8 @@ public class SwitchStatement extends AnalyzedStatement {
 
 	@Override
 	public String toJavaString() {
-		return String.format(
-				"case %s: %s",
-				getValue(),
-				Joiner.on("; ").join(
-						FluentIterable.from(statements).transform(
-								AnalyzedStatement.toJavaStringFunction())));
+		return String.format("case %s: %s", getValue(),
+				statements.stream().map(AnalyzedStatement::toJavaString)
+						.collect(Collectors.joining("; ")));
 	}
 }

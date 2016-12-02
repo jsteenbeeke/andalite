@@ -16,22 +16,53 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
+
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
+/**
+ * Representation of an enum constant
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public class AnalyzedEnumConstant extends ContainingDenomination {
 	private final List<AnalyzedExpression> parameters;
-	
-	public AnalyzedEnumConstant(Location location, int modifiers,
-			String packageName, TerminalNode denominationName, List<AnalyzedExpression> parameters) {
-		super(location, modifiers, packageName, denominationName);
+
+	/**
+	 * Create a new AnalyzedEnumConstant
+	 * 
+	 * @param location
+	 *            The location of the constant
+	 * @param modifiers
+	 *            The modifiers of the constant, indicating what keywords it
+	 *            has. Pretty much unused as enum constants generally don't have
+	 *            modifiers
+	 * @param packageName
+	 *            The name of the package the parent enum is in
+	 * @param constantName
+	 *            The node containing the name of the enum constant
+	 * @param parameters
+	 *            The parameters passed to the constant declaration
+	 */
+	AnalyzedEnumConstant(@Nonnull Location location, int modifiers,
+			@Nonnull String packageName, @Nonnull TerminalNode constantName,
+			@Nonnull List<AnalyzedExpression> parameters) {
+		super(location, modifiers, packageName, constantName);
 		this.parameters = parameters;
 	}
-	
+
+	/**
+	 * Get the list of the parameters passed to the constant declaration
+	 * 
+	 * @return An immutable list of parameter expression
+	 */
+	@Nonnull
 	public List<AnalyzedExpression> getParameters() {
-		return parameters;
+		return ImmutableList.copyOf(parameters);
 	}
 
 	@Override

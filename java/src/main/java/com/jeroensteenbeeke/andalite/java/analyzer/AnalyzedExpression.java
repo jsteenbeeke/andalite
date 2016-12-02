@@ -14,39 +14,38 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import java.io.Serializable;
+import javax.annotation.Nonnull;
 
-import com.google.common.base.Function;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Locatable;
 import com.jeroensteenbeeke.andalite.core.Location;
 
+/**
+ * Representation of an expression
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public abstract class AnalyzedExpression extends Locatable {
-
-	protected AnalyzedExpression(Location location) {
+	/**
+	 * Create a new expression with the given location
+	 * 
+	 * @param location
+	 *            The location of the expression
+	 */
+	protected AnalyzedExpression(@Nonnull Location location) {
 		super(location);
 	}
 
+	/**
+	 * Converts this expression to a Java-representation
+	 * 
+	 * @return A String containing the Java representation of this expression
+	 */
+	@Nonnull
 	public abstract String toJavaString();
 
 	@Override
 	public final void output(IOutputCallback callback) {
 		callback.write(toJavaString());
-	}
-
-	public static Function<AnalyzedExpression, String> toJavaStringFunction() {
-		return TO_JAVASTRING_FUNCTION;
-	}
-
-	private static final Function<AnalyzedExpression, String> TO_JAVASTRING_FUNCTION = new ToJavaStringFunction();
-
-	private static final class ToJavaStringFunction implements
-			Function<AnalyzedExpression, String>, Serializable {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public String apply(AnalyzedExpression input) {
-			return input.toJavaString();
-		}
 	}
 }

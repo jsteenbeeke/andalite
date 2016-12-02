@@ -21,6 +21,11 @@ import javax.annotation.Nonnull;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
+/**
+ * Representation of a field within a denomination
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public final class AnalyzedField extends AccessModifiable {
 	private final String name;
 
@@ -30,7 +35,20 @@ public final class AnalyzedField extends AccessModifiable {
 
 	private AnalyzedExpression initializationExpression;
 
-	public AnalyzedField(@Nonnull Location location, int modifiers,
+	/**
+	 * Create a new AnalyzedField
+	 * 
+	 * @param location
+	 *            The location of the field
+	 * @param modifiers
+	 *            The modifiers of the field, indicating what keywords it
+	 *            has
+	 * @param name
+	 *            The name of the field
+	 * @param type
+	 *            The type of the field
+	 */
+	AnalyzedField(@Nonnull Location location, int modifiers,
 			@Nonnull String name, @Nonnull AnalyzedType type) {
 		super(location, modifiers);
 		this.name = name;
@@ -39,31 +57,73 @@ public final class AnalyzedField extends AccessModifiable {
 		this.initializationExpression = null;
 	}
 
+	/**
+	 * Java has the possibility to declare multiple variables in a single
+	 * statement. In this case, the
+	 * AnalyzedField's location will represent the total statement's location,
+	 * which is copied by each AnalyzedField resulting from this declaration.
+	 * 
+	 * The specific location is the unambiguous location where this exact field
+	 * is defined
+	 * 
+	 * @return The specific location of this field
+	 */
 	public Location getSpecificDeclarationLocation() {
 		return specificDeclarationLocation;
 	}
 
-	void setSpecificDeclarationLocation(Location specificDeclarationLocation) {
+	/**
+	 * Sets the unambiguous location of this field's declaration
+	 * 
+	 * @param specificDeclarationLocation
+	 *            The location of this field
+	 */
+	void setSpecificDeclarationLocation(
+			@Nonnull Location specificDeclarationLocation) {
 		this.specificDeclarationLocation = specificDeclarationLocation;
 	}
 
-	void setInitializationExpression(AnalyzedExpression initializationExpression) {
+	/**
+	 * Get the initializing expression that determines this field's initial
+	 * value
+	 * 
+	 * @return The expression that initializes this variable, or {@code null} if
+	 *         no such expression exists
+	 */
+	@CheckForNull
+	public AnalyzedExpression getInitializationExpression() {
+		return initializationExpression;
+	}
+
+	/**
+	 * Sets the initializer expression for this field
+	 * 
+	 * @param initializationExpression
+	 *            The expression that is assigned to this field as initializer
+	 */
+	void setInitializationExpression(
+			@Nonnull AnalyzedExpression initializationExpression) {
 		this.initializationExpression = initializationExpression;
 	}
 
+	/**
+	 * Get the name of the field
+	 * 
+	 * @return The name of the field
+	 */
 	@Nonnull
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Get the type of the field
+	 * 
+	 * @return The type of the field
+	 */
 	@Nonnull
 	public AnalyzedType getType() {
 		return type;
-	}
-
-	@CheckForNull
-	public AnalyzedExpression getInitializationExpression() {
-		return initializationExpression;
 	}
 
 	@Override
