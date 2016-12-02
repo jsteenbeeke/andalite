@@ -15,13 +15,12 @@
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
@@ -77,10 +76,8 @@ public class FieldAccessExpression extends AnalyzedExpression {
 		}
 		if (!typeArguments.isEmpty()) {
 			java.append("<");
-			Joiner.on(",").appendTo(
-					java,
-					FluentIterable.from(typeArguments).transform(
-							AnalyzedType.toJavaStringFunction()));
+			java.append(typeArguments.stream().map(AnalyzedType::toJavaString)
+					.collect(Collectors.joining(",")));
 			java.append(">");
 		}
 		java.append(field);

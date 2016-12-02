@@ -14,16 +14,25 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import java.io.Serializable;
+import javax.annotation.Nonnull;
 
-import com.google.common.base.Function;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Locatable;
 import com.jeroensteenbeeke.andalite.core.Location;
 
+/**
+ * Representation of a Java type declaration
+ * 
+ * @author Jeroen Steenbeeke
+ */
 public abstract class AnalyzedType extends Locatable {
-
-	public AnalyzedType(Location location) {
+	/**
+	 * Create a new AnalyzedType
+	 * 
+	 * @param location
+	 *            The location of the type
+	 */
+	protected AnalyzedType(@Nonnull Location location) {
 		super(location);
 	}
 
@@ -32,21 +41,5 @@ public abstract class AnalyzedType extends Locatable {
 	@Override
 	public final void output(IOutputCallback callback) {
 		callback.write(toJavaString());
-	}
-
-	public static Function<AnalyzedType, String> toJavaStringFunction() {
-		return TO_JAVASTRING_FUNCTION;
-	}
-
-	private static final Function<AnalyzedType, String> TO_JAVASTRING_FUNCTION = new ToJavaStringFunction();
-
-	private static final class ToJavaStringFunction implements
-			Function<AnalyzedType, String>, Serializable {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public String apply(AnalyzedType input) {
-			return input.toJavaString();
-		}
 	}
 }

@@ -17,8 +17,6 @@ package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -80,8 +78,8 @@ public class ConstructorInvocationStatement extends AnalyzedStatement {
 		}
 		if (!typeArguments.isEmpty()) {
 			result.append("<");
-			result.append(Joiner.on(",").join(FluentIterable.from(typeArguments)
-					.transform(AnalyzedType.toJavaStringFunction())));
+			result.append(typeArguments.stream().map(AnalyzedType::toJavaString)
+					.collect(Collectors.joining(",")));
 			result.append(">");
 		}
 

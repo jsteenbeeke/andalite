@@ -204,11 +204,25 @@ public class ClassAnalyzer {
 
 	private final File targetFile;
 
+	/**
+	 * Create a new ClassAnalyzer for the given file
+	 * 
+	 * @param targetFile
+	 *            The file to parse
+	 */
 	public ClassAnalyzer(@Nonnull File targetFile) {
 		super();
 		this.targetFile = targetFile;
 	}
 
+	/**
+	 * Analyzes the source file, creating a representation of the source file
+	 * that can be
+	 * used in recipes.
+	 * 
+	 * @return A TypedActionResult containing the analyzed source file if
+	 *         successful, or an error message describing why not
+	 */
 	@Nonnull
 	public TypedActionResult<AnalyzedSourceFile> analyze() {
 		log.debug("Starting analysis of {}", targetFile.getAbsolutePath());
