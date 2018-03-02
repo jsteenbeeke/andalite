@@ -10,7 +10,20 @@
 	<artifactId>m2e-settings</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	
+
+	<distributionManagement>
+		<repository>
+			<id>repo-jeroensteenbeeke-releases</id>
+			<name>repo-jeroensteenbeeke-releases</name>
+			<url>https://repo.jeroensteenbeeke.nl/artifactory/libs-release-local</url>
+		</repository>
+		<snapshotRepository>
+			<id>repo-jeroensteenbeeke-snapshots</id>
+			<name>repo-jeroensteenbeeke-snapshots</name>
+			<url>https://repo.jeroensteenbeeke.nl/artifactory/libs-snapshot-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<build>
 		<defaultGoal>package</defaultGoal>
 		<resources>
