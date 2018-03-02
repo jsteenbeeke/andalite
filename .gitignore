@@ -15,3 +15,9 @@
 hs_err_pid*
 /target/
 .factorypath
+
+# IntelliJ
+*.iws
+*.iml
+.idea
+.DS_Store
