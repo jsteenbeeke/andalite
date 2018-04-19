@@ -17,8 +17,11 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
+import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -46,13 +49,14 @@ public final class AnalyzedSourceFile extends Locatable {
 	private final String compilationUnitName;
 
 	public AnalyzedSourceFile(@Nonnull Location location,
-			@Nonnull File originalFile, @Nonnull String packageName,
-			@Nonnull Location packageDefinitionLocation) {
+			@Nonnull File originalFile, @Nullable String packageName,
+			@Nullable Location packageDefinitionLocation) {
 		super(location);
 		this.originalFile = originalFile;
 		this.compilationUnitName = extractCompilationUnitName(originalFile);
-		this.packageName = packageName;
-		this.packageDefinitionLocation = packageDefinitionLocation;
+		this.packageName = Optional.ofNullable(packageName).orElse("");
+		this.packageDefinitionLocation = Optional.ofNullable(packageDefinitionLocation).orElse
+				(new Location(0,0));
 		this.classes = Lists.newArrayList();
 		this.interfaces = Lists.newArrayList();
 		this.enums = Lists.newArrayList();
@@ -69,7 +73,8 @@ public final class AnalyzedSourceFile extends Locatable {
 	public String getCompilationUnitName() {
 		return compilationUnitName;
 	}
-	
+
+	@Nonnull
 	public Location getPackageDefinitionLocation() {
 		return packageDefinitionLocation;
 	}

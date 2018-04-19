@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.annotation.CheckForNull;
@@ -226,7 +227,7 @@ public class ClassAnalyzer {
 
 			AnalyzedSourceFile sourceFile = new AnalyzedSourceFile(
 					Location.from(compilationUnit), targetFile, packageName,
-					Location.from(packageDefinition));
+					Optional.ofNullable(packageDefinition).map(Location::from).orElse(null));
 
 			for (ImportDeclaration importDeclaration : compilationUnit
 					.getImports()) {
