@@ -55,6 +55,9 @@ public class Questions {
 				return (T) object;
 			}
 
+			System.err.println("Keys known:");
+			answers.keySet().forEach(k -> System.err.printf("\t%s", k));
+
 			throw new IllegalArgumentException("No answer registered with key "
 					+ key);
 		}
