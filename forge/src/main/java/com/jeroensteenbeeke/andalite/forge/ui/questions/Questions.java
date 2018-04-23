@@ -75,6 +75,9 @@ public class Questions {
 			combined.putAll(answers);
 			combined.putAll(other.answers);
 
+			System.err.printf("Join of %d and %d items yielded map of %d items", answers.size(), other.answers.size(), combined.size()).println();
+
+
 			return new Answers(combined);
 		}
 	}
