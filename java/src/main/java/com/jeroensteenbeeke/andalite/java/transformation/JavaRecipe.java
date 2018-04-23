@@ -17,11 +17,12 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 import java.io.File;
 import java.util.List;
 
+import com.jeroensteenbeeke.hyperion.util.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.hyperion.util.TypedResult;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 
@@ -40,7 +41,7 @@ public class JavaRecipe {
 		return steps;
 	}
 
-	public ActionResult applyTo(File file) {
+	public TypedResult<AnalyzedSourceFile> applyTo(File file) {
 		logger.debug("Applying transformation ({} steps) to {}", steps.size(),
 				file.getName());
 
@@ -48,7 +49,7 @@ public class JavaRecipe {
 
 		for (JavaRecipeStep<?> step : steps) {
 
-			TypedActionResult<AnalyzedSourceFile> result = new ClassAnalyzer(
+			TypedResult<AnalyzedSourceFile> result = new ClassAnalyzer(
 					file).analyze();
 
 			if (!result.isOk()) {
@@ -58,10 +59,10 @@ public class JavaRecipe {
 					logger.error("Previous action: {}", prev.toString());
 				}
 
-				return ActionResult.error(String.format(
+				return TypedResult.fail(
 						"Navigation: %s\nOperation: %s\nParse result: %s",
 						step.navigationToString(), step.operationToString(),
-						result.getMessage()));
+						result.getMessage());
 
 			}
 
@@ -70,12 +71,10 @@ public class JavaRecipe {
 			if (!stepResult.isOk()) {
 				logger.error("ERROR: {} {}", result.getMessage(),
 						step.toString());
-				return ActionResult
-						.error(String
-								.format("Navigation: %s\nOperation: %s\nTransformation result: %s",
+				return TypedResult.fail("Navigation: %s\nOperation: %s\nTransformation result: %s",
 										step.navigationToString(),
 										step.operationToString(),
-										result.getMessage()));
+										result.getMessage());
 			} else {
 				logger.debug("OK: {}", step.toString());
 			}
@@ -84,22 +83,20 @@ public class JavaRecipe {
 
 			if (!result.isOk()) {
 				logger.error("ERROR: transformation rendered file unparseable");
-				return ActionResult.error(String.format(
+				return TypedResult.fail(
 						"Navigation: %s\nOperation: %s\nParse result: %s",
 						step.navigationToString(), step.operationToString(),
-						result.getMessage()));
+						result.getMessage());
 			}
 
 			ActionResult verify = step.verify(result.getObject());
 
 			if (!verify.isOk()) {
 				logger.error("ERROR: recipe step failed verification");
-				return ActionResult
-						.error(String
-								.format("Navigation: %s\nOperation: %s\nVerification result: %s",
+				return TypedResult.fail("Navigation: %s\nOperation: %s\nVerification result: %s",
 										step.navigationToString(),
 										step.operationToString(),
-										verify.getMessage()));
+										verify.getMessage());
 			}
 
 			prev = step;

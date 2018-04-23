@@ -14,25 +14,18 @@
  */
 package com.jeroensteenbeeke.andalite.maven.ui;
 
-import java.io.File;
-
-import javax.annotation.Nonnull;
-
+import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
+import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
+import com.jeroensteenbeeke.andalite.forge.ui.Question;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.*;
+import com.jeroensteenbeeke.andalite.forge.ui.renderer.QuestionRenderer;
+import com.jeroensteenbeeke.hyperion.util.TypedResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
-import com.jeroensteenbeeke.andalite.forge.ForgeException;
-import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
-import com.jeroensteenbeeke.andalite.forge.ui.Action;
-import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
-import com.jeroensteenbeeke.andalite.forge.ui.Question;
-import com.jeroensteenbeeke.andalite.forge.ui.questions.FileSelectQuestion;
-import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
-import com.jeroensteenbeeke.andalite.forge.ui.questions.SimpleQuestion;
-import com.jeroensteenbeeke.andalite.forge.ui.questions.YesNoQuestion;
-import com.jeroensteenbeeke.andalite.forge.ui.questions.internal.RecipeSelectionQuestion;
-import com.jeroensteenbeeke.andalite.forge.ui.renderer.QuestionRenderer;
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.util.List;
 
 public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler {
 	private static final int YES = 1;
@@ -43,37 +36,33 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 			.getLogger(MavenQuestionRenderer.class);
 
 	@Override
-	public <T> TypedActionResult<Action> renderQuestion(
-			@Nonnull Question<T> question) {
-		try {
-			if (question instanceof SimpleQuestion) {
-				return renderSimpleQuestion((SimpleQuestion) question);
-			}
-			if (question instanceof YesNoQuestion) {
-				return renderYesNoQuestion((YesNoQuestion) question);
-			}
-			if (question instanceof MultipleChoiceQuestion) {
-				return renderMultipleChoiceQuestion((MultipleChoiceQuestion) question);
-			}
-			if (question instanceof FileSelectQuestion) {
-				return renderFileSelectQuestion((FileSelectQuestion) question);
-			}
-			if (question instanceof RecipeSelectionQuestion) {
-				return renderRecipeSelectQuestion((RecipeSelectionQuestion) question);
-			}
-		} catch (ForgeException e) {
-			return TypedActionResult.fail(e.getMessage());
+	public TypedResult<Answers> renderQuestion(
+			@Nonnull Answers answers,
+			@Nonnull Question question) {
+		if (question instanceof SimpleQuestion) {
+			return renderSimpleQuestion((SimpleQuestion) question)
+					.map(o -> answers.plus(question.getKey(), o));
 		}
-
-		return TypedActionResult.fail("Unknown question type: %s", question
-				.getClass().getName());
+		if (question instanceof YesNoQuestion) {
+			return renderYesNoQuestion((YesNoQuestion) question)
+					.map(o -> answers.plus(question.getKey(), o));
+		}
+		if (question instanceof MultipleChoiceQuestion) {
+			return renderMultipleChoiceQuestion((MultipleChoiceQuestion) question)
+					.map(o -> answers.plus(question.getKey(), o));
+		}
+		if (question instanceof FileSelectQuestion) {
+			return renderFileSelectQuestion((FileSelectQuestion) question)
+					.map(o -> answers.plus(question.getKey(), o));
+		}
+		return TypedResult.fail("Unknown question type: %s", question.getClass());
 	}
 
-	private TypedActionResult<Action> renderRecipeSelectQuestion(
-			RecipeSelectionQuestion question) throws ForgeException {
-		TypedActionResult<Integer> response = TypedActionResult.fail("Invalid choice");
-
-		final int exit = question.getRecipes().size() + 1;
+	@Override
+	public TypedResult<ForgeRecipe> renderRecipeSelection(
+			@Nonnull
+					List<ForgeRecipe> recipeList) {
+		TypedResult<Integer> response = createPlaceholder();
 
 		while (!response.isOk()) {
 			String message = response.getMessage();
@@ -81,34 +70,23 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 				System.out.println(message);
 				System.out.println();
 			}
-			System.out.println(question.getQuestion());
+			System.out.println("Select Recipe");
 			int i = 0;
-			for (ForgeRecipe choice : question.getRecipes()) {
+			for (ForgeRecipe recipe : recipeList) {
 				System.out.print("\t[");
 				System.out.print(++i);
 				System.out.print("] ");
-				System.out.println(choice.getName());
+				System.out.println(recipe.getName());
 
 			}
 
-			System.out.print("\t[");
-			System.out.print(++i);
-			System.out.println("] Done");
-
-			response = getNumberResponse(1, i + 1);
+			response = getNumberResponse(1, i);
 		}
 
-		if (response.getObject().intValue() == exit) {
-			return TypedActionResult.ok(Completed.get());
-		}
+		return TypedResult.ok(recipeList.get(response.getObject() - 1));	}
 
-		return TypedActionResult.ok(question.onAnswer(question.getRecipes()
-				.get(response.getObject() - 1), this));
-	}
-
-	private TypedActionResult<Action> renderMultipleChoiceQuestion(
-			MultipleChoiceQuestion question) throws ForgeException {
-		TypedActionResult<Integer> response = createPlaceholder();
+	private TypedResult<String> renderMultipleChoiceQuestion(MultipleChoiceQuestion question) {
+		TypedResult<Integer> response = createPlaceholder();
 
 		while (!response.isOk()) {
 			String message = response.getMessage();
@@ -129,17 +107,16 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 			response = getNumberResponse(1, i);
 		}
 
-		return TypedActionResult.ok(question.onAnswer(question.getChoices()
-				.get(response.getObject() - 1), this));
+		return TypedResult.ok(question.getChoices().get(response.getObject() - 1));
 	}
 
-	private TypedActionResult<Integer> createPlaceholder() {
-		return TypedActionResult.fail("-");
+	private <T> TypedResult<T> createPlaceholder() {
+		return TypedResult.fail("-");
 	}
 
-	private TypedActionResult<Action> renderFileSelectQuestion(
-			FileSelectQuestion question) throws ForgeException {
-		TypedActionResult<Integer> response = createPlaceholder();
+	private TypedResult<File> renderFileSelectQuestion(
+			FileSelectQuestion question) {
+		TypedResult<Integer> response = createPlaceholder();
 
 		while (!response.isOk()) {
 			String message = response.getMessage();
@@ -154,19 +131,16 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 				System.out.print(++i);
 				System.out.print("] ");
 				System.out.println(choice.getPath());
-
 			}
 
 			response = getNumberResponse(1, i);
 		}
 
-		return TypedActionResult.ok(question.onAnswer(question.getChoices()
-				.get(response.getObject() - 1), this));
+		return TypedResult.ok(question.getChoices().get(response.getObject() - 1));
 	}
 
-	private TypedActionResult<Action> renderYesNoQuestion(YesNoQuestion question)
-			throws ForgeException {
-		TypedActionResult<Integer> response = createPlaceholder();
+	private TypedResult<Boolean> renderYesNoQuestion(YesNoQuestion question) {
+		TypedResult<Integer> response = createPlaceholder();
 
 		while (!response.isOk()) {
 			String message = response.getMessage();
@@ -180,30 +154,29 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 			response = getNumberResponse(YES, NO);
 		}
 
-		return TypedActionResult.ok(question.onAnswer(response.getObject()
-				.equals(YES), this));
+		return TypedResult.ok(response.getObject().equals(YES));
 	}
 
-	private TypedActionResult<Action> renderSimpleQuestion(
-			SimpleQuestion question) throws ForgeException {
+	private TypedResult<String> renderSimpleQuestion(
+			SimpleQuestion question) {
 		System.out.println(question.getQuestion());
 		String answer = System.console().readLine();
-		return TypedActionResult.ok(question.onAnswer(answer, this));
+		return TypedResult.ok(answer);
 	}
 
-	private TypedActionResult<Integer> getNumberResponse(int low, int high) {
+	private TypedResult<Integer> getNumberResponse(int low, int high) {
 		String input = System.console().readLine();
 
 		try {
 			int number = Integer.parseInt(input);
 
 			if (number < low || number > high) {
-				return TypedActionResult.fail("Invalid input: %d", number);
+				return TypedResult.fail("Invalid input: %d", number);
 			}
 
-			return TypedActionResult.ok(number);
+			return TypedResult.ok(number);
 		} catch (NumberFormatException nfe) {
-			return TypedActionResult.fail(nfe.getMessage());
+			return TypedResult.fail(nfe.getMessage());
 		}
 
 	}

@@ -22,10 +22,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import com.jeroensteenbeeke.hyperion.util.Randomizer;
+import com.jeroensteenbeeke.hyperion.util.Result;
 import org.junit.Test;
 
 import com.google.common.collect.Maps;
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
@@ -43,8 +45,7 @@ public class MassiveTransformationTest extends DummyAwareTest {
 		builder.ensurePublicClass();
 		;
 		for (int i = 0; i < OPERATIONS; i++) {
-			String randomParam = Randomizer
-					.random(Randomizer.randomLength(20, 40));
+			String randomParam = "_".concat(Randomizer.random(40));
 			paramNames.put(i, randomParam);
 			builder.inPublicClass().ensureMethod()
 					.withModifier(AccessModifier.PUBLIC)
@@ -56,7 +57,7 @@ public class MassiveTransformationTest extends DummyAwareTest {
 
 		File bare = getDummy(BaseDummies.BareClassWithGenericType);
 
-		ActionResult result = recipe.applyTo(bare);
+		Result<?,?> result = recipe.applyTo(bare);
 
 		assertThat(result, isOk());
 

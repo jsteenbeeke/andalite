@@ -43,12 +43,6 @@
 		<tag>HEAD</tag>
 	</scm>
 
-
-
-	<prerequisites>
-		<maven>3.0.5</maven>
-	</prerequisites>
-
 	<dependencies>
 		<!-- Test Dependencies -->
 		<dependency>
@@ -74,16 +68,9 @@
 			<artifactId>andalite-java-parser</artifactId>
 		</dependency>
 
-		<!-- Guava -->
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-
-		<!-- Code Integrity -->
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
+			<groupId>com.jeroensteenbeeke</groupId>
+			<artifactId>hyperion-core</artifactId>
 		</dependency>
 
 		<!-- Logging -->

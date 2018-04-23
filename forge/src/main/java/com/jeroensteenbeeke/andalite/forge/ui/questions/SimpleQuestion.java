@@ -15,8 +15,8 @@
 package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
 
-public abstract class SimpleQuestion extends AbstractQuestion<String> {
-	protected SimpleQuestion(String question) {
-		super(question);
+public abstract class SimpleQuestion extends AbstractQuestion {
+	protected SimpleQuestion(String key, String question) {
+		super(key, question);
 	}
 }

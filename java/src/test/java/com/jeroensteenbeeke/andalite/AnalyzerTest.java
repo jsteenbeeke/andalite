@@ -42,7 +42,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.hyperion.util.TypedResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.core.test.IDummyDescriptor;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
@@ -65,7 +65,7 @@ public class AnalyzerTest extends DummyAwareTest {
 		ClassAnalyzer classAnalyzer = new ClassAnalyzer(
 				new File(
 						"src/test/java/com/jeroensteenbeeke/andalite/AnalyzerTest.java"));
-		TypedActionResult<AnalyzedSourceFile> result = classAnalyzer.analyze();
+		TypedResult<AnalyzedSourceFile> result = classAnalyzer.analyze();
 		assertTrue(result.isOk());
 
 		AnalyzedSourceFile source = result.getObject();
@@ -80,7 +80,7 @@ public class AnalyzerTest extends DummyAwareTest {
 				new File(
 						"src/test/java/com/jeroensteenbeeke/andalite/analyzer/LolCat.java"));
 
-		TypedActionResult<AnalyzedSourceFile> result = classAnalyzer.analyze();
+		TypedResult<AnalyzedSourceFile> result = classAnalyzer.analyze();
 		assertTrue(result.isOk());
 
 		AnalyzedSourceFile source = result.getObject();
@@ -143,7 +143,7 @@ public class AnalyzerTest extends DummyAwareTest {
 	@Test
 	public void testEmptyJava() throws IOException {
 		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.Empty);
-		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+		TypedResult<AnalyzedSourceFile> result = analyzer.analyze();
 
 		assertTrue(result.isOk());
 
@@ -161,7 +161,7 @@ public class AnalyzerTest extends DummyAwareTest {
 	public void testBareClass() throws IOException {
 		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.BareClass);
 
-		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+		TypedResult<AnalyzedSourceFile> result = analyzer.analyze();
 		assertTrue(result.isOk());
 
 		AnalyzedSourceFile file = result.getObject();
@@ -191,7 +191,7 @@ public class AnalyzerTest extends DummyAwareTest {
 	public void testBareInterface() throws IOException {
 		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.BareInterface);
 
-		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+		TypedResult<AnalyzedSourceFile> result = analyzer.analyze();
 		assertTrue(result.isOk());
 
 		AnalyzedSourceFile file = result.getObject();
@@ -214,7 +214,7 @@ public class AnalyzerTest extends DummyAwareTest {
 	public void testBareEnum() throws IOException {
 		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.BareEnum);
 
-		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+		TypedResult<AnalyzedSourceFile> result = analyzer.analyze();
 		assertTrue(result.isOk());
 
 		AnalyzedSourceFile file = result.getObject();
@@ -238,7 +238,7 @@ public class AnalyzerTest extends DummyAwareTest {
 	public void testReverseIntComparator() throws IOException {
 		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.ReverseIntComparator);
 
-		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+		TypedResult<AnalyzedSourceFile> result = analyzer.analyze();
 
 		assertTrue(result.isOk());
 

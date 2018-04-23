@@ -15,10 +15,10 @@
 package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
 
-public abstract class YesNoQuestion extends AbstractQuestion<Boolean> {
+public abstract class YesNoQuestion extends AbstractQuestion {
 
-	protected YesNoQuestion(String question) {
-		super(question);
+	protected YesNoQuestion(String key, String question) {
+		super(key, question);
 	}
 
 }

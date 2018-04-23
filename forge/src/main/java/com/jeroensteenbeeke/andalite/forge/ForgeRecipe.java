@@ -14,13 +14,20 @@
  */
 package com.jeroensteenbeeke.andalite.forge;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
+import com.jeroensteenbeeke.andalite.forge.ui.Question;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
+
+import java.util.List;
+import java.util.function.Function;
 
 public interface ForgeRecipe {
 	ActionResult checkCorrectlyConfigured();
 
 	String getName();
 
-	Action onSelected() throws ForgeException;
+	Function<Answers,List<Question>> questionProvider();
+
+	Function<Answers,Action> answerToAction();
 }

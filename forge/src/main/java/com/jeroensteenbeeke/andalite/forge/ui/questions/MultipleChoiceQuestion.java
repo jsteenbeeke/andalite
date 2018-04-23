@@ -16,10 +16,10 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
 import java.util.List;
 
-public abstract class MultipleChoiceQuestion extends AbstractQuestion<String> {
+public abstract class MultipleChoiceQuestion extends AbstractQuestion {
 
-	protected MultipleChoiceQuestion(String question) {
-		super(question);
+	protected MultipleChoiceQuestion(String key, String question) {
+		super(key, question);
 	}
 
 	public abstract List<String> getChoices();

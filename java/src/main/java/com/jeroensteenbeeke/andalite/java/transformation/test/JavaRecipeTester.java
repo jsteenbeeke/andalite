@@ -6,8 +6,8 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.util.List;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.hyperion.util.TypedResult;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
@@ -17,7 +17,7 @@ public class JavaRecipeTester {
 	public static void assertValid(JavaRecipe recipe, File baseFile) {
 		List<JavaRecipeStep<?>> steps = recipe.getSteps();
 
-		TypedActionResult<AnalyzedSourceFile> parseResult = new ClassAnalyzer(
+		TypedResult<AnalyzedSourceFile> parseResult = new ClassAnalyzer(
 				baseFile).analyze();
 		assertThat("Well-formed Java file before transformation", parseResult,
 				isOk());

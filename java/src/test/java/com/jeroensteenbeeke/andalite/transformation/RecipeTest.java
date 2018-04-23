@@ -29,10 +29,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import com.jeroensteenbeeke.hyperion.util.Result;
 import org.junit.Test;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.hyperion.util.TypedResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
@@ -124,12 +125,12 @@ public class RecipeTest extends DummyAwareTest {
 
 		File bare = getDummy(BaseDummies.BareClass);
 
-		ActionResult result = recipe.applyTo(bare);
+		Result<?,?> result = recipe.applyTo(bare);
 
 		assertThat(result, isOk());
 
 		ClassAnalyzer resultChecker = new ClassAnalyzer(bare);
-		TypedActionResult<AnalyzedSourceFile> analysisResult = resultChecker
+		TypedResult<AnalyzedSourceFile> analysisResult = resultChecker
 				.analyze();
 
 		assertThat(analysisResult, isOk());

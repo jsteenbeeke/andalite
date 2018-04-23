@@ -14,26 +14,26 @@
  */
 package com.jeroensteenbeeke.andalite.maven;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-
-import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
-import com.jeroensteenbeeke.andalite.forge.ui.questions.internal.RecipeSelectionQuestion;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.andalite.forge.ui.renderer.QuestionRenderer;
 import com.jeroensteenbeeke.andalite.maven.ui.FileInputRenderer;
 import com.jeroensteenbeeke.andalite.maven.ui.MavenQuestionRenderer;
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.hyperion.util.TypedResult;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.function.Function;
 
 @Mojo(name = "forge", aggregator = true, requiresDirectInvocation = true)
 public class ForgeMojo extends RecipeMojo {
@@ -49,6 +49,7 @@ public class ForgeMojo extends RecipeMojo {
 
 		List<ForgeRecipe> recipeList = determineRecipes();
 
+
 		QuestionRenderer renderer;
 		try {
 			renderer = inputFile != null ? new FileInputRenderer(inputFile)
@@ -56,28 +57,49 @@ public class ForgeMojo extends RecipeMojo {
 		} catch (IOException e) {
 			throw new MojoFailureException("Could not read input file", e);
 		}
-		Action next = new RecipeSelectionQuestion(recipeList);
 
-		while (next instanceof Question) {
-			getLog().debug(String.format("Next action: %s", next.toString()));
+		TypedResult<ForgeRecipe> selection = renderer.renderRecipeSelection(recipeList);
 
-			Question<?> q = (Question<?>) next;
-			TypedActionResult<Action> result = renderer.renderQuestion(q);
-			if (!result.isOk()) {
-				throw new MojoFailureException(result.getMessage());
-			}
-
-			next = result.getObject();
+		if (!selection.isOk()) {
+			throw new MojoFailureException(selection.getMessage());
 		}
 
-		getLog().debug(String.format("Next action: %s", next.toString()));
+		ForgeRecipe recipe = selection.getObject();
 
-		if (next instanceof Failure) {
-			Failure failure = (Failure) next;
+		Answers answers = Answers.zero();
+
+		Function<Answers, List<Question>> questionProvider = recipe.questionProvider();
+
+		List<Question> questions = questionProvider.apply(answers);
+
+		while (!questions.isEmpty()) {
+			for (Question question : questions) {
+				TypedResult<Answers> result = renderer.renderQuestion(answers, question);
+				if (!result.isOk()) {
+					throw new MojoFailureException(result.getMessage());
+				} else {
+					answers = result.getObject();
+				}
+			}
+
+			questions = questionProvider.apply(answers);
+		}
+
+		Action action;
+		try {
+			action = recipe.answerToAction().apply(answers);
+		} catch (Exception e) {
+			throw new MojoFailureException(e.getMessage(), e);
+		}
+
+		getLog().debug(String.format("Next action: %s", action.toString()));
+
+		if (action instanceof Failure) {
+			Failure failure = (Failure) action;
 			throw new MojoFailureException(String.format("Forge Recipe returned failure: %s", failure.getReason()));
-		} else if (next instanceof PerformableAction) {
-			PerformableAction action = (PerformableAction) next;
-			ActionResult result = action.perform();
+		} else if (action instanceof PerformableAction) {
+			PerformableAction performableAction = (PerformableAction) action;
+			ActionResult result = performableAction.perform();
 			if (!result.isOk()) {
 				throw new MojoFailureException(result.getMessage());
 			}

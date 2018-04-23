@@ -17,11 +17,12 @@ package com.jeroensteenbeeke.andalite.xml;
 
 import java.io.File;
 
+import com.jeroensteenbeeke.hyperion.util.Result;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.hyperion.util.TypedResult;
 import com.jeroensteenbeeke.andalite.xml.util.XMLUtil;
 
 public class XMLRecipeStep<N extends Node> {
@@ -36,8 +37,8 @@ public class XMLRecipeStep<N extends Node> {
 		this.operation = operation;
 	}
 
-	public ActionResult perform(File file) {
-		TypedActionResult<Document> documentResult = XMLUtil.readFile(file);
+	public TypedResult<Document> perform(File file) {
+		TypedResult<Document> documentResult = XMLUtil.readFile(file);
 		if (!documentResult.isOk()) {
 			return documentResult;
 		}

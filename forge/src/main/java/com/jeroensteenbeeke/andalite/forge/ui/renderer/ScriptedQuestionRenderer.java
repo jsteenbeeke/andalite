@@ -14,40 +14,48 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.renderer;
 
+import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
+import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
+import com.jeroensteenbeeke.andalite.forge.ui.Question;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
+import com.jeroensteenbeeke.hyperion.util.TypedResult;
+
+import javax.annotation.Nonnull;
 import java.util.List;
 
-import com.google.common.collect.Lists;
-import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
-import com.jeroensteenbeeke.andalite.forge.ForgeException;
-import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
-import com.jeroensteenbeeke.andalite.forge.ui.Action;
-import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
-import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
-import com.jeroensteenbeeke.andalite.forge.ui.Question;
-import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
-import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
-
 public class ScriptedQuestionRenderer implements QuestionRenderer {
-	private final List<Object> answers;
+	private final List<Object> scriptedAnswers;
 
 	private final FeedbackHandler feedbackHandler;
 
-	private ScriptedQuestionRenderer(List<Object> answers,
+	private ScriptedQuestionRenderer(List<Object> scriptedAnswers,
 			FeedbackHandler feedbackHandler) {
-		this.answers = answers;
+		this.scriptedAnswers = scriptedAnswers;
 		this.feedbackHandler = feedbackHandler;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> TypedActionResult<Action> renderQuestion(Question<T> question) {
-		try {
-			if (answers.isEmpty()) {
-				throw new IllegalStateException(
+	public TypedResult<ForgeRecipe> renderRecipeSelection(
+			@Nonnull List<ForgeRecipe> recipeList) {
+		Object answer = scriptedAnswers.remove(0);
+
+		if (answer instanceof Integer) {
+			return TypedResult.ok(recipeList.get((Integer) answer));
+		}
+
+		return TypedResult.fail("Invalid recipe index: %s", answer);
+	}
+
+	@Override
+	public TypedResult<Answers> renderQuestion(
+			@Nonnull Answers answers,
+			@Nonnull Question question) {
+			if (scriptedAnswers.isEmpty()) {
+				return TypedResult.fail(
 						"Scenario incorrect, no answers left but questions remaining");
 			}
-			T answer = (T) answers.remove(0);
+			Object answer = scriptedAnswers.remove(0);
 			feedbackHandler.info("Question: %s?", question.getQuestion());
 			if (question instanceof MultipleChoiceQuestion) {
 				MultipleChoiceQuestion mcq = (MultipleChoiceQuestion) question;
@@ -58,71 +66,6 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 
 			feedbackHandler.info("\tAnswer: %s", answer.toString());
 
-			Action action = question.onAnswer(answer, feedbackHandler);
-
-			return TypedActionResult.ok(action);
-		} catch (ForgeException e) {
-			return TypedActionResult.fail(e.getMessage());
-		}
-	}
-
-	public static Builder forAnswers(Object first, Object... rest) {
-		List<Object> answers = Lists.newLinkedList();
-		answers.add(first);
-		for (Object object : rest) {
-			answers.add(object);
-		}
-
-		return new Builder(answers);
-	}
-
-	public static class Builder {
-		private final List<Object> answers;
-
-		private Builder(List<Object> answers) {
-			this.answers = answers;
-		}
-
-		public ScriptedQuestionRenderer withHandler(FeedbackHandler handler) {
-			return new ScriptedQuestionRenderer(answers, handler);
-		}
-	}
-
-	public ActionResult execute(ForgeRecipe recipe) {
-		ActionResult result = recipe.checkCorrectlyConfigured();
-		if (!result.isOk()) {
-			return result;
-		}
-
-		try {
-			Action next = recipe.onSelected();
-
-			while (next instanceof Question) {
-				Question<?> q = (Question<?>) next;
-				TypedActionResult<Action> r = renderQuestion(q);
-				if (!result.isOk()) {
-					return result;
-				}
-
-				next = r.getObject();
-			}
-
-			if (next instanceof Failure) {
-				Failure failure = (Failure) next;
-
-				return ActionResult.error(failure.getReason());
-			} else if (next instanceof PerformableAction) {
-				PerformableAction action = (PerformableAction) next;
-				ActionResult r = action.perform();
-				if (!r.isOk()) {
-					return r;
-				}
-			}
-
-		} catch (ForgeException e) {
-			return ActionResult.error(e.getMessage());
-		}
-
-		return ActionResult.ok();
+			return TypedResult.ok(answers.plus(question.getKey(), answer));
 	}
 }

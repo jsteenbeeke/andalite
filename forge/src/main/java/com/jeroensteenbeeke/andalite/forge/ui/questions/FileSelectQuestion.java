@@ -17,10 +17,10 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions;
 import java.io.File;
 import java.util.List;
 
-public abstract class FileSelectQuestion extends AbstractQuestion<File> {
+public abstract class FileSelectQuestion extends AbstractQuestion {
 
-	protected FileSelectQuestion(String question) {
-		super(question);
+	protected FileSelectQuestion(String key, String question) {
+		super(key, question);
 	}
 
 	public abstract List<File> getChoices();

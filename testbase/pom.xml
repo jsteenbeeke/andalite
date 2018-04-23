@@ -35,19 +35,12 @@
 		</license>
 	</licenses>
 
-
 	<scm>
 		<url>https://github.com/jsteenbeeke/andalite</url>
 		<connection>scm:git:git@github.com:jsteenbeeke/andalite.gits</connection>
 		<developerConnection>scm:git:git@github.com:jsteenbeeke/andalite.git</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
-
-
-
-	<prerequisites>
-		<maven>3.0.5</maven>
-	</prerequisites>
 
 	<dependencies>
 		<!-- Sibling projects -->
@@ -87,7 +80,7 @@
 		<!-- Code Integrity -->
 		<dependency>
 			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
+			<artifactId>annotations</artifactId>
 		</dependency>
 
 		<!-- Logging -->

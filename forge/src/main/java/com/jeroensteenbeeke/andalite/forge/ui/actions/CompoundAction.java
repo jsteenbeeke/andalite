@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.actions;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
 import com.jeroensteenbeeke.andalite.forge.ui.CompoundableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 

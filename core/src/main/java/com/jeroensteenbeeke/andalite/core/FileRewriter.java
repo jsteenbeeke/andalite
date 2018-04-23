@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

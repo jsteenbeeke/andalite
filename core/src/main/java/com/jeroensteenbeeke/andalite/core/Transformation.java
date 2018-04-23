@@ -15,6 +15,8 @@
 
 package com.jeroensteenbeeke.andalite.core;
 
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
+
 import java.io.File;
 
 import javax.annotation.Nonnull;

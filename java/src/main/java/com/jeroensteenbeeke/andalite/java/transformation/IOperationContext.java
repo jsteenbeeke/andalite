@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import java.io.File;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
 
 public interface IOperationContext {
 

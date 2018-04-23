@@ -24,7 +24,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import com.google.common.collect.Lists;
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 
 public abstract class RecipeMojo extends AbstractMojo {
@@ -76,16 +76,8 @@ public abstract class RecipeMojo extends AbstractMojo {
 			} catch (ClassNotFoundException e) {
 				getLog().error("Recipe not found: " + className);
 				getLog().error(e);
-			} catch (InstantiationException e) {
+			} catch (InstantiationException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
 				getLog().error("Could not instantiate recipe: " + className);
-				getLog().error(e);
-			} catch (IllegalArgumentException e) {
-				getLog().error("Could not instantiate recipe: " + className);
-				getLog().error(e);
-			} catch (InvocationTargetException e) {
-				getLog().error("Could not instantiate recipe: " + className);
-				getLog().error(e);
-			} catch (IllegalAccessException e) {
 				getLog().error(e);
 			}
 		}

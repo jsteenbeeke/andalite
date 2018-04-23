@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
 
 public final class DeleteFile extends AbstractCompoundableAction {
 	private final File file;
