@@ -14,6 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -64,6 +65,14 @@ public class Questions {
 			}
 			answers.put(key, answer);
 
+		}
+
+		public Answers join(Answers other) {
+			Map<String, Object> combined = Maps.newLinkedHashMap();
+			combined.putAll(answers);
+			combined.putAll(other.answers);
+
+			return new Answers(combined);
 		}
 	}
 
