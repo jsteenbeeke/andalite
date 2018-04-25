@@ -14,6 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.renderer;
 
+import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
@@ -67,5 +68,27 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 			feedbackHandler.info("\tAnswer: %s", answer.toString());
 
 			return TypedResult.ok(answers.plus(question.getKey(), answer));
+	}
+
+	public static Builder forAnswers(Object first, Object... rest) {
+		List<Object> answers = Lists.newLinkedList();
+		answers.add(first);
+		for (Object object : rest) {
+			answers.add(object);
+		}
+
+		return new Builder(answers);
+	}
+
+	public static class Builder {
+		private final List<Object> answers;
+
+		private Builder(List<Object> answers) {
+			this.answers = answers;
+		}
+
+		public ScriptedQuestionRenderer withHandler(FeedbackHandler handler) {
+			return new ScriptedQuestionRenderer(answers, handler);
+		}
 	}
 }
