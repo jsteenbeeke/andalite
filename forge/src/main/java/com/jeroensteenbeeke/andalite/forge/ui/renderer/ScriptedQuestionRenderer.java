@@ -22,6 +22,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
 import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.AbstractQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
 import com.jeroensteenbeeke.hyperion.util.ActionResult;
@@ -71,6 +72,14 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 			}
 
 			feedbackHandler.info("\tAnswer: %s", answer.toString());
+
+			if (question instanceof AbstractQuestion) {
+				@SuppressWarnings("unchecked")
+				AbstractQuestion<Object> aq = (AbstractQuestion<Object>) question;
+				if (!aq.isValidAnswer(answer)) {
+					return TypedResult.fail("%s is not a valid answer", answer);
+				}
+			}
 
 			return TypedResult.ok(answers.plus(question.getKey(), answer));
 	}

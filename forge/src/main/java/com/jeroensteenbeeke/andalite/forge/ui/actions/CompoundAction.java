@@ -21,8 +21,6 @@ import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 public class CompoundAction implements CompoundableAction {
 	private final PerformableAction[] actions;
 	
-	
-	
 	CompoundAction(PerformableAction... actions) {
 		super();
 		this.actions = actions;
@@ -54,5 +52,9 @@ public class CompoundAction implements CompoundableAction {
 		}
 		
 		return new CompoundAction(this, nextAction);
+	}
+
+	public static CompoundAction nothing() {
+		return new CompoundAction();
 	}
 }

@@ -33,8 +33,14 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 	public TypedResult<ForgeRecipe> renderRecipeSelection(
 			@Nonnull
 					List<ForgeRecipe> recipeList) {
+		log.info("Select recipe:");
+		for (int i = 0; i < recipeList.size(); i++) {
+			log.info("\t{} - {}", (i+1), recipeList.get(i).getName());
+		}
 		try {
-			return TypedResult.ok(recipeList.get(Integer.parseInt(input.remove(0))));
+			int index = Integer.parseInt(input.remove(0));
+			log.info("-> {}", index);
+			return TypedResult.ok(recipeList.get(index-1));
 		} catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
 			return TypedResult.fail(e.getMessage());
 		}
