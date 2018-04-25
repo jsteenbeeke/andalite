@@ -15,11 +15,16 @@
 package com.jeroensteenbeeke.andalite.forge.ui.renderer;
 
 import com.google.common.collect.Lists;
+import com.jeroensteenbeeke.andalite.forge.ForgeException;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
+import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
+import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
+import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
+import com.jeroensteenbeeke.hyperion.util.ActionResult;
 import com.jeroensteenbeeke.hyperion.util.TypedResult;
 
 import javax.annotation.Nonnull;
@@ -89,6 +94,42 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 
 		public ScriptedQuestionRenderer withHandler(FeedbackHandler handler) {
 			return new ScriptedQuestionRenderer(answers, handler);
+		}
+	}
+
+	public ActionResult execute(ForgeRecipe recipe) {
+		ActionResult rv = recipe.checkCorrectlyConfigured();
+		if (!rv.isOk()) {
+			return rv;
+		}
+
+		Answers answers = Answers.zero();
+		Action action;
+		try {
+			List<Question> questions = recipe.getQuestions(answers);
+
+			while (!questions.isEmpty()) {
+				for (Question question : questions) {
+					TypedResult<Answers> result = renderQuestion(answers, question);
+					if (!result.isOk()) {
+						return result.asSimpleResult();
+					} else {
+						answers = result.getObject();
+					}
+				}
+
+				questions = recipe.getQuestions(answers);
+			}
+
+			action = recipe.createAction(answers);
+		} catch (Exception e) {
+			return ActionResult.error(e.getMessage());
+		}
+
+		if (action instanceof PerformableAction) {
+			return ((PerformableAction) action).perform();
+		} else {
+			return ActionResult.error("Resulting action %s is not performable", action.getClass().getName());
 		}
 	}
 }
