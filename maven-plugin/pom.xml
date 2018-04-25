@@ -44,7 +44,7 @@
 	</scm>
 
 	<prerequisites>
-		<maven>3.5.3</maven>
+		<maven>3.5.0</maven>
 	</prerequisites>
 
 	<dependencies>
