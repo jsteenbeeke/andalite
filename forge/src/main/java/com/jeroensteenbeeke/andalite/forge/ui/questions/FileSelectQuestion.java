@@ -14,15 +14,35 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
-public abstract class FileSelectQuestion extends AbstractQuestion {
+public abstract class FileSelectQuestion extends AbstractQuestion<File> {
 
-	protected FileSelectQuestion(String key, String question) {
+	public FileSelectQuestion(String key, String question) {
 		super(key, question);
 	}
 
 	public abstract List<File> getChoices();
 
+	@Override
+	public boolean isValidAnswer(@Nullable File answer) {
+		return answer != null && getChoices().contains(answer);
+	}
+
+	public static class SimpleFileSelectQuestion extends FileSelectQuestion {
+		private final List<File> choices;
+
+		public SimpleFileSelectQuestion(String key, String question,
+											List<File> choices) {
+			super(key, question);
+			this.choices = choices;
+		}
+
+		@Override
+		public List<File> getChoices() {
+			return choices;
+		}
+	}
 }

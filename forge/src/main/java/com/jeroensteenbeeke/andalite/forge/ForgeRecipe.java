@@ -18,16 +18,23 @@ import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.hyperion.util.TypedResult;
 
+import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public interface ForgeRecipe {
+	@Nonnull
 	ActionResult checkCorrectlyConfigured();
 
+	@Nonnull
 	String getName();
 
-	Function<Answers,List<Question>> questionProvider();
+	@Nonnull
+	List<Question> getQuestions(@Nonnull Answers answers) throws ForgeException;
 
-	Function<Answers,Action> answerToAction();
+	@Nonnull
+	Action createAction(@Nonnull Answers answers);
 }

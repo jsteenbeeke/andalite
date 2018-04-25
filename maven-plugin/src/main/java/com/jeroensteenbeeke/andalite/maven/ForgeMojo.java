@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -67,27 +67,24 @@ public class ForgeMojo extends RecipeMojo {
 		ForgeRecipe recipe = selection.getObject();
 
 		Answers answers = Answers.zero();
-
-		Function<Answers, List<Question>> questionProvider = recipe.questionProvider();
-
-		List<Question> questions = questionProvider.apply(answers);
-
-		while (!questions.isEmpty()) {
-			for (Question question : questions) {
-				TypedResult<Answers> result = renderer.renderQuestion(answers, question);
-				if (!result.isOk()) {
-					throw new MojoFailureException(result.getMessage());
-				} else {
-					answers = result.getObject();
-				}
-			}
-
-			questions = questionProvider.apply(answers);
-		}
-
 		Action action;
 		try {
-			action = recipe.answerToAction().apply(answers);
+			List<Question> questions = recipe.getQuestions(answers);
+
+			while (!questions.isEmpty()) {
+				for (Question question : questions) {
+					TypedResult<Answers> result = renderer.renderQuestion(answers, question);
+					if (!result.isOk()) {
+						throw new MojoFailureException(result.getMessage());
+					} else {
+						answers = result.getObject();
+					}
+				}
+
+				questions = recipe.getQuestions(answers);
+			}
+
+			action = recipe.createAction(answers);
 		} catch (Exception e) {
 			throw new MojoFailureException(e.getMessage(), e);
 		}
@@ -96,7 +93,8 @@ public class ForgeMojo extends RecipeMojo {
 
 		if (action instanceof Failure) {
 			Failure failure = (Failure) action;
-			throw new MojoFailureException(String.format("Forge Recipe returned failure: %s", failure.getReason()));
+			throw new MojoFailureException(
+					String.format("Forge Recipe returned failure: %s", failure.getReason()));
 		} else if (action instanceof PerformableAction) {
 			PerformableAction performableAction = (PerformableAction) action;
 			ActionResult result = performableAction.perform();

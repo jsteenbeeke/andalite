@@ -14,14 +14,34 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class MultipleChoiceQuestion extends AbstractQuestion {
+public abstract class MultipleChoiceQuestion extends AbstractQuestion<String> {
 
-	protected MultipleChoiceQuestion(String key, String question) {
+	public MultipleChoiceQuestion(String key, String question) {
 		super(key, question);
 	}
 
 	public abstract List<String> getChoices();
 
+	@Override
+	public boolean isValidAnswer(@Nullable String answer) {
+		return answer != null && getChoices().contains(answer);
+	}
+
+	public static class SimpleMultipleChoiceQuestion extends MultipleChoiceQuestion {
+		private final List<String> choices;
+
+		public SimpleMultipleChoiceQuestion(String key, String question,
+											List<String> choices) {
+			super(key, question);
+			this.choices = choices;
+		}
+
+		@Override
+		public List<String> getChoices() {
+			return choices;
+		}
+	}
 }

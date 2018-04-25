@@ -2,6 +2,7 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
 import com.google.common.collect.ImmutableMap;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 public class Answers {
@@ -21,8 +22,16 @@ public class Answers {
 		return new Answers(builder.put(key,value).build());
 	}
 
+	public boolean hasAnswer(@Nonnull String key) {
+		return answers.containsKey(key);
+	}
+
+	public boolean hasAnswer(@Nonnull Class<?> type, @Nonnull String key) {
+		return answers.containsKey(key) && type.isAssignableFrom(answers.get(key).getClass());
+	}
+
 	@SuppressWarnings("unchecked")
-	public <T> T getAnswer(Class<T> type, String key) {
+	public <T> T getAnswer(@Nonnull Class<T> type, @Nonnull String key) {
 		if (answers.containsKey(key)) {
 			Object object = answers.get(key);
 

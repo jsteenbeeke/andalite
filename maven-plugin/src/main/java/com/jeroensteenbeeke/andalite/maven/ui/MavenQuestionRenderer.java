@@ -83,31 +83,38 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 			response = getNumberResponse(1, i);
 		}
 
-		return TypedResult.ok(recipeList.get(response.getObject() - 1));	}
+		ForgeRecipe answer = recipeList.get(response.getObject() - 1);
+
+		return TypedResult.ok(answer);	}
 
 	private TypedResult<String> renderMultipleChoiceQuestion(MultipleChoiceQuestion question) {
 		TypedResult<Integer> response = createPlaceholder();
 
-		while (!response.isOk()) {
-			String message = response.getMessage();
-			if (message != null && !message.isEmpty()) {
-				System.out.println(message);
-				System.out.println();
-			}
-			System.out.println(question.getQuestion());
-			int i = 0;
-			for (String choice : question.getChoices()) {
-				System.out.print("\t[");
-				System.out.print(++i);
-				System.out.print("] ");
-				System.out.println(choice);
+		String answer = "";
 
+		while (!question.isValidAnswer(answer)) {
+			while (!response.isOk()) {
+				String message = response.getMessage();
+				if (message != null && !message.isEmpty()) {
+					System.out.println(message);
+					System.out.println();
+				}
+				System.out.println(question.getQuestion());
+				int i = 0;
+				for (String choice : question.getChoices()) {
+					System.out.print("\t[");
+					System.out.print(++i);
+					System.out.print("] ");
+					System.out.println(choice);
+
+				}
+
+				response = getNumberResponse(1, i);
 			}
 
-			response = getNumberResponse(1, i);
+			answer = question.getChoices().get(response.getObject() - 1);
 		}
-
-		return TypedResult.ok(question.getChoices().get(response.getObject() - 1));
+		return TypedResult.ok(answer);
 	}
 
 	private <T> TypedResult<T> createPlaceholder() {
@@ -118,49 +125,65 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 			FileSelectQuestion question) {
 		TypedResult<Integer> response = createPlaceholder();
 
-		while (!response.isOk()) {
-			String message = response.getMessage();
-			if (message != null && !message.isEmpty()) {
-				System.out.println(message);
-				System.out.println();
-			}
-			System.out.println(question.getQuestion());
-			int i = 0;
-			for (File choice : question.getChoices()) {
-				System.out.print("\t[");
-				System.out.print(++i);
-				System.out.print("] ");
-				System.out.println(choice.getPath());
+		File answer = null;
+
+		while (!question.isValidAnswer(answer)) {
+			while (!response.isOk()) {
+				String message = response.getMessage();
+				if (message != null && !message.isEmpty()) {
+					System.out.println(message);
+					System.out.println();
+				}
+				System.out.println(question.getQuestion());
+				int i = 0;
+				for (File choice : question.getChoices()) {
+					System.out.print("\t[");
+					System.out.print(++i);
+					System.out.print("] ");
+					System.out.println(choice.getPath());
+				}
+
+				response = getNumberResponse(1, i);
 			}
 
-			response = getNumberResponse(1, i);
+			answer = question.getChoices().get(response.getObject() - 1);
 		}
 
-		return TypedResult.ok(question.getChoices().get(response.getObject() - 1));
+		return TypedResult.ok(answer);
 	}
 
 	private TypedResult<Boolean> renderYesNoQuestion(YesNoQuestion question) {
 		TypedResult<Integer> response = createPlaceholder();
 
-		while (!response.isOk()) {
-			String message = response.getMessage();
-			if (message != null && !message.isEmpty()) {
-				System.out.println(message);
-				System.out.println();
+		Boolean answer = null;
+
+		while (!question.isValidAnswer(answer)) {
+
+			while (!response.isOk()) {
+				String message = response.getMessage();
+				if (message != null && !message.isEmpty()) {
+					System.out.println(message);
+					System.out.println();
+				}
+				System.out.println(question.getQuestion());
+				System.out.println("\t[1] Yes");
+				System.out.println("\t[2] No");
+				response = getNumberResponse(YES, NO);
 			}
-			System.out.println(question.getQuestion());
-			System.out.println("\t[1] Yes");
-			System.out.println("\t[2] No");
-			response = getNumberResponse(YES, NO);
+
+			answer = response.getObject().equals(YES);
 		}
 
-		return TypedResult.ok(response.getObject().equals(YES));
+		return TypedResult.ok(answer);
 	}
 
 	private TypedResult<String> renderSimpleQuestion(
 			SimpleQuestion question) {
-		System.out.println(question.getQuestion());
-		String answer = System.console().readLine();
+		String answer = "";
+		while (!question.isValidAnswer(answer)) {
+			System.out.println(question.getQuestion());
+			answer = System.console().readLine();
+		}
 		return TypedResult.ok(answer);
 	}
 

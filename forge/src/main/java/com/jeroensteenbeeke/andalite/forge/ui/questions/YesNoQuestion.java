@@ -15,10 +15,17 @@
 package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
 
-public abstract class YesNoQuestion extends AbstractQuestion {
+import javax.annotation.Nullable;
 
-	protected YesNoQuestion(String key, String question) {
+public class YesNoQuestion extends AbstractQuestion<Boolean> {
+
+	public YesNoQuestion(String key, String question) {
 		super(key, question);
+	}
+
+	@Override
+	public boolean isValidAnswer(@Nullable Boolean answer) {
+		return answer != null;
 	}
 
 }
