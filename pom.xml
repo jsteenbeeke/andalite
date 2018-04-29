@@ -51,6 +51,39 @@
 		</snapshotRepository>
 	</distributionManagement>
 
+	<repositories>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>libs-release</name>
+			<url>https://repo.jeroensteenbeeke.nl/artifactory/libs-release</url>
+		</repository>
+		<repository>
+			<snapshots/>
+			<id>snapshots</id>
+			<name>libs-snapshot</name>
+			<url>https://repo.jeroensteenbeeke.nl/artifactory/libs-snapshot</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>libs-release</name>
+			<url>https://repo.jeroensteenbeeke.nl/artifactory/libs-release</url>
+		</pluginRepository>
+		<pluginRepository>
+			<snapshots/>
+			<id>snapshots</id>
+			<name>libs-snapshot</name>
+			<url>https://repo.jeroensteenbeeke.nl/artifactory/libs-snapshot</url>
+		</pluginRepository>
+	</pluginRepositories>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -253,7 +286,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<execute />
+										<execute/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
