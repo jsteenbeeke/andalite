@@ -15,7 +15,7 @@
 
 package com.jeroensteenbeeke.andalite.core;
 
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 
 import java.io.File;
 

@@ -25,8 +25,8 @@ import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.AbstractQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
-import com.jeroensteenbeeke.hyperion.util.TypedResult;
+import com.jeroensteenbeeke.lux.ActionResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 
 import javax.annotation.Nonnull;
 import java.util.List;

@@ -29,7 +29,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import com.jeroensteenbeeke.hyperion.util.TypedResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 
 public final class XMLUtil {
 	private static final DocumentBuilderFactory documentBuilderFactory = createDocumentBuilderFactory();

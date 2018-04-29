@@ -20,7 +20,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
 
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 
 @Mojo( name = "verify-config")

@@ -30,7 +30,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.jeroensteenbeeke.hyperion.util.TypedResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;

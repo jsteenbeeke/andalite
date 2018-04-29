@@ -3,7 +3,7 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions;
 import com.google.common.collect.ImmutableMap;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
-import com.jeroensteenbeeke.hyperion.util.TypedResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -33,6 +33,9 @@ public class Answers {
 	public String getString(@Nonnull String key) {
 		return getAnswer(String.class, key);
 	}
+
+	public int getInteger(@Nonnull String key) { return Integer.parseInt(getAnswer(String.class,
+			key));}
 
 	public File getFile(@Nonnull String key) {
 		return getAnswer(File.class, key);

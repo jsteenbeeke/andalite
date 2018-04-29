@@ -25,7 +25,7 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 
 /**

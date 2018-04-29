@@ -15,26 +15,38 @@
 
 package com.jeroensteenbeeke.andalite.transformation;
 
-import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
-import static org.junit.Assert.assertThat;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-
-import com.jeroensteenbeeke.hyperion.util.Randomizer;
-import com.jeroensteenbeeke.hyperion.util.Result;
-import org.junit.Test;
-
 import com.google.common.collect.Maps;
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
+import com.jeroensteenbeeke.lux.Result;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Map;
+
+import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
+import static org.junit.Assert.assertThat;
 
 public class MassiveTransformationTest extends DummyAwareTest {
 	private static final int OPERATIONS = 100;
+
+	private static final SecureRandom random = initRandom();
+
+	private static final String AVAILABLE_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+	private static SecureRandom initRandom() {
+		try {
+			return SecureRandom.getInstance("SHA1PRNG");
+		} catch (NoSuchAlgorithmException e) {
+			// If SHA1PRNG does not exist, then go with default implementation
+			return new SecureRandom();
+		}
+	}
 
 	@Test
 	public void testMassiveTransformation() throws IOException {
@@ -45,7 +57,7 @@ public class MassiveTransformationTest extends DummyAwareTest {
 		builder.ensurePublicClass();
 		;
 		for (int i = 0; i < OPERATIONS; i++) {
-			String randomParam = "_".concat(Randomizer.random(40));
+			String randomParam = "_".concat(random(40));
 			paramNames.put(i, randomParam);
 			builder.inPublicClass().ensureMethod()
 					.withModifier(AccessModifier.PUBLIC)
@@ -87,4 +99,22 @@ public class MassiveTransformationTest extends DummyAwareTest {
 		assertThat(result, isOk());
 	}
 
+	/**
+	 * Create a string of random alphanumerical characters, with the given length
+	 * @param length The target length
+	 * @return A String of the given length containing random alphanumerical characters
+	 */
+	public static String random(int length) {
+		StringBuilder password = new StringBuilder();
+
+		for (int i = 0; i < length; i++) {
+			password.append(randomCharacter());
+		}
+
+		return password.toString();
+	}
+
+	private static char randomCharacter() {
+		return AVAILABLE_CHARS.charAt(random.nextInt(AVAILABLE_CHARS.length()));
+	}
 }

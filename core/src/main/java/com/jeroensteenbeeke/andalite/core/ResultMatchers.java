@@ -14,17 +14,14 @@
  */
 package com.jeroensteenbeeke.andalite.core;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
-import com.jeroensteenbeeke.hyperion.util.Result;
+import com.google.common.collect.Lists;
+import com.jeroensteenbeeke.lux.Result;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
+import java.util.List;
 
 public final class ResultMatchers {
 

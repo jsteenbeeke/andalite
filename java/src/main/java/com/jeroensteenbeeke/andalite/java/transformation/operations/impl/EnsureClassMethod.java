@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;

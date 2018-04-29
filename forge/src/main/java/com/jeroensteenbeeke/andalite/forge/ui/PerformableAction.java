@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui;
 
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 
 @FunctionalInterface
 public interface PerformableAction extends Action {

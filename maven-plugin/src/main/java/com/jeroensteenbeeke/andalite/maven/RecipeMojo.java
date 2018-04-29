@@ -24,7 +24,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import com.google.common.collect.Lists;
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 
 public abstract class RecipeMojo extends AbstractMojo {

@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.jeroensteenbeeke.hyperion.util.Result;
+import com.jeroensteenbeeke.lux.Result;
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.Logger;
@@ -26,9 +26,9 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.Atomics;
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.AndaliteContext;
-import com.jeroensteenbeeke.hyperion.util.TypedResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 

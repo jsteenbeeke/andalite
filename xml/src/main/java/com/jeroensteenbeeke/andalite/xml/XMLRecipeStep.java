@@ -17,12 +17,12 @@ package com.jeroensteenbeeke.andalite.xml;
 
 import java.io.File;
 
-import com.jeroensteenbeeke.hyperion.util.Result;
+import com.jeroensteenbeeke.lux.Result;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
-import com.jeroensteenbeeke.hyperion.util.TypedResult;
+import com.jeroensteenbeeke.lux.ActionResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 import com.jeroensteenbeeke.andalite.xml.util.XMLUtil;
 
 public class XMLRecipeStep<N extends Node> {

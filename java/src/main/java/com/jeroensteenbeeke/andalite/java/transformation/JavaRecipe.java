@@ -17,12 +17,12 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 import java.io.File;
 import java.util.List;
 
-import com.jeroensteenbeeke.hyperion.util.Result;
+import com.jeroensteenbeeke.lux.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
-import com.jeroensteenbeeke.hyperion.util.TypedResult;
+import com.jeroensteenbeeke.lux.ActionResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 

@@ -16,7 +16,7 @@ package com.jeroensteenbeeke.andalite.forge.ui.actions;
 
 import java.io.File;
 
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.xml.XMLRecipe;
 
 public class XMLTransformation extends AbstractCompoundableAction {

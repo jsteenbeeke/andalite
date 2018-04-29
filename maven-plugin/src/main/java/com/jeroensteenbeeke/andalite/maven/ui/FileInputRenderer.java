@@ -6,7 +6,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.*;
 import com.jeroensteenbeeke.andalite.forge.ui.renderer.QuestionRenderer;
-import com.jeroensteenbeeke.hyperion.util.TypedResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

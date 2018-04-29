@@ -21,10 +21,10 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.IOException;
 
-import com.jeroensteenbeeke.hyperion.util.Result;
+import com.jeroensteenbeeke.lux.Result;
 import org.junit.Test;
 
-import com.jeroensteenbeeke.hyperion.util.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;

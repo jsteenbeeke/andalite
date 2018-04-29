@@ -120,7 +120,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
-import com.jeroensteenbeeke.hyperion.util.TypedResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.AnnotationValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.ArrayValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
