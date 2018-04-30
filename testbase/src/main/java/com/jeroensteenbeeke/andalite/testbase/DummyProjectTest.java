@@ -159,6 +159,35 @@ public abstract class DummyProjectTest {
 		return baseFolder;
 	}
 
+	protected File getMainJavaFile(String fqdn) {
+		return getJavaFile(SRC_MAIN_JAVA, fqdn);
+	}
+
+	private File getJavaFile(String source, String fqdn) {
+		String todo = fqdn;
+
+		File base = new File(baseFolder, SRC_MAIN_JAVA);
+		int dotIndex = todo.indexOf('.');
+		String path = "";
+
+		while (dotIndex != -1) {
+			String segment = todo.substring(0, dotIndex);
+			if (path.isEmpty()) {
+				path = segment;
+			} else {
+				path = String.format("%s%s%s", path, FILE_SEPARATOR, segment);
+			}
+
+			todo = todo.substring(dotIndex + 1);
+
+			dotIndex = todo.indexOf('.');
+		}
+
+		String filename = todo;
+
+		return new File(new File(base, path), filename.concat(".java"));
+	}
+
 	public Result<?,?> validateModuleMainJavaClass(String module, String fqdn,
 			String... disallowedPackages) {
 		return validateJavaClass(moduleLocation(module, SRC_MAIN_JAVA), fqdn,
@@ -184,30 +213,8 @@ public abstract class DummyProjectTest {
 
 	private Result<?,?> validateJavaClass(String source, String fqdn,
 										  String... disallowedPackages) {
-		String todo = fqdn;
 
-		File base = new File(baseFolder, source);
-		int dotIndex = todo.indexOf('.');
-		String path = "";
-
-		while (dotIndex != -1) {
-			String segment = todo.substring(0, dotIndex);
-			if (path.isEmpty()) {
-				path = segment;
-			} else {
-				path = String.format("%s%s%s", path, FILE_SEPARATOR, segment);
-			}
-
-			todo = todo.substring(dotIndex + 1);
-
-			dotIndex = todo.indexOf('.');
-		}
-
-		String filename = todo;
-
-		File target = new File(new File(base, path), filename.concat(".java"));
-		
-		log.info("Target: {} (\n\tbase {}, \n\tpath {}, \n\tfilename {})", target.getAbsolutePath(), base, path, filename);
+		File target = getJavaFile(source, fqdn);
 
 		TypedResult<AnalyzedSourceFile> result = new ClassAnalyzer(target)
 				.analyze();
