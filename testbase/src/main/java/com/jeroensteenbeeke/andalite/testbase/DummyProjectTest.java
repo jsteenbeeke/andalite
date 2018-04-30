@@ -166,7 +166,7 @@ public abstract class DummyProjectTest {
 	private File getJavaFile(String source, String fqdn) {
 		String todo = fqdn;
 
-		File base = new File(baseFolder, SRC_MAIN_JAVA);
+		File base = new File(baseFolder, source);
 		int dotIndex = todo.indexOf('.');
 		String path = "";
 
