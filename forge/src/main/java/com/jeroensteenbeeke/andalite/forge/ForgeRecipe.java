@@ -14,13 +14,27 @@
  */
 package com.jeroensteenbeeke.andalite.forge;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
+import com.jeroensteenbeeke.andalite.forge.ui.Question;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
+import com.jeroensteenbeeke.lux.ActionResult;
+import com.jeroensteenbeeke.lux.TypedResult;
+
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 public interface ForgeRecipe {
+	@Nonnull
 	ActionResult checkCorrectlyConfigured();
 
+	@Nonnull
 	String getName();
 
-	Action onSelected() throws ForgeException;
+	@Nonnull
+	List<Question> getQuestions(@Nonnull Answers answers) throws ForgeException;
+
+	@Nonnull
+	Action createAction(@Nonnull Answers answers);
 }

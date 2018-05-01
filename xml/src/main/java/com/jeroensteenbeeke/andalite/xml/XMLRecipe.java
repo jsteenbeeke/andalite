@@ -17,11 +17,14 @@ package com.jeroensteenbeeke.andalite.xml;
 import java.io.File;
 import java.util.List;
 
+import com.jeroensteenbeeke.lux.Result;
+import com.jeroensteenbeeke.lux.TypedResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.xml.util.XMLUtil;
+import org.w3c.dom.Document;
 
 public class XMLRecipe {
 	private static final Logger logger = LoggerFactory
@@ -34,12 +37,12 @@ public class XMLRecipe {
 		this.steps = steps;
 	}
 
-	public ActionResult applyTo(File file) {
+	public TypedResult<Document> applyTo(File file) {
 		logger.info("Applying transformation ({} steps) to {}", steps.size(),
 				file.getName());
 
 		for (XMLRecipeStep<?> step : steps) {
-			ActionResult result = step.perform(file);
+			TypedResult<Document> result = step.perform(file);
 			if (!result.isOk()) {
 				return result;
 			}

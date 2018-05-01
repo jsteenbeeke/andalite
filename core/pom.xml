@@ -43,13 +43,17 @@
 		<tag>HEAD</tag>
 	</scm>
 
-
-
-	<prerequisites>
-		<maven>3.0.5</maven>
-	</prerequisites>
-
 	<dependencies>
+		<dependency>
+			<groupId>com.jeroensteenbeeke</groupId>
+			<artifactId>lux</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+
 		<!-- Test Dependencies -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -74,17 +78,7 @@
 			<artifactId>andalite-java-parser</artifactId>
 		</dependency>
 
-		<!-- Guava -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
 
-		<!-- Code Integrity -->
-		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
-			<artifactId>jsr305</artifactId>
-		</dependency>
 
 		<!-- Logging -->
 		<dependency>

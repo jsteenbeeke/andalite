@@ -21,9 +21,10 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.IOException;
 
+import com.jeroensteenbeeke.lux.Result;
 import org.junit.Test;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
@@ -42,7 +43,7 @@ public class FieldFirstTest extends DummyAwareTest {
 
 		File bare = getDummy(BaseDummies.BareClass);
 
-		ActionResult result = recipe.applyTo(bare);
+		Result<?,?> result = recipe.applyTo(bare);
 
 		assertThat(result, isOk());
 	}

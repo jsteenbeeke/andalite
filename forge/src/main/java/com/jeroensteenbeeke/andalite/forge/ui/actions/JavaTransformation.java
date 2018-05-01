@@ -16,8 +16,11 @@ package com.jeroensteenbeeke.andalite.forge.ui.actions;
 
 import java.io.File;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
+import com.jeroensteenbeeke.lux.TypedResult;
+import org.w3c.dom.Document;
 
 public class JavaTransformation extends AbstractCompoundableAction {
 	private final File targetFile;
@@ -31,7 +34,7 @@ public class JavaTransformation extends AbstractCompoundableAction {
 
 	@Override
 	public ActionResult perform() {
-		return recipe.applyTo(targetFile);
+		return recipe.applyTo(targetFile).asSimpleResult();
 	}
 
 }

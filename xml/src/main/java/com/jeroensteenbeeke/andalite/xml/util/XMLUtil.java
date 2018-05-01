@@ -29,7 +29,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 
 public final class XMLUtil {
 	private static final DocumentBuilderFactory documentBuilderFactory = createDocumentBuilderFactory();
@@ -47,12 +47,12 @@ public final class XMLUtil {
 		return factory;
 	}
 
-	public static TypedActionResult<Document> readFile(File file) {
+	public static TypedResult<Document> readFile(File file) {
 		try {
 			DocumentBuilder builder = createBuilder();
-			return TypedActionResult.ok(builder.parse(file));
+			return TypedResult.ok(builder.parse(file));
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			return TypedActionResult.fail(e.getMessage());
+			return TypedResult.fail(e.getMessage());
 
 		}
 	}
@@ -74,17 +74,17 @@ public final class XMLUtil {
 		return f;
 	}
 
-	public static TypedActionResult<Transformer> createTransformer(
+	public static TypedResult<Transformer> createTransformer(
 			String xpathExpression, String transformation) {
 		final String stylesheet = createXSLT(xpathExpression, transformation);
 
 		StreamSource source = new StreamSource(new StringReader(
 				stylesheet.toString()));
 		try {
-			return TypedActionResult.ok(transformerFactory
+			return TypedResult.ok(transformerFactory
 					.newTransformer(source));
 		} catch (TransformerConfigurationException e) {
-			return TypedActionResult.fail(e.getMessage());
+			return TypedResult.fail(e.getMessage());
 		}
 	}
 

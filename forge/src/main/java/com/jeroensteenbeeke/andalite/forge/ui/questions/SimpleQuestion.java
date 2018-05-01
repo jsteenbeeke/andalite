@@ -15,8 +15,25 @@
 package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
 
-public abstract class SimpleQuestion extends AbstractQuestion<String> {
-	protected SimpleQuestion(String question) {
-		super(question);
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public class SimpleQuestion extends AbstractQuestion<String> {
+	public SimpleQuestion(String key, String question) {
+		super(key, question);
+	}
+
+	@Override
+	public boolean isValidAnswer(@Nullable String answer) {
+		return answer != null && !answer.isEmpty();
+	}
+
+	public SimpleQuestion matching(@Nonnull final String pattern) {
+		return new SimpleQuestion(getKey(), getQuestion()) {
+			@Override
+			public boolean isValidAnswer(@Nullable String answer) {
+				return super.isValidAnswer(answer) && answer.matches(pattern);
+			}
+		};
 	}
 }

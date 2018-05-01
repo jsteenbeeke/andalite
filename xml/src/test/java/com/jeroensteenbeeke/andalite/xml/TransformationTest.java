@@ -20,10 +20,11 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.util.List;
 
+import com.jeroensteenbeeke.lux.Result;
 import org.junit.Test;
 import org.w3c.dom.Node;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.testbase.XMLTest;
 
 public class TransformationTest extends XMLTest {
@@ -41,7 +42,7 @@ public class TransformationTest extends XMLTest {
 
 		XMLRecipe recipe = builder.build();
 
-		ActionResult result = recipe.applyTo(inputOutput);
+		Result<?,?> result = recipe.applyTo(inputOutput);
 
 		assertTrue(result.isOk());
 
@@ -69,7 +70,7 @@ public class TransformationTest extends XMLTest {
 
 		XMLRecipe recipe = builder.build();
 
-		ActionResult result = recipe.applyTo(inputOutput);
+		Result<?,?> result = recipe.applyTo(inputOutput);
 
 		assertTrue(result.isOk());
 
@@ -102,7 +103,7 @@ public class TransformationTest extends XMLTest {
 
 		XMLRecipe recipe = builder.build();
 
-		ActionResult result = recipe.applyTo(inputOutput);
+		Result<?,?> result = recipe.applyTo(inputOutput);
 
 		assertTrue(result.isOk());
 
@@ -131,7 +132,7 @@ public class TransformationTest extends XMLTest {
 
 		XMLRecipe recipe = builder.build();
 
-		ActionResult result = recipe.applyTo(inputOutput);
+		Result<?,?> result = recipe.applyTo(inputOutput);
 
 		assertTrue(result.isOk());
 

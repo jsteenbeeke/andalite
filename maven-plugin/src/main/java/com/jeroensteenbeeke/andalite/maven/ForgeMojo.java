@@ -3,37 +3,37 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.jeroensteenbeeke.andalite.maven;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-
-import com.jeroensteenbeeke.andalite.core.ActionResult;
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
 import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 import com.jeroensteenbeeke.andalite.forge.ui.Action;
 import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
-import com.jeroensteenbeeke.andalite.forge.ui.questions.internal.RecipeSelectionQuestion;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.andalite.forge.ui.renderer.QuestionRenderer;
 import com.jeroensteenbeeke.andalite.maven.ui.FileInputRenderer;
 import com.jeroensteenbeeke.andalite.maven.ui.MavenQuestionRenderer;
+import com.jeroensteenbeeke.lux.ActionResult;
+import com.jeroensteenbeeke.lux.TypedResult;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.function.Function;
 
 @Mojo(name = "forge", aggregator = true, requiresDirectInvocation = true)
 public class ForgeMojo extends RecipeMojo {
@@ -49,6 +49,7 @@ public class ForgeMojo extends RecipeMojo {
 
 		List<ForgeRecipe> recipeList = determineRecipes();
 
+
 		QuestionRenderer renderer;
 		try {
 			renderer = inputFile != null ? new FileInputRenderer(inputFile)
@@ -56,28 +57,47 @@ public class ForgeMojo extends RecipeMojo {
 		} catch (IOException e) {
 			throw new MojoFailureException("Could not read input file", e);
 		}
-		Action next = new RecipeSelectionQuestion(recipeList);
 
-		while (next instanceof Question) {
-			getLog().debug(String.format("Next action: %s", next.toString()));
+		TypedResult<ForgeRecipe> selection = renderer.renderRecipeSelection(recipeList);
 
-			Question<?> q = (Question<?>) next;
-			TypedActionResult<Action> result = renderer.renderQuestion(q);
-			if (!result.isOk()) {
-				throw new MojoFailureException(result.getMessage());
-			}
-
-			next = result.getObject();
+		if (!selection.isOk()) {
+			throw new MojoFailureException(selection.getMessage());
 		}
 
-		getLog().debug(String.format("Next action: %s", next.toString()));
+		ForgeRecipe recipe = selection.getObject();
 
-		if (next instanceof Failure) {
-			Failure failure = (Failure) next;
-			throw new MojoFailureException(String.format("Forge Recipe returned failure: %s", failure.getReason()));
-		} else if (next instanceof PerformableAction) {
-			PerformableAction action = (PerformableAction) next;
-			ActionResult result = action.perform();
+		Answers answers = Answers.zero();
+		Action action;
+		try {
+			List<Question> questions = recipe.getQuestions(answers);
+
+			while (!questions.isEmpty()) {
+				for (Question question : questions) {
+					TypedResult<Answers> result = renderer.renderQuestion(answers, question);
+					if (!result.isOk()) {
+						throw new MojoFailureException(result.getMessage());
+					} else {
+						answers = result.getObject();
+					}
+				}
+
+				questions = recipe.getQuestions(answers);
+			}
+
+			action = recipe.createAction(answers);
+		} catch (Exception e) {
+			throw new MojoFailureException(e.getMessage(), e);
+		}
+
+		getLog().debug(String.format("Next action: %s", action.toString()));
+
+		if (action instanceof Failure) {
+			Failure failure = (Failure) action;
+			throw new MojoFailureException(
+					String.format("Forge Recipe returned failure: %s", failure.getReason()));
+		} else if (action instanceof PerformableAction) {
+			PerformableAction performableAction = (PerformableAction) action;
+			ActionResult result = performableAction.perform();
 			if (!result.isOk()) {
 				throw new MojoFailureException(result.getMessage());
 			}

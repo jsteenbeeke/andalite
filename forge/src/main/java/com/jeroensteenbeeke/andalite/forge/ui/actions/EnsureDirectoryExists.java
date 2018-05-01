@@ -16,7 +16,7 @@ package com.jeroensteenbeeke.andalite.forge.ui.actions;
 
 import java.io.File;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 
 public final class EnsureDirectoryExists extends AbstractCompoundableAction {
 	private final File file;

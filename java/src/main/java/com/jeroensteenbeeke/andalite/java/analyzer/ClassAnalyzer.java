@@ -120,7 +120,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.AnnotationValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.ArrayValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
@@ -203,7 +203,7 @@ public class ClassAnalyzer {
 	}
 
 	@Nonnull
-	public TypedActionResult<AnalyzedSourceFile> analyze() {
+	public TypedResult<AnalyzedSourceFile> analyze() {
 		log.debug("Starting analysis of {}", targetFile.getAbsolutePath());
 
 		RecordingBailErrorStrategy errorStrategy = new RecordingBailErrorStrategy(
@@ -244,21 +244,21 @@ public class ClassAnalyzer {
 				analyze(sourceFile, context, typeDeclaration);
 			}
 
-			return TypedActionResult.ok(sourceFile);
+			return TypedResult.ok(sourceFile);
 		} catch (ParseCancellationException e) {
 			log.error(e.getMessage(), e);
 			String exceptionMessage = errorStrategy.getExceptionMessage();
 			if (exceptionMessage != null && !exceptionMessage.isEmpty()) {
-				return TypedActionResult.fail(exceptionMessage);
+				return TypedResult.fail(exceptionMessage);
 			}
-			return TypedActionResult.fail("Could not parse %s",
+			return TypedResult.fail("Could not parse %s",
 					targetFile.getAbsolutePath());
 		} catch (ParseException | IOException e) {
 			String exceptionMessage = errorStrategy.getExceptionMessage();
 			if (exceptionMessage != null && !exceptionMessage.isEmpty()) {
-				return TypedActionResult.fail(exceptionMessage);
+				return TypedResult.fail(exceptionMessage);
 			}
-			return TypedActionResult.fail(e.getMessage());
+			return TypedResult.fail(e.getMessage());
 		}
 	}
 

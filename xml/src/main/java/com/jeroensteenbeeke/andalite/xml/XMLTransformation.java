@@ -31,6 +31,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import com.jeroensteenbeeke.lux.TypedResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -38,7 +39,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 
 public class XMLTransformation<T extends Node> {
@@ -60,7 +61,7 @@ public class XMLTransformation<T extends Node> {
 		this.operation = operation;
 	}
 
-	public ActionResult applyTo(File file) {
+	public TypedResult<Document> applyTo(File file) {
 		try {
 			DocumentBuilder builder = dbFactory.newDocumentBuilder();
 
@@ -93,11 +94,11 @@ public class XMLTransformation<T extends Node> {
 			transformer.transform(new DOMSource(document), new StreamResult(
 					file));
 
-			return ActionResult.ok();
+			return TypedResult.ok(document);
 		} catch (OperationException | ParserConfigurationException | SAXException | IOException
 				| XPathExpressionException | TransformerException cause) {
 			cause.printStackTrace(System.err);
-			return ActionResult.error("Could not perform transformation: %s",
+			return TypedResult.fail("Could not perform transformation: %s",
 					cause.getMessage());
 		}
 

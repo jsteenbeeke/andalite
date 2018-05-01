@@ -6,9 +6,10 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.IOException;
 
+import com.jeroensteenbeeke.lux.Result;
 import org.junit.Test;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
@@ -22,7 +23,7 @@ public class EnumTest extends DummyAwareTest {
 		builder.inPublicEnum().ensureEnumConstant().named("Test");
 		JavaRecipe addEnumConstant = builder.build();
 
-		ActionResult result = addEnumConstant.applyTo(enumFile);
+		Result<?,?> result = addEnumConstant.applyTo(enumFile);
 
 		assertThat(result, isOk());
 
@@ -53,7 +54,7 @@ public class EnumTest extends DummyAwareTest {
 				.withStringParameterExpression("This is a test").named("Test");
 		JavaRecipe addEnumConstant = builder.build();
 
-		ActionResult result = addEnumConstant.applyTo(enumFile);
+		Result<?,?> result = addEnumConstant.applyTo(enumFile);
 
 		assertThat(result, isOk());
 

@@ -16,16 +16,27 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 
-public abstract class AbstractQuestion<T> implements Question<T> {
+import javax.annotation.Nullable;
+
+public abstract class AbstractQuestion<T> implements Question {
+	private final String key;
+
 	private final String question;
 
-	protected AbstractQuestion(String question) {
-		super();
+	protected AbstractQuestion(String key, String question) {
+		this.key = key;
 		this.question = question;
+	}
+
+	@Override
+	public String getKey() {
+		return key;
 	}
 
 	@Override
 	public String getQuestion() {
 		return question;
 	}
+
+	public abstract boolean isValidAnswer(@Nullable T answer);
 }

@@ -15,6 +15,8 @@
 
 package com.jeroensteenbeeke.andalite.core;
 
+import com.jeroensteenbeeke.lux.ActionResult;
+
 import java.io.File;
 
 import javax.annotation.Nonnull;

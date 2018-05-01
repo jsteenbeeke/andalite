@@ -14,15 +14,14 @@
  */
 package com.jeroensteenbeeke.andalite.core;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.google.common.collect.Lists;
+import com.jeroensteenbeeke.lux.Result;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
+import java.util.List;
 
 public final class ResultMatchers {
 
@@ -30,15 +29,15 @@ public final class ResultMatchers {
 
 	}
 
-	public static Matcher<ActionResult> isOk() {
-		return new TypeSafeDiagnosingMatcher<ActionResult>() {
+	public static Matcher<Result<?,?>> isOk() {
+		return new TypeSafeDiagnosingMatcher<Result<?,?>>() {
 			@Override
 			public void describeTo(Description description) {
 				description.appendText("is ok");
 			}
 
 			@Override
-			protected boolean matchesSafely(ActionResult item,
+			protected boolean matchesSafely(Result<?,?> item,
 					Description mismatchDescription) {
 				boolean matches = item.isOk();
 
@@ -53,8 +52,8 @@ public final class ResultMatchers {
 		};
 	}
 
-	public static Matcher<ActionResult> hasError(@Nonnull final String message) {
-		return new TypeSafeDiagnosingMatcher<ActionResult>() {
+	public static Matcher<Result<?,?>> hasError(@Nonnull final String message) {
+		return new TypeSafeDiagnosingMatcher<Result<?,?>>() {
 			@Override
 			public void describeTo(Description description) {
 				description.appendText("is not ok, with error ").appendText(
@@ -62,7 +61,7 @@ public final class ResultMatchers {
 			}
 
 			@Override
-			protected boolean matchesSafely(ActionResult item,
+			protected boolean matchesSafely(Result<?,?> item,
 					Description mismatchDescription) {
 				boolean ok = item.isOk();
 				boolean messageEqual = message.equals(item.getMessage());
@@ -76,7 +75,7 @@ public final class ResultMatchers {
 					}
 					if (!messageEqual) {
 						if (item.getMessage() != null) {
-							messages.add(String.format("error is %s"));
+							messages.add(String.format("error is %s", item.getMessage()));
 						} else {
 							messages.add("no error");
 						}

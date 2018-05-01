@@ -14,10 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui;
 
-import com.jeroensteenbeeke.andalite.forge.ForgeException;
-
-public interface Question<T> extends Action {
+public interface Question {
 	String getQuestion();
 
-	Action onAnswer(T answer, FeedbackHandler handler) throws ForgeException;
+	String getKey();
 }

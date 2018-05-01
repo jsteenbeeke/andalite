@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;

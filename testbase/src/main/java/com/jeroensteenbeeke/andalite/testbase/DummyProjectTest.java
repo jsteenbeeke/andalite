@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.jeroensteenbeeke.lux.Result;
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.Logger;
@@ -25,9 +26,9 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.Atomics;
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.AndaliteContext;
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 
@@ -158,31 +159,11 @@ public abstract class DummyProjectTest {
 		return baseFolder;
 	}
 
-	public ActionResult validateModuleMainJavaClass(String module, String fqdn,
-			String... disallowedPackages) {
-		return validateJavaClass(moduleLocation(module, SRC_MAIN_JAVA), fqdn,
-				disallowedPackages);
+	protected File getMainJavaFile(String fqdn) {
+		return getJavaFile(SRC_MAIN_JAVA, fqdn);
 	}
 
-	public ActionResult validateModuleTestJavaClass(String module, String fqdn,
-			String... disallowedPackages) {
-		return validateJavaClass(moduleLocation(module, SRC_TEST_JAVA), fqdn,
-				disallowedPackages);
-	}
-
-	
-	public ActionResult validateMainJavaClass(String fqdn,
-			String... disallowedPackages) {
-		return validateJavaClass(SRC_MAIN_JAVA, fqdn, disallowedPackages);
-	}
-
-	public ActionResult validateTestJavaClass(String fqdn,
-			String... disallowedPackages) {
-		return validateJavaClass(SRC_TEST_JAVA, fqdn, disallowedPackages);
-	}
-
-	private ActionResult validateJavaClass(String source, String fqdn,
-			String... disallowedPackages) {
+	private File getJavaFile(String source, String fqdn) {
 		String todo = fqdn;
 
 		File base = new File(baseFolder, source);
@@ -204,11 +185,38 @@ public abstract class DummyProjectTest {
 
 		String filename = todo;
 
-		File target = new File(new File(base, path), filename.concat(".java"));
-		
-		log.info("Target: {} (\n\tbase {}, \n\tpath {}, \n\tfilename {})", target.getAbsolutePath(), base, path, filename);
+		return new File(new File(base, path), filename.concat(".java"));
+	}
 
-		TypedActionResult<AnalyzedSourceFile> result = new ClassAnalyzer(target)
+	public Result<?,?> validateModuleMainJavaClass(String module, String fqdn,
+			String... disallowedPackages) {
+		return validateJavaClass(moduleLocation(module, SRC_MAIN_JAVA), fqdn,
+				disallowedPackages);
+	}
+
+	public Result<?,?> validateModuleTestJavaClass(String module, String fqdn,
+			String... disallowedPackages) {
+		return validateJavaClass(moduleLocation(module, SRC_TEST_JAVA), fqdn,
+				disallowedPackages);
+	}
+
+	
+	public Result<?,?> validateMainJavaClass(String fqdn,
+			String... disallowedPackages) {
+		return validateJavaClass(SRC_MAIN_JAVA, fqdn, disallowedPackages);
+	}
+
+	public Result<?,?> validateTestJavaClass(String fqdn,
+			String... disallowedPackages) {
+		return validateJavaClass(SRC_TEST_JAVA, fqdn, disallowedPackages);
+	}
+
+	private Result<?,?> validateJavaClass(String source, String fqdn,
+										  String... disallowedPackages) {
+
+		File target = getJavaFile(source, fqdn);
+
+		TypedResult<AnalyzedSourceFile> result = new ClassAnalyzer(target)
 				.analyze();
 
 		if (!result.isOk()) {
@@ -219,7 +227,7 @@ public abstract class DummyProjectTest {
 
 		for (String disallowed : DISALLOWED_IMPORTS) {
 			if (sourceFile.hasImport(disallowed)) {
-				return TypedActionResult
+				return TypedResult
 						.fail("Source file has disallowed import %s (there should be a wildcard or classname after this)",
 								disallowed);
 			}
@@ -227,7 +235,7 @@ public abstract class DummyProjectTest {
 
 		for (String disallowed : disallowedPackages) {
 			if (sourceFile.hasImport(disallowed)) {
-				return TypedActionResult
+				return TypedResult
 						.fail("Source file has disallowed import %s (there should be a wildcard or classname after this)",
 								disallowed);
 			}

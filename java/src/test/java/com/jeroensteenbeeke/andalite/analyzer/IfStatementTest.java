@@ -30,7 +30,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
+import com.jeroensteenbeeke.lux.TypedResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
@@ -46,7 +46,7 @@ public class IfStatementTest extends DummyAwareTest {
 	public void testIfBlockWithEmptyStatement() throws IOException {
 		File file = getDummy(BaseDummies.IfStatements);
 		ClassAnalyzer analyzer = new ClassAnalyzer(file);
-		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+		TypedResult<AnalyzedSourceFile> result = analyzer.analyze();
 
 		assertThat("File can be parsed", result, isOk());
 
@@ -89,7 +89,7 @@ public class IfStatementTest extends DummyAwareTest {
 
 	private void verifyBlockContents(File file) {
 		ClassAnalyzer analyzer = new ClassAnalyzer(file);
-		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+		TypedResult<AnalyzedSourceFile> result = analyzer.analyze();
 
 		assertThat("File can be parsed", result, isOk());
 
@@ -129,7 +129,7 @@ public class IfStatementTest extends DummyAwareTest {
 	public void testIfElseBlockWithEmptyStatement() throws IOException {
 		File file = getDummy(BaseDummies.IfStatements);
 		ClassAnalyzer analyzer = new ClassAnalyzer(file);
-		TypedActionResult<AnalyzedSourceFile> result = analyzer.analyze();
+		TypedResult<AnalyzedSourceFile> result = analyzer.analyze();
 
 		assertThat("File can be parsed", result, isOk());
 

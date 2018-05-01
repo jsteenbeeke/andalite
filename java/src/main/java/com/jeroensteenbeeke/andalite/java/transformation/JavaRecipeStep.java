@@ -20,7 +20,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jeroensteenbeeke.andalite.core.ActionResult;
+import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.ILocatable;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;

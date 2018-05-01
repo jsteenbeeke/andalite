@@ -14,12 +14,17 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.renderer;
 
-import javax.annotation.Nonnull;
-
-import com.jeroensteenbeeke.andalite.core.TypedActionResult;
-import com.jeroensteenbeeke.andalite.forge.ui.Action;
+import com.jeroensteenbeeke.andalite.forge.ForgeRecipe;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
+import com.jeroensteenbeeke.lux.TypedResult;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 public interface QuestionRenderer {
-	<T> TypedActionResult<Action> renderQuestion(@Nonnull Question<T> question);
+	TypedResult<Answers> renderQuestion(@Nonnull Answers answers,
+									   @Nonnull Question question);
+
+	TypedResult<ForgeRecipe> renderRecipeSelection(@Nonnull List<ForgeRecipe> recipeList);
 }
