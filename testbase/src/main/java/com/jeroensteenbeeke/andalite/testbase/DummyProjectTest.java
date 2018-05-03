@@ -159,7 +159,7 @@ public abstract class DummyProjectTest {
 	}
 
 	public ActionResult validateModuleMainJavaClass(String module, String fqdn,
-			String... disallowedPackages) {
+													String... disallowedPackages) {
 		return validateJavaClass(moduleLocation(module, SRC_MAIN_JAVA), fqdn,
 				disallowedPackages);
 	}
