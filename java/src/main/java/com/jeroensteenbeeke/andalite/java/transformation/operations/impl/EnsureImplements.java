@@ -67,15 +67,19 @@ public class EnsureImplements implements IClassOperation {
 
 	@Override
 	public ActionResult verify(AnalyzedClass input) {
-		if (input.getInterfaces().contains(interfaceName)) {
+		if (input.getInterfaces().stream().map(this::stripWhitespaces).anyMatch(stripWhitespaces(interfaceName)::equals)) {
 			return ActionResult.ok();
 		}
 
 		return ActionResult.error(
 				"Class does not implement %s (observed: %s )",
-				interfaceName,
-				input.getInterfaces().stream().sorted()
+				stripWhitespaces(interfaceName),
+				input.getInterfaces().stream().map(this::stripWhitespaces).sorted()
 						.collect(Collectors.joining(", ")));
+	}
+
+	private String stripWhitespaces(String s) {
+		return s.replaceAll("\\s", "");
 	}
 
 }

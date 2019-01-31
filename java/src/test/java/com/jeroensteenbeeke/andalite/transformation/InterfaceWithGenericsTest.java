@@ -1,0 +1,40 @@
+package com.jeroensteenbeeke.andalite.transformation;
+
+import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
+import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
+import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
+import com.jeroensteenbeeke.lux.Result;
+import com.jeroensteenbeeke.lux.TypedResult;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+
+import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
+import static org.junit.Assert.assertThat;
+
+public class InterfaceWithGenericsTest extends DummyAwareTest {
+	@Test
+	public void testBuilder() throws IOException {
+		JavaRecipeBuilder java = new JavaRecipeBuilder();
+
+		java.inPublicClass().ensureImplements("Map<String,Object>");
+
+		JavaRecipe recipe = java.build();
+
+		File bare = getDummy(BaseDummies.BareClass);
+
+		Result<?,?> result = recipe.applyTo(bare);
+
+		assertThat(result, isOk());
+
+		ClassAnalyzer resultChecker = new ClassAnalyzer(bare);
+		TypedResult<AnalyzedSourceFile> analysisResult = resultChecker
+				.analyze();
+
+		assertThat(analysisResult, isOk());
+
+	}
+}
