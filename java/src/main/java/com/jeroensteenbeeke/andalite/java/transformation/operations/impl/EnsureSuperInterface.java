@@ -16,6 +16,7 @@
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.lux.ActionResult;
@@ -58,12 +59,16 @@ public class EnsureSuperInterface implements IInterfaceOperation {
 
 	@Override
 	public ActionResult verify(AnalyzedInterface input) {
-		if (input.getInterfaces().contains(interfaceName)) {
+		if (input.getInterfaces().stream().map(this::stripWhitespaces).anyMatch(stripWhitespaces(interfaceName)::equals)) {
 			return ActionResult.ok();
 		}
 
 		return ActionResult
-				.error("Interface does not extend %s", interfaceName);
+				.error("Interface does not extend %s (observed: %s)", interfaceName, String.join(", ", input.getInterfaces()));
+	}
+
+	private String stripWhitespaces(String s) {
+		return s.replaceAll("\\s", "");
 	}
 
 }
