@@ -392,6 +392,7 @@
 
 		<!-- Other settings -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
 	</properties>
 
 	<modules>
