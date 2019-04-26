@@ -15,23 +15,22 @@
 
 package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 
-import java.io.Serializable;
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
+import com.jeroensteenbeeke.andalite.core.IInsertionPointProvider;
+import com.jeroensteenbeeke.andalite.core.Locatable;
+import com.jeroensteenbeeke.andalite.core.Location;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.google.common.base.Function;
-import com.jeroensteenbeeke.andalite.core.Locatable;
-import com.jeroensteenbeeke.andalite.core.Location;
-
-public abstract class BaseValue<T> extends Locatable {
+public abstract class BaseValue<T, IPP extends IInsertionPointProvider<IPP,I>, I extends Enum<I> & IInsertionPoint<IPP>> extends Locatable implements IInsertionPointProvider<IPP,I> {
 	private final String name;
 
 	private final T value;
 
 	public BaseValue(@Nonnull Location location, @Nullable String name,
-			@Nullable T value) {
+			@Nonnull T value) {
 		super(location);
 		this.name = name;
 		this.value = value;
@@ -42,7 +41,7 @@ public abstract class BaseValue<T> extends Locatable {
 		return name;
 	}
 
-	@CheckForNull
+	@Nonnull
 	public final T getValue() {
 		return value;
 	}
@@ -64,7 +63,7 @@ public abstract class BaseValue<T> extends Locatable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		BaseValue<?> other = (BaseValue<?>) obj;
+		BaseValue<?,?,?> other = (BaseValue<?,?,?>) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -80,20 +79,8 @@ public abstract class BaseValue<T> extends Locatable {
 
 	public abstract String toJavaString();
 
-	public static Function<BaseValue<?>, String> toJavaStringFunction() {
-		return TO_JAVASTRING_FUNCTION;
-	}
+	public abstract I getBeforeInsertionPoint();
 
-	private static final Function<BaseValue<?>, String> TO_JAVASTRING_FUNCTION = new ToJavaStringFunction();
-
-	private static final class ToJavaStringFunction implements
-			Function<BaseValue<?>, String>, Serializable {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public String apply(BaseValue<?> input) {
-			return input.toJavaString();
-		}
-	}
+	public abstract I getAfterInsertionPoint();
 
 }

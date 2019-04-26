@@ -13,11 +13,11 @@ public class EnumScopeOperationBuilder
 	}
 
 	public HasEnumConstantBuilder ensureEnumConstant() {
-		return new HasEnumConstantBuilder(o -> ensure(o));
+		return new HasEnumConstantBuilder(this::ensure);
 	}
 
 	public EnsureEnumMethodBuilder ensureMethod() {
-		return new EnsureEnumMethodBuilder(o -> ensure(o));
+		return new EnsureEnumMethodBuilder(this::ensure);
 	}
 
 }

@@ -18,7 +18,7 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class DoStatement extends AnalyzedStatement {
+public class DoStatement extends BaseStatement {
 	private final AnalyzedExpression condition;
 
 	private final AnalyzedStatement body;

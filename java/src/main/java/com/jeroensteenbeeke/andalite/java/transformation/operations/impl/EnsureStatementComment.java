@@ -17,14 +17,15 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 
-public class EnsureStatementComment<S extends AnalyzedStatement> implements
-		IJavaOperation<S> {
+public class EnsureStatementComment<I extends Enum<I> & IInsertionPoint<?>> implements
+		IJavaOperation<AnalyzedStatement<?,I>> {
 
 	private final String comment;
 
@@ -37,13 +38,13 @@ public class EnsureStatementComment<S extends AnalyzedStatement> implements
 	}
 
 	@Override
-	public List<Transformation> perform(S input) throws OperationException {
+	public List<Transformation> perform(AnalyzedStatement<?,I> input) throws OperationException {
 		if (!input.getComments().contains("// ".concat(comment))) {
 			if (prefix) {
-				return ImmutableList.of(Transformation.insertBefore(input,
+				return ImmutableList.of(input.insertAt(input.getBeforeInsertionPoint(),
 						String.format("// %s\n", comment)));
 			} else {
-				return ImmutableList.of(Transformation.insertAfter(input,
+				return ImmutableList.of(input.insertAt(input.getAfterInsertionPoint(),
 						String.format("// %s\n", comment)));
 			}
 		}
@@ -57,7 +58,7 @@ public class EnsureStatementComment<S extends AnalyzedStatement> implements
 	}
 
 	@Override
-	public ActionResult verify(S input) {
+	public ActionResult verify(AnalyzedStatement<?,I> input) {
 		if (!input.getComments().contains("// ".concat(comment))) {
 			return ActionResult.error("Missing comment: %s", comment);
 		}

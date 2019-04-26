@@ -14,27 +14,30 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 
-public class AfterStatementNavigation extends
-		ChainedNavigation<IBodyContainer, AnalyzedStatement> {
+public class AfterStatementNavigation<T extends IBodyContainer<T, ?>, S extends AnalyzedStatement<S,?>> extends
+		ChainedNavigation<T, S> {
 	private final String statement;
 
 	public AfterStatementNavigation(String statement,
-			IJavaNavigation<IBodyContainer> chained) {
+			IJavaNavigation<T> chained) {
 		super(chained);
 		this.statement = statement;
 	}
 
 	@Override
-	public AnalyzedStatement navigate(IBodyContainer chainedTarget)
+	@SuppressWarnings("unchecked")
+	public S navigate(T chainedTarget)
 			throws NavigationException {
 		return chainedTarget
 				.getStatements()
 				.stream()
 				.filter(s -> s.toJavaString().equals(statement))
+				.map(s -> (S) s)
 				.findFirst()
 				.orElseThrow(
 						() -> new NavigationException(String.format(

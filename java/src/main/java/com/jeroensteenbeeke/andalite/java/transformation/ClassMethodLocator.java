@@ -35,6 +35,7 @@ public class ClassMethodLocator extends
 
 	}
 
+	@Nonnull
 	public MethodOperationBuilder named(@Nonnull String name) {
 		return new MethodOperationBuilder(collector, new ClassMethodNavigation(
 				parentNavigation, name, getType(), getModifier(),

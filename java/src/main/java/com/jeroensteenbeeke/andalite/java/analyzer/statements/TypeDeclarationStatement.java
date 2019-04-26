@@ -19,7 +19,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.Denomination;
 import com.jeroensteenbeeke.andalite.java.analyzer.StringBuilderCallback;
 
-public class TypeDeclarationStatement extends AnalyzedStatement {
+public class TypeDeclarationStatement extends BaseStatement {
 	private final Denomination declaredType;
 
 	public TypeDeclarationStatement(Location location, Denomination declaredType) {

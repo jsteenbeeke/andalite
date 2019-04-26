@@ -17,24 +17,26 @@ package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.BlockStatement;
 
-public class StatementAsBodyNavigation<S extends AnalyzedStatement> extends
-		ChainedNavigation<S, IBodyContainer> {
+public class StatementAsBodyNavigation<S extends AnalyzedStatement<? super S,?>> extends
+		ChainedNavigation<S, BlockStatement> {
 	public StatementAsBodyNavigation(IJavaNavigation<S> chained) {
 		super(chained);
 	}
 
 	@Override
 	public String getStepDescription() {
-		return "assume it is a body statement";
+		return "assume it is a block statement";
 	}
 
-	public IBodyContainer navigate(S chainedTarget) throws NavigationException {
-		if (chainedTarget instanceof IBodyContainer) {
-			return (IBodyContainer) chainedTarget;
+	@SuppressWarnings("unchecked")
+	public BlockStatement navigate(S chainedTarget) throws NavigationException {
+		if (chainedTarget instanceof BlockStatement) {
+			return (BlockStatement) chainedTarget;
 		}
 
-		throw new NavigationException("Statement is not a body container");
+		throw new NavigationException("Statement is not a block statement");
 	}
 
 }

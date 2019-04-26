@@ -16,7 +16,10 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import javax.annotation.Nonnull;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
+import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.BlockStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.IfStatementLocator.IfStatementLocatorTerminator;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ByExpressionIfStatementNavigation;
@@ -24,18 +27,18 @@ import com.jeroensteenbeeke.andalite.java.transformation.navigation.ElseStatemen
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ThenStatementNavigation;
 
-public class IfStatementLocator extends
+public class IfStatementLocator<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> extends
 		AbstractExpressionMatcher<IfStatement, IfStatementLocatorTerminator> {
 
-	private BodyContainerOperationBuilder body;
+	private BodyContainerOperationBuilder<T,I> body;
 
-	public IfStatementLocator(BodyContainerOperationBuilder body) {
+	public IfStatementLocator(BodyContainerOperationBuilder<T,I> body) {
 		this.body = body;
 	}
 
 	public IfStatementLocatorTerminator withExpression(
 			@Nonnull String expression) {
-		return nextInChain(new ByExpressionIfStatementNavigation(
+		return nextInChain(new ByExpressionIfStatementNavigation<>(
 				body.getNavigation(), expression));
 	}
 
@@ -57,14 +60,14 @@ public class IfStatementLocator extends
 			this.statementNavigation = statementNavigation;
 		}
 
-		public StatementOperationBuilder<AnalyzedStatement> thenStatement() {
-			return new StatementOperationBuilder<AnalyzedStatement>(collector,
-					new ThenStatementNavigation(statementNavigation));
+		public <S extends AnalyzedStatement<S,?>> StatementOperationBuilder<S> thenStatement() {
+			return new StatementOperationBuilder<S>(collector,
+												   new ThenStatementNavigation<>(statementNavigation));
 		}
 
-		public StatementOperationBuilder<AnalyzedStatement> elseStatement() {
-			return new StatementOperationBuilder<AnalyzedStatement>(collector,
-					new ElseStatementNavigation(statementNavigation));
+		public  <S extends AnalyzedStatement<S,?>> StatementOperationBuilder<S> elseStatement() {
+			return new StatementOperationBuilder<S>(collector,
+												   new ElseStatementNavigation<>(statementNavigation));
 		}
 
 	}

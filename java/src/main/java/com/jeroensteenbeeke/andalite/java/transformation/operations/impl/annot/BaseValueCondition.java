@@ -26,12 +26,12 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
 public abstract class BaseValueCondition<T> implements InnerAnnotationCondition {
 	private final String name;
 
-	private final Class<? extends BaseValue<T>> expectedType;
+	private final Class<? extends BaseValue<T,?,?>> expectedType;
 
 	private final T expectedValue;
 
 	protected BaseValueCondition(@Nullable String name,
-			@Nonnull Class<? extends BaseValue<T>> expectedType,
+			@Nonnull Class<? extends BaseValue<T,?,?>> expectedType,
 			@Nullable T expectedValue) {
 		super();
 		this.name = name;
@@ -40,16 +40,14 @@ public abstract class BaseValueCondition<T> implements InnerAnnotationCondition 
 	}
 
 	@Override
-	public boolean isSatisfiedBy(AnnotationValue value) {
+	public boolean test(AnnotationValue value) {
 		AnalyzedAnnotation annotation = value.getValue();
 
-		if (annotation != null) {
-			if (annotation.hasValueOfType(expectedType, name)) {
-				BaseValue<T> baseValue = annotation
-						.getValue(expectedType, name);
+		if (annotation.hasValueOfType(expectedType, name)) {
+			BaseValue<T,?,?> baseValue = annotation
+					.getValue(expectedType, name);
 
-				return Objects.equals(baseValue.getValue(), expectedValue);
-			}
+			return Objects.equals(baseValue.getValue(), expectedValue);
 		}
 
 		return false;

@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,7 +26,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.Constru
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureConstructorAnnotation;
 
 public class ConstructorOperationBuilder extends
-		AbstractOperationBuilder<AnalyzedConstructor, IConstructorOperation> {
+	AbstractOperationBuilder<AnalyzedConstructor, IConstructorOperation> {
 
 	public static class ParameterLocator {
 		private final ConstructorOperationBuilder parent;
@@ -34,7 +34,7 @@ public class ConstructorOperationBuilder extends
 		private final String name;
 
 		private ParameterLocator(@Nonnull ConstructorOperationBuilder parent,
-				@Nonnull String name) {
+								 @Nonnull String name) {
 			super();
 			this.parent = parent;
 			this.name = name;
@@ -42,21 +42,21 @@ public class ConstructorOperationBuilder extends
 
 		public ParameterScopeOperationBuilder ofType(@Nonnull String type) {
 			return new ParameterScopeOperationBuilder(parent.getCollector(),
-					new ConstructorParameterNavigation(parent.getNavigation(),
-							type, name));
+													  new ConstructorParameterNavigation(parent.getNavigation(),
+																						 type, name));
 		}
 	}
 
 	ConstructorOperationBuilder(@Nonnull IStepCollector collector,
-			@Nonnull IJavaNavigation<AnalyzedConstructor> navigation) {
+								@Nonnull IJavaNavigation<AnalyzedConstructor> navigation) {
 		super(collector, navigation);
 	}
 
 	@Nonnull
 	public AnnotatableOperationBuilder<AnalyzedConstructor> forAnnotation(
-			@Nonnull String type) {
-		return new AnnotatableOperationBuilder<AnalyzedConstructor>(
-				getCollector(), getNavigation(), type);
+		@Nonnull String type) {
+		return new AnnotatableOperationBuilder<>(
+			getCollector(), getNavigation(), type);
 	}
 
 	@Nonnull
@@ -65,27 +65,33 @@ public class ConstructorOperationBuilder extends
 	}
 
 	/**
-	 * @param index
-	 *            The 0-based index of the parameter
+	 * @param index The 0-based index of the parameter
 	 */
 	@Nonnull
 	public ParameterScopeOperationBuilder forParameterAtIndex(int index) {
 		return new ParameterScopeOperationBuilder(getCollector(),
-				new ByIndexConstructorParameterNavigation(getNavigation(),
-						index));
+												  new ByIndexConstructorParameterNavigation(getNavigation(),
+																							index));
 	}
 
 	@Nonnull
-	public BodyContainerOperationBuilder inBody() {
-		return new BodyContainerOperationBuilder(getCollector(),
-				new BodyContainerNavigation<AnalyzedConstructor>(
-						getNavigation()));
+	public BodyContainerOperationBuilder<AnalyzedConstructor, AnalyzedConstructor.ConstructorInsertionPoint> inBody() {
+		return new BodyContainerOperationBuilder<>(
+			getCollector(),
+			new BodyContainerNavigation<>(
+				getNavigation())) {
+
+			@Override
+			public AnalyzedConstructor.ConstructorInsertionPoint getLastStatementLocation() {
+				return AnalyzedConstructor.ConstructorInsertionPoint.END_OF_BODY;
+			}
+		};
 	}
 
 	@Nonnull
 	public ConstructorParameterAdditionBuilder addConstructorParameter(
-			@Nonnull String name) {
-		return new ConstructorParameterAdditionBuilder(name, o -> ensure(o));
+		@Nonnull String name) {
+		return new ConstructorParameterAdditionBuilder(name, this::ensure);
 	}
 
 	public void ensureAnnotation(@Nonnull String annotation) {

@@ -20,15 +20,18 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.ContainingDenomination;
 import com.jeroensteenbeeke.andalite.java.transformation.AbstractMethodBuilder;
 
+import javax.annotation.Nonnull;
+
 public class GetMethodBuilder
 		extends
-		AbstractMethodBuilder<Matcher<ContainingDenomination>, GetMethodBuilder> {
+		AbstractMethodBuilder<Matcher<ContainingDenomination<?,?>>, GetMethodBuilder> {
 	public GetMethodBuilder() {
 		super("void", AccessModifier.PUBLIC);
 	}
 
 	@Override
-	public Matcher<ContainingDenomination> named(String name) {
+	@Nonnull
+	public Matcher<ContainingDenomination<?,?>> named(String name) {
 		return new MethodMatcher(getModifier(), getType(), name,
 				getDescriptors());
 	}

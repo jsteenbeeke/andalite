@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +29,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 
-public class EnsureStatement implements IBodyContainerOperation {
+public abstract class EnsureStatement<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> implements IBodyContainerOperation<T> {
 	private static final Logger logger = LoggerFactory
 			.getLogger(EnsureStatement.class);
 
@@ -40,14 +41,12 @@ public class EnsureStatement implements IBodyContainerOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(IBodyContainer input)
+	public List<Transformation> perform(T input)
 			throws OperationException {
 		if (input.isAbstract()) {
 			throw new OperationException(
 					"Cannot insert statement into abstract method!");
 		}
-
-		AnalyzedStatement last = null;
 
 		for (AnalyzedStatement analyzedStatement : input.getStatements()) {
 			if (analyzedStatement == null)
@@ -61,31 +60,16 @@ public class EnsureStatement implements IBodyContainerOperation {
 			if (asJava.equals(statement)) {
 				return ImmutableList.of();
 			}
-
-			last = analyzedStatement;
 		}
 
 		final String code = String.format("\t\t%s", statement);
 
-		Transformation t;
 
-		if (last == null) {
-			t = Transformation.insertAt(input.getLocation().getEnd() - 1,
-					String.format("%s\n", code));
-		} else {
-			if (last instanceof ReturnStatement) {
-				// insert before last
-				t = Transformation.insertBefore(last,
-						String.format("%s\n", code));
-			} else {
 
-				t = Transformation.insertAfter(last,
-						String.format("\n%s", code));
-			}
-		}
-
-		return ImmutableList.of(t);
+		return ImmutableList.of(input.insertAt(getLastStatementLocation(), code));
 	}
+
+	public abstract I getLastStatementLocation();
 
 	@Override
 	public String getDescription() {
@@ -93,7 +77,7 @@ public class EnsureStatement implements IBodyContainerOperation {
 	}
 
 	@Override
-	public ActionResult verify(IBodyContainer input) {
+	public ActionResult verify(T input) {
 		for (AnalyzedStatement analyzedStatement : input.getStatements()) {
 			if (analyzedStatement == null)
 				continue;

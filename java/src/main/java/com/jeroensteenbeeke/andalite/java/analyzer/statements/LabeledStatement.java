@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class LabeledStatement extends AnalyzedStatement {
+public class LabeledStatement extends BaseStatement {
 
 	private final String label;
 

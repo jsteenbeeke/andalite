@@ -19,7 +19,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.Annotatable;
 
-class AnnotationMatcher extends TypeSafeDiagnosingMatcher<Annotatable> {
+class AnnotationMatcher extends TypeSafeDiagnosingMatcher<Annotatable<?,?>> {
 	private final String annotation;
 
 	AnnotationMatcher(String annotation) {
@@ -32,7 +32,7 @@ class AnnotationMatcher extends TypeSafeDiagnosingMatcher<Annotatable> {
 	}
 
 	@Override
-	protected boolean matchesSafely(Annotatable item,
+	protected boolean matchesSafely(Annotatable<?,?> item,
 			Description mismatchDescription) {
 		boolean matches = item.hasAnnotation(annotation);
 

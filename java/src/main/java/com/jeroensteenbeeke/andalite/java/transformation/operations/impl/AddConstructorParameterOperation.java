@@ -10,39 +10,31 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedParameter;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
 
+import javax.annotation.Nonnull;
+
 public class AddConstructorParameterOperation implements IConstructorOperation {
 	private final String identifier;
 
 	private final String type;
 
-	public AddConstructorParameterOperation(String identifier, String type) {
+	AddConstructorParameterOperation(String identifier, String type) {
 		this.identifier = identifier;
 		this.type = type;
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedConstructor input)
+	public List<Transformation> perform(@Nonnull AnalyzedConstructor input)
 			throws OperationException {
 		if (!hasParameter(input)) {
-			List<AnalyzedParameter> parameters = input.getParameters();
-			if (parameters.isEmpty()) {
-				return ImmutableList.of(Transformation.insertAfter(
-						input.getParametersStartLocation(),
+				return ImmutableList.of(input.insertAt(AnalyzedConstructor.ConstructorInsertionPoint.AFTER_LAST_PARAMETER,
 						String.format("%s %s", type, identifier)));
-			} else {
-				AnalyzedParameter lastParam = parameters
-						.get(parameters.size() - 1);
-
-				return ImmutableList.of(Transformation.insertAfter(lastParam,
-						String.format(", %s %s", type, identifier)));
-			}
 		}
 
 		return ImmutableList.of();
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedConstructor input) {
+	public ActionResult verify(@Nonnull AnalyzedConstructor input) {
 		return hasParameter(input) ? ActionResult.ok() : ActionResult.error(
 				"Parameter %s of type %s not present", identifier, type);
 	}

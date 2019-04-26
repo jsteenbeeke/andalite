@@ -21,7 +21,7 @@ public class EnsureMethodJavadoc implements IMethodOperation {
 			throws OperationException {
 		if (!javadoc.equals(input.getJavadoc())) {
 			return ImmutableList
-					.of(Transformation.insertBefore(input, javadoc));
+					.of(input.insertAt(AnalyzedMethod.MethodInsertionPoint.BEFORE, javadoc));
 		}
 
 		return ImmutableList.of();

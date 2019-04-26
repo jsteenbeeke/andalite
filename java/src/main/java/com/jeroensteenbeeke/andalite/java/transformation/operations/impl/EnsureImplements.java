@@ -16,9 +16,11 @@
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.java.analyzer.GenerifiedName;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
@@ -36,28 +38,20 @@ public class EnsureImplements implements IClassOperation {
 	@Override
 	public List<Transformation> perform(AnalyzedClass input)
 			throws OperationException {
-		Location lastImplementsLocation = input.getLastImplementsLocation();
-		Location extendsLocation = input.getExtendsLocation();
-		Location nameLocation = input.getNameLocation();
 
 		if (input.getInterfaces().contains(interfaceName)) {
 			return ImmutableList.of();
 		}
 
-		if (lastImplementsLocation != null) {
-			return ImmutableList.of(Transformation.insertAfter(
-					lastImplementsLocation, ", ".concat(interfaceName)));
+		final String prefix;
+
+		if (input.getLastImplementsLocation().isEmpty()) {
+			prefix = " implements ";
 		} else {
-			if (extendsLocation != null) {
-				return ImmutableList.of(Transformation.insertAfter(
-						extendsLocation, " implements ".concat(interfaceName)));
-
-			} else {
-				return ImmutableList.of(Transformation.insertAfter(
-						nameLocation, " implements ".concat(interfaceName)));
-
-			}
+			prefix = ", ";
 		}
+
+		return ImmutableList.of(input.insertAt(AnalyzedClass.ClassInsertionPoint.AFTER_LAST_IMPLEMENTED_INTERFACE, prefix + interfaceName));
 	}
 
 	@Override
@@ -67,14 +61,14 @@ public class EnsureImplements implements IClassOperation {
 
 	@Override
 	public ActionResult verify(AnalyzedClass input) {
-		if (input.getInterfaces().stream().map(this::stripWhitespaces).anyMatch(stripWhitespaces(interfaceName)::equals)) {
+		if (input.getInterfaces().stream().map(GenerifiedName::getName).map(this::stripWhitespaces).anyMatch(stripWhitespaces(interfaceName)::equals)) {
 			return ActionResult.ok();
 		}
 
 		return ActionResult.error(
 				"Class does not implement %s (observed: %s )",
 				stripWhitespaces(interfaceName),
-				input.getInterfaces().stream().map(this::stripWhitespaces).sorted()
+				input.getInterfaces().stream().map(GenerifiedName::getName).map(this::stripWhitespaces).sorted()
 						.collect(Collectors.joining(", ")));
 	}
 

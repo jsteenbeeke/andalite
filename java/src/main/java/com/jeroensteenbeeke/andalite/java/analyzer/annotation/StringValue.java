@@ -18,13 +18,14 @@ package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public class StringValue extends BaseValue<String> {
+public class StringValue extends BaseValue<String,StringValue, StringValue.StringValueInsertionPoint> {
 
 	public StringValue(@Nonnull Location location, @Nullable String name,
-			@Nullable String value) {
+			@Nonnull String value) {
 		super(location, name, value);
 	}
 
@@ -32,23 +33,39 @@ public class StringValue extends BaseValue<String> {
 	public void output(IOutputCallback callback) {
 		String value = getValue();
 
-		if (value != null) {
-			callback.write("\"");
-			callback.write(value);
-			callback.write("\"");
-		} else {
-			callback.write(null);
-		}
+		callback.write("\"");
+		callback.write(value);
+		callback.write("\"");
 	}
 
 	@Override
 	public String toJavaString() {
 		String value = getValue();
 
-		if (value != null) {
-			return String.format("\"%s\"", value);
-		} else {
-			return "null";
-		}
+		return String.format("\"%s\"", value);
+	}
+
+	@Override
+	public StringValue.StringValueInsertionPoint getBeforeInsertionPoint() {
+		return StringValue.StringValueInsertionPoint.BEFORE;
+	}
+
+	@Override
+	public StringValue.StringValueInsertionPoint getAfterInsertionPoint() {
+		return StringValue.StringValueInsertionPoint.AFTER;
+	}
+
+	public enum StringValueInsertionPoint implements IInsertionPoint<StringValue> {
+		BEFORE {
+			@Override
+			public int position(StringValue container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(StringValue container) {
+				return container.getLocation().getEnd();
+			}
+		};
 	}
 }

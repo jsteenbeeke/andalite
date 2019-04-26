@@ -45,7 +45,7 @@ public class EnsureInterfaceMethodBuilder extends
 					modifier.name());
 		}
 
-		return (EnsureInterfaceMethodBuilder) super.withModifier(
+		return super.withModifier(
 				AccessModifier.PUBLIC);
 	}
 

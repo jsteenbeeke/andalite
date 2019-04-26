@@ -113,6 +113,14 @@
 				<scope>test</scope>
 			</dependency>
 
+			<dependency>
+				<groupId>com.tngtech.archunit</groupId>
+				<artifactId>archunit</artifactId>
+				<version>${archunit.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+
 			<!-- Guava -->
 			<dependency>
 				<groupId>com.google.guava</groupId>
@@ -125,6 +133,13 @@
 				<groupId>com.google.code.findbugs</groupId>
 				<artifactId>annotations</artifactId>
 				<version>${findbugs.annotations.version}</version>
+			</dependency>
+
+			<!-- Java parsing -->
+			<dependency>
+				<groupId>com.github.javaparser</groupId>
+				<artifactId>javaparser-symbol-solver-core</artifactId>
+				<version>${javaparser.version}</version>
 			</dependency>
 
 			<!-- Logging -->
@@ -164,12 +179,6 @@
 
 			<dependency>
 				<groupId>com.jeroensteenbeeke.andalite</groupId>
-				<artifactId>andalite-java-parser</artifactId>
-				<version>${andalite.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>com.jeroensteenbeeke.andalite</groupId>
 				<artifactId>andalite-java</artifactId>
 				<version>${andalite.version}</version>
 			</dependency>
@@ -191,31 +200,11 @@
 				<artifactId>andalite-maven-plugin</artifactId>
 				<version>${andalite.version}</version>
 			</dependency>
-
-			<dependency>
-				<groupId>com.jeroensteenbeeke.andalite.andalite</groupId>
-				<artifactId>m2e-settings</artifactId>
-				<version>${andalite.version}</version>
-				<scope>compile</scope>
-			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
 	<build>
 		<plugins>
-			<plugin>
-				<inherited>true</inherited>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<dependencies>
-					<dependency>
-						<groupId>com.jeroensteenbeeke.andalite</groupId>
-						<artifactId>m2e-settings</artifactId>
-						<version>${andalite.version}</version>
-					</dependency>
-				</dependencies>
-			</plugin>
 			<plugin>
 				<inherited>true</inherited>
 				<groupId>com.mycila</groupId>
@@ -231,75 +220,11 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-eclipse-plugin</artifactId>
-					<version>${maven.eclipse.plugin.version}</version>
-					<dependencies>
-						<dependency>
-							<groupId>com.jeroensteenbeeke.andalite</groupId>
-							<artifactId>m2e-settings</artifactId>
-							<version>${andalite.version}</version>
-						</dependency>
-					</dependencies>
-					<configuration>
-						<additionalConfig>
-							<file>
-								<name>.settings/org.eclipse.jdt.core.prefs</name>
-								<location>/org.eclipse.jdt.core.prefs</location>
-							</file>
-							<file>
-								<name>.settings/org.eclipse.jdt.ui.prefs</name>
-								<location>/org.eclipse.jdt.ui.prefs</location>
-							</file>
-							<file>
-								<name>.settings/org.eclipse.m2e.core.prefs</name>
-								<location>/org.eclipse.m2e.core.prefs</location>
-							</file>
-							<file>
-								<name>.settings/org.eclipse.search.prefs</name>
-								<location>/org.eclipse.search.prefs</location>
-							</file>
-							<file>
-								<name>.settings/org.eclipse.ui.prefs</name>
-								<location>/org.eclipse.ui.prefs</location>
-							</file>
-							<file>
-								<name>.settings/org.eclipse.wst.html.ui.prefs</name>
-								<location>/org.eclipse.wst.html.ui.prefs</location>
-							</file>
-						</additionalConfig>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>${maven.lifecycle.plugin.version}</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>com.mycila</groupId>
-										<artifactId>license-maven-plugin</artifactId>
-										<versionRange>[${maven.license.plugin.version},)</versionRange>
-										<goals>
-											<goal>check</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<execute/>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>${maven.compiler.plugin.version}</version>
 					<configuration>
-						<target>1.8</target>
-						<source>1.8</source>
+						<target>11</target>
+						<source>11</source>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -340,6 +265,11 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${maven.jar.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-javadoc-plugin</artifactId>
 					<version>${maven.javadoc.plugin.version}</version>
 					<executions>
@@ -376,6 +306,7 @@
 		<hamcrest.version>1.3</hamcrest.version>
 		<javaee.version>7.0</javaee.version>
 		<findbugs.annotations.version>3.0.0</findbugs.annotations.version>
+		<javaparser.version>3.12.0</javaparser.version>
 		<junit.version>4.12</junit.version>
 		<lux.version>1.0-SNAPSHOT</lux.version>
 		<parser.version>1.0.17</parser.version>
@@ -384,22 +315,22 @@
 		<!-- Plugin Versions -->
 		<maven.antlr.plugin.version>4.5.3</maven.antlr.plugin.version>
 		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
-		<maven.eclipse.plugin.version>2.9</maven.eclipse.plugin.version>
-		<maven.javadoc.plugin.version>2.10.3</maven.javadoc.plugin.version>
+		<maven.jar.plugin.version>3.1.1</maven.jar.plugin.version>
+		<maven.javadoc.plugin.version>3.1.0</maven.javadoc.plugin.version>
 		<maven.license.plugin.version>2.3</maven.license.plugin.version>
 		<maven.lifecycle.plugin.version>1.0.0</maven.lifecycle.plugin.version>
 		<maven.source.plugin.version>2.4</maven.source.plugin.version>
+		<maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
 
 		<!-- Other settings -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
+		<archunit.version>0.10.1</archunit.version>
 	</properties>
 
 	<modules>
-		<module>m2e-settings</module>
 		<module>core</module>
 		<module>testbase</module>
-		<module>java-parser</module>
 		<module>java</module>
 		<module>xml</module>
 		<module>forge</module>

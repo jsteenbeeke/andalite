@@ -18,11 +18,12 @@ package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
 
-public class AnnotationValue extends BaseValue<AnalyzedAnnotation> {
+public class AnnotationValue extends BaseValue<AnalyzedAnnotation,AnnotationValue, AnnotationValue.AnnotationValueInsertionPoint> {
 
 	public AnnotationValue(@Nonnull Location location, @Nullable String name,
 			@Nonnull AnalyzedAnnotation value) {
@@ -37,5 +38,29 @@ public class AnnotationValue extends BaseValue<AnalyzedAnnotation> {
 	@Override
 	public String toJavaString() {
 		return getValue().toJavaString();
+	}
+
+	@Override
+	public AnnotationValueInsertionPoint getBeforeInsertionPoint() {
+		return AnnotationValueInsertionPoint.BEFORE;
+	}
+
+	@Override
+	public AnnotationValueInsertionPoint getAfterInsertionPoint() {
+		return AnnotationValueInsertionPoint.AFTER;
+	}
+
+	public enum AnnotationValueInsertionPoint implements IInsertionPoint<AnnotationValue> {
+		BEFORE {
+			@Override
+			public int position(AnnotationValue container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(AnnotationValue container) {
+				return container.getLocation().getEnd();
+			}
+		};
 	}
 }

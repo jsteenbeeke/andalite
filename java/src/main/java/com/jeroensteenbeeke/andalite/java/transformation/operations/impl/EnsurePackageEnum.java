@@ -53,19 +53,15 @@ public class EnsurePackageEnum implements ICompilationUnitOperation {
 
 	@Override
 	public List<Transformation> perform(AnalyzedSourceFile input) {
-		ILocatable last = input;
-
 		for (AnalyzedEnum analyzedEnum : input.getEnums()) {
 			if (analyzedEnum.getAccessModifier() == AccessModifier.DEFAULT
 					&& expectedEnumName.equals(analyzedEnum.getEnumName())) {
 				return ImmutableList.of();
 			}
-
-			last = analyzedEnum;
 		}
 
 		return ImmutableList
-				.of(Transformation.insertAt(last.getLocation().getEnd() + 2,
+				.of(input.insertAt(AnalyzedSourceFile.SourceFileInsertionPoint.AFTER_LAST_DENOMINATION,
 						String.format("enum %s {\n\n}\n", expectedEnumName)));
 	}
 

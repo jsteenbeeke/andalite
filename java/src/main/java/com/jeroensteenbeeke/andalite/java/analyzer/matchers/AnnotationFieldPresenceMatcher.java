@@ -24,10 +24,10 @@ public class AnnotationFieldPresenceMatcher extends
 		TypeSafeDiagnosingMatcher<AnalyzedAnnotation> {
 	private final String name;
 
-	private final Class<? extends BaseValue<?>> type;
+	private final Class<? extends BaseValue<?,?,?>> type;
 
 	AnnotationFieldPresenceMatcher(String name,
-			Class<? extends BaseValue<?>> type) {
+			Class<? extends BaseValue<?,?,?>> type) {
 		super();
 		this.name = name;
 		this.type = type;

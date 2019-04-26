@@ -52,28 +52,23 @@ public class JavaRecipeStep<T extends ILocatable> {
 					"Navigation (%s) failed: %s", navigation.getDescription(),
 					e.getMessage()));
 		}
-		if (target != null) {
-			List<Transformation> transformations;
-			try {
-				transformations = operation.perform(target);
-			} catch (OperationException e) {
-				logger.error(e.getMessage(), e);
-				return ActionResult.error("Operation cannot be performed: %s",
-						e.getMessage());
-			}
-			for (Transformation transformation : transformations) {
-				ActionResult result = transformation.applyTo(file
-						.getOriginalFile());
-				if (!result.isOk()) {
-					return result;
-				}
-			}
-
-			return ActionResult.ok();
-		} else {
-			return ActionResult.error("Could not navigate to %s",
-					navigation.getDescription());
+		List<Transformation> transformations;
+		try {
+			transformations = operation.perform(target);
+		} catch (OperationException e) {
+			logger.error(e.getMessage(), e);
+			return ActionResult.error("Operation cannot be performed: %s",
+					e.getMessage());
 		}
+		for (Transformation transformation : transformations) {
+			ActionResult result = transformation.applyTo(file
+					.getOriginalFile());
+			if (!result.isOk()) {
+				return result;
+			}
+		}
+
+		return ActionResult.ok();
 	}
 
 	@Override

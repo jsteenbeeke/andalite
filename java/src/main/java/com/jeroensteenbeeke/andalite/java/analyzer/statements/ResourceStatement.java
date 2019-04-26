@@ -18,12 +18,12 @@ import java.util.List;
 
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
+import com.jeroensteenbeeke.andalite.java.analyzer.*;
 
-public class ResourceStatement extends AnalyzedStatement {
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+
+public class ResourceStatement extends BaseStatement implements IAnnotationAddable<ResourceStatement> {
 	private final AnalyzedType type;
 
 	private final String name;
@@ -44,13 +44,17 @@ public class ResourceStatement extends AnalyzedStatement {
 		this.initializer = null;
 	}
 
-	public void addAnnotation(AnalyzedAnnotation annotation) {
+
+	public ResourceStatement addAnnotation(@Nonnull AnalyzedAnnotation annotation) {
 		this.annotations.add(annotation);
+		return this;
 	}
 
+	@Nonnull
 	public List<AnalyzedAnnotation> getAnnotations() {
 		return annotations;
 	}
+
 
 	public AnalyzedExpression getInitializer() {
 		return initializer;

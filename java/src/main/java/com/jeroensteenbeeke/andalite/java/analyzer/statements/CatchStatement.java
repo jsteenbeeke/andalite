@@ -14,17 +14,19 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
-import java.util.List;
-
 import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
+import com.jeroensteenbeeke.andalite.java.analyzer.IAnnotationAddable;
 
-public class CatchStatement extends AnalyzedStatement {
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class CatchStatement extends BaseStatement implements IAnnotationAddable<CatchStatement> {
 
 	private final BlockStatement block;
 
@@ -43,8 +45,9 @@ public class CatchStatement extends AnalyzedStatement {
 		this.annotations = Lists.newArrayList();
 	}
 
-	public void addAnnotation(AnalyzedAnnotation annotation) {
+	public CatchStatement addAnnotation(@Nonnull AnalyzedAnnotation annotation) {
 		annotations.add(annotation);
+		return this;
 	}
 
 	public List<AnalyzedAnnotation> getAnnotations() {
@@ -74,12 +77,10 @@ public class CatchStatement extends AnalyzedStatement {
 		java.append(" catch (");
 		Joiner.on(" ").appendTo(
 				java,
-				FluentIterable.from(annotations).transform(
-						AnalyzedAnnotation.toJavaStringFunction()));
+				annotations.stream().map(AnalyzedAnnotation::toJavaString).collect(Collectors.toList()));
 		Joiner.on(" | ").appendTo(
 				java,
-				FluentIterable.from(exceptionTypes).transform(
-						AnalyzedType.toJavaStringFunction()));
+				exceptionTypes.stream().map(AnalyzedType::toJavaString).collect(Collectors.toList()));
 		java.append(" ");
 		java.append(exceptionName);
 		java.append(") ");

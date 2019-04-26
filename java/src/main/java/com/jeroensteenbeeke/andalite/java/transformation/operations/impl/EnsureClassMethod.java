@@ -31,121 +31,17 @@ import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
-public class EnsureClassMethod implements IClassOperation {
-	private final String name;
-
-	private final String type;
-
-	private final AccessModifier modifier;
-
-	private final List<ParameterDescriptor> descriptors;
+public class EnsureClassMethod extends AbstractEnsureMethod<AnalyzedClass, AnalyzedClass.ClassInsertionPoint> implements IClassOperation {
 
 	public EnsureClassMethod(String name, String type, AccessModifier modifier,
 			List<ParameterDescriptor> descriptors) {
-		this.name = name;
-		this.type = type;
-		this.modifier = modifier;
-		this.descriptors = descriptors;
+		super(name, type, modifier, descriptors);
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedClass input)
-			throws OperationException {
-		Location last = input.getBodyLocation();
-
-		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
-			if (name.equals(analyzedMethod.getName())) {
-				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
-					AnalyzedType returnType = analyzedMethod.getReturnType();
-					final String returnTypeAsString = returnType != null ? returnType
-							.toJavaString() : "void";
-
-					if (!type.equals(returnTypeAsString)) {
-						throw new OperationException(
-								String.format(
-										"Method with expected signature exists, but has incorrect return type %s (expected %s)",
-										returnTypeAsString, type));
-					}
-
-					if (!modifier.equals(analyzedMethod.getAccessModifier())) {
-						throw new OperationException(
-								String.format(
-										"Method with expected signature exists, but has incorrect access %s (expected %s)",
-										analyzedMethod.getAccessModifier(),
-										modifier));
-					}
-
-					return ImmutableList.of();
-				}
-			}
-
-			last = analyzedMethod.getLocation();
-		}
-		StringBuilder code = new StringBuilder();
-		code.append("\t");
-		code.append(modifier.getOutput());
-		code.append(type);
-		code.append(" ");
-		code.append(name);
-		code.append("(");
-		code.append(Joiner.on(", ").join(descriptors));
-		code.append(") {\n");
-		code.append("\t}\n\n");
-
-		ImmutableList.Builder<Transformation> transforms = ImmutableList
-				.builder();
-
-		int l = last.getEnd() + 2;
-
-		if (last.getLength() == 0) {
-			transforms
-					.add(Transformation.insertAt(last.getStart() + 2, "\n\n"));
-
-			l = last.getStart() + 3;
-		}
-
-		transforms.add(Transformation.insertAt(l, code.toString()));
-
-		return transforms.build();
+	protected AnalyzedClass.ClassInsertionPoint getInsertionPoint() {
+		return AnalyzedClass.ClassInsertionPoint.AFTER_LAST_METHOD;
 	}
 
-	@Override
-	public String getDescription() {
-		return String.format("existence of method: %s%s %s",
-				modifier.getOutput(), type,
-				AnalyzeUtil.getMethodSignature(name, descriptors));
-	}
-
-	@Override
-	public ActionResult verify(AnalyzedClass input) {
-		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
-			if (name.equals(analyzedMethod.getName())) {
-				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
-					AnalyzedType returnType = analyzedMethod.getReturnType();
-					final String returnTypeAsString = returnType != null ? returnType
-							.toJavaString() : "void";
-
-					if (!type.equals(returnTypeAsString)) {
-						return ActionResult
-								.error("Method with expected signature exists, but has incorrect return type %s (expected %s)",
-										returnTypeAsString, type);
-					}
-
-					if (!modifier.equals(analyzedMethod.getAccessModifier())) {
-						return ActionResult
-								.error("Method with expected signature exists, but has incorrect access %s (expected %s)",
-										analyzedMethod.getAccessModifier(),
-										modifier);
-					}
-
-					return ActionResult.ok();
-				}
-			}
-		}
-
-		return ActionResult.error("No method %s with parameters ( %s ) found",
-				name, descriptors.stream().map(ParameterDescriptor::toString)
-						.collect(Collectors.joining(", ")));
-	}
 
 }

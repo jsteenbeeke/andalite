@@ -14,17 +14,17 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
-import java.util.List;
-
 import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 
-public class ConstructorInvocationStatement extends AnalyzedStatement {
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class ConstructorInvocationStatement extends BaseStatement {
 	private final InvocationType invocationType;
 
 	private AnalyzedExpression scope = null;
@@ -80,8 +80,7 @@ public class ConstructorInvocationStatement extends AnalyzedStatement {
 		if (!typeArguments.isEmpty()) {
 			result.append("<");
 			result.append(Joiner.on(",").join(
-					FluentIterable.from(typeArguments).transform(
-							AnalyzedType.toJavaStringFunction())));
+				typeArguments.stream().map(AnalyzedType::toJavaString).collect(Collectors.toList())));
 			result.append(">");
 		}
 
@@ -90,8 +89,7 @@ public class ConstructorInvocationStatement extends AnalyzedStatement {
 		result.append("(");
 		if (!arguments.isEmpty()) {
 			result.append(Joiner.on(", ").join(
-					FluentIterable.from(arguments).transform(
-							AnalyzedExpression.toJavaStringFunction())));
+				arguments.stream().map(AnalyzedExpression::toJavaString).collect(Collectors.toList())));
 		}
 		result.append(")");
 

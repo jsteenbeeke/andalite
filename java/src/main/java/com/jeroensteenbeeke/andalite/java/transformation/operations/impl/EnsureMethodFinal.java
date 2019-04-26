@@ -18,8 +18,8 @@ public class EnsureMethodFinal implements IMethodOperation {
 	public List<Transformation> perform(AnalyzedMethod input)
 			throws OperationException {
 		if (!input.isFinal()) {
-			return ImmutableList.of(Transformation.insertBefore(
-					input.getReturnType(), " final "));
+			return ImmutableList.of(input.insertAt(
+				AnalyzedMethod.MethodInsertionPoint.BEFORE_RETURN_TYPE, " final "));
 		}
 
 		return ImmutableList.of();

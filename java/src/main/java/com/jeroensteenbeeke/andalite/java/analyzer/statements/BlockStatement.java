@@ -15,12 +15,18 @@
 package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
+import com.jeroensteenbeeke.andalite.core.IInsertionPointProvider;
 import com.jeroensteenbeeke.andalite.core.Location;
+import com.jeroensteenbeeke.andalite.core.Transformation;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 
@@ -28,8 +34,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
  * Represents a statement that is a block of statements, such as one generally
  * following an if-statement
  */
-public class BlockStatement extends AnalyzedStatement implements IBodyContainer {
-	private List<AnalyzedStatement> statements;
+public class BlockStatement extends AnalyzedStatement<BlockStatement, BlockStatement.BlockStatementInsertionPoint> implements IBodyContainer<BlockStatement, BlockStatement.BlockStatementInsertionPoint> {
+	private List<AnalyzedStatement<?,?>> statements;
 
 	/**
 	 * Creates a new block statement
@@ -60,7 +66,7 @@ public class BlockStatement extends AnalyzedStatement implements IBodyContainer 
 	 * @param statement
 	 *            The statement to add to this block
 	 */
-	public void addStatement(@Nonnull AnalyzedStatement statement) {
+	public void addStatement(@Nonnull AnalyzedStatement<?,?> statement) {
 		this.statements.add(statement);
 	}
 
@@ -69,7 +75,7 @@ public class BlockStatement extends AnalyzedStatement implements IBodyContainer 
 	 */
 	@Override
 	@Nonnull
-	public List<AnalyzedStatement> getStatements() {
+	public List<AnalyzedStatement<?,?>> getStatements() {
 		return ImmutableList.copyOf(statements);
 	}
 
@@ -82,7 +88,7 @@ public class BlockStatement extends AnalyzedStatement implements IBodyContainer 
 		StringBuilder block = new StringBuilder();
 
 		block.append("{\n");
-		for (AnalyzedStatement statement : getStatements()) {
+		for (AnalyzedStatement<?,?> statement : getStatements()) {
 			block.append(statement.toJavaString());
 		}
 
@@ -91,4 +97,63 @@ public class BlockStatement extends AnalyzedStatement implements IBodyContainer 
 		return block.toString();
 	}
 
+	@Override
+	public BlockStatementInsertionPoint getBeforeInsertionPoint() {
+		return BlockStatementInsertionPoint.BEFORE;
+	}
+
+	@Override
+	public BlockStatementInsertionPoint getAfterInsertionPoint() {
+		return BlockStatementInsertionPoint.AFTER;
+	}
+
+	@Override
+	public BlockStatementInsertionPoint getStatementInsertionPoint() {
+		return BlockStatementInsertionPoint.BEFORE_RETURN_STATEMENT;
+	}
+
+	public enum BlockStatementInsertionPoint implements IInsertionPoint<BlockStatement> {
+		BEFORE {
+			@Override
+			public int position(BlockStatement container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(BlockStatement container) {
+				return container.getLocation().getEnd();
+			}
+		},
+		START_OF_BODY {
+			@Override
+			public int position(BlockStatement container) {
+				return container.getLocation().getStart() + 1;
+			}
+
+		},
+		END_OF_BODY {
+			@Override
+			public int position(BlockStatement container) {
+				return container.getLocation().getEnd() - 1;
+			}
+		},
+		BEFORE_RETURN_STATEMENT {
+			@Override
+			public int position(BlockStatement container) {
+				List<AnalyzedStatement<?,?>> returnStatements = container
+					.getStatements()
+					.stream()
+					.filter(s -> s instanceof ReturnStatement)
+					.collect(Collectors.toList());
+
+				// No return statement: assume implicit empty return
+				if (returnStatements.isEmpty()) {
+					return END_OF_BODY.position(container);
+				}
+
+				return returnStatements.get(returnStatements.size()-1).getLocation().getEnd();
+			}
+		}
+
+	}
 }

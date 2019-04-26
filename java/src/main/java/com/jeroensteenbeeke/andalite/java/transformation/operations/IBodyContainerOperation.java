@@ -16,6 +16,6 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 
-public interface IBodyContainerOperation extends IJavaOperation<IBodyContainer> {
+public interface IBodyContainerOperation<T extends IBodyContainer> extends IJavaOperation<T> {
 
 }

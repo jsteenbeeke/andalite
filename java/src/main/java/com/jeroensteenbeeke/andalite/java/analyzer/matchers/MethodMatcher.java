@@ -14,22 +14,21 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.matchers;
 
-import java.util.List;
-
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
-
 import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.java.analyzer.ContainingDenomination;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MethodMatcher extends
-		TypeSafeDiagnosingMatcher<ContainingDenomination> {
+		TypeSafeDiagnosingMatcher<ContainingDenomination<?,?>> {
 	private final AccessModifier modifier;
 	private final String type;
 	private final String name;
@@ -53,14 +52,13 @@ public class MethodMatcher extends
 		description.appendText(name);
 		description.appendText("(");
 		description.appendText(Joiner.on(", ").join(
-				FluentIterable.from(descriptors).transform(
-						ParameterDescriptor.toStringFunction())));
+			descriptors.stream().map(ParameterDescriptor::toString).collect(Collectors.toList())));
 		description.appendText(")");
 
 	}
 
 	@Override
-	protected boolean matchesSafely(ContainingDenomination item,
+	protected boolean matchesSafely(ContainingDenomination<?,?> item,
 			Description mismatchDescription) {
 		int nameMatches = 0;
 

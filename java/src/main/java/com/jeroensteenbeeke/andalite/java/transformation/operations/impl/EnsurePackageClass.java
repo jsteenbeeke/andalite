@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,7 +29,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilation
 /**
  * Ensures that a given compilation unit will have a class with default
  * (package) scope and the specified name
- * 
+ *
  * @author Jeroen Steenbeeke
  *
  */
@@ -38,7 +38,7 @@ public class EnsurePackageClass implements ICompilationUnitOperation {
 
 	/**
 	 * Create a new EnsurePackageClass operation
-	 * 
+	 *
 	 * @param expectedClassName
 	 *            The name of the class we want to ensure the existence of.
 	 *            Needs to be a valid Java identifier
@@ -46,44 +46,33 @@ public class EnsurePackageClass implements ICompilationUnitOperation {
 	public EnsurePackageClass(String expectedClassName) {
 		if (!isValidJavaIdentifier(expectedClassName)) {
 			throw new IllegalArgumentException(String.format(
-					"%s is not a valid Java identifier", expectedClassName));
+				"%s is not a valid Java identifier", expectedClassName));
 		}
 		this.expectedClassName = expectedClassName;
 	}
 
 	@Override
 	public List<Transformation> perform(AnalyzedSourceFile input) {
-		ILocatable last = input;
-
-		for (AnalyzedClass analyzedClass : input.getClasses()) {
-			if (analyzedClass.getAccessModifier() == AccessModifier.DEFAULT
-					&& expectedClassName.equals(analyzedClass.getClassName())) {
-				return ImmutableList.of();
-			}
-
-			last = analyzedClass;
-		}
-
 		return ImmutableList
-				.of(Transformation.insertAt(last.getLocation().getEnd() + 2,
-						String.format("class %s {\n\n}\n", expectedClassName)));
+			.of(input.insertAt(AnalyzedSourceFile.SourceFileInsertionPoint.AFTER_LAST_DENOMINATION,
+							   String.format("class %s {\n\n}\n", expectedClassName)));
 	}
 
 	@Override
 	public String getDescription() {
 		return String.format("presence of a package-level class named %s",
-				expectedClassName);
+							 expectedClassName);
 	}
 
 	@Override
 	public ActionResult verify(AnalyzedSourceFile input) {
 		for (AnalyzedClass analyzedClass : input.getClasses()) {
 			if (analyzedClass.getAccessModifier() == AccessModifier.DEFAULT
-					&& expectedClassName.equals(analyzedClass.getClassName())) {
+				&& expectedClassName.equals(analyzedClass.getClassName())) {
 				return ActionResult.ok();
 			}
 		}
 		return ActionResult.error("No package class named %s",
-				expectedClassName);
+								  expectedClassName);
 	}
 }

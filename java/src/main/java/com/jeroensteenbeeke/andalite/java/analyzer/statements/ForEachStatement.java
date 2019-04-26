@@ -21,7 +21,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.expression.VariableDeclarationExpression;
 
-public class ForEachStatement extends AnalyzedStatement {
+public class ForEachStatement extends BaseStatement {
 	private final VariableDeclarationExpression variableExpression;
 
 	private final AnalyzedExpression iterable;

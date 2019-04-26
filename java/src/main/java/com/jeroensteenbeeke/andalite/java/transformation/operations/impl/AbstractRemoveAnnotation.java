@@ -11,11 +11,11 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.java.analyzer.Annotatable;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 
-public abstract class AbstractRemoveAnnotation<T extends Annotatable>
+public abstract class AbstractRemoveAnnotation<T extends Annotatable<T,?>>
 		implements IJavaOperation<T> {
 	private final String annotation;
 
-	public AbstractRemoveAnnotation(String annotation) {
+	AbstractRemoveAnnotation(String annotation) {
 		this.annotation = annotation;
 	}
 
@@ -26,16 +26,11 @@ public abstract class AbstractRemoveAnnotation<T extends Annotatable>
 
 		for (AnalyzedAnnotation analyzedAnnotation : input.getAnnotations()) {
 			if (analyzedAnnotation.getType().equals(annotation)) {
-				transformations.add(Transformation
-						.replace(getLocation(analyzedAnnotation), ""));
+				transformations.add(analyzedAnnotation.replace(""));
 			}
 		}
 
 		return transformations.build();
-	}
-
-	public Location getLocation(AnalyzedAnnotation annotation) {
-		return annotation.getLocation();
 	}
 
 	@Override

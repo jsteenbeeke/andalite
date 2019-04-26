@@ -3,33 +3,36 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import java.util.List;
-
-import org.antlr.v4.runtime.tree.TerminalNode;
-
+import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.expr.SimpleName;
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
+import com.jeroensteenbeeke.andalite.core.Transformation;
 
-public class AnalyzedEnumConstant extends ContainingDenomination {
+import javax.annotation.Nonnull;
+import java.util.List;
+
+public class AnalyzedEnumConstant extends ContainingDenomination<AnalyzedEnumConstant, AnalyzedEnumConstant.EnumConstantInsertionPoint> {
 	private final List<AnalyzedExpression> parameters;
-	
-	public AnalyzedEnumConstant(Location location, int modifiers,
-			String packageName, TerminalNode denominationName, List<AnalyzedExpression> parameters) {
-		super(location, modifiers, packageName, denominationName);
+
+	public AnalyzedEnumConstant(@Nonnull AnalyzedSourceFile sourceFile, @Nonnull Location location, @Nonnull List<Modifier.Keyword> modifiers,
+								@Nonnull String packageName, @Nonnull LocatedName<SimpleName> name, @Nonnull List<AnalyzedExpression> parameters) {
+		super(sourceFile, location, modifiers, packageName, name);
 		this.parameters = parameters;
 	}
-	
+
 	public List<AnalyzedExpression> getParameters() {
 		return parameters;
 	}
@@ -56,7 +59,65 @@ public class AnalyzedEnumConstant extends ContainingDenomination {
 		callback.newline();
 		callback.write("}");
 		callback.newline();
-
 	}
 
+	@Nonnull
+	@Override
+	public Transformation insertAt(@Nonnull EnumConstantInsertionPoint insertionPoint, @Nonnull String code) {
+		String actualCode = code;
+
+		if (insertionPoint.requiresBody() && getBodyLocation().isEmpty()) {
+			actualCode = " { "+ actualCode + " } ";
+		}
+
+		return super.insertAt(insertionPoint, actualCode);
+	}
+
+	@Override
+	public EnumConstantInsertionPoint getAnnotationInsertPoint() {
+		return EnumConstantInsertionPoint.BEFORE;
+	}
+
+	public enum EnumConstantInsertionPoint implements IInsertionPoint<AnalyzedEnumConstant> {
+		BEFORE {
+			@Override
+			public int position(AnalyzedEnumConstant container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(AnalyzedEnumConstant container) {
+				return container.getLocation().getEnd();
+			}
+		}, BEFORE_FIRST_MEMBER(true) {
+			@Override
+			public int position(AnalyzedEnumConstant container) {
+				return container.getBodyLocation().map(Location::getStart)
+								.map(s -> s + 1)
+								.orElseGet(() -> AFTER.position(container));
+			}
+		},
+		AFTER_LAST_MEMBER(true) {
+			@Override
+			public int position(AnalyzedEnumConstant container) {
+				return container.getBodyLocation().map(Location::getEnd)
+								.map(e -> e - 1)
+								.orElseGet(() -> AFTER.position(container));
+			}
+		};
+
+		private final boolean requiresBody;
+
+		EnumConstantInsertionPoint(boolean requiresBody) {
+			this.requiresBody = requiresBody;
+		}
+
+		EnumConstantInsertionPoint() {
+			this(false);
+		}
+
+		public boolean requiresBody() {
+			return requiresBody;
+		}
+	}
 }

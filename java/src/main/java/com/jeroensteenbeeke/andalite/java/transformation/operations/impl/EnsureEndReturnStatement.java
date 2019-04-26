@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
@@ -29,7 +30,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 
-public class EnsureEndReturnStatement implements IBodyContainerOperation {
+public abstract class EnsureEndReturnStatement<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> implements IBodyContainerOperation<T> {
 
 	private final String returnValue;
 
@@ -38,41 +39,41 @@ public class EnsureEndReturnStatement implements IBodyContainerOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(IBodyContainer input)
-			throws OperationException {
+	public List<Transformation> perform(T input)
+		throws OperationException {
 		if (input.isAbstract()) {
 			throw new OperationException(
-					"Cannot insert statement into abstract method!");
+				"Cannot insert statement into abstract method!");
 		}
 
 		AnalyzedStatement last = Iterables.getLast(input.getStatements(), null);
 
 		if (last == null) {
 			// No statements
-			return ImmutableList.of(Transformation.insertAt(input.getLocation()
-					.getEnd() - 1, String.format("\t\treturn %s;\n",
-					returnValue)));
+			return ImmutableList.of(input.insertAt(getLastStatementLocation(), String.format("\t\treturn %s;\n",
+																							 returnValue)));
 		} else {
 			// One or more statements
 			if (last instanceof ReturnStatement) {
 				// Check if return statement matches expectations
 				ReturnStatement statement = (ReturnStatement) last;
 
-				AnalyzedExpression returnExpression = statement
-						.getReturnExpression();
-				if (!returnExpression.toJavaString().equals(returnValue)) {
-					return ImmutableList.of(Transformation.replace(
-							returnExpression, returnValue));
-				}
+				return statement
+					.getReturnExpression().filter(
+						returnExpression -> !returnExpression.toJavaString().equals(returnValue)
+
+					).map(returnExpression -> returnExpression.replace(returnValue))
+					.map(ImmutableList::of)
+					.orElseGet(ImmutableList::of);
 			} else {
 				// Insert return statement after
-				return ImmutableList.of(Transformation.insertAfter(last,
-						String.format("\t\treturn %s;", returnValue)));
+				return ImmutableList.of(input.insertAt(getLastStatementLocation(), String.format("\t\treturn %s;\n",
+																								 returnValue)));
 			}
 		}
-
-		return ImmutableList.of();
 	}
+
+	public abstract I getLastStatementLocation();
 
 	@Override
 	public String getDescription() {
@@ -80,26 +81,24 @@ public class EnsureEndReturnStatement implements IBodyContainerOperation {
 	}
 
 	@Override
-	public ActionResult verify(IBodyContainer input) {
+	public ActionResult verify(T input) {
 		AnalyzedStatement last = Iterables.getLast(input.getStatements(), null);
 
 		if (last instanceof ReturnStatement) {
 			ReturnStatement statement = (ReturnStatement) last;
 
-			AnalyzedExpression returnExpression = statement
-					.getReturnExpression();
-			if (!returnExpression.toJavaString().equals(returnValue)) {
-				return ActionResult.error("Invalid return expression: %s",
-						returnExpression.toJavaString());
-			}
-
-			return ActionResult.ok();
+			return statement.getReturnExpression()
+							.filter(
+								returnExpression -> !returnExpression.toJavaString().equals(returnValue)
+							).map(returnExpression -> ActionResult.error("Invalid return expression: %s",
+																		 returnExpression.toJavaString()))
+							.orElseGet(ActionResult::ok);
 		}
 
 		if (last != null) {
 			return ActionResult.error(
-					"Last statement is not a return statement: %s",
-					last.toJavaString());
+				"Last statement is not a return statement: %s",
+				last.toJavaString());
 		} else {
 			return ActionResult.error("Body has no statements");
 		}

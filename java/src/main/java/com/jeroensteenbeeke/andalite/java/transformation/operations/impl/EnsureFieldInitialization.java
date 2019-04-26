@@ -38,14 +38,12 @@ public class EnsureFieldInitialization implements IFieldOperation {
 		AnalyzedExpression init = input.getInitializationExpression();
 
 		if (init == null) {
-			return ImmutableList.of(Transformation.insertAt(input.getLocation()
-					.getEnd(), String.format(" = %s", expression)));
+			return ImmutableList.of(input.insertAt(AnalyzedField.FieldInsertionPoint.BEFORE_SEMICOLON, String.format(" = %s", expression)));
 		} else {
 			if (init.toJavaString().equals(expression)) {
 				return ImmutableList.of();
 			} else {
-				return ImmutableList.of(Transformation
-						.replace(init, expression));
+				return ImmutableList.of(init.replace(expression));
 			}
 		}
 

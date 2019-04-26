@@ -15,19 +15,13 @@
 
 package com.jeroensteenbeeke.andalite.core;
 
-import javax.annotation.Nonnull;
 
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
-import com.github.antlrjavaparser.api.Node;
-
-public final class Location {
+public final class Location implements Comparable<Location> {
 	private final int start;
 
 	private final int end;
 
-	public Location(@Nonnull int start, @Nonnull int end) {
+	public Location(int start, int end) {
 		if (end < start) {
 			throw new IllegalArgumentException("End before start");
 		}
@@ -35,35 +29,51 @@ public final class Location {
 		this.end = end;
 	}
 
-	@Nonnull
 	public int getLength() {
 		return end - start;
 	}
 
-	@Nonnull
 	public int getStart() {
 		return start;
 	}
 
-	@Nonnull
 	public int getEnd() {
 		return end;
 	}
 
-	@Nonnull
-	public static Location from(@Nonnull Node node) {
-		return new Location(node.getBeginIndex(), node.getEndIndex() + 1);
+	public Location max(Location other) {
+		if (compareTo(other) < 0) {
+			return other;
+		}
+
+		return this;
 	}
 
-	@Nonnull
-	public static Location from(@Nonnull TerminalNode node) {
-		Token symbol = node.getSymbol();
+	public Location min(Location other) {
+		if (compareTo(other) > 0) {
+			return other;
+		}
 
-		return new Location(symbol.getStartIndex(), symbol.getStopIndex() + 1);
+		return this;
+	}
+
+	public Location intersect(Location other) {
+		return new Location(Math.max(start, other.start), Math.min(end, other.end));
 	}
 
 	@Override
 	public String toString() {
 		return String.format("[%d,%d]", start, end);
+	}
+
+	@Override
+	public int compareTo(Location location) {
+		int c = Integer.compare(start, location.start);
+
+		if (c == 0) {
+			c = Integer.compare(end, location.end);
+		}
+
+		return c;
 	}
 }

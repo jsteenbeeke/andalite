@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 
-public class AnnotationExpression extends AnalyzedExpression {
+public abstract class AnnotationExpression extends AnalyzedExpression {
 	private final String qualifiedName;
 
 	public AnnotationExpression(Location location, String qualifiedName) {
@@ -29,9 +29,5 @@ public class AnnotationExpression extends AnalyzedExpression {
 		return qualifiedName;
 	}
 
-	@Override
-	public String toJavaString() {
-		return String.format("@%s", qualifiedName);
-	}
 
 }

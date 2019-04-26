@@ -54,19 +54,14 @@ public class EnsurePackageInterface implements ICompilationUnitOperation {
 
 	@Override
 	public List<Transformation> perform(AnalyzedSourceFile input) {
-		ILocatable last = input;
-
 		for (AnalyzedInterface iface : input.getInterfaces()) {
 			if (iface.getAccessModifier() == AccessModifier.DEFAULT
 					&& expectedInterfaceName.equals(iface.getInterfaceName())) {
 				return ImmutableList.of();
 			}
-
-			last = iface;
 		}
 
-		return ImmutableList.of(Transformation.insertAt(
-				last.getLocation().getEnd() + 2,
+		return ImmutableList.of(input.insertAt(AnalyzedSourceFile.SourceFileInsertionPoint.AFTER_LAST_DENOMINATION,
 				String.format("interface %s {\n\n}\n", expectedInterfaceName)));
 	}
 

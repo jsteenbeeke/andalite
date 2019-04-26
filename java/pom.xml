@@ -44,6 +44,11 @@
 	</scm>
 
 	<dependencies>
+		<dependency>
+			<groupId>com.jeroensteenbeeke</groupId>
+			<artifactId>lux</artifactId>
+		</dependency>
+
 		<!-- Sibling projects -->
 		<dependency>
 			<groupId>com.jeroensteenbeeke.andalite</groupId>
@@ -68,10 +73,15 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.tngtech.archunit</groupId>
+			<artifactId>archunit</artifactId>
+		</dependency>
+
 		<!-- Java Parser -->
 		<dependency>
-			<groupId>com.jeroensteenbeeke.andalite</groupId>
-			<artifactId>andalite-java-parser</artifactId>
+			<groupId>com.github.javaparser</groupId>
+			<artifactId>javaparser-symbol-solver-core</artifactId>
 		</dependency>
 
 		<!-- Guava -->

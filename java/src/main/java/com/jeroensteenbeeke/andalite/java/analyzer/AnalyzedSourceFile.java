@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -23,13 +23,12 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.github.javaparser.Range;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.jeroensteenbeeke.andalite.core.IOutputCallback;
-import com.jeroensteenbeeke.andalite.core.Locatable;
-import com.jeroensteenbeeke.andalite.core.Location;
+import com.jeroensteenbeeke.andalite.core.*;
 
-public final class AnalyzedSourceFile extends Locatable {
+public final class AnalyzedSourceFile extends Locatable implements IInsertionPointProvider<AnalyzedSourceFile, AnalyzedSourceFile.SourceFileInsertionPoint> {
 	private final List<AnalyzedClass> classes;
 
 	private final List<AnalyzedInterface> interfaces;
@@ -45,18 +44,17 @@ public final class AnalyzedSourceFile extends Locatable {
 	private final Location packageDefinitionLocation;
 
 	private final File originalFile;
-	
+
 	private final String compilationUnitName;
 
 	public AnalyzedSourceFile(@Nonnull Location location,
-			@Nonnull File originalFile, @Nullable String packageName,
-			@Nullable Location packageDefinitionLocation) {
+							  @Nonnull File originalFile, @Nullable String packageName,
+							  @Nullable Location packageDefinitionLocation) {
 		super(location);
 		this.originalFile = originalFile;
 		this.compilationUnitName = extractCompilationUnitName(originalFile);
 		this.packageName = Optional.ofNullable(packageName).orElse("");
-		this.packageDefinitionLocation = Optional.ofNullable(packageDefinitionLocation).orElse
-				(new Location(0,0));
+		this.packageDefinitionLocation = packageDefinitionLocation;
 		this.classes = Lists.newArrayList();
 		this.interfaces = Lists.newArrayList();
 		this.enums = Lists.newArrayList();
@@ -66,8 +64,8 @@ public final class AnalyzedSourceFile extends Locatable {
 
 	private static String extractCompilationUnitName(File file) {
 		final String fileName = file.getName();
-		
-		return fileName.substring(0, fileName.length()-5);
+
+		return fileName.substring(0, fileName.length() - 5);
 	}
 
 	public String getCompilationUnitName() {
@@ -75,8 +73,8 @@ public final class AnalyzedSourceFile extends Locatable {
 	}
 
 	@Nonnull
-	public Location getPackageDefinitionLocation() {
-		return packageDefinitionLocation;
+	public Optional<Location> getPackageDefinitionLocation() {
+		return Optional.ofNullable(packageDefinitionLocation);
 	}
 
 	@Nonnull
@@ -156,5 +154,41 @@ public final class AnalyzedSourceFile extends Locatable {
 
 	public File getOriginalFile() {
 		return originalFile;
+	}
+
+	public enum SourceFileInsertionPoint implements IInsertionPoint<AnalyzedSourceFile> {
+		AFTER_PACKAGE_DECLARATION {
+			@Override
+			public int position(AnalyzedSourceFile container) {
+				return container.getPackageDefinitionLocation().map(l -> l.getEnd() + 1).orElse(0);
+			}
+		}, AFTER_IMPORTS {
+			@Override
+			public int position(AnalyzedSourceFile container) {
+				return container
+					.getImports()
+					.stream()
+					.map(AnalyzedImport::getLocation)
+					.reduce(Location::max)
+					.map(Location::getEnd)
+					.map(e -> e + 1)
+					.orElseGet(() -> AFTER_PACKAGE_DECLARATION.position(container));
+			}
+		}, AFTER_LAST_DENOMINATION {
+			@Override
+			public int position(AnalyzedSourceFile container) {
+				return ImmutableList.<Denomination<?,?>>builder()
+					.addAll(container.getClasses())
+					.addAll(container.getEnums())
+					.addAll(container.getAnnotations())
+					.addAll(container.getInterfaces())
+					.build().stream()
+					.map(Denomination::getLocation)
+					.reduce(Location::max)
+					.map(Location::getEnd)
+					.map(e -> e + 1)
+					.orElseGet(() -> AFTER_IMPORTS.position(container));
+			}
+		}
 	}
 }

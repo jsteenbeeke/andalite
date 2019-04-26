@@ -161,12 +161,12 @@ public class RecipeTest extends DummyAwareTest {
 		ArrayValue uniqueConstraints = tableAnnotation
 				.getValue(ArrayValue.class, "uniqueConstraints");
 
-		List<BaseValue<?>> values = uniqueConstraints.getValue();
+		List<BaseValue<?,?,?>> values = uniqueConstraints.getValue();
 
 		assertThat(values.size(), equalTo(2));
 
-		BaseValue<?> firstConstraintBase = values.get(0);
-		BaseValue<?> secondConstraintBase = values.get(1);
+		BaseValue<?,?,?> firstConstraintBase = values.get(0);
+		BaseValue<?,?,?> secondConstraintBase = values.get(1);
 
 		assertThat(firstConstraintBase, instanceOf(AnnotationValue.class));
 		assertThat(secondConstraintBase, instanceOf(AnnotationValue.class));

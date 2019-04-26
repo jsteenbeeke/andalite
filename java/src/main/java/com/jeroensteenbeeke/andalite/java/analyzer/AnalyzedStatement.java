@@ -14,18 +14,14 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import java.io.Serializable;
-import java.util.List;
-
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.jeroensteenbeeke.andalite.core.IOutputCallback;
-import com.jeroensteenbeeke.andalite.core.Locatable;
-import com.jeroensteenbeeke.andalite.core.Location;
+import com.jeroensteenbeeke.andalite.core.*;
 
-public abstract class AnalyzedStatement extends Locatable implements
-		Commentable {
+import java.util.List;
+
+public abstract class AnalyzedStatement<T extends AnalyzedStatement<T,I>, I extends Enum<I> & IInsertionPoint<T>> extends Locatable implements
+		Commentable, IInsertionPointProvider<T, I> {
 	private final List<String> comments;
 
 	protected AnalyzedStatement(Location location) {
@@ -54,19 +50,8 @@ public abstract class AnalyzedStatement extends Locatable implements
 		callback.write(";\n");
 	}
 
-	public static Function<AnalyzedStatement, String> toJavaStringFunction() {
-		return TO_JAVASTRING_FUNCTION;
-	}
+	public abstract I getBeforeInsertionPoint();
 
-	private static final Function<AnalyzedStatement, String> TO_JAVASTRING_FUNCTION = new ToJavaStringFunction();
+	public abstract I getAfterInsertionPoint();
 
-	private static final class ToJavaStringFunction implements
-			Function<AnalyzedStatement, String>, Serializable {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public String apply(AnalyzedStatement input) {
-			return input.toJavaString();
-		}
-	}
 }

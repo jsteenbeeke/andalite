@@ -14,16 +14,16 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
-import java.util.List;
-
-import com.github.antlrjavaparser.api.body.ModifierSet;
+import com.github.javaparser.ast.Modifier;
 import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class VariableDeclarationExpression extends AnalyzedExpression {
 	private final boolean declaredFinal;
@@ -34,10 +34,10 @@ public class VariableDeclarationExpression extends AnalyzedExpression {
 
 	private final List<DeclareVariableExpression> variables;
 
-	public VariableDeclarationExpression(Location location, int modifiers,
+	public VariableDeclarationExpression(Location location, List<Modifier.Keyword> modifiers,
 			AnalyzedType type) {
 		super(location);
-		this.declaredFinal = ModifierSet.isFinal(modifiers);
+		this.declaredFinal = modifiers.contains(Modifier.Keyword.FINAL);
 		this.type = type;
 		this.annotations = Lists.newArrayList();
 		this.variables = Lists.newArrayList();
@@ -74,8 +74,7 @@ public class VariableDeclarationExpression extends AnalyzedExpression {
 		if (!annotations.isEmpty()) {
 			Joiner.on(" ").appendTo(
 					sb,
-					FluentIterable.from(annotations).transform(
-							AnalyzedAnnotation.toJavaStringFunction()));
+					annotations.stream().map(AnalyzedAnnotation::toJavaString).collect(Collectors.toList()));
 			sb.append(" ");
 		}
 
@@ -89,8 +88,7 @@ public class VariableDeclarationExpression extends AnalyzedExpression {
 			sb.append(" ");
 			Joiner.on(", ").appendTo(
 					sb,
-					FluentIterable.from(variables).transform(
-							AnalyzedExpression.toJavaStringFunction()));
+					variables.stream().map(AnalyzedExpression::toJavaString).collect(Collectors.toList()));
 		}
 
 		return sb.toString();

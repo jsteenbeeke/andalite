@@ -34,8 +34,8 @@ public class FieldOperationBuilder
 	@Nonnull
 	public AnnotatableOperationBuilder<AnalyzedField> forAnnotation(
 			@Nonnull String type) {
-		return new AnnotatableOperationBuilder<AnalyzedField>(getCollector(),
-				getNavigation(), type);
+		return new AnnotatableOperationBuilder<>(getCollector(),
+												 getNavigation(), type);
 	}
 
 	public void ensureAnnotation(@Nonnull String annotation) {

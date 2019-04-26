@@ -37,27 +37,27 @@ public class Primitive extends AnalyzedType {
 		return type.name().toLowerCase();
 	}
 
-	public static enum PrimitiveType {
+	public enum PrimitiveType {
 		Boolean, Byte, Char, Double, Float, Int, Long, Short;
 
 		public static PrimitiveType fromParserType(
-				com.github.antlrjavaparser.api.type.PrimitiveType.Primitive prim) {
+				com.github.javaparser.ast.type.PrimitiveType.Primitive prim) {
 			switch (prim) {
-				case Boolean:
+				case BOOLEAN:
 					return Boolean;
-				case Byte:
+				case BYTE:
 					return Byte;
-				case Char:
+				case CHAR:
 					return Char;
-				case Double:
+				case DOUBLE:
 					return Double;
-				case Float:
+				case FLOAT:
 					return Float;
-				case Int:
+				case INT:
 					return Int;
-				case Long:
+				case LONG:
 					return Long;
-				case Short:
+				case SHORT:
 					return Short;
 			}
 

@@ -109,7 +109,7 @@ public class AnalyzerTest extends DummyAwareTest {
 		assertNotNull(array);
 		assertEquals(2, array.getValue().size());
 
-		for (BaseValue<?> baseValue : array.getValue()) {
+		for (BaseValue<?,?,?> baseValue : array.getValue()) {
 			assertTrue(baseValue instanceof AnnotationValue);
 			AnnotationValue annotValue = (AnnotationValue) baseValue;
 
@@ -226,6 +226,78 @@ public class AnalyzerTest extends DummyAwareTest {
 		AnalyzedEnum analyzedEnum = file.getEnums().get(0);
 		assertThat(analyzedEnum, hasModifier(AccessModifier.PUBLIC));
 		assertThat(analyzedEnum, hasName("BareEnum"));
+		assertThat(analyzedEnum, hasNoFields());
+		assertThat(analyzedEnum, hasNoMethods());
+		assertThat(analyzedEnum, hasNoConstructors());
+		assertThat(analyzedEnum, hasNoInnerClasses());
+		assertThat(analyzedEnum, hasNoInterfaces());
+
+	}
+
+	@Test
+	public void testBarestEnum() throws IOException {
+		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.BarestEnum);
+
+		TypedResult<AnalyzedSourceFile> result = analyzer.analyze();
+		assertTrue(result.isOk());
+
+		AnalyzedSourceFile file = result.getObject();
+		assertThat(file, notNullValue());
+		assertThat(file, inPackage(DUMMY_PACKAGE));
+		assertThat(file, hasNoImports());
+		assertThat(file, hasClasses(0));
+
+		AnalyzedEnum analyzedEnum = file.getEnums().get(0);
+		assertThat(analyzedEnum, hasModifier(AccessModifier.PUBLIC));
+		assertThat(analyzedEnum, hasName("BarestEnum"));
+		assertThat(analyzedEnum, hasNoFields());
+		assertThat(analyzedEnum, hasNoMethods());
+		assertThat(analyzedEnum, hasNoConstructors());
+		assertThat(analyzedEnum, hasNoInnerClasses());
+		assertThat(analyzedEnum, hasNoInterfaces());
+
+	}
+
+	@Test
+	public void testEnumWithValuesPresent() throws IOException {
+		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.EnumWithValuesPresent);
+
+		TypedResult<AnalyzedSourceFile> result = analyzer.analyze();
+		assertTrue(result.isOk());
+
+		AnalyzedSourceFile file = result.getObject();
+		assertThat(file, notNullValue());
+		assertThat(file, inPackage(DUMMY_PACKAGE));
+		assertThat(file, hasNoImports());
+		assertThat(file, hasClasses(0));
+
+		AnalyzedEnum analyzedEnum = file.getEnums().get(0);
+		assertThat(analyzedEnum, hasModifier(AccessModifier.PUBLIC));
+		assertThat(analyzedEnum, hasName("EnumWithValuesPresent"));
+		assertThat(analyzedEnum, hasNoFields());
+		assertThat(analyzedEnum, hasNoMethods());
+		assertThat(analyzedEnum, hasNoConstructors());
+		assertThat(analyzedEnum, hasNoInnerClasses());
+		assertThat(analyzedEnum, hasNoInterfaces());
+
+	}
+
+	@Test
+	public void testEnumWithValuesPresentNoSemi() throws IOException {
+		ClassAnalyzer analyzer = analyzeDummy(BaseDummies.EnumWithValuesPresentNoSemi);
+
+		TypedResult<AnalyzedSourceFile> result = analyzer.analyze();
+		assertTrue(result.isOk());
+
+		AnalyzedSourceFile file = result.getObject();
+		assertThat(file, notNullValue());
+		assertThat(file, inPackage(DUMMY_PACKAGE));
+		assertThat(file, hasNoImports());
+		assertThat(file, hasClasses(0));
+
+		AnalyzedEnum analyzedEnum = file.getEnums().get(0);
+		assertThat(analyzedEnum, hasModifier(AccessModifier.PUBLIC));
+		assertThat(analyzedEnum, hasName("EnumWithValuesPresentNoSemi"));
 		assertThat(analyzedEnum, hasNoFields());
 		assertThat(analyzedEnum, hasNoMethods());
 		assertThat(analyzedEnum, hasNoConstructors());

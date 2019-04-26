@@ -22,7 +22,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifiable;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 
-class AccessMatcher extends TypeSafeDiagnosingMatcher<AccessModifiable> {
+class AccessMatcher extends TypeSafeDiagnosingMatcher<AccessModifiable<?,?>> {
 	private final AccessModifier expected;
 
 	public AccessMatcher(@Nonnull AccessModifier expected) {
@@ -37,7 +37,7 @@ class AccessMatcher extends TypeSafeDiagnosingMatcher<AccessModifiable> {
 	}
 
 	@Override
-	protected boolean matchesSafely(AccessModifiable item,
+	protected boolean matchesSafely(AccessModifiable<?,?> item,
 			Description mismatchDescription) {
 
 		boolean match = expected.equals(item.getAccessModifier());

@@ -14,16 +14,16 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
-import java.util.List;
-
 import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class ForStatement extends AnalyzedStatement {
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class ForStatement extends BaseStatement {
 	private final AnalyzedStatement body;
 
 	private final AnalyzedExpression compare;
@@ -72,8 +72,7 @@ public class ForStatement extends AnalyzedStatement {
 		java.append("for (");
 		Joiner.on(",").appendTo(
 				java,
-				FluentIterable.from(initializerExpressions).transform(
-						AnalyzedExpression.toJavaStringFunction()));
+				initializerExpressions.stream().map(AnalyzedExpression::toJavaString).collect(Collectors.toList()));
 		java.append(";");
 		if (compare != null) {
 			java.append(compare.toJavaString());
@@ -81,8 +80,7 @@ public class ForStatement extends AnalyzedStatement {
 		java.append(";");
 		Joiner.on(",").appendTo(
 				java,
-				FluentIterable.from(updateExpressions).transform(
-						AnalyzedExpression.toJavaStringFunction()));
+				updateExpressions.stream().map(AnalyzedExpression::toJavaString).collect(Collectors.toList()));
 		java.append(") ");
 		java.append(body.toJavaString());
 

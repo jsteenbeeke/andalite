@@ -18,10 +18,14 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
+import com.github.javaparser.ast.Modifier;
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public final class AnalyzedField extends AccessModifiable {
+import java.util.List;
+
+public final class AnalyzedField extends AccessModifiable<AnalyzedField, AnalyzedField.FieldInsertionPoint> {
 	private final String name;
 
 	private final AnalyzedType type;
@@ -30,7 +34,7 @@ public final class AnalyzedField extends AccessModifiable {
 
 	private AnalyzedExpression initializationExpression;
 
-	public AnalyzedField(@Nonnull Location location, int modifiers,
+	public AnalyzedField(@Nonnull Location location, List<Modifier.Keyword> modifiers,
 			@Nonnull String name, @Nonnull AnalyzedType type) {
 		super(location, modifiers);
 		this.name = name;
@@ -72,5 +76,30 @@ public final class AnalyzedField extends AccessModifiable {
 		callback.write(" ");
 		callback.write(name);
 		callback.write(";");
+	}
+
+	@Override
+	public FieldInsertionPoint getAnnotationInsertPoint() {
+		return FieldInsertionPoint.BEFORE;
+	}
+
+	public enum FieldInsertionPoint implements IInsertionPoint<AnalyzedField> {
+		BEFORE {
+			@Override
+			public int position(AnalyzedField container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(AnalyzedField container) {
+				return container.getLocation().getEnd();
+			}
+		}, BEFORE_SEMICOLON {
+			@Override
+			public int position(AnalyzedField container) {
+				return container.getLocation().getEnd() - 1;
+			}
+
+		};
 	}
 }

@@ -20,7 +20,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
 
 public class EnsureMethodAnnotation extends
-		AbstractEnsureAnnotation<AnalyzedMethod> implements IMethodOperation {
+		AbstractEnsureAnnotation<AnalyzedMethod, AnalyzedMethod.MethodInsertionPoint> implements IMethodOperation {
 	public EnsureMethodAnnotation(String type) {
 		super(type);
 	}

@@ -14,13 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
 import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
@@ -28,6 +22,11 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.java.analyzer.types.ClassOrInterface;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ObjectCreationExpression extends AnalyzedExpression {
 	private final ClassOrInterface type;
@@ -124,16 +123,17 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 			java.append("<");
 			Joiner.on(",").appendTo(
 					java,
-					FluentIterable.from(typeArguments).transform(
-							AnalyzedType.toJavaStringFunction()));
+					typeArguments.stream().map(AnalyzedType::toJavaString).collect(Collectors.toList()));
 			java.append(">");
 		}
 		java.append("(");
 		if (!arguments.isEmpty()) {
 			Joiner.on(",").appendTo(
 					java,
-					FluentIterable.from(arguments).transform(
-							AnalyzedExpression.toJavaStringFunction()));
+					arguments
+						.stream()
+						.map(AnalyzedExpression::toJavaString)
+						.collect(Collectors.toList()));
 		}
 		java.append(")");
 

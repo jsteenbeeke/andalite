@@ -72,14 +72,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Java Parser -->
-		<dependency>
-			<groupId>com.jeroensteenbeeke.andalite</groupId>
-			<artifactId>andalite-java-parser</artifactId>
-		</dependency>
-
-
-
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

@@ -3,32 +3,30 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 
-import java.util.List;
+import com.google.common.base.Joiner;
+import com.jeroensteenbeeke.andalite.core.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
-import com.jeroensteenbeeke.andalite.core.IOutputCallback;
-import com.jeroensteenbeeke.andalite.core.Location;
-
-public final class ArrayValue extends BaseValue<List<BaseValue<?>>> {
+public final class ArrayValue extends BaseValue<List<BaseValue<?,?,?>>,ArrayValue, ArrayValue.ArrayValueInsertionPoint> {
 
 	public ArrayValue(@Nonnull Location location, @Nullable String name,
-			@Nonnull List<BaseValue<?>> value) {
+					  @Nonnull List<BaseValue<?,?,?>> value) {
 		super(location, name, value);
 	}
 
@@ -37,7 +35,7 @@ public final class ArrayValue extends BaseValue<List<BaseValue<?>>> {
 		callback.write("{ ");
 
 		int i = 0;
-		for (BaseValue<?> baseValue : getValue()) {
+		for (BaseValue<?,?,?> baseValue : getValue()) {
 			if (i++ > 0) {
 				callback.write(", ");
 			}
@@ -51,9 +49,55 @@ public final class ArrayValue extends BaseValue<List<BaseValue<?>>> {
 	@Override
 	public String toJavaString() {
 		return String.format(
-				"{%s}",
-				Joiner.on(", ").join(
-						FluentIterable.from(getValue()).transform(
-								BaseValue.toJavaStringFunction())));
+			"{%s}",
+			Joiner.on(", ").join(
+				getValue().stream().map(BaseValue::toJavaString).collect(Collectors.toList())));
+	}
+
+	@Override
+	public ArrayValueInsertionPoint getBeforeInsertionPoint() {
+		return ArrayValueInsertionPoint.BEFORE;
+	}
+
+	@Override
+	public ArrayValueInsertionPoint getAfterInsertionPoint() {
+		return ArrayValueInsertionPoint.AFTER;
+	}
+
+	@Nonnull
+	@Override
+	public Transformation insertAt(@Nonnull ArrayValueInsertionPoint insertionPoint, @Nonnull String replacement) {
+		if (getValue().isEmpty()) {
+			return super.insertAt(insertionPoint, String.format("{%s}", replacement));
+		}
+
+		return super.insertAt(insertionPoint, String.format(", %s", replacement));
+	}
+
+	public enum ArrayValueInsertionPoint implements IInsertionPoint<ArrayValue> {
+		BEFORE {
+			@Override
+			public int position(ArrayValue container) {
+				return container.getLocation().getStart();
+			}
+		},
+		AFTER {
+			@Override
+			public int position(ArrayValue container) {
+				return container.getLocation().getEnd();
+			}
+		},
+		AFTER_LAST_ELEMENT {
+			@Override
+			public int position(ArrayValue container) {
+				return container
+					.getValue()
+					.stream()
+					.map(BaseValue::getLocation)
+					.map(Location::getEnd)
+					.max(Integer::compareTo)
+					.orElseGet(() -> container.getLocation().getEnd());
+			}
+		}
 	}
 }

@@ -37,7 +37,7 @@ public class EnsurePublicInterface implements ICompilationUnitOperation {
 			}
 		}
 
-		return ImmutableList.of(Transformation.insertAfter(input,
+		return ImmutableList.of(input.insertAt(AnalyzedSourceFile.SourceFileInsertionPoint.AFTER_LAST_DENOMINATION,
 				String.format("public interface %s {\n\n}\n",
 						stripExtension(input.getOriginalFile().getName()))));
 	}

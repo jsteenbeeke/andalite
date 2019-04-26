@@ -22,14 +22,14 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 import com.jeroensteenbeeke.andalite.java.analyzer.ConstructableDenomination;
 
 class ConstructableDenominationConstructorsMatchers extends
-		ByPropertyMatcher<ConstructableDenomination, List<AnalyzedConstructor>> {
+		ByPropertyMatcher<ConstructableDenomination<?,?>, List<AnalyzedConstructor>> {
 	ConstructableDenominationConstructorsMatchers(
 			Matcher<List<AnalyzedConstructor>> delegateMatcher) {
 		super(delegateMatcher);
 	}
 
 	@Override
-	protected List<AnalyzedConstructor> transform(ConstructableDenomination item) {
+	protected List<AnalyzedConstructor> transform(ConstructableDenomination<?,?> item) {
 		return item.getConstructors();
 	}
 

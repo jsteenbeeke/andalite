@@ -32,7 +32,6 @@ public class EnsureConstructorOperation implements IClassOperation {
 	@Override
 	public List<Transformation> perform(AnalyzedClass input)
 			throws OperationException {
-		Location last = input.getBodyLocation();
 
 		for (AnalyzedConstructor ctor : input.getConstructors()) {
 			if (!checkSignature
@@ -47,11 +46,10 @@ public class EnsureConstructorOperation implements IClassOperation {
 
 				return ImmutableList.of();
 			}
-
-			last = ctor.getLocation();
 		}
 		StringBuilder code = new StringBuilder();
-		code.append("\t");
+
+		code.append("\n\n\t");
 		code.append(modifier.getOutput());
 		code.append(" ");
 		code.append(input.getClassName());
@@ -60,21 +58,7 @@ public class EnsureConstructorOperation implements IClassOperation {
 		code.append(") {\n");
 		code.append("\t}\n\n");
 
-		ImmutableList.Builder<Transformation> transforms = ImmutableList
-				.builder();
-
-		int l = last.getEnd() + 2;
-
-		if (last.getLength() == 0) {
-			transforms
-					.add(Transformation.insertAt(last.getStart() + 2, "\n\n"));
-
-			l = last.getStart() + 3;
-		}
-
-		transforms.add(Transformation.insertAt(l, code.toString()));
-
-		return transforms.build();
+		return ImmutableList.of(input.insertAt(AnalyzedClass.ClassInsertionPoint.AFTER_LAST_FIELD, code.toString()));
 	}
 
 	public EnsureConstructorOperation withAnySignature() {

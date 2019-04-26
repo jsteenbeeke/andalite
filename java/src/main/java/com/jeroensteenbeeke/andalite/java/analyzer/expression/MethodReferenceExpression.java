@@ -18,15 +18,18 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 
 public class MethodReferenceExpression extends AnalyzedExpression {
+	private final String identifier;
 
-	public MethodReferenceExpression(Location location) {
+	private final AnalyzedExpression scope;
+
+	public MethodReferenceExpression(Location location, String identifier, AnalyzedExpression scope) {
 		super(location);
-		// TODO When antlr-java-parser is updated
+		this.identifier = identifier;
+		this.scope = scope;
 	}
 
 	@Override
 	public String toJavaString() {
-		// TODO When antlr-java-parser is updated
-		return "::";
+		return String.format("%s::%s", scope.toJavaString(), identifier);
 	}
 }

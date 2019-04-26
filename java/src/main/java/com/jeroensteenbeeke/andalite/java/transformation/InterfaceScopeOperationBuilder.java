@@ -33,14 +33,14 @@ public class InterfaceScopeOperationBuilder extends
 
 	public ClassScopeOperationBuilder forInnerClass(String name) {
 		return new ClassScopeOperationBuilder(getCollector(),
-				new InnerClassNavigation<AnalyzedInterface>(getNavigation(),
-						name));
+											  new InnerClassNavigation<>(getNavigation(),
+																		 name));
 	}
 
 	public AnnotatableOperationBuilder<AnalyzedInterface> forAnnotation(
 			String type) {
-		return new AnnotatableOperationBuilder<AnalyzedInterface>(
-				getCollector(), getNavigation(), type);
+		return new AnnotatableOperationBuilder<>(
+			getCollector(), getNavigation(), type);
 	}
 
 	public InterfaceMethodLocator forMethod() {

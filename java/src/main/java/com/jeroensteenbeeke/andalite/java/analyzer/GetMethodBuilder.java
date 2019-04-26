@@ -17,17 +17,19 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 import com.jeroensteenbeeke.andalite.java.transformation.AbstractMethodBuilder;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
+import javax.annotation.Nonnull;
+
 public class GetMethodBuilder
 		extends AbstractMethodBuilder<AnalyzedMethod, GetMethodBuilder> {
-	private final ContainingDenomination containingDenomination;
+	private final ContainingDenomination<?,?> containingDenomination;
 
-	public GetMethodBuilder(ContainingDenomination containingDenomination) {
+	public GetMethodBuilder(ContainingDenomination<?,?> containingDenomination) {
 		super("void", AccessModifier.PUBLIC);
 		this.containingDenomination = containingDenomination;
 	}
 
 	@Override
-	public AnalyzedMethod named(String name) {
+	public AnalyzedMethod named(@Nonnull String name) {
 		for (AnalyzedMethod analyzedMethod : containingDenomination
 				.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {

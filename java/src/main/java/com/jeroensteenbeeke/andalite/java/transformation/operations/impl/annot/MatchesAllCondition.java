@@ -28,7 +28,7 @@ public class MatchesAllCondition implements InnerAnnotationCondition {
 	}
 
 	@Override
-	public boolean isSatisfiedBy(AnnotationValue value) {
+	public boolean test(AnnotationValue value) {
 		for (InnerAnnotationCondition condition : conditions) {
 			if (!condition.isSatisfiedBy(value)) {
 				return false;

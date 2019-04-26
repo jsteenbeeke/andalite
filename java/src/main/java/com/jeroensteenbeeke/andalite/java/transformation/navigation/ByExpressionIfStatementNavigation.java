@@ -14,6 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.BlockStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,21 +25,21 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
 
-public class ByExpressionIfStatementNavigation extends
-		ChainedNavigation<IBodyContainer, IfStatement> {
+public class ByExpressionIfStatementNavigation<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> extends
+		ChainedNavigation<T, IfStatement> {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ByExpressionIfStatementNavigation.class);
 
 	private final String expression;
 
 	public ByExpressionIfStatementNavigation(
-			IJavaNavigation<IBodyContainer> chained, String expression) {
+			IJavaNavigation<T> chained, String expression) {
 		super(chained);
 		this.expression = expression;
 	}
 
 	@Override
-	public IfStatement navigate(IBodyContainer chainedTarget)
+	public IfStatement navigate(T chainedTarget)
 			throws NavigationException {
 		for (AnalyzedStatement analyzedStatement : chainedTarget
 				.getStatements()) {

@@ -40,36 +40,11 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 		}
 
 		List<AnalyzedEnumConstant> constants = input.getConstants();
-		AnalyzedEnumConstant last = constants.isEmpty() ? null : constants
-				.get(constants.size() - 1);
 
-		Transformation t = null;
-
-		if (last == null) {
-			Location separatorLocation = input.getSeparatorLocation();
-			final String code = String.format(
-					"%s(%s)",
-					name,
-					expectedParameterExpressions.stream().collect(
-							Collectors.joining(", ")));
-
-			if (separatorLocation == null) {
-				// Insert before body
-				t = Transformation.insertAt(input.getBodyLocation().getStart(),
-						code);
-			} else {
-
-				t = Transformation.insertBefore(separatorLocation, code);
-			}
-		} else {
-			t = Transformation.insertAfter(last, String.format(
-					", %s(%s)",
-					name,
-					expectedParameterExpressions.stream().collect(
-							Collectors.joining(", "))));
-		}
-
-		return ImmutableList.of(t);
+		return ImmutableList.of(input.insertAt(AnalyzedEnum.EnumInsertionPoint.AFTER_LAST_CONSTANT, String.format(
+			"%s(%s)",
+			name,
+			String.join(", ", expectedParameterExpressions))));
 	}
 
 	@Override
@@ -104,7 +79,7 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 
 					String found = analyzedExpression.toJavaString();
 					String expected = expectedParameterExpressions.get(i);
-					if (!expected.equals(expected)) {
+					if (!expected.equals(found)) {
 						return Optional
 								.of(errorMessageToReturnType.apply(String
 										.format("Constant named %s exist, but parameter %d is invalid (expected %s, found %s)",
@@ -126,8 +101,7 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 		return String.format(
 				"Ensure presence of enum constant %s with parameters (%s)",
 				name,
-				expectedParameterExpressions.stream().collect(
-						Collectors.joining(", ")));
+				String.join(", ", expectedParameterExpressions));
 	}
 
 }

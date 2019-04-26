@@ -22,7 +22,7 @@ public class EnsureMethodComment implements IMethodOperation {
 			throws OperationException {
 		if (!input.getComments().contains(comment)) {
 			return ImmutableList
-					.of(Transformation.insertBefore(input, comment));
+					.of(input.insertAt(AnalyzedMethod.MethodInsertionPoint.BEFORE, comment));
 		}
 
 		return ImmutableList.of();

@@ -18,8 +18,8 @@ import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
 
-public class ThenStatementNavigation extends
-		ChainedNavigation<IfStatement, AnalyzedStatement> {
+public class ThenStatementNavigation<T extends AnalyzedStatement<T,?>> extends
+		ChainedNavigation<IfStatement, T> {
 
 	public ThenStatementNavigation(IJavaNavigation<IfStatement> chained) {
 		super(chained);
@@ -31,9 +31,10 @@ public class ThenStatementNavigation extends
 	}
 
 	@Override
-	public AnalyzedStatement navigate(IfStatement chainedTarget)
+	@SuppressWarnings("unchecked")
+	public T navigate(IfStatement chainedTarget)
 			throws NavigationException {
-		AnalyzedStatement thenStatement = chainedTarget.getThenStatement();
+		T thenStatement = (T) chainedTarget.getThenStatement();
 
 		if (thenStatement == null) {
 			throw new NavigationException("if-statement has no then statement");

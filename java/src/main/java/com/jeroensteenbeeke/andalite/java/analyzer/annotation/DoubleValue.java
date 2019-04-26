@@ -18,26 +18,51 @@ package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public final class DoubleValue extends BaseValue<Double> {
+public final class DoubleValue extends BaseValue<Double,DoubleValue, DoubleValue.DoubleValueInsertionPoint> {
 
 	public DoubleValue(@Nonnull Location location, @Nullable String name,
-			@Nullable Double value) {
+			@Nonnull Double value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(IOutputCallback callback) {
 		Double value = getValue();
-		callback.write(value != null ? Double.toString(value) : null);
+		callback.write(Double.toString(value));
 
 	}
 
 	@Override
 	public String toJavaString() {
 		Double value = getValue();
-		return value != null ? Double.toString(value) : null;
+		return Double.toString(value);
+	}
+
+	@Override
+	public DoubleValue.DoubleValueInsertionPoint getBeforeInsertionPoint() {
+		return DoubleValue.DoubleValueInsertionPoint.BEFORE;
+	}
+
+	@Override
+	public DoubleValue.DoubleValueInsertionPoint getAfterInsertionPoint() {
+		return DoubleValue.DoubleValueInsertionPoint.AFTER;
+	}
+
+	public enum DoubleValueInsertionPoint implements IInsertionPoint<DoubleValue> {
+		BEFORE {
+			@Override
+			public int position(DoubleValue container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(DoubleValue container) {
+				return container.getLocation().getEnd();
+			}
+		};
 	}
 }

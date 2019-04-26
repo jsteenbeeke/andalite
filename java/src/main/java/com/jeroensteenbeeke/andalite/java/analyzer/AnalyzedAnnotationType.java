@@ -3,29 +3,32 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import javax.annotation.Nonnull;
-
-import org.antlr.v4.runtime.tree.TerminalNode;
-
+import com.github.javaparser.ast.Modifier;
+import com.github.javaparser.ast.expr.SimpleName;
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public class AnalyzedAnnotationType extends ContainingDenomination {
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Optional;
 
-	protected AnalyzedAnnotationType(@Nonnull Location location, int modifiers,
-			@Nonnull String packageName, @Nonnull TerminalNode denominationName) {
-		super(location, modifiers, packageName, denominationName);
+public class AnalyzedAnnotationType extends ContainingDenomination<AnalyzedAnnotationType, AnalyzedAnnotationType.AnnotationTypeInsertionPoint> {
+
+	protected AnalyzedAnnotationType(@Nonnull AnalyzedSourceFile sourceFile, @Nonnull Location location, @Nonnull List<Modifier.Keyword> modifiers,
+									 @Nonnull String packageName, @Nonnull LocatedName<SimpleName> name) {
+		super(sourceFile, location, modifiers, packageName, name);
 	}
 
 	public String getAnnotationName() {
@@ -44,7 +47,34 @@ public class AnalyzedAnnotationType extends ContainingDenomination {
 		callback.newline();
 		callback.write("}");
 		callback.newline();
-
 	}
 
+	@Override
+	public AnnotationTypeInsertionPoint getAnnotationInsertPoint() {
+		return AnnotationTypeInsertionPoint.BEFORE;
+	}
+
+	public enum AnnotationTypeInsertionPoint implements IInsertionPoint<AnalyzedAnnotationType> {
+		BEFORE {
+			@Override
+			public int position(AnalyzedAnnotationType container) {
+				return container.getLocation().getStart();
+			}
+		},
+		START {
+			@Override
+			public int position(AnalyzedAnnotationType container) {
+				return container.getBodyLocation()
+					.map(Location::getStart)
+					.orElseThrow(() -> new IllegalStateException("Annotation definition without body location"));
+			}
+		}, END {
+			@Override
+			public int position(AnalyzedAnnotationType container) {
+				return container.getBodyLocation()
+					.map(Location::getEnd)
+					.orElseThrow(() -> new IllegalStateException("Annotation definition without body location"));
+			}
+		}
+	}
 }

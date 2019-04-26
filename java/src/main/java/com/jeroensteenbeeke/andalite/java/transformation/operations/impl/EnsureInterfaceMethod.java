@@ -47,8 +47,6 @@ public class EnsureInterfaceMethod implements IInterfaceOperation {
 	@Override
 	public List<Transformation> perform(AnalyzedInterface input)
 			throws OperationException {
-		Location last = input.getBodyLocation();
-
 		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
@@ -66,8 +64,6 @@ public class EnsureInterfaceMethod implements IInterfaceOperation {
 					return ImmutableList.of();
 				}
 			}
-
-			last = analyzedMethod.getLocation();
 		}
 		StringBuilder code = new StringBuilder();
 		code.append("\t");
@@ -78,8 +74,7 @@ public class EnsureInterfaceMethod implements IInterfaceOperation {
 		code.append(Joiner.on(", ").join(descriptors));
 		code.append(");\n\n");
 
-		return ImmutableList.of(Transformation.insertBefore(last,
-				code.toString()));
+		return ImmutableList.of(input.insertAt(AnalyzedInterface.InterfaceInsertionPoint.AFTER_LAST_METHOD, code.toString()));
 	}
 
 	@Override

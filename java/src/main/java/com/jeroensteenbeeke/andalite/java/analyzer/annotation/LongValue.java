@@ -18,25 +18,50 @@ package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public final class LongValue extends BaseValue<Long> {
+public final class LongValue extends BaseValue<Long,LongValue, LongValue.LongValueInsertionPoint> {
 
 	public LongValue(@Nonnull Location location, @Nullable String name,
-			@Nullable Long value) {
+			@Nonnull Long value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(IOutputCallback callback) {
 		Long value = getValue();
-		callback.write(value != null ? Long.toString(value) : null);
+		callback.write(Long.toString(value));
 	}
 
 	@Override
 	public String toJavaString() {
 		Long value = getValue();
-		return value != null ? Long.toString(value) : "null";
+		return Long.toString(value);
+	}
+
+	@Override
+	public LongValue.LongValueInsertionPoint getBeforeInsertionPoint() {
+		return LongValue.LongValueInsertionPoint.BEFORE;
+	}
+
+	@Override
+	public LongValue.LongValueInsertionPoint getAfterInsertionPoint() {
+		return LongValue.LongValueInsertionPoint.AFTER;
+	}
+
+	public enum LongValueInsertionPoint implements IInsertionPoint<LongValue> {
+		BEFORE {
+			@Override
+			public int position(LongValue container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(LongValue container) {
+				return container.getLocation().getEnd();
+			}
+		};
 	}
 }

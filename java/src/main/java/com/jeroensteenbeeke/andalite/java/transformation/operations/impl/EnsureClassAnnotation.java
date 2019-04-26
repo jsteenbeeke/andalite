@@ -18,7 +18,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
 
 public class EnsureClassAnnotation extends
-		AbstractEnsureAnnotation<AnalyzedClass> implements IClassOperation {
+		AbstractEnsureAnnotation<AnalyzedClass, AnalyzedClass.ClassInsertionPoint> implements IClassOperation {
 	public EnsureClassAnnotation(String type) {
 		super(type);
 

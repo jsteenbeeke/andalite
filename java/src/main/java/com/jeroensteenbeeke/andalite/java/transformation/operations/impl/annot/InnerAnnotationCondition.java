@@ -16,6 +16,11 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.AnnotationValue;
 
-public interface InnerAnnotationCondition {
-	boolean isSatisfiedBy(AnnotationValue value);
+import java.util.function.Predicate;
+
+@FunctionalInterface
+public interface InnerAnnotationCondition extends Predicate<AnnotationValue> {
+	default boolean isSatisfiedBy(AnnotationValue value) {
+		return test(value);
+	}
 }

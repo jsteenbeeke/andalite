@@ -18,7 +18,7 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class IfStatement extends AnalyzedStatement {
+public class IfStatement extends BaseStatement {
 	private final AnalyzedExpression condition;
 
 	private final AnalyzedStatement thenStatement;
@@ -57,11 +57,11 @@ public class IfStatement extends AnalyzedStatement {
 		return condition;
 	}
 
-	public AnalyzedStatement getThenStatement() {
+	public AnalyzedStatement<?,?> getThenStatement() {
 		return thenStatement;
 	}
 
-	public AnalyzedStatement getElseStatement() {
+	public AnalyzedStatement<?,?> getElseStatement() {
 		return elseStatement;
 	}
 }
