@@ -167,8 +167,8 @@ public final class AnalyzedMethod extends AccessModifiable<AnalyzedMethod, Analy
 	}
 
 	@Override
-	public String getJavadoc() {
-		return javadoc;
+	public Optional<String> getJavadoc() {
+		return Optional.ofNullable(javadoc);
 	}
 
 	@Override
@@ -234,7 +234,6 @@ public final class AnalyzedMethod extends AccessModifiable<AnalyzedMethod, Analy
 			@Override
 			public int position(AnalyzedMethod container) {
 				return container.getBodyLocation().map(Location::getEnd)
-								.map(s -> s - 1)
 								.orElseThrow(() -> new IllegalStateException("Cannot insert into method without body location"));
 			}
 		}, AFTER_LAST_EXCEPTION {

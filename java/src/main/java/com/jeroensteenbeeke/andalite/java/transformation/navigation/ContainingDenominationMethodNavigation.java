@@ -14,21 +14,17 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
-import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
+import com.jeroensteenbeeke.andalite.java.analyzer.*;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
-public class ClassMethodNavigation extends
-		ChainedNavigation<AnalyzedClass, AnalyzedMethod> {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
+public class ContainingDenominationMethodNavigation<T extends ContainingDenomination<T,?>> extends
+		ChainedNavigation<T, AnalyzedMethod> {
 	private final String name;
 
 	private final String type;
@@ -37,12 +33,12 @@ public class ClassMethodNavigation extends
 
 	private final List<ParameterDescriptor> descriptors;
 
-	public ClassMethodNavigation(
-			@Nonnull IJavaNavigation<AnalyzedClass> classNavigation,
+	public ContainingDenominationMethodNavigation(
+			@Nonnull IJavaNavigation<T> denominationNavigation,
 			@Nonnull String name, @Nullable String type,
 			@Nullable AccessModifier modifier,
 			@Nonnull List<ParameterDescriptor> descriptors) {
-		super(classNavigation);
+		super(denominationNavigation);
 		this.name = name;
 		this.type = type;
 		this.modifier = modifier;
@@ -56,7 +52,7 @@ public class ClassMethodNavigation extends
 	}
 
 	@Override
-	public AnalyzedMethod navigate(AnalyzedClass chainedTarget)
+	public AnalyzedMethod navigate(T chainedTarget)
 			throws NavigationException {
 		for (AnalyzedMethod analyzedMethod : chainedTarget.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {

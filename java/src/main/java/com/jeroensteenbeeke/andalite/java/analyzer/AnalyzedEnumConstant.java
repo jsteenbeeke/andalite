@@ -87,7 +87,7 @@ public class AnalyzedEnumConstant extends ContainingDenomination<AnalyzedEnumCon
 		}, AFTER {
 			@Override
 			public int position(AnalyzedEnumConstant container) {
-				return container.getLocation().getEnd();
+				return container.getLocation().getEnd() + 1;
 			}
 		}, BEFORE_FIRST_MEMBER(true) {
 			@Override

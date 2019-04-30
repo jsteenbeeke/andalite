@@ -167,7 +167,7 @@ public final class AnalyzedClass extends ConstructableDenomination<AnalyzedClass
 		}, AFTER_NAME {
 			@Override
 			public int position(AnalyzedClass container) {
-				return container.getNameLocation().getEnd();
+				return container.getNameLocation().getEnd() + 1;
 			}
 		};
 	}

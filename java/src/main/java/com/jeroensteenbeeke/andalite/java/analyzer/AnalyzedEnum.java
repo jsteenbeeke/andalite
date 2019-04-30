@@ -128,7 +128,6 @@ public class AnalyzedEnum extends ConstructableDenomination<AnalyzedEnum, Analyz
 			public int position(AnalyzedEnum container) {
 				return Optional.ofNullable(container.getSeparatorLocation())
 					.map(Location::getStart)
-					.map(e -> e-1)
 					.orElseGet(() -> END_OF_IMPLEMENTATION.position(container));
 			}
 		}, START_OF_IMPLEMENTATION {

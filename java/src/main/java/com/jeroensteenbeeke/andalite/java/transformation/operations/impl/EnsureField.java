@@ -139,7 +139,7 @@ public class EnsureField implements IClassOperation {
 			.builder();
 
 		if (input.getBodyLocation().map(Location::getLength).orElse(0) == 0) {
-			transforms.add(input.insertAt(AnalyzedClass.ClassInsertionPoint.AFTER_LAST_FIELD, "\n\n"));
+			extras.add(0, "\n\n");
 		}
 
 

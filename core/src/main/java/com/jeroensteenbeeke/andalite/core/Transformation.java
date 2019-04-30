@@ -47,7 +47,7 @@ public class Transformation {
 	public static Transformation replace(@Nonnull IReplaceable replaceable, @Nonnull String code) {
 		Location location = replaceable.getLocation();
 
-		return new Transformation(location.getStart(), location.getEnd(), code);
+		return new Transformation(location.getStart(), location.getEnd()+1, code);
 	}
 
 	public static <T extends IInsertionPointProvider<T, I>, I extends Enum<I> & IInsertionPoint<T>> Transformation atInsertionPoint(@Nonnull T container,

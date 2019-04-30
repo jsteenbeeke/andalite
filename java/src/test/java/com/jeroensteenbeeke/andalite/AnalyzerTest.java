@@ -14,6 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite;
 
+import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasClasses;
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasInterfaces;
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.hasMethods;
@@ -312,7 +313,7 @@ public class AnalyzerTest extends DummyAwareTest {
 
 		TypedResult<AnalyzedSourceFile> result = analyzer.analyze();
 
-		assertTrue(result.isOk());
+		assertThat(result, isOk());
 
 		AnalyzedSourceFile file = result.getObject();
 

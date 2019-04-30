@@ -16,6 +16,7 @@
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.jeroensteenbeeke.andalite.core.*;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
@@ -23,6 +24,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -32,7 +34,7 @@ import java.util.stream.Collectors;
 public final class AnalyzedAnnotation extends Locatable implements IInsertionPointProvider<AnalyzedAnnotation, AnalyzedAnnotation.AnnotationInsertionPoint> {
 	private final String type;
 
-	private final Map<String, BaseValue<?,?,?>> annotationValues;
+	private final Map<String, BaseValue<?, ?, ?>> annotationValues;
 
 	private Location parametersLocation;
 
@@ -42,6 +44,10 @@ public final class AnalyzedAnnotation extends Locatable implements IInsertionPoi
 		super(location);
 		this.type = type;
 		this.annotationValues = Maps.newLinkedHashMap();
+	}
+
+	public List<BaseValue<?, ?, ?>> getValues() {
+		return ImmutableList.copyOf(annotationValues.values());
 	}
 
 	@Nonnull
@@ -58,14 +64,14 @@ public final class AnalyzedAnnotation extends Locatable implements IInsertionPoi
 		return type;
 	}
 
-	void addAnnotation(BaseValue<?,?,?> value) {
+	void addAnnotation(BaseValue<?, ?, ?> value) {
 		annotationValues.put(value.getName(), value);
 	}
 
-	public <T extends BaseValue<?,?,?>> boolean hasValueOfType(
+	public <T extends BaseValue<?, ?, ?>> boolean hasValueOfType(
 		Class<T> expectedType, String name) {
 		if (annotationValues.containsKey(name)) {
-			BaseValue<?,?,?> value = annotationValues.get(name);
+			BaseValue<?, ?, ?> value = annotationValues.get(name);
 			if (expectedType.isAssignableFrom(value.getClass())) {
 				return true;
 			}
@@ -76,8 +82,8 @@ public final class AnalyzedAnnotation extends Locatable implements IInsertionPoi
 
 	@SuppressWarnings("unchecked")
 	@CheckForNull
-	public <T extends BaseValue<?,?,?>> T getValue(Class<T> expectedType,
-											   String name) {
+	public <T extends BaseValue<?, ?, ?>> T getValue(Class<T> expectedType,
+													 String name) {
 		if (hasValueOfType(expectedType, name)) {
 			return (T) annotationValues.get(name);
 
@@ -96,7 +102,7 @@ public final class AnalyzedAnnotation extends Locatable implements IInsertionPoi
 			callback.newline();
 
 			int i = 0;
-			for (Entry<String, BaseValue<?,?,?>> entry : annotationValues
+			for (Entry<String, BaseValue<?, ?, ?>> entry : annotationValues
 				.entrySet()) {
 				if (i++ > 0) {
 					callback.write(",");
@@ -160,10 +166,14 @@ public final class AnalyzedAnnotation extends Locatable implements IInsertionPoi
 			java.append("(");
 			Joiner.on(", ").appendTo(
 				java,
-				annotationValues.entrySet().stream().map(e -> String.format("%s=%s", e
-					.getKey(), e
-																				.getValue()
-																				.toJavaString())).collect(Collectors.toList()));
+				annotationValues
+					.entrySet()
+					.stream()
+					.map(e -> String.format("%s=%s", e
+						.getKey(), e
+												.getValue()
+												.toJavaString()))
+					.collect(Collectors.toList()));
 			java.append(")");
 		}
 
@@ -183,12 +193,19 @@ public final class AnalyzedAnnotation extends Locatable implements IInsertionPoi
 		}, AFTER {
 			@Override
 			public int position(AnalyzedAnnotation container) {
-				return container.getLocation().getEnd();
+				return container.getLocation().getEnd() + 1;
 			}
 		}, AFTER_LAST_ARGUMENT {
 			@Override
 			public int position(AnalyzedAnnotation container) {
-				return container.getParametersLocation().map(Location::getEnd).orElseGet(() -> AFTER.position(container));
+				return container.getValues().stream()
+								.map(BaseValue::getLocation)
+								.map(Location::getEnd)
+								.map(e -> e + 1)
+								.max(Integer::compareTo)
+								.or(() -> container.getParametersLocation()
+												   .map(Location::getEnd))
+								.orElseGet(() -> AFTER.position(container));
 			}
 		};
 	}

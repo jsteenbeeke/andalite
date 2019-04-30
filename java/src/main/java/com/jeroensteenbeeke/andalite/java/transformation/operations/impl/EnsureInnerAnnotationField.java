@@ -55,7 +55,6 @@ public class EnsureInnerAnnotationField implements IAnnotationOperation {
 	@Override
 	public List<Transformation> perform(AnalyzedAnnotation input)
 		throws OperationException {
-		// TODO: REWRITE
 		final String actualName = name != null ? name : "value";
 
 		if (input.hasValueOfType(AnnotationValue.class, name)) {

@@ -16,9 +16,15 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 
+import com.google.common.io.CharSink;
+import com.google.common.io.CharSource;
+import com.google.googlejavaformat.java.Formatter;
+import com.google.googlejavaformat.java.FormatterException;
+import com.google.googlejavaformat.java.filer.FormattingFiler;
 import com.jeroensteenbeeke.lux.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,10 +82,19 @@ public class JavaRecipe {
 				return TypedResult.fail("Navigation: %s\nOperation: %s\nTransformation result: %s",
 										step.navigationToString(),
 										step.operationToString(),
-										result.getMessage());
+										stepResult.getMessage());
 			} else {
 				logger.debug("OK: {}", step.toString());
 			}
+
+			try {
+				System.out.printf("// OK: %s", step.toString()).println();
+
+				Files.lines(file.toPath()).forEach(System.out::println);
+			} catch (IOException e) {
+				return TypedResult.fail(e.getMessage());
+			}
+
 
 			result = new ClassAnalyzer(file).analyze();
 
@@ -99,6 +114,15 @@ public class JavaRecipe {
 										step.navigationToString(),
 										step.operationToString(),
 										verify.getMessage());
+			}
+
+			CharSource source = com.google.common.io.Files.asCharSource(file, StandardCharsets.UTF_8);
+			CharSink sink = com.google.common.io.Files.asCharSink(file, StandardCharsets.UTF_8);
+
+			try {
+				new Formatter().formatSource(source, sink);
+			} catch (FormatterException | IOException e) {
+				return TypedResult.fail("Could not format source after transform: %s, %s", e.getClass().getSimpleName(), e.getMessage());
 			}
 
 			prev = step;

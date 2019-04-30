@@ -41,8 +41,10 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 
 		List<AnalyzedEnumConstant> constants = input.getConstants();
 
+		final String prefix = constants.isEmpty() ? "" : ", ";
+
 		return ImmutableList.of(input.insertAt(AnalyzedEnum.EnumInsertionPoint.AFTER_LAST_CONSTANT, String.format(
-			"%s(%s)",
+			"%s%s(%s)", prefix,
 			name,
 			String.join(", ", expectedParameterExpressions))));
 	}

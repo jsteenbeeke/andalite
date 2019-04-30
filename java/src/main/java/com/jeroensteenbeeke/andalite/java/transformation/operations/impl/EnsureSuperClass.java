@@ -48,7 +48,7 @@ public class EnsureSuperClass implements IClassOperation {
 			return ImmutableList.of();
 		} else {
 			return input.getSuperClass().map(name -> name.replace(superClass)).or(() ->
-																					  Optional.of(input.insertAt(AnalyzedClass.ClassInsertionPoint.AFTER_NAME, " extends" + superClass))
+																					  Optional.of(input.insertAt(AnalyzedClass.ClassInsertionPoint.AFTER_NAME, " extends " + superClass))
 			).map(ImmutableList::of).orElseGet(ImmutableList::of);
 		}
 	}

@@ -14,27 +14,28 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import java.util.function.Consumer;
-
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumConstantOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEnumConstantMethod;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEnumMethod;
 
 import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
-public class EnsureEnumMethodBuilder
-		extends AbstractMethodBuilder<IEnumOperation, EnsureEnumMethodBuilder> {
-	private final Consumer<IEnumOperation> onCreate;
+public class EnsureEnumConstantMethodBuilder
+		extends AbstractMethodBuilder<IEnumConstantOperation, EnsureEnumConstantMethodBuilder> {
+	private final Consumer<IEnumConstantOperation> onCreate;
 
-	EnsureEnumMethodBuilder(Consumer<IEnumOperation> onCreate) {
+	EnsureEnumConstantMethodBuilder(Consumer<IEnumConstantOperation> onCreate) {
 		super("void", AccessModifier.PUBLIC);
 		this.onCreate = onCreate;
 	}
 
 	@Override
-	public IEnumOperation named(@Nonnull String name) {
-		EnsureEnumMethod ensureEnumMethod = new EnsureEnumMethod(name,
-				getType(), getModifier(), getDescriptors());
+	public IEnumConstantOperation named(@Nonnull String name) {
+		EnsureEnumConstantMethod ensureEnumMethod = new EnsureEnumConstantMethod(name,
+																		 getType(), getModifier(), getDescriptors());
 		onCreate.accept(ensureEnumMethod);
 		return ensureEnumMethod;
 	}

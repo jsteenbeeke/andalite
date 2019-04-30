@@ -14,21 +14,21 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedEnum;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ContainingDenominationMethodNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 
 import javax.annotation.Nonnull;
 
-public class ClassMethodLocator extends
-		AbstractMethodBuilder<MethodOperationBuilder, ClassMethodLocator> {
+public class EnumMethodLocator extends
+		AbstractMethodBuilder<MethodOperationBuilder, EnumMethodLocator> {
 
 	private final IStepCollector collector;
 
-	private final IJavaNavigation<AnalyzedClass> parentNavigation;
+	private final IJavaNavigation<AnalyzedEnum> parentNavigation;
 
-	ClassMethodLocator(IStepCollector collector,
-			IJavaNavigation<AnalyzedClass> parentNavigation) {
+	EnumMethodLocator(IStepCollector collector,
+					  IJavaNavigation<AnalyzedEnum> parentNavigation) {
 		super(null, null);
 		this.collector = collector;
 		this.parentNavigation = parentNavigation;
@@ -38,8 +38,8 @@ public class ClassMethodLocator extends
 	@Nonnull
 	public MethodOperationBuilder named(@Nonnull String name) {
 		return new MethodOperationBuilder(collector, new ContainingDenominationMethodNavigation<>(
-				parentNavigation, name, getType(), getModifier(),
-				getDescriptors()));
+			parentNavigation, name, getType(), getModifier(),
+			getDescriptors()));
 	}
 
 }

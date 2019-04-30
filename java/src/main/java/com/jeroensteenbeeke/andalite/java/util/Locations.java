@@ -8,9 +8,7 @@ import com.google.common.collect.TreeMultimap;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.lux.TypedResult;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,21 +49,34 @@ public class Locations {
 	}
 
 	public static TypedResult<CharacterMap> mapCharacters(File targetFile) {
-		CharacterMap characters = new CharacterMap();
-
 		try (FileInputStream fis = new FileInputStream(targetFile)) {
-			int b;
-			int pos = 1;
-
-			while ((b = fis.read()) != -1) {
-				char c = (char) b;
-
-				characters.put(c, pos++);
-
-			}
+			return mapCharactersFromStream(fis);
 		} catch (IOException e) {
 			return TypedResult.fail(e.getMessage());
 		}
+	}
+
+	public static TypedResult<CharacterMap> mapCharacters(String input) {
+		try (ByteArrayInputStream bis = new ByteArrayInputStream(input.getBytes())) {
+			return mapCharactersFromStream(bis);
+		} catch (IOException e) {
+			return TypedResult.fail(e.getMessage());
+		}
+	}
+
+	private static TypedResult<CharacterMap> mapCharactersFromStream(InputStream fis) throws IOException {
+		CharacterMap characters = new CharacterMap();
+
+		int b;
+		int pos = 1;
+
+		while ((b = fis.read()) != -1) {
+			char c = (char) b;
+
+			characters.put(c, pos++);
+
+		}
+
 
 		return TypedResult.ok(characters);
 	}
@@ -98,21 +109,21 @@ public class Locations {
 		public SortedSet<Location> findIn(char target, Location location) {
 			return characterPositions.get(target).stream()
 									 .filter(l -> l.getStart() >= location.getStart())
-									 .filter(l -> l.getEnd() < location.getEnd())
+									 .filter(l -> l.getEnd() <= location.getEnd())
 									 .collect(Collectors.toCollection(TreeSet::new));
 		}
 
 		public SortedSet<Location> findBetweenInclusive(char target, Location from, Location to) {
 			return characterPositions.get(target).stream()
 									 .filter(l -> l.getStart() >= from.getStart())
-									 .filter(l -> l.getEnd() < to.getEnd())
+									 .filter(l -> l.getEnd() <= to.getEnd()+1)
 									 .collect(Collectors.toCollection(TreeSet::new));
 		}
 
 		public SortedSet<Location> findBetweenExclusive(char target, Location from, Location to) {
 			return characterPositions.get(target).stream()
 									 .filter(l -> l.getStart() >= from.getStart())
-									 .filter(l -> l.getEnd() < to.getStart())
+									 .filter(l -> l.getEnd() <= to.getStart())
 									 .collect(Collectors.toCollection(TreeSet::new));
 		}
 	}

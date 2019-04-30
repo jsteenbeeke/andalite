@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.collect.SortedSetMultimap;
 import com.jeroensteenbeeke.lux.ActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,9 +42,9 @@ public class FileRewriter {
 
 	private final File targetFile;
 
-	private final Multimap<Index, String> mutations;
+	private final TreeMultimap<Index, String> mutations;
 
-	private final Multimap<Integer, Index> pointIndexes;
+	private final TreeMultimap<Integer, Index> pointIndexes;
 
 	public FileRewriter(File targetFile) {
 		super();
@@ -129,6 +130,10 @@ public class FileRewriter {
 				out.flush();
 
 				logger.debug("Outputted: {}", output);
+
+				if (!pointIndexes.keySet().tailSet(point).isEmpty()) {
+					return ActionResult.error("Transformations beyond file end!");
+				}
 
 				Files.copy(temp, targetFile);
 				temp.deleteOnExit();

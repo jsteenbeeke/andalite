@@ -13,15 +13,15 @@ public class EnsureMethodJavadoc implements IMethodOperation {
 	private final String javadoc;
 
 	public EnsureMethodJavadoc(String javadoc) {
-		this.javadoc = String.format("/**\n * %s\n */\n", javadoc);
+		this.javadoc = javadoc;
 	}
 
 	@Override
 	public List<Transformation> perform(AnalyzedMethod input)
-			throws OperationException {
-		if (!javadoc.equals(input.getJavadoc())) {
+		throws OperationException {
+		if (input.getJavadoc().map(String::trim).filter(javadoc::equals).isEmpty()) {
 			return ImmutableList
-					.of(input.insertAt(AnalyzedMethod.MethodInsertionPoint.BEFORE, javadoc));
+				.of(input.insertAt(AnalyzedMethod.MethodInsertionPoint.BEFORE, String.format("/**\n * %s\n */", javadoc)));
 		}
 
 		return ImmutableList.of();
@@ -29,12 +29,12 @@ public class EnsureMethodJavadoc implements IMethodOperation {
 
 	@Override
 	public ActionResult verify(AnalyzedMethod input) {
-		if (javadoc.equals(input.getJavadoc())) {
+		if (input.getJavadoc().map(String::trim).filter(javadoc::equals).isPresent()) {
 			return ActionResult.ok();
 		}
 
 		return ActionResult.error("Missing javadoc: %s (actual: %s)", javadoc,
-				input.getJavadoc());
+								  input.getJavadoc());
 	}
 
 	@Override

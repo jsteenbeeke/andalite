@@ -224,8 +224,8 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 	}
 
 	@Override
-	public String getJavadoc() {
-		return javadoc;
+	public Optional<String> getJavadoc() {
+		return Optional.ofNullable(javadoc);
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class AbstractEnsureMethod<T extends ConstructableDenomination<T,I>, I extends Enum<I> & IInsertionPoint<T>> implements IJavaOperation<T> {
+public abstract class AbstractEnsureMethod<T extends ContainingDenomination<T,I>, I extends Enum<I> & IInsertionPoint<T>> implements IJavaOperation<T> {
 	private final String name;
 
 	private final String type;
