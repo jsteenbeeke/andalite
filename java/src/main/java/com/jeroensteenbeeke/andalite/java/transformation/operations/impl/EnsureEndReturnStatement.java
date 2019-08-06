@@ -30,7 +30,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 
-public abstract class EnsureEndReturnStatement<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> implements IBodyContainerOperation<T> {
+public abstract class EnsureEndReturnStatement<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> implements IBodyContainerOperation<T,I> {
 
 	private final String returnValue;
 
@@ -46,7 +46,7 @@ public abstract class EnsureEndReturnStatement<T extends IBodyContainer<T, I>, I
 				"Cannot insert statement into abstract method!");
 		}
 
-		AnalyzedStatement last = Iterables.getLast(input.getStatements(), null);
+		AnalyzedStatement<?,?> last = Iterables.getLast(input.getStatements(), null);
 
 		if (last == null) {
 			// No statements

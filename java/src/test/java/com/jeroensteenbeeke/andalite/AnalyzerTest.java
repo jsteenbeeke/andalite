@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -39,21 +39,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.jeroensteenbeeke.andalite.java.analyzer.*;
 import org.junit.Test;
 
 import com.jeroensteenbeeke.lux.TypedResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.core.test.IDummyDescriptor;
-import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedEnum;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
-import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.AnnotationValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.ArrayValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
@@ -63,23 +57,49 @@ public class AnalyzerTest extends DummyAwareTest {
 
 	@Test
 	public void testAnalyzer() {
-		ClassAnalyzer classAnalyzer = new ClassAnalyzer(
-				new File(
-						"src/test/java/com/jeroensteenbeeke/andalite/AnalyzerTest.java"));
-		TypedResult<AnalyzedSourceFile> result = classAnalyzer.analyze();
-		assertTrue(result.isOk());
+		TypedResult<AnalyzedSourceFile> result = analyzeAndVerify("src/test/java/com/jeroensteenbeeke/andalite/AnalyzerTest.java");
 
 		AnalyzedSourceFile source = result.getObject();
 
 		assertTrue(source
-				.hasImport("com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer"));
+					   .hasImport("com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer"));
 	}
+
+	@Test
+	public void testAnnotationType() {
+		TypedResult<AnalyzedSourceFile> result = analyzeAndVerify("src/test/java/com/jeroensteenbeeke/andalite/analyzer/TestType.java");
+	}
+
+	@Test
+	public void testInterface() {
+		TypedResult<AnalyzedSourceFile> result = analyzeAndVerify("src/test/java/com/jeroensteenbeeke/andalite/analyzer/TestInterface.java");
+	}
+
+	@Test
+	public void testEnum() {
+		TypedResult<AnalyzedSourceFile> result = analyzeAndVerify("src/test/java/com/jeroensteenbeeke/andalite/analyzer/TestEnum.java");
+	}
+
+	@Test
+	public void testInnerClasses() {
+		TypedResult<AnalyzedSourceFile> result = analyzeAndVerify("src/test/java/com/jeroensteenbeeke/andalite/analyzer/TestInnerClasses.java");
+	}
+
+	@Test
+	public void parseAllAndaliteFiles() {
+		List<File> allFiles = new ArrayList<>();
+		allFiles.addAll(searchJava(new File("src/main/java/com/jeroensteenbeeke/andalite")));
+		allFiles.addAll(searchJava(new File("src/test/java/com/jeroensteenbeeke/andalite")));
+
+		allFiles.forEach(this::analyzeAndVerify);
+	}
+
 
 	@Test
 	public void testAnnotationScan() {
 		ClassAnalyzer classAnalyzer = new ClassAnalyzer(
-				new File(
-						"src/test/java/com/jeroensteenbeeke/andalite/analyzer/LolCat.java"));
+			new File(
+				"src/test/java/com/jeroensteenbeeke/andalite/analyzer/LolCat.java"));
 
 		TypedResult<AnalyzedSourceFile> result = classAnalyzer.analyze();
 		assertTrue(result.isOk());
@@ -98,7 +118,7 @@ public class AnalyzerTest extends DummyAwareTest {
 		assertNotNull(table);
 		assertTrue(table.hasValueOfType(AnnotationValue.class, "indexes"));
 		AnnotationValue index = table
-				.getValue(AnnotationValue.class, "indexes");
+			.getValue(AnnotationValue.class, "indexes");
 		assertNotNull(index);
 
 		assertEquals("Index", index.getValue().getType());
@@ -106,11 +126,11 @@ public class AnalyzerTest extends DummyAwareTest {
 		assertTrue(table.hasValueOfType(ArrayValue.class, "uniqueConstraints"));
 
 		ArrayValue array = table
-				.getValue(ArrayValue.class, "uniqueConstraints");
+			.getValue(ArrayValue.class, "uniqueConstraints");
 		assertNotNull(array);
 		assertEquals(2, array.getValue().size());
 
-		for (BaseValue<?,?,?> baseValue : array.getValue()) {
+		for (BaseValue<?, ?, ?> baseValue : array.getValue()) {
 			assertTrue(baseValue instanceof AnnotationValue);
 			AnnotationValue annotValue = (AnnotationValue) baseValue;
 
@@ -184,7 +204,7 @@ public class AnalyzerTest extends DummyAwareTest {
 	}
 
 	private ClassAnalyzer analyzeDummy(IDummyDescriptor descriptor)
-			throws IOException {
+		throws IOException {
 		return new ClassAnalyzer(getDummy(descriptor));
 	}
 
@@ -339,5 +359,39 @@ public class AnalyzerTest extends DummyAwareTest {
 
 		assertThat(analyzedClass, hasNoSuperClass());
 
+	}
+
+
+	private TypedResult<AnalyzedSourceFile> analyzeAndVerify(String pathname) {
+		return analyzeAndVerify(new File(pathname));
+	}
+
+	private TypedResult<AnalyzedSourceFile> analyzeAndVerify(File file) {
+
+		ClassAnalyzer classAnalyzer = new ClassAnalyzer(
+			file);
+
+		TypedResult<AnalyzedSourceFile> result = classAnalyzer.analyze();
+		assertTrue(result.isOk());
+
+		StringBuilder builder = new StringBuilder();
+		result.getObject().output(new StringBuilderCallback(builder));
+		assertTrue(builder.length() > 0);
+		result.getObject().output(new PrintStreamCallback(System.out));
+
+		return result;
+	}
+
+	private List<File> searchJava(File root) {
+		if (root.isDirectory()) {
+			return Arrays
+				.stream(Objects.requireNonNull(root.listFiles()))
+				.flatMap(f -> searchJava(f).stream())
+				.collect(Collectors.toList());
+		} else if (root.getName().endsWith(".java")) {
+			return List.of(root);
+		} else {
+			return List.of();
+		}
 	}
 }

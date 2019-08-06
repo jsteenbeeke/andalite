@@ -30,14 +30,14 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureS
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.HasIfStatementOperation;
 
 public abstract class BodyContainerOperationBuilder<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> extends
-		AbstractOperationBuilder<T, IBodyContainerOperation<T>> {
+		AbstractOperationBuilder<T, IBodyContainerOperation<T,I>> {
 	BodyContainerOperationBuilder(IStepCollector collector,
 			IJavaNavigation<T> navigation) {
 		super(collector, navigation);
 	}
 
 	@Nonnull
-	public IfStatementLocator inIfExpression() {
+	public IfStatementLocator<T,I> inIfStatement() {
 		return new IfStatementLocator<>(this);
 	}
 
@@ -50,8 +50,10 @@ public abstract class BodyContainerOperationBuilder<T extends IBodyContainer<T, 
 	@Nonnull
 	public <S extends AnalyzedStatement<S,?>> StatementOperationBuilder<S> afterStatement(
 			String statement) {
+		String stmt = statement.endsWith(";") ? statement.substring(0, statement.length()-1) : statement;
+
 		return new StatementOperationBuilder<S>(getCollector(),
-				new AfterStatementNavigation<>(statement, getNavigation()));
+				new AfterStatementNavigation<>(stmt, getNavigation()));
 	}
 
 	public void ensureReturnAsLastStatement(@Nonnull String expression) {

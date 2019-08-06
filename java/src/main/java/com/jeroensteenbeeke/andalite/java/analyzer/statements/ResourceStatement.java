@@ -23,7 +23,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.*;
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 
-public class ResourceStatement extends BaseStatement implements IAnnotationAddable<ResourceStatement> {
+public class ResourceStatement extends BaseStatement<ResourceStatement> implements IAnnotationAddable<ResourceStatement> {
 	private final AnalyzedType type;
 
 	private final String name;

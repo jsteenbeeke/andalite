@@ -29,7 +29,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 
-public abstract class EnsureStatement<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> implements IBodyContainerOperation<T> {
+public abstract class EnsureStatement<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> implements IBodyContainerOperation<T,I> {
 	private static final Logger logger = LoggerFactory
 			.getLogger(EnsureStatement.class);
 
@@ -48,7 +48,7 @@ public abstract class EnsureStatement<T extends IBodyContainer<T, I>, I extends 
 					"Cannot insert statement into abstract method!");
 		}
 
-		for (AnalyzedStatement analyzedStatement : input.getStatements()) {
+		for (AnalyzedStatement<?,?> analyzedStatement : input.getStatements()) {
 			if (analyzedStatement == null)
 				continue;
 
@@ -78,7 +78,7 @@ public abstract class EnsureStatement<T extends IBodyContainer<T, I>, I extends 
 
 	@Override
 	public ActionResult verify(T input) {
-		for (AnalyzedStatement analyzedStatement : input.getStatements()) {
+		for (AnalyzedStatement<?,?> analyzedStatement : input.getStatements()) {
 			if (analyzedStatement == null)
 				continue;
 

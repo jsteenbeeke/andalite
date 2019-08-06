@@ -25,11 +25,11 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SwitchEntryStatement extends BaseStatement {
+public class SwitchEntryStatement extends BaseStatement<SwitchEntryStatement> {
 
 	private final AnalyzedExpression value;
 
-	private final List<AnalyzedStatement> statements;
+	private final List<AnalyzedStatement<?,?>> statements;
 
 	public SwitchEntryStatement(Location from, @Nullable AnalyzedExpression value) {
 		super(from);
@@ -42,11 +42,11 @@ public class SwitchEntryStatement extends BaseStatement {
 		return value;
 	}
 
-	public void addStatement(AnalyzedStatement statement) {
+	public void addStatement(AnalyzedStatement<?,?> statement) {
 		this.statements.add(statement);
 	}
 
-	public List<AnalyzedStatement> getStatements() {
+	public List<AnalyzedStatement<?,?>> getStatements() {
 		return statements;
 	}
 

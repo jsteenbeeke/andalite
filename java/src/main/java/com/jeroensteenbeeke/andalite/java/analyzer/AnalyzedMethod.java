@@ -151,7 +151,9 @@ public final class AnalyzedMethod extends AccessModifiable<AnalyzedMethod, Analy
 		callback.write(" {");
 		callback.increaseIndentationLevel();
 		callback.newline();
-		// TODO: body
+
+		getStatements().forEach(s -> s.output(callback));
+
 		callback.decreaseIndentationLevel();
 		callback.newline();
 		callback.write("}");

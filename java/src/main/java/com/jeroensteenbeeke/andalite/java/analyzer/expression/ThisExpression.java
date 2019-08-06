@@ -18,28 +18,38 @@ import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.github.javaparser.ast.expr.Name;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
+import com.jeroensteenbeeke.andalite.java.analyzer.LocatedName;
+
+import java.util.Optional;
 
 public class ThisExpression extends AnalyzedExpression {
 
-	private final AnalyzedExpression classExpression;
+	private final LocatedName<Name> typeName;
 
 	public ThisExpression(@Nonnull Location location,
-			@Nullable AnalyzedExpression classExpression) {
+			@Nullable LocatedName<Name> typeName) {
 		super(location);
-		this.classExpression = classExpression;
+		this.typeName = typeName;
 	}
 
 	@CheckForNull
-	public AnalyzedExpression getClassExpression() {
-		return classExpression;
+	public LocatedName<Name> getTypeName() {
+		return typeName;
 	}
+
+	@Nonnull
+	public Optional<LocatedName<Name>> typeName() {
+		return Optional.ofNullable(getTypeName());
+	}
+
 
 	@Override
 	public String toJavaString() {
-		if (classExpression != null) {
-			return String.format("%s.this", classExpression.toJavaString());
+		if (typeName != null) {
+			return String.format("%s.this", typeName.toString());
 		}
 
 		return "this";

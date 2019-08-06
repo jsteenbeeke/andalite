@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CatchStatement extends BaseStatement implements IAnnotationAddable<CatchStatement> {
+public class CatchStatement extends BaseStatement<CatchStatement> implements IAnnotationAddable<CatchStatement> {
 
 	private final BlockStatement block;
 

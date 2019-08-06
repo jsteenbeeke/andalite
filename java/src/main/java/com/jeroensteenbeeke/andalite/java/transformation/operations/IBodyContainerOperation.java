@@ -14,8 +14,9 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 
-public interface IBodyContainerOperation<T extends IBodyContainer> extends IJavaOperation<T> {
+public interface IBodyContainerOperation<T extends IBodyContainer<T,I>, I extends Enum<I> & IInsertionPoint<T>> extends IJavaOperation<T> {
 
 }

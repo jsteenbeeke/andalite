@@ -30,7 +30,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 
-public class HasIfStatementOperation<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> implements IBodyContainerOperation<T> {
+public class HasIfStatementOperation<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> implements IBodyContainerOperation<T,I> {
 	private static final Logger logger = LoggerFactory
 			.getLogger(HasIfStatementOperation.class);
 
@@ -49,7 +49,7 @@ public class HasIfStatementOperation<T extends IBodyContainer<T, I>, I extends E
 					"Cannot insert statement into abstract method!");
 		}
 
-		for (AnalyzedStatement analyzedStatement : input.getStatements()) {
+		for (AnalyzedStatement<?,?> analyzedStatement : input.getStatements()) {
 			if (analyzedStatement instanceof IfStatement) {
 				IfStatement stmt = (IfStatement) analyzedStatement;
 

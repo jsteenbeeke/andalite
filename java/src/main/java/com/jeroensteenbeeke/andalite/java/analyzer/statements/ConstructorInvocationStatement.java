@@ -24,7 +24,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ConstructorInvocationStatement extends BaseStatement {
+public class ConstructorInvocationStatement extends BaseStatement<ConstructorInvocationStatement> {
 	private final InvocationType invocationType;
 
 	private AnalyzedExpression scope = null;

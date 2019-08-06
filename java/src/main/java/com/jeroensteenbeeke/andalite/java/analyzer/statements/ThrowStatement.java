@@ -18,7 +18,7 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class ThrowStatement extends BaseStatement {
+public class ThrowStatement extends BaseStatement<ThrowStatement> {
 
 	private final AnalyzedExpression throwable;
 

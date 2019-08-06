@@ -18,7 +18,7 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class AssertStatement extends BaseStatement {
+public class AssertStatement extends BaseStatement<AssertStatement> {
 
 	private final AnalyzedExpression check;
 	

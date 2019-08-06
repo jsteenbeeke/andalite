@@ -18,7 +18,7 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class ExpressionStatement extends BaseStatement {
+public class ExpressionStatement extends BaseStatement<ExpressionStatement> {
 	public ExpressionStatement(Location location, AnalyzedExpression expression) {
 		super(location);
 		this.expression = expression;

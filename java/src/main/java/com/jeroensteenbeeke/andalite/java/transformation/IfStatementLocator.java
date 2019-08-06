@@ -67,7 +67,12 @@ public class IfStatementLocator<T extends IBodyContainer<T, I>, I extends Enum<I
 
 		public  <S extends AnalyzedStatement<S,?>> StatementOperationBuilder<S> elseStatement() {
 			return new StatementOperationBuilder<S>(collector,
-												   new ElseStatementNavigation<>(statementNavigation));
+													new ElseStatementNavigation<>(statementNavigation));
+		}
+
+		public IfStatementOperationBuilder<IfStatement> wholeStatement() {
+			return new IfStatementOperationBuilder<>(collector,
+													 statementNavigation);
 		}
 
 	}

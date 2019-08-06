@@ -28,17 +28,17 @@ import java.util.stream.Collectors;
 
 public class TryStatement extends BaseStatement {
 
-	private final AnalyzedStatement block;
+	private final AnalyzedStatement<?,?> block;
 
-	private final AnalyzedStatement finallyStatement;
+	private final AnalyzedStatement<?,?> finallyStatement;
 
 	private final List<ResourceStatement> resourceStatements;
 
 	private final List<CatchStatement> catchClauses;
 
 	public TryStatement(@Nonnull Location location,
-			@Nonnull AnalyzedStatement block,
-			@Nullable AnalyzedStatement finallyStatement) {
+			@Nonnull AnalyzedStatement<?,?> block,
+			@Nullable AnalyzedStatement<?,?> finallyStatement) {
 		super(location);
 		this.block = block;
 		this.finallyStatement = finallyStatement;
@@ -47,12 +47,12 @@ public class TryStatement extends BaseStatement {
 	}
 
 	@Nonnull
-	public AnalyzedStatement getBlock() {
+	public AnalyzedStatement<?,?> getBlock() {
 		return block;
 	}
 
 	@CheckForNull
-	public AnalyzedStatement getFinallyStatement() {
+	public AnalyzedStatement<?,?> getFinallyStatement() {
 		return finallyStatement;
 	}
 

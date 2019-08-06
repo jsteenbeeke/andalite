@@ -23,8 +23,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ForStatement extends BaseStatement {
-	private final AnalyzedStatement body;
+public class ForStatement extends BaseStatement<ForStatement> {
+	private final AnalyzedStatement<?,?> body;
 
 	private final AnalyzedExpression compare;
 
@@ -32,7 +32,7 @@ public class ForStatement extends BaseStatement {
 
 	private final List<AnalyzedExpression> updateExpressions;
 
-	public ForStatement(Location location, AnalyzedStatement body,
+	public ForStatement(Location location, AnalyzedStatement<?,?> body,
 			AnalyzedExpression compare) {
 		super(location);
 		this.body = body;
@@ -41,7 +41,7 @@ public class ForStatement extends BaseStatement {
 		this.updateExpressions = Lists.newArrayList();
 	}
 
-	public AnalyzedStatement getBody() {
+	public AnalyzedStatement<?,?> getBody() {
 		return body;
 	}
 

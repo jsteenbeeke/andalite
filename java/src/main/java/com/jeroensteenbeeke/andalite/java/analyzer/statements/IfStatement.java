@@ -18,21 +18,21 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class IfStatement extends BaseStatement {
+public class IfStatement extends BaseStatement<IfStatement> {
 	private final AnalyzedExpression condition;
 
-	private final AnalyzedStatement thenStatement;
+	private final AnalyzedStatement<?,?> thenStatement;
 
-	private AnalyzedStatement elseStatement;
+	private AnalyzedStatement<?,?> elseStatement;
 
 	public IfStatement(Location location, AnalyzedExpression condition,
-			AnalyzedStatement thenStatement) {
+			AnalyzedStatement<?,?> thenStatement) {
 		super(location);
 		this.condition = condition;
 		this.thenStatement = thenStatement;
 	}
 
-	public void setElseStatement(AnalyzedStatement statement) {
+	public void setElseStatement(AnalyzedStatement<?,?> statement) {
 		this.elseStatement = statement;
 	}
 

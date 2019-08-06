@@ -18,14 +18,14 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class SynchronizedStatement extends BaseStatement {
+public class SynchronizedStatement extends BaseStatement<SynchronizedStatement> {
 
 	private final AnalyzedExpression expression;
 
-	private final AnalyzedStatement statement;
+	private final AnalyzedStatement<?,?> statement;
 
 	public SynchronizedStatement(Location from, AnalyzedExpression expression,
-			AnalyzedStatement statement) {
+			AnalyzedStatement<?,?> statement) {
 		super(from);
 		this.expression = expression;
 		this.statement = statement;
@@ -35,7 +35,7 @@ public class SynchronizedStatement extends BaseStatement {
 		return expression;
 	}
 
-	public AnalyzedStatement getStatement() {
+	public AnalyzedStatement<?,?> getStatement() {
 		return statement;
 	}
 

@@ -16,6 +16,9 @@
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import com.github.javaparser.JavaParser;
+import com.github.javaparser.ParseResult;
+import com.github.javaparser.ParserConfiguration;
+import com.github.javaparser.Problem;
 import com.github.javaparser.ast.*;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.comments.Comment;
@@ -74,8 +77,17 @@ public class ClassAnalyzer {
 	public TypedResult<AnalyzedSourceFile> analyze() {
 		log.debug("Starting analysis of {}", targetFile.getAbsolutePath());
 
+		JavaParser parser = new JavaParser(new ParserConfiguration().setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_11));
 
-		return TypedResult.attempt(() -> JavaParser.parse(targetFile))
+		return TypedResult.attempt(() -> parser.parse(targetFile))
+						  .filter(ParseResult::isSuccessful, pr -> pr
+							  .getProblems()
+							  .stream()
+							  .map(this::problemToString)
+							  .collect(Collectors.joining(", ")))
+						  .map(ParseResult::getResult)
+						  .filter(Optional::isPresent, "Parse marked as successful but no result present")
+						  .map(Optional::get)
 						  .flatMap(compilationUnit -> {
 
 							  compilationUnit.accept(new DebugVisitor(), log);
@@ -112,6 +124,16 @@ public class ClassAnalyzer {
 
 							  return TypedResult.ok(sourceFile);
 						  });
+	}
+
+	private String problemToString(Problem problem) {
+		return problem
+			.getLocation()
+			.map(loc -> String.format("%s at location %s - %s", problem.getMessage(), loc.getBegin().asString(), loc
+				.getEnd()
+				.asString()))
+			.orElseGet(problem::getMessage);
+
 	}
 
 	private Denomination<?, ?> analyzeTypeDeclaration(@Nonnull AnalyzedSourceFile sourceFile,
@@ -509,7 +531,7 @@ public class ClassAnalyzer {
 	}
 
 	private Optional<GenerifiedName> getTypeNameWithGenerics(ContainingDenomination<?, ?> containingElement,
-		@Nullable ClassOrInterfaceType type) {
+															 @Nullable ClassOrInterfaceType type) {
 		if (type == null) {
 			return Optional.empty();
 		}
@@ -1354,13 +1376,13 @@ public class ClassAnalyzer {
 
 	public String sanitizeJavadoc(String input) {
 		return Arrays.stream(input.split("\n"))
-			.map(s -> {
-				if (s.startsWith(" * ")) {
-					return s.substring(3);
-				}
+					 .map(s -> {
+						 if (s.startsWith(" * ")) {
+							 return s.substring(3);
+						 }
 
-				return s;
-			}).collect(Collectors.joining("\n"));
+						 return s;
+					 }).collect(Collectors.joining("\n"));
 	}
 
 	private BlockStatement analyzeBlockStatement(BlockStmt blockStatement,
@@ -1695,7 +1717,6 @@ public class ClassAnalyzer {
 				objectCreationExpr.getType()).map(type -> {
 
 
-
 				ObjectCreationExpression creationExpression = new ObjectCreationExpression(
 					Locations.from(objectCreationExpr, indexes), type);
 				objectCreationExpr
@@ -1743,10 +1764,9 @@ public class ClassAnalyzer {
 		if (expr instanceof SuperExpr) {
 			SuperExpr superExpr = (SuperExpr) expr;
 
-			AnalyzedExpression classExpression = superExpr
-				.getClassExpr()
-				.map(e -> analyzeExpression(e, containingDenomination, analyzerContext)
-				)
+			LocatedName<Name> classExpression = superExpr
+				.getTypeName()
+				.map(e -> new LocatedName<>(e, Locations.from(e, indexes)))
 				.orElse(null);
 
 			return new SuperExpression(Locations.from(superExpr, indexes),
@@ -1755,12 +1775,10 @@ public class ClassAnalyzer {
 		if (expr instanceof ThisExpr) {
 			ThisExpr thisExpr = (ThisExpr) expr;
 
-			AnalyzedExpression classExpression = thisExpr
-				.getClassExpr()
-				.map(e -> analyzeExpression(e, containingDenomination, analyzerContext)
-				)
+			LocatedName<Name> classExpression = thisExpr
+				.getTypeName()
+				.map(e -> new LocatedName<>(e, Locations.from(e, indexes)))
 				.orElse(null);
-
 
 			return new ThisExpression(Locations.from(thisExpr, indexes), classExpression);
 		}
@@ -1935,7 +1953,7 @@ public class ClassAnalyzer {
 				});
 
 				return Optional.of(new ClassOrInterface(Locations.from(classOrInterface, indexes),
-											locate(classOrInterface.getName()), null, analyzedTypeArguments));
+														locate(classOrInterface.getName()), null, analyzedTypeArguments));
 			});
 	}
 

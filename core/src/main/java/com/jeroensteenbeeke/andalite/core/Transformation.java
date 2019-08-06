@@ -50,8 +50,8 @@ public class Transformation {
 		return new Transformation(location.getStart(), location.getEnd()+1, code);
 	}
 
-	public static <T extends IInsertionPointProvider<T, I>, I extends Enum<I> & IInsertionPoint<T>> Transformation atInsertionPoint(@Nonnull T container,
-																																	@Nonnull IInsertionPoint<T> point,
+	public static <T extends IInsertionPointProvider<T, I>, I extends Enum<I> & IInsertionPoint<? super T>> Transformation atInsertionPoint(@Nonnull T container,
+																																	@Nonnull IInsertionPoint<? super T> point,
 																																	@Nonnull String code) {
 		return new Transformation(point.position(container), code);
 	}

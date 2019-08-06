@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class BreakStatement extends BaseStatement {
+public class BreakStatement extends BaseStatement<BreakStatement> {
 	private final AnalyzedExpression expression;
 
 	public BreakStatement(@Nonnull Location location, @Nullable AnalyzedExpression expression) {

@@ -78,8 +78,8 @@ public class IfStatementTest extends DummyAwareTest {
 
 		JavaRecipeBuilder java = new JavaRecipeBuilder();
 		java.inPublicClass().forMethod().named("emptyIf").inBody()
-				.inIfExpression().withExpression("1 == 2").thenStatement()
-				.body().ensureStatement("System.out.println()");
+			.inIfStatement().withExpression("1 == 2").thenStatement()
+			.body().ensureStatement("System.out.println()");
 
 		java.build().applyTo(file);
 

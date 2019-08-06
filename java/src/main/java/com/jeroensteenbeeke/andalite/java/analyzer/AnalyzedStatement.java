@@ -17,10 +17,11 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.*;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
 
 import java.util.List;
 
-public abstract class AnalyzedStatement<T extends AnalyzedStatement<T,I>, I extends Enum<I> & IInsertionPoint<T>> extends Locatable implements
+public abstract class AnalyzedStatement<T extends AnalyzedStatement<T,I>, I extends Enum<I> & IInsertionPoint<? super T>> extends Locatable implements
 		Commentable, IInsertionPointProvider<T, I> {
 	private final List<String> comments;
 
@@ -53,5 +54,4 @@ public abstract class AnalyzedStatement<T extends AnalyzedStatement<T,I>, I exte
 	public abstract I getBeforeInsertionPoint();
 
 	public abstract I getAfterInsertionPoint();
-
 }

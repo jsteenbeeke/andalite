@@ -23,7 +23,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SwitchStatement extends BaseStatement {
+public class SwitchStatement extends BaseStatement<SwitchStatement> {
 
 	private final AnalyzedExpression value;
 
