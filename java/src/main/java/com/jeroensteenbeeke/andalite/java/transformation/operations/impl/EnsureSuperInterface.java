@@ -27,6 +27,8 @@ import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
 
+import javax.annotation.Nonnull;
+
 public class EnsureSuperInterface implements IInterfaceOperation {
 	private final String interfaceName;
 
@@ -35,13 +37,15 @@ public class EnsureSuperInterface implements IInterfaceOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedInterface input)
+	public List<Transformation> perform(@Nonnull AnalyzedInterface input)
 		throws OperationException {
-		if (input.getInterfaces().contains(interfaceName)) {
+		if (input.getInterfaces().stream().map(GenerifiedName::getName).anyMatch(interfaceName::equals)) {
 			return ImmutableList.of();
 		}
 
-		return ImmutableList.of(input.insertAt(AnalyzedInterface.InterfaceInsertionPoint.AT_SUPERINTERFACE_POINT, ", ".concat(interfaceName)));
+		String prefix = input.getInterfaces().isEmpty() ? "" : ", ";
+
+		return ImmutableList.of(input.insertAt(AnalyzedInterface.InterfaceInsertionPoint.AT_SUPERINTERFACE_POINT, prefix.concat(interfaceName)));
 
 	}
 
@@ -51,7 +55,7 @@ public class EnsureSuperInterface implements IInterfaceOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedInterface input) {
+	public ActionResult verify(@Nonnull AnalyzedInterface input) {
 		if (input
 			.getInterfaces()
 			.stream()

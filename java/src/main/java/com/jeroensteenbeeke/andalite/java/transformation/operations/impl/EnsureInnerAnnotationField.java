@@ -53,7 +53,7 @@ public class EnsureInnerAnnotationField implements IAnnotationOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedAnnotation input)
+	public List<Transformation> perform(@Nonnull AnalyzedAnnotation input)
 		throws OperationException {
 		final String actualName = name != null ? name : "value";
 
@@ -107,7 +107,7 @@ public class EnsureInnerAnnotationField implements IAnnotationOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedAnnotation input) {
+	public ActionResult verify(@Nonnull AnalyzedAnnotation input) {
 		if (input.hasValueNamed(name)) {
 
 			if (input.hasValueOfType(AnnotationValue.class, name)) {

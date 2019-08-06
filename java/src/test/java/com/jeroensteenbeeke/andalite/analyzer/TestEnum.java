@@ -12,9 +12,13 @@ public enum TestEnum {
 
 		}
 	}, C(0) {
+		void fb() {
+
+		}
+
 		@Override
 		protected void baz() {
-
+			fb();
 		}
 	};
 
@@ -34,5 +38,5 @@ public enum TestEnum {
 
 	}
 
-	protected abstract void baz();
+	abstract void baz();
 }

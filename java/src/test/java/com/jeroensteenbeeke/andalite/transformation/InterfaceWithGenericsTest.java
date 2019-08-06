@@ -37,4 +37,22 @@ public class InterfaceWithGenericsTest extends DummyAwareTest {
 		assertThat(analysisResult, isOk());
 
 	}
+
+	@Test
+	public void addPackageInterface() throws IOException {
+		JavaRecipeBuilder builder = new JavaRecipeBuilder();
+		builder.ensurePackageInterface("FooBar");
+		builder.inPackageInterface("FooBar").ensureSuperInterface("Serializable");
+		builder.inPackageInterface("FooBar").ensureSuperInterface("Cloneable");
+
+
+		JavaRecipe recipe = builder.build();
+
+		File bare = getDummy(BaseDummies.BareClass);
+
+		TypedResult<AnalyzedSourceFile> result = recipe.applyTo(bare);
+
+		assertThat(result, isOk());
+
+	}
 }

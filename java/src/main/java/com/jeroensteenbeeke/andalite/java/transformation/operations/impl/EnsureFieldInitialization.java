@@ -24,6 +24,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IFieldOperation;
 
+import javax.annotation.Nonnull;
+
 public class EnsureFieldInitialization implements IFieldOperation {
 	private final String expression;
 
@@ -33,7 +35,7 @@ public class EnsureFieldInitialization implements IFieldOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedField input)
+	public List<Transformation> perform(@Nonnull AnalyzedField input)
 			throws OperationException {
 		AnalyzedExpression init = input.getInitializationExpression();
 
@@ -55,7 +57,7 @@ public class EnsureFieldInitialization implements IFieldOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedField input) {
+	public ActionResult verify(@Nonnull AnalyzedField input) {
 		AnalyzedExpression init = input.getInitializationExpression();
 
 		if (init != null) {

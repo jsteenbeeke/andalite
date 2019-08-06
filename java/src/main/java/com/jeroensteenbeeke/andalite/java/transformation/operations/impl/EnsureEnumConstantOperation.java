@@ -30,7 +30,7 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedEnum input)
+	public List<Transformation> perform(@Nonnull AnalyzedEnum input)
 			throws OperationException {
 		Optional<OperationException> validationError = checkEnum(input,
 				OperationException::new, Optional::empty);
@@ -50,7 +50,7 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedEnum input) {
+	public ActionResult verify(@Nonnull AnalyzedEnum input) {
 		Optional<ActionResult> checked = checkEnum(input, ActionResult::error,
 				() -> Optional.of(ActionResult.error(
 						"Enum constant %s not found", name)));

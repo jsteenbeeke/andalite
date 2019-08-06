@@ -89,7 +89,7 @@ public abstract class AbstractEnsureMethod<T extends ContainingDenomination<T,I>
 	}
 
 	@Override
-	public ActionResult verify(T input) {
+	public ActionResult verify(@Nonnull T input) {
 		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {

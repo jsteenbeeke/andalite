@@ -11,7 +11,11 @@ public interface TestInterface {
 		d();
 	}
 
-	static void d() {
+	private static void d() {
+
+	}
+
+	static void e() {
 
 	}
 }

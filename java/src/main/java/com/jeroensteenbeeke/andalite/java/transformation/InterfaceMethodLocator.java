@@ -35,6 +35,7 @@ public class InterfaceMethodLocator extends
 
 	}
 
+	@Nonnull
 	public MethodOperationBuilder named(@Nonnull String name) {
 		return new MethodOperationBuilder(collector,
 				new InterfaceMethodNavigation(parentNavigation, name,

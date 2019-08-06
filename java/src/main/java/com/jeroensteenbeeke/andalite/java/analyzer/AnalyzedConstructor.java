@@ -157,7 +157,6 @@ public final class AnalyzedConstructor extends AccessModifiable<AnalyzedConstruc
 			@Override
 			public int position(AnalyzedConstructor container) {
 				return container.getBodyLocation().map(Location::getEnd)
-								.map(s -> s - 1)
 								.orElseThrow(() -> new IllegalStateException("Cannot insert into method without body location"));
 			}
 		}

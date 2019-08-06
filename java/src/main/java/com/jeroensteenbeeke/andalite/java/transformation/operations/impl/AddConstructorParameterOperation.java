@@ -26,8 +26,10 @@ public class AddConstructorParameterOperation implements IConstructorOperation {
 	public List<Transformation> perform(@Nonnull AnalyzedConstructor input)
 			throws OperationException {
 		if (!hasParameter(input)) {
+				String prefix = input.getParameters().isEmpty() ? "" : ", ";
+
 				return ImmutableList.of(input.insertAt(AnalyzedConstructor.ConstructorInsertionPoint.AFTER_LAST_PARAMETER,
-						String.format("%s %s", type, identifier)));
+						String.format("%s%s %s", prefix, type, identifier)).whichInvalidatesNavigation());
 		}
 
 		return ImmutableList.of();

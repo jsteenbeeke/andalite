@@ -30,6 +30,7 @@ import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.type.*;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.ClassValue;
@@ -50,11 +51,19 @@ import java.io.File;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ClassAnalyzer {
 	private static final Logger log = LoggerFactory
 		.getLogger(ClassAnalyzer.class);
+
+	private static final Set<Modifier.Keyword> VISIBILITY_KEYWORDS = ImmutableSet. <Modifier.Keyword> builderWithExpectedSize(4)
+		.add(Modifier.Keyword.PUBLIC)
+		.add(Modifier.Keyword.DEFAULT)
+		.add(Modifier.Keyword.PRIVATE)
+		.add(Modifier.Keyword.PROTECTED)
+		.build();
 
 	private final File targetFile;
 
@@ -145,7 +154,7 @@ public class ClassAnalyzer {
 			if (decl.isInterface()) {
 
 				AnalyzedInterface element = new AnalyzedInterface(sourceFile,
-																  Locations.from(decl, indexes), keywords(decl.getModifiers()),
+																  Locations.from(decl, indexes), keywords(Modifier.Keyword.DEFAULT, decl.getModifiers()),
 																  context.getScope(), locate(decl.getName()));
 
 				processInterfaceDeclaration(decl,
@@ -156,7 +165,8 @@ public class ClassAnalyzer {
 				return setJavadoc(decl, element);
 			} else {
 				AnalyzedClass element = new AnalyzedClass(sourceFile, Locations.from(decl, indexes),
-														  keywords(decl.getModifiers()), context.getScope(),
+														  keywords(Modifier.Keyword.DEFAULT, decl.getModifiers()), context
+															  .getScope(),
 														  locate(decl.getName())
 				);
 
@@ -171,7 +181,7 @@ public class ClassAnalyzer {
 			EnumDeclaration decl = (EnumDeclaration) typeDeclaration;
 
 			AnalyzedEnum element = new AnalyzedEnum(sourceFile, Locations.from(decl, indexes),
-													keywords(decl.getModifiers()), context.getScope(), locate(decl.getName())
+													keywords(Modifier.Keyword.DEFAULT, decl.getModifiers()), context.getScope(), locate(decl.getName())
 			);
 
 			processEnumDeclaration(decl,
@@ -184,7 +194,7 @@ public class ClassAnalyzer {
 			AnnotationDeclaration decl = (AnnotationDeclaration) typeDeclaration;
 
 			AnalyzedAnnotationType element = new AnalyzedAnnotationType(sourceFile,
-																		Locations.from(decl, indexes), keywords(decl.getModifiers()),
+																		Locations.from(decl, indexes), keywords(Modifier.Keyword.DEFAULT, decl.getModifiers()),
 																		context.getScope(), locate(decl.getName()));
 
 			processAnnotationDeclaration(decl, element);
@@ -202,9 +212,7 @@ public class ClassAnalyzer {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
 			AnalyzedAnnotation annotation = analyze(expr, element,
 													new AnalyzerContext(element.getAnnotationName(), null));
-			if (annotation != null) {
-				element.addAnnotation(annotation);
-			}
+			element.addAnnotation(annotation);
 		}
 
 		determineBodyLocation(element, true);
@@ -371,14 +379,13 @@ public class ClassAnalyzer {
 				element.addField(field);
 			}
 		} else if (member instanceof MethodDeclaration) {
-			AnalyzedMethod method = analyzeMethod((MethodDeclaration) member, element,
+			Modifier.Keyword defaultKeyword = element instanceof AnalyzedInterface
+				? Modifier.Keyword.PUBLIC : Modifier.Keyword.DEFAULT;
+
+			AnalyzedMethod method = analyzeMethod((MethodDeclaration) member, defaultKeyword, element,
 												  analyzerContext);
 
 			if (method != null) {
-				if (element.isAutoAbstractMethods()) {
-					method.setAbstract(true);
-				}
-
 				element.addMethod(method);
 			}
 		} else if (member instanceof EnumConstantDeclaration) {
@@ -391,16 +398,15 @@ public class ClassAnalyzer {
 		} else if (member instanceof ConstructorDeclaration) {
 			AnalyzedConstructor constr = analyzeConstructor(typeName,
 															(ConstructorDeclaration) member, element, analyzerContext);
-			if (constr != null) {
-				addConstructor(element, constr);
-			}
+			addConstructor(element, constr);
 		} else if (member instanceof ClassOrInterfaceDeclaration) {
 			ClassOrInterfaceDeclaration innerClassDecl = (ClassOrInterfaceDeclaration) member;
 
 			if (innerClassDecl.isInterface()) {
 				AnalyzedInterface innerInterface = new AnalyzedInterface(element.getSourceFile(),
 																		 Locations.from(innerClassDecl, indexes),
-																		 keywords(innerClassDecl.getModifiers()),
+																		 keywords(Modifier.Keyword.PUBLIC, innerClassDecl
+																			 .getModifiers()),
 																		 String.format("%s.%s", element.getPackageName(),
 																					   element.getDenominationName()),
 																		 locate(innerClassDecl.getName()));
@@ -414,7 +420,7 @@ public class ClassAnalyzer {
 			} else {
 				AnalyzedClass innerClass = new AnalyzedClass(element.getSourceFile(),
 															 Locations.from(innerClassDecl, indexes),
-															 keywords(innerClassDecl.getModifiers()),
+															 keywords(Modifier.Keyword.DEFAULT, innerClassDecl.getModifiers()),
 															 String.format("%s.%s", element.getPackageName(),
 																		   element.getDenominationName()),
 															 locate(innerClassDecl.getName()));
@@ -430,7 +436,8 @@ public class ClassAnalyzer {
 			EnumDeclaration decl = (EnumDeclaration) member;
 
 			AnalyzedEnum elem = new AnalyzedEnum(element.getSourceFile(), Locations.from(decl, indexes),
-												 keywords(decl.getModifiers()), analyzerContext.getScope(),
+												 keywords(Modifier.Keyword.DEFAULT, decl.getModifiers()), analyzerContext
+													 .getScope(),
 												 locate(decl.getName()));
 
 			processEnumDeclaration(decl,
@@ -441,7 +448,8 @@ public class ClassAnalyzer {
 			AnnotationDeclaration decl = (AnnotationDeclaration) member;
 
 			AnalyzedAnnotationType elem = new AnalyzedAnnotationType(element.getSourceFile(),
-																	 Locations.from(decl, indexes), keywords(decl.getModifiers()),
+																	 Locations.from(decl, indexes), keywords(Modifier.Keyword.PUBLIC, decl
+				.getModifiers()),
 																	 analyzerContext.getScope(), locate(decl.getName()));
 
 			processAnnotationDeclaration(decl, elem);
@@ -450,8 +458,13 @@ public class ClassAnalyzer {
 		}
 	}
 
-	private List<Modifier.Keyword> keywords(NodeList<Modifier> modifiers) {
-		return modifiers.stream().map(Modifier::getKeyword).collect(Collectors.toList());
+	private List<Modifier.Keyword> keywords(@Nonnull Modifier.Keyword defaultKeyword, @Nonnull NodeList<Modifier> modifiers) {
+		List<Modifier.Keyword> keywords = modifiers.stream().map(Modifier::getKeyword).collect(Collectors.toList());
+		if (keywords.stream().noneMatch(VISIBILITY_KEYWORDS::contains)) {
+			keywords.add(defaultKeyword);
+		}
+
+		return keywords;
 	}
 
 	private void analyzeEnumConstant(ContainingDenomination<?, ?> element,
@@ -493,9 +506,7 @@ public class ClassAnalyzer {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
 			AnalyzedAnnotation annotation = analyze(expr, element,
 													analyzerContext);
-			if (annotation != null) {
-				element.addAnnotation(annotation);
-			}
+			element.addAnnotation(annotation);
 		}
 
 		List<ClassOrInterfaceType> extendedClasses = decl.getExtendedTypes();
@@ -573,9 +584,7 @@ public class ClassAnalyzer {
 		for (AnnotationExpr expr : decl.getAnnotations()) {
 			AnalyzedAnnotation annotation = analyze(expr, element,
 													analyzerContext);
-			if (annotation != null) {
-				element.addAnnotation(annotation);
-			}
+			element.addAnnotation(annotation);
 		}
 
 		List<ClassOrInterfaceType> extendedClasses = decl.getExtendedTypes();
@@ -600,7 +609,7 @@ public class ClassAnalyzer {
 												   @Nonnull AnalyzerContext analyzerContext) {
 
 		AnalyzedConstructor constructor = new AnalyzedConstructor(
-			Locations.from(member, indexes), className, keywords(member.getModifiers()),
+			Locations.from(member, indexes), className, keywords(Modifier.Keyword.DEFAULT, member.getModifiers()),
 			determineRightParenthesisLocation(member));
 
 		constructor.addAnnotations(determineAnnotations(member,
@@ -630,9 +639,7 @@ public class ClassAnalyzer {
 			for (Parameter parameter : parameters) {
 				AnalyzedParameter analyzedParameter = analyzeParameter(parameter,
 																	   containingDenomination, analyzerContext);
-				if (analyzedParameter != null) {
-					parameterized.addParameter(analyzedParameter);
-				}
+				parameterized.addParameter(analyzedParameter);
 			}
 		}
 	}
@@ -659,11 +666,13 @@ public class ClassAnalyzer {
 	}
 
 	private AnalyzedMethod analyzeMethod(MethodDeclaration member,
+										 @Nonnull Modifier.Keyword defaultKeyword,
 										 @Nonnull ContainingDenomination<?, ?> containingDenomination,
 										 @Nonnull AnalyzerContext analyzerContext) {
+		String nameAsString = member.getNameAsString();
 		final AnalyzedMethod method = new AnalyzedMethod(Locations.from(member, indexes),
-														 analyzeType(member.getType()), keywords(member.getModifiers()),
-														 member.getNameAsString());
+														 analyzeType(member.getType()), keywords(defaultKeyword, member.getModifiers()),
+														 nameAsString);
 
 		method.addAnnotations(determineAnnotations(member,
 												   containingDenomination, analyzerContext));
@@ -779,7 +788,7 @@ public class ClassAnalyzer {
 										@Nonnull ContainingDenomination<?, ?> containingDenomination,
 										@Nonnull AnalyzerContext analyzerContext) {
 		final AnalyzedType type = analyzeType(member.getElementType());
-		final List<Modifier.Keyword> modifiers = keywords(member.getModifiers());
+		final List<Modifier.Keyword> modifiers = keywords(Modifier.Keyword.DEFAULT, member.getModifiers());
 
 		Builder<AnalyzedField> builder = ImmutableList.builder();
 		List<AnalyzedAnnotation> annotations = determineAnnotations(member,
@@ -1234,7 +1243,7 @@ public class ClassAnalyzer {
 						String resourceId = decl.getNameAsString();
 						ResourceStatement resourceStatement = new ResourceStatement(
 							Locations.from(resource, indexes), type, resourceId,
-							keywords(expr.getModifiers()).contains(Modifier.Keyword.FINAL));
+							keywords(Modifier.Keyword.DEFAULT, expr.getModifiers()).contains(Modifier.Keyword.FINAL));
 
 						decl.getInitializer().ifPresent(initExpr -> {
 
@@ -1321,22 +1330,17 @@ public class ClassAnalyzer {
 			AnalyzedAnnotation annotation = analyze(
 				annotationExpr, containingDenomination,
 				analyzerContext);
-			if (annotation != null) {
-				addable = addable.addAnnotation(annotation);
-			}
+			addable = addable.addAnnotation(annotation);
 		}
 
 		return addable;
 	}
 
 	private <T extends Commentable> T addComments(Node node, T commentable) {
-		List<Comment> beginComments = node.getAllContainedComments();
-		if (beginComments != null) {
-			for (Comment comment : beginComments) {
+		node.getComment().ifPresent(comment -> {
 				checkJavadoc(commentable, comment);
 				commentable.addComment(comment.getContent());
-			}
-		}
+		});
 		return commentable;
 	}
 
@@ -1347,7 +1351,7 @@ public class ClassAnalyzer {
 			JavadocComment jdc = (JavadocComment) comment;
 			Javadocable jda = (Javadocable) commentable;
 
-			if (jda.getJavadoc() == null) {
+			if (!jda.getJavadoc().isPresent()) {
 				String content = sanitizeJavadoc(jdc.getContent());
 				if (content.startsWith(" * ")) {
 					content = content.substring(3);
@@ -1823,7 +1827,7 @@ public class ClassAnalyzer {
 		ContainingDenomination<?, ?> containingDenomination,
 		AnalyzerContext analyzerContext) {
 
-		final List<Modifier.Keyword> modifiers = keywords(variable.getModifiers());
+		final List<Modifier.Keyword> modifiers = keywords(Modifier.Keyword.DEFAULT, variable.getModifiers());
 		final AnalyzedType type = analyzeType(variable.getElementType());
 
 		VariableDeclarationExpression expression = new VariableDeclarationExpression(

@@ -32,7 +32,7 @@ public class TestInnerClasses {
 			@Override
 			public void run() {
 				do {
-
+					assert true;
 				} while (false);
 			}
 

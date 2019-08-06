@@ -36,6 +36,8 @@ public class JavaRecipeStep<T extends ILocatable> {
 
 	private final IJavaOperation<T> operation;
 
+	private boolean navigationInvalidated = false;
+
 	JavaRecipeStep(IJavaNavigation<T> navigation, IJavaOperation<T> operation) {
 		super();
 		this.navigation = navigation;
@@ -66,6 +68,10 @@ public class JavaRecipeStep<T extends ILocatable> {
 			if (!result.isOk()) {
 				return result;
 			}
+
+			if (transformation.invalidatesNavigation()) {
+				this.navigationInvalidated = true;
+			}
 		}
 
 		return ActionResult.ok();
@@ -79,6 +85,10 @@ public class JavaRecipeStep<T extends ILocatable> {
 
 	public ActionResult verify(AnalyzedSourceFile sourceFile) {
 		try {
+			if (navigationInvalidated) {
+				logger.warn("Transformation marked navigation as invalidated: {}", operationToString());
+				return ActionResult.ok();
+			}
 			T target = navigation.navigate(sourceFile);
 			return operation.verify(target);
 		} catch (NavigationException e) {

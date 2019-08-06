@@ -15,6 +15,8 @@ import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
+import javax.annotation.Nonnull;
+
 public class EnsureConstructorOperation implements IClassOperation {
 	private final AccessModifier modifier;
 
@@ -30,7 +32,7 @@ public class EnsureConstructorOperation implements IClassOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedClass input)
+	public List<Transformation> perform(@Nonnull AnalyzedClass input)
 			throws OperationException {
 
 		for (AnalyzedConstructor ctor : input.getConstructors()) {
@@ -80,7 +82,7 @@ public class EnsureConstructorOperation implements IClassOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedClass input) {
+	public ActionResult verify(@Nonnull AnalyzedClass input) {
 
 		for (AnalyzedConstructor ctor : input.getConstructors()) {
 			if (AnalyzeUtil.matchesSignature(ctor, parameters)) {

@@ -12,6 +12,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedThrownException;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
 
+import javax.annotation.Nonnull;
+
 public class MethodThrowsException implements IMethodOperation {
 	private final String thrownException;
 
@@ -20,7 +22,7 @@ public class MethodThrowsException implements IMethodOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedMethod input)
+	public List<Transformation> perform(@Nonnull AnalyzedMethod input)
 		throws OperationException {
 		List<String> ex = input
 			.getThrownExceptions()
@@ -42,7 +44,7 @@ public class MethodThrowsException implements IMethodOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedMethod input) {
+	public ActionResult verify(@Nonnull AnalyzedMethod input) {
 		if (input.getThrownExceptions().stream()
 				 .anyMatch(e -> e.getException().equals(thrownException))) {
 			return ActionResult.ok();

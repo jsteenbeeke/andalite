@@ -26,6 +26,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilationUnitOperation;
 
+import javax.annotation.Nonnull;
+
 /**
  * Ensures that a given compilation unit will have a class with default
  * (package) scope and the specified name
@@ -52,7 +54,7 @@ public class EnsurePackageClass implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedSourceFile input) {
+	public List<Transformation> perform(@Nonnull AnalyzedSourceFile input) {
 		return ImmutableList
 			.of(input.insertAt(AnalyzedSourceFile.SourceFileInsertionPoint.AFTER_LAST_DENOMINATION,
 							   String.format("class %s {\n\n}\n", expectedClassName)));
@@ -65,7 +67,7 @@ public class EnsurePackageClass implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedSourceFile input) {
+	public ActionResult verify(@Nonnull AnalyzedSourceFile input) {
 		for (AnalyzedClass analyzedClass : input.getClasses()) {
 			if (analyzedClass.getAccessModifier() == AccessModifier.DEFAULT
 				&& expectedClassName.equals(analyzedClass.getClassName())) {

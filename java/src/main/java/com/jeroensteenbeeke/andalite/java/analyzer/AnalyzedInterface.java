@@ -41,11 +41,6 @@ public class AnalyzedInterface extends ContainingDenomination<AnalyzedInterface,
 	}
 
 	@Override
-	public boolean isAutoAbstractMethods() {
-		return true;
-	}
-
-	@Override
 	public void onModifierOutputted(IOutputCallback callback) {
 		callback.write("interface ");
 		callback.write(getInterfaceName());
@@ -97,6 +92,7 @@ public class AnalyzedInterface extends ContainingDenomination<AnalyzedInterface,
 			public int position(AnalyzedInterface container) {
 				return container.getLastImplementsLocation().or(() -> Optional.of(container.getNameLocation()))
 								.map(Location::getEnd)
+								.map(e -> e + 1)
 								.orElseThrow(() -> new IllegalStateException("Could not determine superinterface target location"));
 			}
 		}, START {

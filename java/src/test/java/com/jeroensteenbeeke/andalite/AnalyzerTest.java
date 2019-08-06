@@ -31,6 +31,7 @@ import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatch
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.implementsInterface;
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.importsClass;
 import static com.jeroensteenbeeke.andalite.java.analyzer.matchers.AndaliteMatchers.inPackage;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -40,6 +41,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.*;
@@ -73,16 +75,114 @@ public class AnalyzerTest extends DummyAwareTest {
 	@Test
 	public void testInterface() {
 		TypedResult<AnalyzedSourceFile> result = analyzeAndVerify("src/test/java/com/jeroensteenbeeke/andalite/analyzer/TestInterface.java");
+
+		AnalyzedSourceFile sourceFile = result.getObject();
+
+		List<AnalyzedInterface> interfaces = sourceFile.getInterfaces();
+		assertThat(interfaces.size(), equalTo(1));
+
+		AnalyzedInterface anInterface = interfaces.get(0);
+
+		List<AnalyzedMethod> methods = anInterface.getMethods();
+
+		assertThat(methods.size(), equalTo(5));
+
+		Map<String, AnalyzedMethod> methodsByName = methods
+			.stream()
+			.collect(Collectors.toMap(AnalyzedMethod::getName, Function.identity()));
+
+		assertTrue(methodsByName.containsKey("a"));
+		assertTrue(methodsByName.containsKey("b"));
+		assertTrue(methodsByName.containsKey("c"));
+		assertTrue(methodsByName.containsKey("d"));
+		assertTrue(methodsByName.containsKey("e"));
+
+		assertThat(methodsByName.get("a").getAccessModifier(), equalTo(AccessModifier.PUBLIC));
+		assertThat(methodsByName.get("b").getAccessModifier(), equalTo(AccessModifier.DEFAULT));
+		assertThat(methodsByName.get("c").getAccessModifier(), equalTo(AccessModifier.PRIVATE));
+		assertTrue(methodsByName.get("d").isStatic());
+		assertThat(methodsByName.get("d").getAccessModifier(), equalTo(AccessModifier.PRIVATE));
+		assertTrue(methodsByName.get("e").isStatic());
+		assertThat(methodsByName.get("e").getAccessModifier(), equalTo(AccessModifier.PUBLIC));
 	}
 
 	@Test
 	public void testEnum() {
 		TypedResult<AnalyzedSourceFile> result = analyzeAndVerify("src/test/java/com/jeroensteenbeeke/andalite/analyzer/TestEnum.java");
+
+		AnalyzedSourceFile sourceFile = result.getObject();
+
+		List<AnalyzedEnum> enums = sourceFile.getEnums();
+
+		assertThat(enums.size(), equalTo(1));
+
+		AnalyzedEnum analyzedEnum = enums.get(0);
+
+		List<AnalyzedEnumConstant> constants = analyzedEnum.getConstants();
+
+		assertThat(constants.size(), equalTo(3));
+
+		List<AnalyzedMethod> baseMethods = analyzedEnum.getMethods();
+
+		assertThat(baseMethods.size(), equalTo(2));
+
+		Map<String,AnalyzedMethod> baseMethodsByName = baseMethods.stream().collect(Collectors.toMap(AnalyzedMethod::getName, Function
+			.identity()));
+
+		assertTrue(baseMethodsByName.containsKey("bar"));
+		assertTrue(baseMethodsByName.containsKey("baz"));
+
+		assertThat(baseMethodsByName.get("bar").getAccessModifier(), equalTo(AccessModifier.PROTECTED));
+		assertThat(baseMethodsByName.get("baz").getAccessModifier(), equalTo(AccessModifier.DEFAULT));
+
+		Map<String, AnalyzedEnumConstant> constantsByName = constants
+			.stream()
+			.collect(Collectors.toMap(AnalyzedEnumConstant::getDenominationName, Function.identity()));
+
+		assertTrue(constantsByName.containsKey("A"));
+		assertTrue(constantsByName.containsKey("B"));
+		assertTrue(constantsByName.containsKey("C"));
+
+		Map<String, AnalyzedMethod> aMethodsByName = constantsByName
+			.get("A")
+			.getMethods()
+			.stream()
+			.collect(Collectors.toMap(AnalyzedMethod::getName, Function
+				.identity()));
+		Map<String, AnalyzedMethod> bMethodsByName = constantsByName
+			.get("B")
+			.getMethods()
+			.stream()
+			.collect(Collectors.toMap(AnalyzedMethod::getName, Function
+				.identity()));
+		Map<String, AnalyzedMethod> cMethodsByName = constantsByName
+			.get("C")
+			.getMethods()
+			.stream()
+			.collect(Collectors.toMap(AnalyzedMethod::getName, Function
+				.identity()));
+
+		assertThat(aMethodsByName.size(), equalTo(1));
+		assertThat(bMethodsByName.size(), equalTo(1));
+		assertThat(cMethodsByName.size(), equalTo(2));
+
+		assertTrue(aMethodsByName.containsKey("baz"));
+		assertTrue(bMethodsByName.containsKey("baz"));
+		assertTrue(cMethodsByName.containsKey("baz"));
+		assertTrue(cMethodsByName.containsKey("fb"));
+
+		assertThat(aMethodsByName.get("baz").getAccessModifier(), equalTo(AccessModifier.PROTECTED));
+		assertThat(bMethodsByName.get("baz").getAccessModifier(), equalTo(AccessModifier.PROTECTED));
+		assertThat(cMethodsByName.get("baz").getAccessModifier(), equalTo(AccessModifier.PROTECTED));
+		assertThat(cMethodsByName.get("fb").getAccessModifier(), equalTo(AccessModifier.DEFAULT));
+
 	}
 
 	@Test
 	public void testInnerClasses() {
 		TypedResult<AnalyzedSourceFile> result = analyzeAndVerify("src/test/java/com/jeroensteenbeeke/andalite/analyzer/TestInnerClasses.java");
+
+
 	}
 
 	@Test

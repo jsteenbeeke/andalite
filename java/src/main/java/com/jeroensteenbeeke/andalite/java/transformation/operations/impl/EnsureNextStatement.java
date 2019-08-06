@@ -59,7 +59,7 @@ public class EnsureNextStatement<T extends AnalyzedStatement<T,I>, I extends Enu
 	}
 
 	@Override
-	public ActionResult verify(T input) {
+	public ActionResult verify(@Nonnull T input) {
 		// FIXME: Not verifiable?
 
 		return ActionResult.ok();

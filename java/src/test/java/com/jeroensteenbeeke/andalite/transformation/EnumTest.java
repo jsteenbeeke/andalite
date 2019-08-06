@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.IOException;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.lux.Result;
+import com.jeroensteenbeeke.lux.TypedResult;
 import org.junit.Test;
 
 import com.jeroensteenbeeke.lux.ActionResult;
@@ -105,6 +107,35 @@ public class EnumTest extends DummyAwareTest {
 		addEnumConstant = builder.build();
 
 		result = addEnumConstant.applyTo(enumFile);
+
+		assertThat(result, isOk());
+	}
+
+	@Test
+	public void addPublicEnum() throws IOException {
+		JavaRecipeBuilder builder = new JavaRecipeBuilder();
+		builder.ensurePublicEnum();
+
+		JavaRecipe recipe = builder.build();
+
+		File bare = getDummy(BaseDummies.Empty);
+
+		TypedResult<AnalyzedSourceFile> result = recipe.applyTo(bare);
+
+		assertThat(result, isOk());
+
+	}
+
+	@Test
+	public void addPackageEnum() throws IOException {
+		JavaRecipeBuilder builder = new JavaRecipeBuilder();
+		builder.ensurePackageEnum("FooBar");
+
+		JavaRecipe recipe = builder.build();
+
+		File bare = getDummy(BaseDummies.Empty);
+
+		TypedResult<AnalyzedSourceFile> result = recipe.applyTo(bare);
 
 		assertThat(result, isOk());
 

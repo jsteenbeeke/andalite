@@ -156,7 +156,7 @@ public class EnsureField implements IClassOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedClass input) {
+	public ActionResult verify(@Nonnull AnalyzedClass input) {
 		AnalyzedField field = input.getField(name);
 		if (field != null) {
 

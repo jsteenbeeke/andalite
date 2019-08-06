@@ -39,7 +39,7 @@ public abstract class EnsureEndReturnStatement<T extends IBodyContainer<T, I>, I
 	}
 
 	@Override
-	public List<Transformation> perform(T input)
+	public List<Transformation> perform(@Nonnull T input)
 		throws OperationException {
 		if (input.isAbstract()) {
 			throw new OperationException(
@@ -81,7 +81,7 @@ public abstract class EnsureEndReturnStatement<T extends IBodyContainer<T, I>, I
 	}
 
 	@Override
-	public ActionResult verify(T input) {
+	public ActionResult verify(@Nonnull T input) {
 		AnalyzedStatement last = Iterables.getLast(input.getStatements(), null);
 
 		if (last instanceof ReturnStatement) {

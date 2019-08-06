@@ -9,13 +9,15 @@ import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
 
+import javax.annotation.Nonnull;
+
 public class EnsureMethodFinal implements IMethodOperation {
 
 	public EnsureMethodFinal() {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedMethod input)
+	public List<Transformation> perform(@Nonnull AnalyzedMethod input)
 			throws OperationException {
 		if (!input.isFinal()) {
 			return ImmutableList.of(input.insertAt(
@@ -26,7 +28,7 @@ public class EnsureMethodFinal implements IMethodOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedMethod input) {
+	public ActionResult verify(@Nonnull AnalyzedMethod input) {
 		if (input.isFinal()) {
 			return ActionResult.ok();
 		}

@@ -47,7 +47,7 @@ public abstract class EnsureAnnotationField<T> implements IAnnotationOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedAnnotation input)
+	public List<Transformation> perform(@Nonnull AnalyzedAnnotation input)
 		throws OperationException {
 		final String actualName = name != null ? name : "value";
 
@@ -93,7 +93,7 @@ public abstract class EnsureAnnotationField<T> implements IAnnotationOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedAnnotation input) {
+	public ActionResult verify(@Nonnull AnalyzedAnnotation input) {
 		if (input.hasValueOfType(expectedType, name)) {
 			BaseValue<T,?,?> value = input.getValue(expectedType, name);
 

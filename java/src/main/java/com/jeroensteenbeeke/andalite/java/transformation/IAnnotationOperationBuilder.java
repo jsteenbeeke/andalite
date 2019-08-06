@@ -29,7 +29,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureI
 
 public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJavaOperation<T>>
 		extends IScopedOperationBuilder<T, O> {
-	static final String NULL = "null";
+	String NULL = "null";
 
 	default void ensureBooleanValue(@Nonnull String name, boolean value) {
 		ensure(new EnsureAnnotationField<>(name, BooleanValue.class,

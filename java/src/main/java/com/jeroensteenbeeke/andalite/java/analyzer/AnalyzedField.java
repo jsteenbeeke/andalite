@@ -92,12 +92,12 @@ public final class AnalyzedField extends AccessModifiable<AnalyzedField, Analyze
 		}, AFTER {
 			@Override
 			public int position(AnalyzedField container) {
-				return container.getLocation().getEnd();
+				return container.getLocation().getEnd() + 1;
 			}
 		}, BEFORE_SEMICOLON {
 			@Override
 			public int position(AnalyzedField container) {
-				return container.getLocation().getEnd() - 1;
+				return container.getLocation().getEnd();
 			}
 
 		};

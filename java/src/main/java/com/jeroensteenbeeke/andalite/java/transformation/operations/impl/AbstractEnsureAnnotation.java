@@ -21,6 +21,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.Annotatable;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 import com.jeroensteenbeeke.lux.ActionResult;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public abstract class AbstractEnsureAnnotation<T extends Annotatable<T, I>, I extends Enum<I> & IInsertionPoint<T>>
@@ -40,7 +41,7 @@ public abstract class AbstractEnsureAnnotation<T extends Annotatable<T, I>, I ex
 	}
 
 	@Override
-	public final List<Transformation> perform(T input) {
+	public final List<Transformation> perform(@Nonnull T input) {
 		if (!input.hasAnnotation(type)) {
 			final String before = isNewlineBefore(input) ? "\n\t" : " ";
 			final String suffix = isNewlineAfter(input) ? "\n" : " ";
@@ -64,7 +65,7 @@ public abstract class AbstractEnsureAnnotation<T extends Annotatable<T, I>, I ex
 	}
 
 	@Override
-	public ActionResult verify(T input) {
+	public ActionResult verify(@Nonnull T input) {
 		boolean hasAnnotation = input.hasAnnotation(type);
 		return hasAnnotation ? ActionResult.ok()
 			: ActionResult.error("Annotation @%s not present", type);

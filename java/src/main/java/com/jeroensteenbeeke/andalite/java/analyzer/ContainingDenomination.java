@@ -219,10 +219,6 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 
 	}
 
-	public boolean isAutoAbstractMethods() {
-		return false;
-	}
-
 	@Override
 	public Optional<String> getJavadoc() {
 		return Optional.ofNullable(javadoc);

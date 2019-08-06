@@ -47,7 +47,7 @@ public class EnsureImports implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedSourceFile input) {
+	public List<Transformation> perform(@Nonnull AnalyzedSourceFile input) {
 
 		for (AnalyzedImport analyzedImport : input.getImports()) {
 			if (analyzedImport.matchesClass(fqdn)) {
@@ -64,7 +64,7 @@ public class EnsureImports implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedSourceFile input) {
+	public ActionResult verify(@Nonnull AnalyzedSourceFile input) {
 		if (input.hasImport(fqdn)) {
 			return ActionResult.ok();
 		}

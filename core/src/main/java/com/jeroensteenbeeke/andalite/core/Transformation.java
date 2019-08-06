@@ -28,14 +28,21 @@ public class Transformation {
 
 	private final String code;
 
+	private final boolean invalidatesNavigation;
+
 	private Transformation(int point, String code) {
-		this(point, point, code);
+		this(point, point, code, false);
 	}
 
-	private Transformation(int from, int to, String code) {
+	private Transformation(int from, int to, String code, boolean invalidatesNavigation) {
 		this.from = from;
 		this.to = to;
 		this.code = code;
+		this.invalidatesNavigation = invalidatesNavigation;
+	}
+
+	public Transformation whichInvalidatesNavigation() {
+		return new Transformation(from, to, code, true);
 	}
 
 	public ActionResult applyTo(@Nonnull File targetFile) {
@@ -44,10 +51,14 @@ public class Transformation {
 		return rewriter.rewrite();
 	}
 
+	public boolean invalidatesNavigation() {
+		return invalidatesNavigation;
+	}
+
 	public static Transformation replace(@Nonnull IReplaceable replaceable, @Nonnull String code) {
 		Location location = replaceable.getLocation();
 
-		return new Transformation(location.getStart(), location.getEnd()+1, code);
+		return new Transformation(location.getStart(), location.getEnd()+1, code, false);
 	}
 
 	public static <T extends IInsertionPointProvider<T, I>, I extends Enum<I> & IInsertionPoint<? super T>> Transformation atInsertionPoint(@Nonnull T container,

@@ -37,7 +37,7 @@ public class EnsureSuperClass implements IClassOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedClass input)
+	public List<Transformation> perform(@Nonnull AnalyzedClass input)
 		throws OperationException {
 		if (input
 			.getSuperClass()

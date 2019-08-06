@@ -1,6 +1,7 @@
 package com.jeroensteenbeeke.andalite.transformation;
 
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
+import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.lux.Result;
@@ -76,6 +77,18 @@ public class StatementInsertionTest extends DummyAwareTest {
 			   .elseStatement()
 			   .ensureNextStatement("b = b + b");
 
+
+		builder.inPublicClass()
+			   .forMethod()
+			   .named("foo")
+			   .inBody()
+			   .inIfStatement()
+			   .withExpression("b.isEmpty()")
+			   .elseStatement()
+			   .body()
+			   .afterStatement("b = b + b")
+			   .ensurePrefixComment("Your mom");
+
 		JavaRecipe recipe = builder.build();
 
 		File bare = getDummy(BaseDummies.BareClass);
@@ -84,4 +97,5 @@ public class StatementInsertionTest extends DummyAwareTest {
 
 		assertThat(result, isOk());
 	}
+
 }
