@@ -64,7 +64,7 @@ public abstract class RecipeMojo extends AbstractMojo {
 					} catch (NoSuchMethodException e) {
 						// And if it doesn't exist, go for a default no-argument
 						// constructor
-						recipeList.add((ForgeRecipe) recipeClass.newInstance());
+						recipeList.add((ForgeRecipe) recipeClass.getConstructor().newInstance());
 
 					}
 				} else {
@@ -76,7 +76,7 @@ public abstract class RecipeMojo extends AbstractMojo {
 			} catch (ClassNotFoundException e) {
 				getLog().error("Recipe not found: " + className);
 				getLog().error(e);
-			} catch (InstantiationException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+			} catch (InstantiationException | IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 				getLog().error("Could not instantiate recipe: " + className);
 				getLog().error(e);
 			}

@@ -27,4 +27,9 @@ public class GenerifiedName implements IReplaceable {
 	public void output(IOutputCallback callback) {
 		callback.write(name);
 	}
+
+	@Override
+	public String toString() {
+		return name;
+	}
 }
