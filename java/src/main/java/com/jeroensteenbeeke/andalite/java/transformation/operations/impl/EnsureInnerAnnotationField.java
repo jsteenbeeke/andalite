@@ -92,8 +92,10 @@ public class EnsureInnerAnnotationField implements IAnnotationOperation {
 				}
 			}
 		} else {
+			final String prefix = input.getValues().isEmpty() ? "" : ", ";
+
 			return ImmutableList.of(input.insertAt(AnalyzedAnnotation.AnnotationInsertionPoint.AFTER_LAST_ARGUMENT,
-												   String.format("%s=@%s()", actualName,
+												   String.format("%s%s=@%s()", prefix, actualName,
 																 type)));
 		}
 

@@ -53,16 +53,14 @@ public final class ResultMatchers {
 	}
 
 	public static Matcher<Result<?,?>> hasError(@Nonnull final String message) {
-		return new TypeSafeDiagnosingMatcher<Result<?,?>>() {
+		return new TypeSafeDiagnosingMatcher<>() {
 			@Override
 			public void describeTo(Description description) {
-				description.appendText("is not ok, with error ").appendText(
-						message);
+				description.appendText("is not ok, with error ").appendValue(message);
 			}
 
 			@Override
-			protected boolean matchesSafely(Result<?,?> item,
-					Description mismatchDescription) {
+			protected boolean matchesSafely(Result<?, ?> item, Description mismatchDescription) {
 				boolean ok = item.isOk();
 				boolean messageEqual = message.equals(item.getMessage());
 				boolean matches = !ok && messageEqual;
@@ -75,7 +73,7 @@ public final class ResultMatchers {
 					}
 					if (!messageEqual) {
 						if (item.getMessage() != null) {
-							messages.add(String.format("error is %s", item.getMessage()));
+							messages.add(String.format("error is \"%s\"", item.getMessage()));
 						} else {
 							messages.add("no error");
 						}

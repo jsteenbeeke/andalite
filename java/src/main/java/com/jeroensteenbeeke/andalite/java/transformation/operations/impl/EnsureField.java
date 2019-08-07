@@ -83,7 +83,7 @@ public class EnsureField implements IClassOperation {
 				throw new OperationException(
 					String.format(
 						"Field %s should have type %s but instead has type %s",
-						name, type, analyzedType));
+						name, type, analyzedType.toJavaString()));
 			}
 
 			if (!modifier.equals(field.getAccessModifier())) {
