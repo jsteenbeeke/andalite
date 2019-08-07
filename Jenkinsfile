@@ -28,6 +28,17 @@ pipeline {
                 sh 'mvn -B -U clean verify package -P-disable-slow-tests'
             }
         }
+        stage('Coverage') {
+            when {
+                expression {
+                    currentBuild.result == 'SUCCESS' || currentBuild.result == null
+                }
+            }
+
+            steps {
+                jacoco changeBuildStatus: false, exclusionPattern: '**/*Test*.class,**/HelpMojo.class'
+            }
+        }
         stage('Deploy') {
             when {
                 expression {
