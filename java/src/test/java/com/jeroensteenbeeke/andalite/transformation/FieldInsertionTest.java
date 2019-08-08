@@ -180,4 +180,23 @@ public class FieldInsertionTest extends DummyAwareTest {
 		assertThat(result, hasError("Navigation: Public Class\nOperation: presence of field: private  int a\nTransformation result: Operation cannot be performed: Field a should have type int but instead has type String"));
 
 	}
+
+	@Test
+	public void testArrayInsertion() throws IOException {
+		JavaRecipeBuilder builder = new JavaRecipeBuilder();
+
+		builder.ensurePublicClass();
+		builder.inPublicClass().ensureField("a").typed("String[]").withAccess(
+			AccessModifier.PRIVATE);
+		builder.inPublicClass().ensureField("b").typed("int[]").withAccess(
+			AccessModifier.PRIVATE);
+
+		JavaRecipe recipe = builder.build();
+
+		File bare = getDummy(BaseDummies.BareClass);
+
+		TypedResult<AnalyzedSourceFile> result = recipe.applyTo(bare);
+
+		assertThat(result, isOk());
+	}
 }

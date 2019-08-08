@@ -39,19 +39,18 @@ import com.jeroensteenbeeke.andalite.java.analyzer.expression.*;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.*;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ConstructorInvocationStatement.InvocationType;
 import com.jeroensteenbeeke.andalite.java.analyzer.types.*;
+import com.jeroensteenbeeke.andalite.java.analyzer.types.ArrayType;
 import com.jeroensteenbeeke.andalite.java.util.Locations;
 import com.jeroensteenbeeke.lux.TypedResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ClassAnalyzer {
@@ -373,8 +372,8 @@ public class ClassAnalyzer {
 									ContainingDenomination<?, ?> element, AnalyzerContext analyzerContext,
 									BodyDeclaration<?> member) {
 		if (member instanceof FieldDeclaration) {
-			List<AnalyzedField> fields = analyze((FieldDeclaration) member,
-												 element, analyzerContext);
+			List<AnalyzedField> fields = analyzeField((FieldDeclaration) member,
+													  element, analyzerContext);
 			for (AnalyzedField field : fields) {
 				element.addField(field);
 			}
@@ -784,10 +783,10 @@ public class ClassAnalyzer {
 		return param;
 	}
 
-	private List<AnalyzedField> analyze(FieldDeclaration member,
-										@Nonnull ContainingDenomination<?, ?> containingDenomination,
-										@Nonnull AnalyzerContext analyzerContext) {
-		final AnalyzedType type = analyzeType(member.getElementType());
+	private List<AnalyzedField> analyzeField(FieldDeclaration member,
+											 @Nonnull ContainingDenomination<?, ?> containingDenomination,
+											 @Nonnull AnalyzerContext analyzerContext) {
+		final AnalyzedType type = analyzeType(member.getCommonType());
 		final List<Modifier.Keyword> modifiers = keywords(Modifier.Keyword.DEFAULT, member.getModifiers());
 
 		Builder<AnalyzedField> builder = ImmutableList.builder();
@@ -799,6 +798,7 @@ public class ClassAnalyzer {
 
 			AnalyzedField analyzedField = new AnalyzedField(
 				Locations.from(member, indexes), modifiers, name, type);
+
 			analyzedField.setSpecificDeclarationLocation(Locations.from(var, indexes));
 			analyzedField.addAnnotations(annotations);
 
@@ -1878,6 +1878,14 @@ public class ClassAnalyzer {
 	private AnalyzedType analyzeType(Type type) {
 		final Location location = Locations.from(type, indexes);
 
+		if (type.isArrayType()) {
+			return new ArrayType(location, analyzeType(type.asArrayType().getComponentType()));
+		}
+
+		return analyzeBaseType(type, location);
+	}
+
+	private AnalyzedType analyzeBaseType(Type type, Location location) {
 		if (type instanceof ClassOrInterfaceType) {
 			ClassOrInterfaceType classOrInterface = (ClassOrInterfaceType) type;
 
