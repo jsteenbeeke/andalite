@@ -15,6 +15,10 @@ public interface TypeReference {
 			return new ArrayReference(TypeReference.of(representation.substring(0, representation.length()-2)));
 		}
 
+		if (representation.contains("<")) {
+			return GenerifiedType.of(representation);
+		}
+
 		switch (representation) {
 			case "String":
 				return ClassReference.of("java.lang.String");

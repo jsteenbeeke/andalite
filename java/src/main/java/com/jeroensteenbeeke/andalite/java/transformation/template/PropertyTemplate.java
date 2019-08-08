@@ -15,15 +15,18 @@ public class PropertyTemplate implements ClassElementTemplate {
 
 	private final ImmutableSet<PropertyElementTemplate> templates;
 
+	private final ImmutableSet<String> extraImports;
+
 	PropertyTemplate(TypeReference type, String name) {
-		this(type, name, type.nullable(), ImmutableSet.of());
+		this(type, name, type.nullable(), ImmutableSet.of(), ImmutableSet.of());
 	}
 
-	private PropertyTemplate(TypeReference type, String name, boolean nullable, ImmutableSet<PropertyElementTemplate> templates) {
+	private PropertyTemplate(TypeReference type, String name, boolean nullable, ImmutableSet<PropertyElementTemplate> templates, ImmutableSet<String> extraImports) {
 		this.type = type;
 		this.name = name;
 		this.nullable = nullable;
 		this.templates = templates;
+		this.extraImports = extraImports;
 	}
 
 	public PropertyTemplate nonNull() {
@@ -31,7 +34,7 @@ public class PropertyTemplate implements ClassElementTemplate {
 			return this;
 		}
 
-		return new PropertyTemplate(type, name, false, templates);
+		return new PropertyTemplate(type, name, false, templates, extraImports);
 	}
 
 	public PropertyTemplate with(PropertyElementTemplate... templates) {
@@ -40,6 +43,17 @@ public class PropertyTemplate implements ClassElementTemplate {
 			ImmutableSet.<PropertyElementTemplate>builder()
 				.addAll(this.templates)
 				.addAll(ImmutableList.copyOf(templates))
+				.build()
+			, extraImports
+		);
+	}
+
+	public PropertyTemplate whichRequiresImport(String... imports) {
+		return new PropertyTemplate(
+			type, name, nullable, templates,
+			ImmutableSet.<String>builder()
+				.addAll(this.extraImports)
+				.addAll(ImmutableList.copyOf(imports))
 				.build()
 		);
 	}
@@ -60,6 +74,7 @@ public class PropertyTemplate implements ClassElementTemplate {
 	public void applyTo(JavaRecipeBuilder builder) {
 		type.importStatement().ifPresent(builder::ensureImport);
 		builder.inPublicClass().ensureField(name).typed(type.name()).withAccess(AccessModifier.PRIVATE);
+		extraImports.forEach(builder::ensureImport);
 
 		templates.forEach(t -> t.onField(builder, builder.inPublicClass().forField(name)));
 

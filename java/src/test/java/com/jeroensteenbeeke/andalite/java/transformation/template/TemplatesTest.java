@@ -134,7 +134,9 @@ public class TemplatesTest extends DummyAwareTest {
 				optionalGetterAnnotation("javax.annotation.Nonnull").withValues(
 					booleanField("really").withValue(true)
 				)
-			)
+			),
+			property("units").ofType("java.util.List<Unit>").nonNull()
+							 .whichRequiresImport("foo.bar.Unit")
 
 		).toRecipe();
 
