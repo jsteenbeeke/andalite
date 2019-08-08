@@ -155,6 +155,7 @@ public final class AnalyzedClass extends ConstructableDenomination<AnalyzedClass
 			public int position(AnalyzedClass container) {
 				return container.getLastImplementsLocation()
 								.map(Location::getEnd)
+								.map(end -> end + 1)
 								.orElseGet(() -> AFTER_SUPERCLASS.position(container));
 			}
 		}, AFTER_SUPERCLASS {
@@ -162,6 +163,7 @@ public final class AnalyzedClass extends ConstructableDenomination<AnalyzedClass
 			public int position(AnalyzedClass container) {
 				return container.getSuperClass().map(GenerifiedName::getLocation)
 								.map(Location::getEnd)
+								.map(end -> end + 1)
 								.orElseGet(() -> AFTER_NAME.position(container));
 			}
 		}, AFTER_NAME {

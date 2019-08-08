@@ -553,7 +553,7 @@ public class ClassAnalyzer {
 
 		String prefix = type
 			.getScope()
-			.flatMap(s -> getTypeNameWithGenerics(containingElement, type))
+			.flatMap(s -> getTypeNameWithGenerics(containingElement, s))
 			.map(GenerifiedName::getName)
 			.map(s -> s.concat("."))
 			.orElse("");

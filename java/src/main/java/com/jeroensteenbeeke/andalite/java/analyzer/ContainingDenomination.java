@@ -150,7 +150,7 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 	}
 
 	public boolean implementsInterface(@Nonnull String interfaceName) {
-		return this.interfaces.contains(interfaceName);
+		return this.interfaces.stream().map(GenerifiedName::getName).anyMatch(interfaceName::equals);
 	}
 
 	@Nonnull

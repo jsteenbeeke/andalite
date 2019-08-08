@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import javax.annotation.Nonnull;
 
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedParameter;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
@@ -38,4 +39,7 @@ public class ParameterScopeOperationBuilder extends
 		ensure(new RemoveParameterAnnotation(annotation));
 	}
 
+	public AnnotatableOperationBuilder<AnalyzedParameter> forAnnotation(String name) {
+		return new AnnotatableOperationBuilder<>(getCollector(), getNavigation(), name);
+	}
 }
