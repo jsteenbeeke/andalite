@@ -24,6 +24,7 @@ import com.google.common.io.CharSink;
 import com.google.common.io.CharSource;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
+import com.google.googlejavaformat.java.ImportOrderer;
 import com.google.googlejavaformat.java.filer.FormattingFiler;
 import com.jeroensteenbeeke.lux.Result;
 import org.slf4j.Logger;
@@ -119,7 +120,7 @@ public class JavaRecipe {
 			try {
 				Formatter formatter = new Formatter();
 
-				Files.writeString(file.toPath(), formatter.formatSourceAndFixImports(Files.readString(file.toPath())));
+				Files.writeString(file.toPath(), ImportOrderer.reorderImports(formatter.formatSource(Files.readString(file.toPath()))));
 
 			} catch (FormatterException | IOException e) {
 				return TypedResult.fail("Could not format source after transform: %s, %s", e
