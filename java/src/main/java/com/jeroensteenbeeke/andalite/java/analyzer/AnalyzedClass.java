@@ -89,7 +89,7 @@ public final class AnalyzedClass extends ConstructableDenomination<AnalyzedClass
 
 	@Override
 	public ClassInsertionPoint getAnnotationInsertPoint() {
-		return ClassInsertionPoint.BEFORE;
+		return ClassInsertionPoint.AFTER_LAST_ANNOTATION;
 	}
 
 
@@ -98,6 +98,17 @@ public final class AnalyzedClass extends ConstructableDenomination<AnalyzedClass
 			@Override
 			public int position(AnalyzedClass container) {
 				return container.getLocation().getStart();
+			}
+		},
+		AFTER_LAST_ANNOTATION {
+			@Override
+			public int position(AnalyzedClass container) {
+				return container
+					.getAnnotations()
+					.stream()
+					.map(a -> AnalyzedAnnotation.AnnotationInsertionPoint.AFTER.position(a))
+					.findFirst()
+					.orElseGet(() -> BEFORE.position(container));
 			}
 		},
 		START {

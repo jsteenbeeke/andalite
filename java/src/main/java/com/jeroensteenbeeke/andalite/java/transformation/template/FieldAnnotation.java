@@ -1,6 +1,6 @@
 package com.jeroensteenbeeke.andalite.java.transformation.template;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.transformation.FieldOperationBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 
@@ -10,17 +10,17 @@ public class FieldAnnotation extends AnnotationAdditionTemplate<FieldAnnotation>
 	private final TypeReference type;
 
 	FieldAnnotation(@Nonnull TypeReference type) {
-		this(type, ImmutableSet.of());
+		this(type, ImmutableList.of());
 	}
 
-	public FieldAnnotation(@Nonnull TypeReference type, @Nonnull ImmutableSet<AnnotationValueTemplate<?>> values) {
+	private FieldAnnotation(@Nonnull TypeReference type, @Nonnull ImmutableList<AnnotationValueTemplate<?>> values) {
 		super(values);
 		this.type = type;
 	}
 
 	@Nonnull
 	@Override
-	protected FieldAnnotation newInstance(@Nonnull ImmutableSet<AnnotationValueTemplate<?>> templates) {
+	protected FieldAnnotation newInstance(@Nonnull ImmutableList<AnnotationValueTemplate<?>> templates) {
 		return new FieldAnnotation(type, templates);
 	}
 

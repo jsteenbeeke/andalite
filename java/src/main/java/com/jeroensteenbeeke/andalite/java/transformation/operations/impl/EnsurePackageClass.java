@@ -33,7 +33,6 @@ import javax.annotation.Nonnull;
  * (package) scope and the specified name
  *
  * @author Jeroen Steenbeeke
- *
  */
 public class EnsurePackageClass implements ICompilationUnitOperation {
 	private final String expectedClassName;
@@ -41,9 +40,8 @@ public class EnsurePackageClass implements ICompilationUnitOperation {
 	/**
 	 * Create a new EnsurePackageClass operation
 	 *
-	 * @param expectedClassName
-	 *            The name of the class we want to ensure the existence of.
-	 *            Needs to be a valid Java identifier
+	 * @param expectedClassName The name of the class we want to ensure the existence of.
+	 *                          Needs to be a valid Java identifier
 	 */
 	public EnsurePackageClass(String expectedClassName) {
 		if (!isValidJavaIdentifier(expectedClassName)) {
@@ -55,6 +53,22 @@ public class EnsurePackageClass implements ICompilationUnitOperation {
 
 	@Override
 	public List<Transformation> perform(@Nonnull AnalyzedSourceFile input) {
+		if (input
+			.getClasses()
+			.stream()
+			.filter(c -> c.getAccessModifier() == AccessModifier.DEFAULT)
+			.anyMatch(c -> c.getDenominationName().equals(expectedClassName))) {
+			return ImmutableList.of();
+		}
+
+		if (input
+			.getClasses()
+			.stream()
+			.filter(c -> c.getAccessModifier() == AccessModifier.PUBLIC)
+			.anyMatch(c -> c.getDenominationName().equals(expectedClassName))) {
+			throw new IllegalStateException(String.format("Class named %s is present, but is public", expectedClassName));
+		}
+
 		return ImmutableList
 			.of(input.insertAt(AnalyzedSourceFile.SourceFileInsertionPoint.AFTER_LAST_DENOMINATION,
 							   String.format("class %s {\n\n}\n", expectedClassName)));

@@ -6,26 +6,26 @@ import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
 
 import javax.annotation.Nonnull;
 
-public class GetterAnnotation extends AnnotationAdditionTemplate<GetterAnnotation> implements PropertyElementTemplate {
+public class MethodAnnotation extends AnnotationAdditionTemplate<MethodAnnotation> implements MethodElementTemplate {
 	private final TypeReference type;
 
-	GetterAnnotation(TypeReference type) {
+	MethodAnnotation(TypeReference type) {
 		this(type, ImmutableList.of());
 	}
 
-	private GetterAnnotation(TypeReference type, ImmutableList<AnnotationValueTemplate<?>> templates) {
+	private MethodAnnotation(TypeReference type, ImmutableList<AnnotationValueTemplate<?>> templates) {
 		super(templates);
 		this.type = type;
 	}
 
 	@Nonnull
 	@Override
-	protected GetterAnnotation newInstance(@Nonnull ImmutableList<AnnotationValueTemplate<?>> templates) {
-		return new GetterAnnotation(type, templates);
+	protected MethodAnnotation newInstance(@Nonnull ImmutableList<AnnotationValueTemplate<?>> templates) {
+		return new MethodAnnotation(type, templates);
 	}
 
 	@Override
-	public void onGetter(JavaRecipeBuilder builder, MethodOperationBuilder methodBuilder) {
+	public void onMethod(JavaRecipeBuilder builder, MethodOperationBuilder methodBuilder) {
 		type.importStatement().ifPresent(builder::ensureImport);
 		methodBuilder.ensureAnnotation(type.name());
 

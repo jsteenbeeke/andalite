@@ -1,10 +1,14 @@
 package com.jeroensteenbeeke.andalite.java.transformation.template;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.java.transformation.ClassScopeOperationBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
+
+import javax.annotation.Nonnull;
+import java.util.function.Predicate;
 
 public class PropertyTemplate implements ClassElementTemplate {
 	private final TypeReference type;
@@ -13,20 +17,32 @@ public class PropertyTemplate implements ClassElementTemplate {
 
 	private final boolean nullable;
 
-	private final ImmutableSet<PropertyElementTemplate> templates;
+	private final ImmutableList<PropertyElementTemplate> templates;
 
-	private final ImmutableSet<String> extraImports;
+	private final ImmutableList<String> extraImports;
 
 	PropertyTemplate(TypeReference type, String name) {
-		this(type, name, type.nullable(), ImmutableSet.of(), ImmutableSet.of());
+		this(type, name, type.nullable(), ImmutableList.of(), ImmutableList.of());
 	}
 
-	private PropertyTemplate(TypeReference type, String name, boolean nullable, ImmutableSet<PropertyElementTemplate> templates, ImmutableSet<String> extraImports) {
+	private PropertyTemplate(TypeReference type, String name, boolean nullable, ImmutableList<PropertyElementTemplate> templates, ImmutableList<String> extraImports) {
 		this.type = type;
 		this.name = name;
 		this.nullable = nullable;
 		this.templates = templates;
 		this.extraImports = extraImports;
+	}
+
+	public PropertyTemplate nullable(boolean nullable) {
+		if (nullable == this.nullable) {
+			return this;
+		}
+
+		if (nullable && !type.nullable()) {
+			return this;
+		}
+
+		return new PropertyTemplate(type, name, nullable, templates, extraImports);
 	}
 
 	public PropertyTemplate nonNull() {
@@ -40,7 +56,7 @@ public class PropertyTemplate implements ClassElementTemplate {
 	public PropertyTemplate with(PropertyElementTemplate... templates) {
 		return new PropertyTemplate(
 			type, name, nullable,
-			ImmutableSet.<PropertyElementTemplate>builder()
+			ImmutableList.<PropertyElementTemplate>builder()
 				.addAll(this.templates)
 				.addAll(ImmutableList.copyOf(templates))
 				.build()
@@ -48,10 +64,24 @@ public class PropertyTemplate implements ClassElementTemplate {
 		);
 	}
 
+	public ConditionalInclusion ifMatched(@Nonnull Predicate<PropertyTemplate> condition) {
+		return templates -> {
+			if (!condition.test(this)) {
+				return this;
+			}
+
+			return with(templates);
+		};
+	}
+
+	public ConditionalInclusion ifNotMatched(@Nonnull Predicate<PropertyTemplate> condition) {
+		return ifMatched(condition.negate());
+	}
+
 	public PropertyTemplate whichRequiresImport(String... imports) {
 		return new PropertyTemplate(
 			type, name, nullable, templates,
-			ImmutableSet.<String>builder()
+			ImmutableList.<String>builder()
 				.addAll(this.extraImports)
 				.addAll(ImmutableList.copyOf(imports))
 				.build()
@@ -71,24 +101,22 @@ public class PropertyTemplate implements ClassElementTemplate {
 	}
 
 	@Override
-	public void applyTo(JavaRecipeBuilder builder) {
+	public void onClass(JavaRecipeBuilder builder, ClassScopeOperationBuilder inClass) {
 		type.importStatement().ifPresent(builder::ensureImport);
-		builder.inPublicClass().ensureField(name).typed(type.name()).withAccess(AccessModifier.PRIVATE);
+		inClass.ensureField(name).typed(type.name()).withAccess(AccessModifier.PRIVATE);
 		extraImports.forEach(builder::ensureImport);
 
-		templates.forEach(t -> t.onField(builder, builder.inPublicClass().forField(name)));
+		templates.forEach(t -> t.onField(builder, inClass.forField(name)));
 
 		final String getter = "get" + name.substring(0, 1).toUpperCase() + name.substring(1);
 		final String setter = "set" + name.substring(0, 1).toUpperCase() + name.substring(1);
 
-		builder
-			.inPublicClass()
+		inClass
 			.ensureMethod()
 			.withReturnType(type.name())
 			.withModifier(AccessModifier.PUBLIC)
 			.named(getter);
-		MethodOperationBuilder getterOperationBuilder = builder
-			.inPublicClass()
+		MethodOperationBuilder getterOperationBuilder = inClass
 			.forMethod()
 			.withReturnType(type.name())
 			.withModifier(AccessModifier.PUBLIC)
@@ -101,10 +129,9 @@ public class PropertyTemplate implements ClassElementTemplate {
 
 		if (nullable) {
 			builder.ensureImport("java.util.Optional");
-			builder.inPublicClass().ensureMethod().withReturnType(String.format("Optional<%s>", type.name()))
+			inClass.ensureMethod().withReturnType(String.format("Optional<%s>", type.name()))
 				   .withModifier(AccessModifier.PUBLIC).named(name);
-			MethodOperationBuilder optionalGetterOperationBuilder = builder
-				.inPublicClass()
+			MethodOperationBuilder optionalGetterOperationBuilder = inClass
 				.forMethod()
 				.withReturnType(String.format("Optional<%s>", type.name()))
 				.withModifier(AccessModifier.PUBLIC)
@@ -115,16 +142,14 @@ public class PropertyTemplate implements ClassElementTemplate {
 			templates.forEach(t -> t.onOptionalGetter(builder, optionalGetterOperationBuilder));
 		}
 
-		builder
-			.inPublicClass()
+		inClass
 			.ensureMethod()
 			.withParameter("name")
 			.ofType(type.name())
 			.withModifier(AccessModifier.PUBLIC)
 			.named(setter);
 
-		MethodOperationBuilder setterOperationBuilder = builder
-			.inPublicClass()
+		MethodOperationBuilder setterOperationBuilder = inClass
 			.forMethod()
 			.withParameter("name")
 			.ofType(type.name())
@@ -135,5 +160,11 @@ public class PropertyTemplate implements ClassElementTemplate {
 			.ensureStatement(String.format("this.%1$s = %1$s", this.name));
 		templates.forEach(t -> t.onSetter(builder, setterOperationBuilder));
 
+	}
+
+	@FunctionalInterface
+	public interface ConditionalInclusion {
+		@Nonnull
+		PropertyTemplate include(@Nonnull PropertyElementTemplate... templates);
 	}
 }

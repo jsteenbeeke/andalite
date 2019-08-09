@@ -1,6 +1,8 @@
 package com.jeroensteenbeeke.andalite.java.transformation.template;
 
+import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.transformation.IAnnotationOperationBuilder;
+import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 
 import javax.annotation.Nonnull;
 
@@ -9,7 +11,37 @@ public class Templates {
 
 	@Nonnull
 	public static ClassTemplate aPublicClass() {
-		return new ClassTemplate();
+		return new ClassTemplate(JavaRecipeBuilder::ensurePublicClass, JavaRecipeBuilder::inPublicClass);
+	}
+
+	@Nonnull
+	public static ClassTemplate aPackageClass(String name) {
+		return new ClassTemplate(b -> b.ensurePackageClass(name), b -> b.inPackageClass(name));
+	}
+
+	@Nonnull
+	public static InterfaceTemplate aPublicInterface() {
+		return new InterfaceTemplate(ImmutableList.of(), ImmutableList.of());
+	}
+
+	@Nonnull
+	public static ClassAnnotation classAnnotation(@Nonnull String type) {
+		return new ClassAnnotation(TypeReference.of(type), ImmutableList.of());
+	}
+
+	@Nonnull
+	public static EnsuredImport ensuredImport(@Nonnull String fqdn) {
+		return new EnsuredImport(TypeReference.of(fqdn));
+	}
+
+	@Nonnull
+	public static FieldOfType field(@Nonnull String name) {
+		return type -> new FieldTemplate(TypeReference.of(type), name);
+	}
+
+	@FunctionalInterface
+	public interface FieldOfType {
+		FieldTemplate ofType(@Nonnull String type);
 	}
 
 	@Nonnull
@@ -21,6 +53,42 @@ public class Templates {
 	public interface PropertyOfType {
 		@Nonnull
 		PropertyTemplate ofType(@Nonnull String type);
+	}
+
+	public static Initializer initializer(@Nonnull String expression) {
+		return new Initializer(expression);
+	}
+
+	public static MethodOfType method(@Nonnull String name) {
+		return type -> new MethodTemplate(TypeReference.of(type), name);
+	}
+
+	@FunctionalInterface
+	public interface MethodOfType {
+		@Nonnull
+		MethodTemplate ofType(@Nonnull String type);
+	}
+
+	public static ParameterOfType parameter(@Nonnull String name) {
+		return type -> new ParameterTemplate(TypeReference.of(type), name);
+	}
+
+	@FunctionalInterface
+	public interface ParameterOfType {
+		@Nonnull
+		ParameterTemplate ofType(@Nonnull String type);
+	}
+
+	public static ParameterAnnotation parameterAnnotation(@Nonnull String type) {
+		return new ParameterAnnotation(TypeReference.of(type));
+	}
+
+	public static MethodAnnotation methodAnnotation(@Nonnull String type) {
+		return new MethodAnnotation(TypeReference.of(type));
+	}
+
+	public static Returns returns(@Nonnull String expression) {
+		return new Returns(expression);
 	}
 
 	public static FieldAnnotation fieldAnnotation(@Nonnull String type) {
@@ -49,6 +117,10 @@ public class Templates {
 
 	public static AnnotationValueBuilder<Boolean> booleanField(@Nonnull String name) {
 		return value -> new AnnotationValueTemplate<>(name, value, IAnnotationOperationBuilder::ensureBooleanValue);
+	}
+
+	public static AnnotationValueBuilder<String> fieldAccessField(@Nonnull String name) {
+		return value -> new AnnotationValueTemplate<>(name, value, IAnnotationOperationBuilder::ensureFieldAccessValue);
 	}
 
 	@FunctionalInterface

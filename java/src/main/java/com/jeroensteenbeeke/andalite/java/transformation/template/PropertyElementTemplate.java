@@ -4,7 +4,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.FieldOperationBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
 
-public interface PropertyElementTemplate {
+public interface PropertyElementTemplate extends FieldElementTemplate{
 	default void onSetter(JavaRecipeBuilder builder, MethodOperationBuilder methodBuilder) {
 
 	}
@@ -17,6 +17,7 @@ public interface PropertyElementTemplate {
 
 	}
 
+	@Override
 	default void onField(JavaRecipeBuilder builder, FieldOperationBuilder fieldBuilder) {
 
 	}

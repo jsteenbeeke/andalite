@@ -1,6 +1,6 @@
 package com.jeroensteenbeeke.andalite.java.transformation.template;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
 
@@ -10,17 +10,17 @@ public class SetterParameterAnnotation extends AnnotationAdditionTemplate<Setter
 	private final TypeReference type;
 
 	SetterParameterAnnotation(@Nonnull TypeReference type) {
-		this(type, ImmutableSet.of());
+		this(type, ImmutableList.of());
 	}
 
-	private SetterParameterAnnotation(@Nonnull TypeReference type, @Nonnull ImmutableSet<AnnotationValueTemplate<?>> values) {
+	private SetterParameterAnnotation(@Nonnull TypeReference type, @Nonnull ImmutableList<AnnotationValueTemplate<?>> values) {
 		super(values);
 		this.type = type;
 	}
 
 	@Nonnull
 	@Override
-	protected SetterParameterAnnotation newInstance(@Nonnull ImmutableSet<AnnotationValueTemplate<?>> templates) {
+	protected SetterParameterAnnotation newInstance(@Nonnull ImmutableList<AnnotationValueTemplate<?>> templates) {
 		return new SetterParameterAnnotation(type, templates);
 	}
 

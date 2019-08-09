@@ -36,7 +36,8 @@ final class ClassReference implements TypeReference {
 			return Optional.empty();
 		}
 
-		return Optional.of(prefix() + "." + name());
+		return Optional.of(prefix()).filter(s -> !s.isBlank())
+			.map(prefix -> prefix + "." + name()).or(() -> Optional.of(name()));
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 package com.jeroensteenbeeke.andalite.java.transformation.template;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
 
@@ -10,17 +10,17 @@ public class OptionalGetterAnnotation extends AnnotationAdditionTemplate<Optiona
 	private final TypeReference type;
 
 	OptionalGetterAnnotation(TypeReference type) {
-		this(type, ImmutableSet.of());
+		this(type, ImmutableList.of());
 	}
 
-	private OptionalGetterAnnotation(TypeReference type, ImmutableSet<AnnotationValueTemplate<?>> values) {
+	private OptionalGetterAnnotation(TypeReference type, ImmutableList<AnnotationValueTemplate<?>> values) {
 		super(values);
 		this.type = type;
 	}
 
 	@Nonnull
 	@Override
-	protected OptionalGetterAnnotation newInstance(@Nonnull ImmutableSet<AnnotationValueTemplate<?>> templates) {
+	protected OptionalGetterAnnotation newInstance(@Nonnull ImmutableList<AnnotationValueTemplate<?>> templates) {
 		return new OptionalGetterAnnotation(type, templates);
 	}
 

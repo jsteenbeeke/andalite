@@ -1,67 +1,99 @@
 package com.jeroensteenbeeke.andalite.java.transformation.template;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.java.transformation.ClassScopeOperationBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 
 import javax.annotation.Nonnull;
-
-import static com.jeroensteenbeeke.andalite.java.transformation.template.Templates.JAVA_LANG;
+import java.lang.reflect.Type;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class ClassTemplate {
 	private static final ClassReference JAVA_LANG_OBJECT = ClassReference.of("java.lang.Object");
 
-	private final ClassReference superclass;
+	private final Function<JavaRecipeBuilder, ClassScopeOperationBuilder> classLocator;
 
-	private final ImmutableSet<ClassReference> interfaces;
+	private final Consumer<JavaRecipeBuilder> creator;
 
-	private final ImmutableSet<ClassElementTemplate> templates;
+	private final TypeReference superclass;
 
-	ClassTemplate() {
-		this(JAVA_LANG_OBJECT, ImmutableSet.of(), ImmutableSet.of());
+	private final ImmutableList<TypeReference> interfaces;
+
+	private final ImmutableList<ClassElementTemplate> templates;
+
+	ClassTemplate(Consumer<JavaRecipeBuilder> creator, Function<JavaRecipeBuilder, ClassScopeOperationBuilder> classLocator) {
+		this(creator, classLocator, JAVA_LANG_OBJECT, ImmutableList.of(), ImmutableList.of());
 	}
 
-	private ClassTemplate(ClassReference superclass, ImmutableSet<ClassReference> interfaces, ImmutableSet<ClassElementTemplate> templates) {
+	private ClassTemplate(Consumer<JavaRecipeBuilder> creator, Function<JavaRecipeBuilder, ClassScopeOperationBuilder> classLocator, TypeReference superclass, ImmutableList<TypeReference> interfaces, ImmutableList<ClassElementTemplate> templates) {
+		this.creator = creator;
+		this.classLocator = classLocator;
 		this.superclass = superclass;
 		this.interfaces = interfaces;
 		this.templates = templates;
 	}
 
+	public TypeReference getSuperclass() {
+		return superclass;
+	}
+
+	public ImmutableList<TypeReference> getInterfaces() {
+		return interfaces;
+	}
+
 	public ClassTemplate withSuperClass(String fqdn) {
-		return new ClassTemplate(ClassReference.of(fqdn), interfaces, templates);
+		return new ClassTemplate(creator, classLocator, TypeReference.of(fqdn), interfaces, templates);
 	}
 
 	public ClassTemplate withImplementedInterface(@Nonnull String fqdn) {
-		return new ClassTemplate(superclass, ImmutableSet.<ClassReference>builder()
+		return new ClassTemplate(creator, classLocator, superclass, ImmutableList.<TypeReference>builder()
 			.addAll(interfaces)
-			.add(ClassReference.of(fqdn))
+			.add(TypeReference.of(fqdn))
 			.build(), templates);
 	}
 
-	public ClassTemplate containing(ClassElementTemplate... templates) {
-		return new ClassTemplate(superclass, interfaces, ImmutableSet.<ClassElementTemplate>builder()
+	public ClassTemplate with(ClassElementTemplate... templates) {
+		return new ClassTemplate(creator, classLocator, superclass, interfaces, ImmutableList.<ClassElementTemplate>builder()
 			.addAll(this.templates)
-			.addAll(ImmutableSet.copyOf(templates))
+			.addAll(ImmutableList.copyOf(templates))
 			.build());
 
+	}
+
+	public OptionalInclusion when(boolean condition) {
+		return templates -> {
+			if (condition) {
+				return with(templates);
+			}
+
+			return this;
+		};
+	}
+
+	@FunctionalInterface
+	public interface OptionalInclusion {
+		ClassTemplate include(@Nonnull ClassElementTemplate...templates);
 	}
 
 	public JavaRecipe toRecipe() {
 		JavaRecipeBuilder builder = new JavaRecipeBuilder();
 
-		builder.ensurePublicClass();
+		creator.accept(builder);
 
 		if (!superclass.equals(JAVA_LANG_OBJECT)) {
 			superclass.importStatement().ifPresent(builder::ensureImport);
-			builder.inPublicClass().ensureSuperclass(superclass.name());
+			classLocator.apply(builder).ensureSuperclass(superclass.name());
 		}
 
-		for (ClassReference iface : interfaces) {
+		for (TypeReference iface : interfaces) {
 			iface.importStatement().ifPresent(builder::ensureImport);
-			builder.inPublicClass().ensureImplements(iface.name());
+			classLocator.apply(builder).ensureImplements(iface.name());
 		}
 
-		templates.forEach(t -> t.applyTo(builder));
+		templates.forEach(t -> t.onClass(builder, classLocator.apply(builder)));
 
 		return builder.build();
 	}

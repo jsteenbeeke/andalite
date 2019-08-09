@@ -126,7 +126,7 @@ public final class AnalyzedMethod extends AccessModifiable<AnalyzedMethod, Analy
 		return statements;
 	}
 
-	void addStatement(AnalyzedStatement statement) {
+	void addStatement(AnalyzedStatement<?,?> statement) {
 		this.statements.add(statement);
 	}
 

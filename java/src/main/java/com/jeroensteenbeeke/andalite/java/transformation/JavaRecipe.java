@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -36,7 +36,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 
 public class JavaRecipe {
 	private static final Logger logger = LoggerFactory
-			.getLogger(JavaRecipe.class);
+		.getLogger(JavaRecipe.class);
 
 	private final List<JavaRecipeStep<?>> steps;
 
@@ -51,26 +51,26 @@ public class JavaRecipe {
 
 	public TypedResult<AnalyzedSourceFile> applyTo(File file) {
 		logger.debug("Applying transformation ({} steps) to {}", steps.size(),
-				file.getName());
+					 file.getName());
 
 		JavaRecipeStep<?> prev = null;
 
 		for (JavaRecipeStep<?> step : steps) {
 
 			TypedResult<AnalyzedSourceFile> result = new ClassAnalyzer(
-					file).analyze();
+				file).analyze();
 
 			if (!result.isOk()) {
 				logger.error("ERROR, could not read file: {}",
-						result.getMessage());
+							 result.getMessage());
 				if (prev != null) {
 					logger.error("Previous action: {}", prev.toString());
 				}
 
 				return TypedResult.fail(
-						"Navigation: %s\nOperation: %s\nParse result: %s",
-						step.navigationToString(), step.operationToString(),
-						result.getMessage());
+					"Navigation: %s\nOperation: %s\nParse result: %s",
+					step.navigationToString(), step.operationToString(),
+					result.getMessage());
 
 			}
 
@@ -78,7 +78,7 @@ public class JavaRecipe {
 
 			if (!stepResult.isOk()) {
 				logger.error("ERROR: {} {}", result.getMessage(),
-						step.toString());
+							 step.toString());
 				return TypedResult.fail("Navigation: %s\nOperation: %s\nTransformation result: %s",
 										step.navigationToString(),
 										step.operationToString(),
@@ -101,9 +101,9 @@ public class JavaRecipe {
 			if (!result.isOk()) {
 				logger.error("ERROR: transformation rendered file unparseable");
 				return TypedResult.fail(
-						"Navigation: %s\nOperation: %s\nParse result: %s",
-						step.navigationToString(), step.operationToString(),
-						result.getMessage());
+					"Navigation: %s\nOperation: %s\nParse result: %s",
+					step.navigationToString(), step.operationToString(),
+					result.getMessage());
 			}
 
 			ActionResult verify = step.verify(result.getObject());
@@ -116,13 +116,15 @@ public class JavaRecipe {
 										verify.getMessage());
 			}
 
-			CharSource source = com.google.common.io.Files.asCharSource(file, StandardCharsets.UTF_8);
-			CharSink sink = com.google.common.io.Files.asCharSink(file, StandardCharsets.UTF_8);
-
 			try {
-				new Formatter().formatSource(source, sink);
+				Formatter formatter = new Formatter();
+
+				Files.writeString(file.toPath(), formatter.formatSourceAndFixImports(Files.readString(file.toPath())));
+
 			} catch (FormatterException | IOException e) {
-				return TypedResult.fail("Could not format source after transform: %s, %s", e.getClass().getSimpleName(), e.getMessage());
+				return TypedResult.fail("Could not format source after transform: %s, %s", e
+					.getClass()
+					.getSimpleName(), e.getMessage());
 			}
 
 			prev = step;

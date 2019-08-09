@@ -1,9 +1,7 @@
 package com.jeroensteenbeeke.andalite.java.transformation.template;
 
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
-import com.jeroensteenbeeke.andalite.java.analyzer.GenerifiedName;
+import com.jeroensteenbeeke.andalite.java.analyzer.*;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.lux.TypedResult;
 import org.junit.Test;
@@ -114,7 +112,7 @@ public class TemplatesTest extends DummyAwareTest {
 
 	@Test
 	public void testProperties() throws IOException {
-		JavaRecipe recipe = aPublicClass().containing(
+		JavaRecipe recipe = aPublicClass().with(
 			property("foo").ofType("String").nonNull().with(
 				setterParameterAnnotation("javax.annotation.Nonnull"),
 				getterAnnotation("javax.annotation.Nonnull")
@@ -151,5 +149,77 @@ public class TemplatesTest extends DummyAwareTest {
 
 		assertThat(classes.size(), is(1));
 		AnalyzedClass analyzedClass = classes.get(0);
+	}
+
+	@Test
+	public void testConditionals() throws IOException {
+		JavaRecipe recipe = aPublicClass().with(
+			property("foo")
+				.ofType("String")
+				.nullable(true)
+				.ifMatched(PropertyTemplate::isNullable).include(
+				optionalGetterAnnotation("javax.annotation.Nonnull"),
+				setterParameterAnnotation("javax.annotation.Nullable"),
+				getterAnnotation("javax.annotation.CheckForNull")
+			).ifNotMatched(PropertyTemplate::isNullable).include(
+				setterParameterAnnotation("javax.annotation.Nonnull"),
+				getterAnnotation("javax.annotation.Nonnull")
+			),
+			property("bar")
+				.ofType("String")
+				.nullable(false)
+				.ifMatched(PropertyTemplate::isNullable).include(
+				setterParameterAnnotation("javax.annotation.Nullable"),
+				getterAnnotation("javax.annotation.CheckForNull")
+			).ifNotMatched(PropertyTemplate::isNullable).include(
+				setterParameterAnnotation("javax.annotation.Nonnull"),
+				getterAnnotation("javax.annotation.Nonnull")
+			)
+		).toRecipe();
+
+		File bare = getDummy(BaseDummies.Empty);
+
+		TypedResult<AnalyzedSourceFile> result = recipe.applyTo(bare);
+
+		assertThat(result, isOk());
+
+		AnalyzedSourceFile sourceFile = result.getObject();
+		List<AnalyzedClass> classes = sourceFile.getClasses();
+
+		assertThat(classes.size(), is(1));
+		AnalyzedClass analyzedClass = classes.get(0);
+
+		assertTrue(analyzedClass
+					   .getMethod()
+					   .withModifier(AccessModifier.PUBLIC)
+					   .withReturnType("String")
+					   .named("getFoo")
+					   .hasAnnotation("CheckForNull"));
+		assertTrue(analyzedClass
+					   .getMethod()
+					   .withModifier(AccessModifier.PUBLIC)
+					   .withReturnType("Optional<String>")
+					   .named("foo")
+					   .hasAnnotation("Nonnull"));
+		AnalyzedMethod setFoo = analyzedClass
+			.getMethod()
+			.withModifier(AccessModifier.PUBLIC)
+			.withReturnType("void")
+			.withParameterOfType("String")
+			.named("setFoo");
+		assertTrue(setFoo.getParameters().get(0).hasAnnotation("Nullable"));
+		assertTrue(analyzedClass
+					   .getMethod()
+					   .withModifier(AccessModifier.PUBLIC)
+					   .withReturnType("String")
+					   .named("getBar")
+					   .hasAnnotation("Nonnull"));
+
+		assertTrue(analyzedClass
+					   .getMethod()
+					   .withModifier(AccessModifier.PUBLIC)
+					   .withParameterOfType("String")
+					   .named("setBar")
+					   .getParameters().get(0).hasAnnotation("Nonnull"));
 	}
 }
