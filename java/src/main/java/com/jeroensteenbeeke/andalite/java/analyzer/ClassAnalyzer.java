@@ -1717,9 +1717,9 @@ public class ClassAnalyzer {
 		if (expr instanceof ObjectCreationExpr) {
 			ObjectCreationExpr objectCreationExpr = (ObjectCreationExpr) expr;
 
+			ClassOrInterfaceType objectType = objectCreationExpr.getType();
 			return analyzeClassOrInterface(
-				objectCreationExpr.getType()).map(type -> {
-
+				objectType).map(type -> {
 
 				ObjectCreationExpression creationExpression = new ObjectCreationExpression(
 					Locations.from(objectCreationExpr, indexes), type);
@@ -1735,7 +1735,10 @@ public class ClassAnalyzer {
 							analyzerContext));
 					}
 				}
-				objectCreationExpr.getTypeArguments().ifPresent(typeArgs -> {
+
+				creationExpression.setDiamond(objectType.isUsingDiamondOperator());
+
+				objectType.getTypeArguments().ifPresent(typeArgs -> {
 					for (Type t : typeArgs) {
 						creationExpression.addTypeArgument(analyzeType(t));
 					}

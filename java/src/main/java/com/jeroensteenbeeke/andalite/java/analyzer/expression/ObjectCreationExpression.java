@@ -39,12 +39,18 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 
 	private AnalyzedClass declaredAnonymousClass;
 
+	private boolean diamond = false;
+
 	public ObjectCreationExpression(@Nonnull Location location,
 			@Nonnull ClassOrInterface type) {
 		super(location);
 		this.type = type;
 		this.arguments = Lists.newArrayList();
 		this.typeArguments = Lists.newArrayList();
+	}
+
+	public void setDiamond(boolean diamond) {
+		this.diamond = diamond;
 	}
 
 	@CheckForNull
@@ -119,7 +125,7 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 			java.append(".");
 		}
 		java.append(type.toJavaString());
-		if (!typeArguments.isEmpty()) {
+		if (diamond || !typeArguments.isEmpty()) {
 			java.append("<");
 			Joiner.on(",").appendTo(
 					java,
