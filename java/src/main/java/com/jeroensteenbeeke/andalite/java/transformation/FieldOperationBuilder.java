@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
+import com.jeroensteenbeeke.andalite.java.analyzer.ContainingDenomination;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.FieldNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IFieldOperation;
@@ -27,8 +28,8 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureF
 public class FieldOperationBuilder
 		extends AbstractOperationBuilder<AnalyzedField, IFieldOperation> {
 	FieldOperationBuilder(IStepCollector collector,
-			IJavaNavigation<AnalyzedClass> parentNav, String fieldName) {
-		super(collector, new FieldNavigation(parentNav, fieldName));
+			IJavaNavigation<? extends ContainingDenomination<?,?>> parentNav, String fieldName) {
+		super(collector, new FieldNavigation<>(parentNav, fieldName));
 	}
 
 	@Nonnull

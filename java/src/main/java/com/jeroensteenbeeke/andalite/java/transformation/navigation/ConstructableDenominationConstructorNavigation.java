@@ -14,29 +14,29 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
+import com.jeroensteenbeeke.andalite.java.analyzer.ConstructableDenomination;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
-public class ClassConstructorNavigation extends
-		ChainedNavigation<AnalyzedClass, AnalyzedConstructor> {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+
+public class ConstructableDenominationConstructorNavigation<T extends ConstructableDenomination<T,?>> extends
+		ChainedNavigation<T, AnalyzedConstructor> {
 	private final AccessModifier modifier;
 
 	private final List<ParameterDescriptor> descriptors;
 
-	public ClassConstructorNavigation(
-			@Nonnull IJavaNavigation<AnalyzedClass> classNavigation,
+	public ConstructableDenominationConstructorNavigation(
+			@Nonnull IJavaNavigation<T> denominationNavigation,
 			@Nullable AccessModifier modifier,
 			@Nonnull List<ParameterDescriptor> descriptors) {
-		super(classNavigation);
+		super(denominationNavigation);
 		this.modifier = modifier;
 		this.descriptors = descriptors;
 	}
@@ -48,7 +48,7 @@ public class ClassConstructorNavigation extends
 	}
 
 	@Override
-	public AnalyzedConstructor navigate(AnalyzedClass chainedTarget)
+	public AnalyzedConstructor navigate(T chainedTarget)
 			throws NavigationException {
 		for (AnalyzedConstructor analyzedConstructor : chainedTarget
 				.getConstructors()) {

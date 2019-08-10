@@ -24,6 +24,14 @@ public class Templates {
 		return new InterfaceTemplate(ImmutableList.of(), ImmutableList.of());
 	}
 
+	public static EnumTemplate aPublicEnum() {
+		return new EnumTemplate(ImmutableList.of(), ImmutableList.of());
+	}
+
+	public static EnumConstantTemplate enumConstant(@Nonnull String name) {
+		return new EnumConstantTemplate(name);
+	}
+
 	@Nonnull
 	public static ClassAnnotation classAnnotation(@Nonnull String type) {
 		return new ClassAnnotation(TypeReference.of(type), ImmutableList.of());

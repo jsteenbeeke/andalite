@@ -18,22 +18,25 @@ import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.expr.SimpleName;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.jeroensteenbeeke.andalite.core.*;
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
+import com.jeroensteenbeeke.andalite.core.IOutputCallback;
+import com.jeroensteenbeeke.andalite.core.Location;
+import com.jeroensteenbeeke.andalite.core.Transformation;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
-public class AnalyzedEnum extends ConstructableDenomination<AnalyzedEnum, AnalyzedEnum.EnumInsertionPoint> {
+public class AnalyzedEnum extends
+	ConstructableDenomination<AnalyzedEnum, AnalyzedEnum.EnumInsertionPoint> {
 	private final List<AnalyzedEnumConstant> constants;
 
 	private Location separatorLocation;
 
-	public AnalyzedEnum(@Nonnull AnalyzedSourceFile sourceFile, @Nonnull Location location,
-						@Nonnull List<Modifier.Keyword> modifiers,
-						@Nonnull String packageName,
-						@Nonnull LocatedName<SimpleName> name) {
+	public AnalyzedEnum(@Nonnull AnalyzedSourceFile sourceFile,
+		@Nonnull Location location, @Nonnull List<Modifier.Keyword> modifiers,
+		@Nonnull String packageName, @Nonnull LocatedName<SimpleName> name) {
 		super(sourceFile, location, modifiers, packageName, name);
 		this.constants = Lists.newArrayList();
 	}
@@ -96,9 +99,12 @@ public class AnalyzedEnum extends ConstructableDenomination<AnalyzedEnum, Analyz
 
 	@Nonnull
 	@Override
-	public Transformation insertAt(@Nonnull EnumInsertionPoint insertionPoint, @Nonnull String replacement) {
-		if (getSeparatorLocation() == null && insertionPoint.isAfterSeparator()) {
-			return super.insertAt(EnumInsertionPoint.AFTER_LAST_CONSTANT, "; "+ replacement);
+	public Transformation insertAt(@Nonnull EnumInsertionPoint insertionPoint,
+		@Nonnull String replacement) {
+		if (getSeparatorLocation() == null && insertionPoint
+			.isAfterSeparator()) {
+			return super.insertAt(EnumInsertionPoint.AFTER_LAST_CONSTANT,
+				"; " + replacement);
 		}
 
 		return super.insertAt(insertionPoint, replacement);
@@ -115,13 +121,24 @@ public class AnalyzedEnum extends ConstructableDenomination<AnalyzedEnum, Analyz
 			public int position(AnalyzedEnum container) {
 				return container.getLocation().getStart();
 			}
-		},
-		BEFORE_FIRST_CONSTANT {
+		}, AFTER_ENUM_NAME {
 			@Override
 			public int position(AnalyzedEnum container) {
-				return container.getBodyLocation()
-					.map(Location::getStart)
-					.orElseThrow(() -> new IllegalStateException("Enum without body location"));
+				return container.getNameLocation().getEnd() + 1;
+			}
+		}, AFTER_LAST_INTERFACE {
+			@Override
+			public int position(AnalyzedEnum container) {
+				return container.getLastImplementsLocation()
+					.map(Location::getEnd).map(e -> e + 1)
+					.orElseGet(() -> AFTER_ENUM_NAME.position(container));
+			}
+		}, BEFORE_FIRST_CONSTANT {
+			@Override
+			public int position(AnalyzedEnum container) {
+				return container.getBodyLocation().map(Location::getStart)
+					.orElseThrow(() -> new IllegalStateException(
+						"Enum without body location"));
 			}
 		}, AFTER_LAST_CONSTANT {
 			@Override
@@ -134,9 +151,8 @@ public class AnalyzedEnum extends ConstructableDenomination<AnalyzedEnum, Analyz
 			@Override
 			public int position(AnalyzedEnum container) {
 				return Optional.ofNullable(container.getSeparatorLocation())
-									  .map(Location::getEnd)
-									  .map(e -> e+1)
-									  .orElseGet(() -> END_OF_IMPLEMENTATION.position(container));
+					.map(Location::getEnd).map(e -> e + 1)
+					.orElseGet(() -> END_OF_IMPLEMENTATION.position(container));
 			}
 
 			@Override
@@ -146,10 +162,10 @@ public class AnalyzedEnum extends ConstructableDenomination<AnalyzedEnum, Analyz
 		}, END_OF_IMPLEMENTATION {
 			@Override
 			public int position(AnalyzedEnum container) {
-				return container.getBodyLocation()
-					.map(Location::getEnd)
-					.map(e -> e-1)
-					.orElseThrow(() -> new IllegalStateException("Enum without body location"));
+				return container.getBodyLocation().map(Location::getEnd)
+					.map(e -> e - 1).orElseThrow(
+						() -> new IllegalStateException(
+							"Enum without body location"));
 			}
 
 			@Override

@@ -7,7 +7,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.*;
 
 import javax.annotation.Nonnull;
 
-public class MethodTemplate implements ClassElementTemplate, InterfaceElementTemplate {
+public class MethodTemplate implements ClassElementTemplate, InterfaceElementTemplate, EnumElementTemplate, EnumConstantElementTemplate {
 	private final TypeReference type;
 
 	private final String name;
@@ -98,6 +98,54 @@ public class MethodTemplate implements ClassElementTemplate, InterfaceElementTem
 		InterfaceMethodLocator interfaceMethodLocator = interfaceScopeOperationBuilder.forMethod()
 																					  .withReturnType(type.name())
 																					  .withModifier(accessModifier);
+
+		ensureParametersAndRunTemplates(builder, interfaceMethodLocator);
+	}
+
+	@Override
+	public void onEnumConstant(JavaRecipeBuilder builder,
+		EnumConstantScopeOperationBuilder enumConstantBuilder) {
+		type.importStatement().ifPresent(builder::ensureImport);
+
+		EnsureEnumConstantMethodBuilder methodBuilder = enumConstantBuilder
+			.ensureMethod()
+			.withReturnType(type.name())
+			.withModifier(accessModifier);
+
+		for (ParameterTemplate parameter : parameters) {
+			parameter.getType().importStatement().ifPresent(builder::ensureImport);
+			methodBuilder = methodBuilder.withParameter(parameter.getName()).ofType(parameter.getType().name());
+		}
+
+		methodBuilder.named(name);
+
+		EnumConstantMethodLocator interfaceMethodLocator = enumConstantBuilder.forMethod()
+			.withReturnType(type.name())
+			.withModifier(accessModifier);
+
+		ensureParametersAndRunTemplates(builder, interfaceMethodLocator);
+	}
+
+	@Override
+	public void onEnum(JavaRecipeBuilder builder,
+		EnumScopeOperationBuilder enumBuilder) {
+		type.importStatement().ifPresent(builder::ensureImport);
+
+		EnsureEnumMethodBuilder methodBuilder = enumBuilder
+			.ensureMethod()
+			.withReturnType(type.name())
+			.withModifier(accessModifier);
+
+		for (ParameterTemplate parameter : parameters) {
+			parameter.getType().importStatement().ifPresent(builder::ensureImport);
+			methodBuilder = methodBuilder.withParameter(parameter.getName()).ofType(parameter.getType().name());
+		}
+
+		methodBuilder.named(name);
+
+		EnumMethodLocator interfaceMethodLocator = enumBuilder.forMethod()
+			.withReturnType(type.name())
+			.withModifier(accessModifier);
 
 		ensureParametersAndRunTemplates(builder, interfaceMethodLocator);
 	}

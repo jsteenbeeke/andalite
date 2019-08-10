@@ -14,24 +14,24 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import com.jeroensteenbeeke.lux.ActionResult;
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
+import com.jeroensteenbeeke.andalite.java.analyzer.ContainingDenomination;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
+import com.jeroensteenbeeke.lux.ActionResult;
 
-public class EnsureField implements IClassOperation {
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.Optional;
+
+public abstract class EnsureField<T extends ContainingDenomination<T,I>,I extends Enum<I> & IInsertionPoint<T>,E extends EnsureField<T,I,E>> implements IJavaOperation<T> {
 	private final String name;
 
 	private final String type;
@@ -52,25 +52,28 @@ public class EnsureField implements IClassOperation {
 		this.modifier = modifier;
 	}
 
-	public EnsureField shouldBeStatic() {
+	@SuppressWarnings("unchecked")
+	public E shouldBeStatic() {
 		this.staticField = true;
-		return this;
+		return (E) this;
 	}
 
-	public EnsureField shouldBeFinal() {
+	@SuppressWarnings("unchecked")
+	public E shouldBeFinal() {
 		this.finalField = true;
-		return this;
+		return (E) this;
 	}
 
-	public EnsureField shouldBeVolatile() {
+	@SuppressWarnings("unchecked")
+	public E shouldBeVolatile() {
 		this.volatileField = true;
-		return this;
+		return (E) this;
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedClass input)
+	public List<Transformation> perform(@Nonnull T input)
 		throws OperationException {
-		AnalyzedField field = input.getField(name);
+		AnalyzedField field = getField(input, name);
 
 		if (field != null) {
 
@@ -138,16 +141,24 @@ public class EnsureField implements IClassOperation {
 		ImmutableList.Builder<Transformation> transforms = ImmutableList
 			.builder();
 
-		if (input.getBodyLocation().map(Location::getLength).orElse(0) == 0) {
+		if (getBodyLocation(input).map(Location::getLength).orElse(0) == 0) {
 			extras.add(0, "\n\n");
 		}
 
 
-		transforms.add(input.insertAt(AnalyzedClass.ClassInsertionPoint.AFTER_LAST_FIELD, String.format(
+		transforms.add(input.insertAt(getLastFieldLocation(), String.format(
 			"\n\t%s%s%s %s;\n\n", modifier.getOutput(), String.join("", extras), type, name)));
 
 		return transforms.build();
 	}
+
+	protected abstract I getLastFieldLocation();
+
+	public Optional<Location> getBodyLocation(T input) {
+		return Optional.empty();
+	}
+
+	protected abstract AnalyzedField getField(T input, String name);
 
 	@Override
 	public String getDescription() {
@@ -156,8 +167,8 @@ public class EnsureField implements IClassOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedClass input) {
-		AnalyzedField field = input.getField(name);
+	public ActionResult verify(@Nonnull T input) {
+		AnalyzedField field = getField(input, name);
 		if (field != null) {
 
 			if (!field.getType().toJavaString().equals(type)) {

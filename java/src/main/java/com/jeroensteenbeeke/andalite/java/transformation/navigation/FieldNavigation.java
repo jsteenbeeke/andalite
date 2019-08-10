@@ -20,12 +20,13 @@ import javax.annotation.Nonnull;
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
+import com.jeroensteenbeeke.andalite.java.analyzer.ContainingDenomination;
 
-public class FieldNavigation extends
-		ChainedNavigation<AnalyzedClass, AnalyzedField> {
+public class FieldNavigation<T extends ContainingDenomination<?,?>> extends
+		ChainedNavigation<T, AnalyzedField> {
 	private final String fieldName;
 
-	public FieldNavigation(@Nonnull IJavaNavigation<AnalyzedClass> chained,
+	public FieldNavigation(@Nonnull IJavaNavigation<T> chained,
 			@Nonnull String fieldName) {
 		super(chained);
 		this.fieldName = fieldName;
@@ -33,7 +34,7 @@ public class FieldNavigation extends
 
 	@Override
 	@Nonnull
-	public AnalyzedField navigate(@Nonnull AnalyzedClass chainedTarget)
+	public AnalyzedField navigate(@Nonnull T chainedTarget)
 			throws NavigationException {
 		AnalyzedField field = chainedTarget.getField(fieldName);
 
@@ -42,8 +43,8 @@ public class FieldNavigation extends
 		}
 
 		throw new NavigationException(String.format(
-				"Class %s does not have field %s",
-				chainedTarget.getClassName(), fieldName));
+				"Denomination %s does not have field %s",
+				chainedTarget.getDenominationName(), fieldName));
 	}
 
 	@Nonnull

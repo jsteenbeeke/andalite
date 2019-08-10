@@ -1,23 +1,23 @@
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.google.common.collect.ImmutableList;
-import com.jeroensteenbeeke.lux.ActionResult;
-import com.jeroensteenbeeke.andalite.core.Location;
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
+import com.jeroensteenbeeke.andalite.java.analyzer.ConstructableDenomination;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
+import com.jeroensteenbeeke.lux.ActionResult;
 
 import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.stream.Collectors;
 
-public class EnsureConstructorOperation implements IClassOperation {
+public abstract class EnsureConstructorOperation<T extends ConstructableDenomination<T,I>,I extends Enum<I> & IInsertionPoint<T>> implements IJavaOperation<T> {
 	private final AccessModifier modifier;
 
 	private final List<ParameterDescriptor> parameters;
@@ -32,7 +32,7 @@ public class EnsureConstructorOperation implements IClassOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedClass input)
+	public List<Transformation> perform(@Nonnull T input)
 			throws OperationException {
 
 		for (AnalyzedConstructor ctor : input.getConstructors()) {
@@ -54,14 +54,16 @@ public class EnsureConstructorOperation implements IClassOperation {
 		code.append("\n\n\t");
 		code.append(modifier.getOutput());
 		code.append(" ");
-		code.append(input.getClassName());
+		code.append(input.getDenominationName());
 		code.append("(");
 		code.append(createParameterList());
 		code.append(") {\n");
 		code.append("\t}\n\n");
 
-		return ImmutableList.of(input.insertAt(AnalyzedClass.ClassInsertionPoint.AFTER_LAST_FIELD, code.toString()));
+		return ImmutableList.of(input.insertAt(getInsertionPoint(), code.toString()));
 	}
+
+	public abstract I getInsertionPoint();
 
 	public EnsureConstructorOperation withAnySignature() {
 		this.checkSignature = false;
@@ -82,7 +84,7 @@ public class EnsureConstructorOperation implements IClassOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedClass input) {
+	public ActionResult verify(@Nonnull T input) {
 
 		for (AnalyzedConstructor ctor : input.getConstructors()) {
 			if (AnalyzeUtil.matchesSignature(ctor, parameters)) {

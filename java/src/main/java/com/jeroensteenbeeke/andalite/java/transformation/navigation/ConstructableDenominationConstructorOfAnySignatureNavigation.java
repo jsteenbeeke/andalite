@@ -14,20 +14,22 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
+import com.jeroensteenbeeke.andalite.java.analyzer.ConstructableDenomination;
 
-public class ClassConstructorOfAnySignatureNavigation extends
-		ChainedNavigation<AnalyzedClass, AnalyzedConstructor> {
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public class ConstructableDenominationConstructorOfAnySignatureNavigation<T extends ConstructableDenomination<T,?>>
+	extends
+		ChainedNavigation<T, AnalyzedConstructor> {
 	private final AccessModifier modifier;
 
-	public ClassConstructorOfAnySignatureNavigation(
-			@Nonnull IJavaNavigation<AnalyzedClass> classNavigation,
+	public ConstructableDenominationConstructorOfAnySignatureNavigation(
+			@Nonnull IJavaNavigation<T> classNavigation,
 			@Nullable AccessModifier modifier) {
 		super(classNavigation);
 		this.modifier = modifier;
@@ -40,7 +42,7 @@ public class ClassConstructorOfAnySignatureNavigation extends
 	}
 
 	@Override
-	public AnalyzedConstructor navigate(AnalyzedClass chainedTarget)
+	public AnalyzedConstructor navigate(T chainedTarget)
 			throws NavigationException {
 		for (AnalyzedConstructor analyzedConstructor : chainedTarget
 				.getConstructors()) {

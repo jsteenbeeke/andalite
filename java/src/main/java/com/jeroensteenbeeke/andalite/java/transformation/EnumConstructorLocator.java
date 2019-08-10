@@ -15,21 +15,21 @@
 package com.jeroensteenbeeke.andalite.java.transformation;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedEnum;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ConstructableDenominationConstructorNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ConstructableDenominationConstructorOfAnySignatureNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 
-public class ClassConstructorLocator
+public class EnumConstructorLocator
 		extends
-		AbstractParameterizedBuilder<ConstructorOperationBuilder, ClassConstructorLocator> {
+		AbstractParameterizedBuilder<EnumScopeOperationBuilder, EnumConstructorLocator> {
 
 	private final IStepCollector collector;
 
-	private final IJavaNavigation<AnalyzedClass> parentNavigation;
+	private final IJavaNavigation<AnalyzedEnum> parentNavigation;
 
-	ClassConstructorLocator(IStepCollector collector,
-			IJavaNavigation<AnalyzedClass> parentNavigation) {
+	EnumConstructorLocator(IStepCollector collector,
+			IJavaNavigation<AnalyzedEnum> parentNavigation) {
 		super(AccessModifier.PUBLIC);
 		this.collector = collector;
 		this.parentNavigation = parentNavigation;
