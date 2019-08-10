@@ -59,6 +59,10 @@ public class Templates {
 		return new Initializer(expression);
 	}
 
+	public static ConstructorTemplate constructor() {
+		return new ConstructorTemplate();
+	}
+
 	public static MethodOfType method(@Nonnull String name) {
 		return type -> new MethodTemplate(TypeReference.of(type), name);
 	}
@@ -89,6 +93,10 @@ public class Templates {
 
 	public static Returns returns(@Nonnull String expression) {
 		return new Returns(expression);
+	}
+
+	public static Statement statement(@Nonnull String statement) {
+		return new Statement(statement);
 	}
 
 	public static FieldAnnotation fieldAnnotation(@Nonnull String type) {

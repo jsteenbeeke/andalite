@@ -22,6 +22,7 @@ public interface TypeReference {
 		switch (representation) {
 			case "String":
 				return ClassReference.of("java.lang.String");
+			case "void":
 			case "boolean":
 			case "byte":
 			case "short":
