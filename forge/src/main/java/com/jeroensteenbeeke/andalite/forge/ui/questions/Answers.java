@@ -45,8 +45,8 @@ public class Answers {
 		return getAnswer(Boolean.class, key);
 	}
 
-	public TypedResult<AnalyzedSourceFile> getSource(@Nonnull String key) {
-		return new ClassAnalyzer(getFile(key)).analyze();
+	public AnalyzedSourceFile getSource(@Nonnull String key) {
+		return getAnswer(AnalyzedSourceFile.class, key);
 	}
 
 	private boolean hasAnswer(@Nonnull Class<?> type, @Nonnull String key) {
