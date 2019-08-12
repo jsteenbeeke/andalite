@@ -96,7 +96,7 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 
 		int selection = response.getObject() - 1;
 
-		if (recipeList.size() >= selection) {
+		if (selection >= recipeList.size()) {
 			return TypedResult.ok(ForgeRecipe.ExitRecipe.instance());
 		}
 

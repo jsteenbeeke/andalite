@@ -70,6 +70,7 @@ public class ForgeMojo extends RecipeMojo {
 		ForgeRecipe recipe = selection.getObject();
 
 		if (recipe instanceof ForgeRecipe.ExitRecipe) {
+			getLog().info("Exit selected");
 			return;
 		}
 
