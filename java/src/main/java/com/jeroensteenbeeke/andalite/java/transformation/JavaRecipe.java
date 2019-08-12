@@ -89,15 +89,6 @@ public class JavaRecipe {
 				logger.debug("OK: {}", step.toString());
 			}
 
-			try {
-				System.out.printf("// OK: %s", step.toString()).println();
-
-				Files.lines(file.toPath()).forEach(System.out::println);
-			} catch (IOException e) {
-				return TypedResult.fail(e.getMessage());
-			}
-
-
 			result = new ClassAnalyzer(file).analyze();
 
 			if (!result.isOk()) {

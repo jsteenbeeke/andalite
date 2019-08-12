@@ -477,7 +477,7 @@ public class AnalyzerTest extends DummyAwareTest {
 		StringBuilder builder = new StringBuilder();
 		result.getObject().output(new StringBuilderCallback(builder));
 		assertTrue(builder.length() > 0);
-		result.getObject().output(new PrintStreamCallback(System.out));
+//		result.getObject().output(new PrintStreamCallback(System.out));
 
 		return result;
 	}
