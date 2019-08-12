@@ -156,6 +156,10 @@ public final class AnalyzedSourceFile extends Locatable implements IInsertionPoi
 		return originalFile;
 	}
 
+	public String getFullyQualifiedName() {
+		return packageName != null && !packageName.isBlank() ? packageName + "." + compilationUnitName : compilationUnitName;
+	}
+
 	public enum SourceFileInsertionPoint implements IInsertionPoint<AnalyzedSourceFile> {
 		AFTER_PACKAGE_DECLARATION {
 			@Override

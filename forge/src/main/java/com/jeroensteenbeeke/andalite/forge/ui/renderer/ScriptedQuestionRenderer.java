@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,10 +25,13 @@ import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.AbstractQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.templates.QuestionTemplate;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.lux.TypedResult;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ScriptedQuestionRenderer implements QuestionRenderer {
@@ -37,14 +40,14 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 	private final FeedbackHandler feedbackHandler;
 
 	private ScriptedQuestionRenderer(List<Object> scriptedAnswers,
-			FeedbackHandler feedbackHandler) {
+									 FeedbackHandler feedbackHandler) {
 		this.scriptedAnswers = scriptedAnswers;
 		this.feedbackHandler = feedbackHandler;
 	}
 
 	@Override
 	public TypedResult<ForgeRecipe> renderRecipeSelection(
-			@Nonnull List<ForgeRecipe> recipeList) {
+		@Nonnull List<ForgeRecipe> recipeList) {
 		Object answer = scriptedAnswers.remove(0);
 
 		if (answer instanceof Integer) {
@@ -56,40 +59,38 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 
 	@Override
 	public TypedResult<Answers> renderQuestion(
-			@Nonnull Answers answers,
-			@Nonnull Question question) {
-			if (scriptedAnswers.isEmpty()) {
-				return TypedResult.fail(
-						"Scenario incorrect, no answers left but questions remaining");
+		@Nonnull Answers answers,
+		@Nonnull Question question) {
+		if (scriptedAnswers.isEmpty()) {
+			return TypedResult.fail(
+				"Scenario incorrect, no answers left but questions remaining");
+		}
+		Object answer = scriptedAnswers.remove(0);
+		feedbackHandler.info("Question: %s", question.getQuestion());
+		if (question instanceof MultipleChoiceQuestion) {
+			MultipleChoiceQuestion mcq = (MultipleChoiceQuestion) question;
+
+			mcq.getChoices().forEach(
+				c -> feedbackHandler.info("\t\t - %s", c));
+		}
+
+		feedbackHandler.info("\tAnswer: %s", answer.toString());
+
+		if (question instanceof AbstractQuestion) {
+			@SuppressWarnings("unchecked")
+			AbstractQuestion<Object> aq = (AbstractQuestion<Object>) question;
+			if (!aq.isValidAnswer(answer)) {
+				return TypedResult.fail("%s is not a valid answer", answer);
 			}
-			Object answer = scriptedAnswers.remove(0);
-			feedbackHandler.info("Question: %s?", question.getQuestion());
-			if (question instanceof MultipleChoiceQuestion) {
-				MultipleChoiceQuestion mcq = (MultipleChoiceQuestion) question;
+		}
 
-				mcq.getChoices().forEach(
-						c -> feedbackHandler.info("\t\t - %s", c));
-			}
-
-			feedbackHandler.info("\tAnswer: %s", answer.toString());
-
-			if (question instanceof AbstractQuestion) {
-				@SuppressWarnings("unchecked")
-				AbstractQuestion<Object> aq = (AbstractQuestion<Object>) question;
-				if (!aq.isValidAnswer(answer)) {
-					return TypedResult.fail("%s is not a valid answer", answer);
-				}
-			}
-
-			return TypedResult.ok(answers.plus(question.getKey(), answer));
+		return TypedResult.ok(answers.plus(question.getKey(), answer));
 	}
 
 	public static Builder forAnswers(Object first, Object... rest) {
 		List<Object> answers = Lists.newLinkedList();
 		answers.add(first);
-		for (Object object : rest) {
-			answers.add(object);
-		}
+	answers.addAll(Arrays.asList(rest));
 
 		return new Builder(answers);
 	}
@@ -115,19 +116,20 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 		Answers answers = Answers.zero();
 		Action action;
 		try {
-			List<Question> questions = recipe.getQuestions(answers);
+			List<QuestionTemplate<?, ?>> questions = new ArrayList<>();
+			questions.add(recipe.getInitialQuestion());
 
 			while (!questions.isEmpty()) {
-				for (Question question : questions) {
-					TypedResult<Answers> result = renderQuestion(answers, question);
-					if (!result.isOk()) {
-						return result.asSimpleResult();
-					} else {
-						answers = result.getObject();
-					}
+				QuestionTemplate<?, ?> next = questions.remove(0);
+
+				TypedResult<Answers> result = renderQuestion(answers, next.toQuestion(answers));
+				if (!result.isOk()) {
+					return result.asSimpleResult();
+				} else {
+					answers = result.getObject();
 				}
 
-				questions = recipe.getQuestions(answers);
+				questions.addAll(next.getFollowUpQuestions(answers));
 			}
 
 			action = recipe.createAction(answers);

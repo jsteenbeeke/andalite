@@ -43,6 +43,7 @@ public abstract class AbstractForgeRecipe implements ForgeRecipe {
 		this.identifier = name;
 	}
 
+	@Nonnull
 	@Override
 	public String getName() {
 		return identifier;

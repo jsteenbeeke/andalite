@@ -6,6 +6,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.*;
 import com.jeroensteenbeeke.andalite.forge.ui.renderer.QuestionRenderer;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.lux.TypedResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 	private static final Logger log = LoggerFactory
-			.getLogger(MavenQuestionRenderer.class);
+		.getLogger(MavenQuestionRenderer.class);
 
 	private final List<String> input;
 
@@ -31,16 +32,16 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 
 	@Override
 	public TypedResult<ForgeRecipe> renderRecipeSelection(
-			@Nonnull
-					List<ForgeRecipe> recipeList) {
+		@Nonnull
+			List<ForgeRecipe> recipeList) {
 		log.info("Select recipe:");
 		for (int i = 0; i < recipeList.size(); i++) {
-			log.info("\t{} - {}", (i+1), recipeList.get(i).getName());
+			log.info("\t{} - {}", (i + 1), recipeList.get(i).getName());
 		}
 		try {
 			int index = Integer.parseInt(input.remove(0));
 			log.info("-> {}", index);
-			return TypedResult.ok(recipeList.get(index-1));
+			return TypedResult.ok(recipeList.get(index - 1));
 		} catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
 			return TypedResult.fail(e.getMessage());
 		}
@@ -48,8 +49,8 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 
 	@Override
 	public TypedResult<Answers> renderQuestion(
-			@Nonnull Answers answers,
-			@Nonnull Question question) {
+		@Nonnull Answers answers,
+		@Nonnull Question question) {
 
 		String nextInput = input.remove(0);
 
@@ -73,14 +74,14 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 		if (question instanceof MultipleChoiceQuestion) {
 			MultipleChoiceQuestion mcQuestion = (MultipleChoiceQuestion) question;
 
-			log.info("\t{}", mcQuestion.getChoices().stream().collect(Collectors.joining(", ")));
+			log.info("\t{}", String.join(", ", mcQuestion.getChoices()));
 
 			try {
 				int choice = Integer.parseInt(nextInput);
 				if (choice < 1 || choice > mcQuestion.getChoices().size()) {
 					log.debug("Valid choices: 1 to {}", mcQuestion.getChoices().size());
 					return TypedResult.fail("Invalid input: "
-							+ choice);
+												+ choice);
 				}
 
 				String answer = mcQuestion.getChoices().get(choice - 1);
@@ -90,7 +91,7 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 				return TypedResult.ok(answers.plus(answerKey, answer));
 			} catch (NumberFormatException nfe) {
 				return TypedResult
-						.fail("Invalid input: " + nextInput);
+					.fail("Invalid input: " + nextInput);
 			}
 
 		}
@@ -104,7 +105,7 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 				if (choice < 1 || choice > fsQuestion.getChoices().size()) {
 					log.debug("Valid choices: 1 to {}", fsQuestion.getChoices().size());
 					return TypedResult.fail("Invalid input: "
-							+ choice);
+												+ choice);
 				}
 
 				File answer = fsQuestion.getChoices().get(choice - 1);
@@ -117,8 +118,35 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 			}
 		}
 
+		if (question instanceof SourceFileSelectQuestion) {
+			SourceFileSelectQuestion fsQuestion = (SourceFileSelectQuestion) question;
+
+			log.info("\t{}", fsQuestion
+				.getChoices()
+				.stream()
+				.map(AnalyzedSourceFile::getFullyQualifiedName)
+				.collect(Collectors.joining(", ")));
+
+			try {
+				int choice = Integer.parseInt(nextInput);
+				if (choice < 1 || choice > fsQuestion.getChoices().size()) {
+					log.debug("Valid choices: 1 to {}", fsQuestion.getChoices().size());
+					return TypedResult.fail("Invalid input: "
+												+ choice);
+				}
+
+				AnalyzedSourceFile answer = fsQuestion.getChoices().get(choice - 1);
+
+				log.info("-> {}", answer.getFullyQualifiedName());
+
+				return TypedResult.ok(answers.plus(answerKey, answer));
+			} catch (NumberFormatException nfe) {
+				return TypedResult.fail("Invalid input: " + nextInput);
+			}
+		}
+
 		return TypedResult.fail("Unknown question type: %s", question
-				.getClass().getName());
+			.getClass().getName());
 	}
 
 	@Override

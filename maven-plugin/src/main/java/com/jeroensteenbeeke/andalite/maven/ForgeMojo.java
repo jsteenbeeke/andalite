@@ -20,6 +20,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.templates.QuestionTemplate;
 import com.jeroensteenbeeke.andalite.forge.ui.renderer.QuestionRenderer;
 import com.jeroensteenbeeke.andalite.maven.ui.FileInputRenderer;
 import com.jeroensteenbeeke.andalite.maven.ui.MavenQuestionRenderer;
@@ -32,6 +33,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -44,7 +47,7 @@ public class ForgeMojo extends RecipeMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (recipes == null || recipes.length == 0) {
 			throw new MojoFailureException(
-					"No recipes defined for this project!");
+				"No recipes defined for this project!");
 		}
 
 		List<ForgeRecipe> recipeList = determineRecipes();
@@ -53,7 +56,7 @@ public class ForgeMojo extends RecipeMojo {
 		QuestionRenderer renderer;
 		try {
 			renderer = inputFile != null ? new FileInputRenderer(inputFile)
-					: new MavenQuestionRenderer();
+				: new MavenQuestionRenderer();
 		} catch (IOException e) {
 			throw new MojoFailureException("Could not read input file", e);
 		}
@@ -66,22 +69,27 @@ public class ForgeMojo extends RecipeMojo {
 
 		ForgeRecipe recipe = selection.getObject();
 
+		if (recipe instanceof ForgeRecipe.ExitRecipe) {
+			return;
+		}
+
 		Answers answers = Answers.zero();
 		Action action;
 		try {
-			List<Question> questions = recipe.getQuestions(answers);
+			List<QuestionTemplate<?, ?>> questions = new ArrayList<>();
+			questions.add(recipe.getInitialQuestion());
 
 			while (!questions.isEmpty()) {
-				for (Question question : questions) {
-					TypedResult<Answers> result = renderer.renderQuestion(answers, question);
-					if (!result.isOk()) {
-						throw new MojoFailureException(result.getMessage());
-					} else {
-						answers = result.getObject();
-					}
+				QuestionTemplate<?, ?> next = questions.remove(0);
+
+				TypedResult<Answers> result = renderer.renderQuestion(answers, next.toQuestion(answers));
+				if (!result.isOk()) {
+					throw new MojoFailureException(result.getMessage());
+				} else {
+					answers = result.getObject();
 				}
 
-				questions = recipe.getQuestions(answers);
+				questions.addAll(next.getFollowUpQuestions(answers));
 			}
 
 			action = recipe.createAction(answers);
@@ -94,7 +102,7 @@ public class ForgeMojo extends RecipeMojo {
 		if (action instanceof Failure) {
 			Failure failure = (Failure) action;
 			throw new MojoFailureException(
-					String.format("Forge Recipe returned failure: %s", failure.getReason()));
+				String.format("Forge Recipe returned failure: %s", failure.getReason()));
 		} else if (action instanceof PerformableAction) {
 			PerformableAction performableAction = (PerformableAction) action;
 			ActionResult result = performableAction.perform();
