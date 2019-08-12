@@ -25,6 +25,7 @@ import com.google.common.io.CharSource;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import com.google.googlejavaformat.java.ImportOrderer;
+import com.google.googlejavaformat.java.JavaFormatterOptions;
 import com.google.googlejavaformat.java.filer.FormattingFiler;
 import com.jeroensteenbeeke.lux.Result;
 import org.slf4j.Logger;
@@ -118,7 +119,7 @@ public class JavaRecipe {
 			}
 
 			try {
-				Formatter formatter = new Formatter();
+				Formatter formatter = new Formatter(JavaFormatterOptions.builder().style(JavaFormatterOptions.Style.AOSP).build());
 
 				Files.writeString(file.toPath(), ImportOrderer.reorderImports(formatter.formatSource(Files.readString(file.toPath()))));
 
