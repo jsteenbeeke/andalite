@@ -147,7 +147,10 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 					answers = result.getObject();
 				}
 
-				questions.addAll(next.getFollowUpQuestions(answers));
+				List<QuestionTemplate<?, ?>> followUp = next.getFollowUpQuestions(answers);
+				for (int i = followUp.size() - 1; i >= 0; i--) {
+					questions.add(0, followUp.get(i));
+				}
 			}
 
 			action = recipe.createAction(answers);
