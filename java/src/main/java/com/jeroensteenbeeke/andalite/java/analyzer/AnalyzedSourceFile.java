@@ -17,6 +17,7 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import java.io.File;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.annotation.CheckForNull;
@@ -194,5 +195,19 @@ public final class AnalyzedSourceFile extends Locatable implements IInsertionPoi
 					.orElseGet(() -> AFTER_IMPORTS.position(container));
 			}
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		AnalyzedSourceFile that = (AnalyzedSourceFile) o;
+		return originalFile.equals(that.originalFile);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), originalFile);
 	}
 }
