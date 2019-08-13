@@ -144,14 +144,14 @@ public class PropertyTemplate implements ClassElementTemplate {
 
 		inClass
 			.ensureMethod()
-			.withParameter("name")
+			.withParameter(name)
 			.ofType(type.name())
 			.withModifier(AccessModifier.PUBLIC)
 			.named(setter);
 
 		MethodOperationBuilder setterOperationBuilder = inClass
 			.forMethod()
-			.withParameter("name")
+			.withParameter(name)
 			.ofType(type.name())
 			.withModifier(AccessModifier.PUBLIC)
 			.named(setter);

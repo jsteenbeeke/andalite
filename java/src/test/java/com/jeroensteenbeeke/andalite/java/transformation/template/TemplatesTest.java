@@ -12,6 +12,7 @@ import java.util.List;
 
 import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
 import static com.jeroensteenbeeke.andalite.java.transformation.template.Templates.*;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
@@ -134,6 +135,24 @@ public class TemplatesTest extends DummyAwareTest {
 
 		assertThat(classes.size(), is(1));
 		AnalyzedClass analyzedClass = classes.get(0);
+
+		AnalyzedMethod setFoo = analyzedClass.getMethod().withParameterOfType("String").withReturnType("void").named("setFoo");
+		AnalyzedMethod setBar = analyzedClass.getMethod().withParameterOfType("int").withReturnType("void").named("setBar");
+		AnalyzedMethod setBaz = analyzedClass.getMethod().withParameterOfType("Date").withReturnType("void").named("setBaz");
+		AnalyzedMethod setUnits = analyzedClass.getMethod().withParameterOfType("List<Unit>").withReturnType("void").named("setUnits");
+
+		assertThat(setFoo, notNullValue());
+		assertThat(setBar, notNullValue());
+		assertThat(setBaz, notNullValue());
+		assertThat(setUnits, notNullValue());
+
+		assertThat(setFoo.getParameters().get(0).getName(), equalTo("foo"));
+		assertThat(setBar.getParameters().get(0).getName(), equalTo("bar"));
+		assertThat(setBaz.getParameters().get(0).getName(), equalTo("baz"));
+		assertThat(setUnits.getParameters().get(0).getName(), equalTo("units"));
+
+
+
 	}
 
 	@Test
