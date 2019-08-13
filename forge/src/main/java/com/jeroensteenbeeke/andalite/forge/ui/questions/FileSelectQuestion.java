@@ -28,6 +28,8 @@ public abstract class FileSelectQuestion extends AbstractQuestion<File> {
 
 	@Override
 	public boolean isValidAnswer(@Nullable File answer) {
+
+
 		return answer != null && getChoices().contains(answer);
 	}
 

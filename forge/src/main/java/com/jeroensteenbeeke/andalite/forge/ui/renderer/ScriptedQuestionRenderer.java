@@ -26,10 +26,13 @@ import com.jeroensteenbeeke.andalite.forge.ui.questions.AbstractQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.templates.QuestionTemplate;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.lux.TypedResult;
 
 import javax.annotation.Nonnull;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -80,7 +83,23 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 			@SuppressWarnings("unchecked")
 			AbstractQuestion<Object> aq = (AbstractQuestion<Object>) question;
 			if (!aq.isValidAnswer(answer)) {
-				return TypedResult.fail("%s is not a valid answer", answer);
+				if (answer instanceof File) {
+					TypedResult<AnalyzedSourceFile> file = new ClassAnalyzer((File) answer).analyze()
+						.filter(aq::isValidAnswer, String.format("%s is not a valid answer", answer));
+
+					if (!file.isOk()) {
+						return file.map(f -> answers);
+					}
+				} else if (answer instanceof AnalyzedSourceFile) {
+					AnalyzedSourceFile source = (AnalyzedSourceFile) answer;
+					if (!aq.isValidAnswer(source.getOriginalFile())) {
+						return TypedResult.fail("%s is not a valid answer", answer);
+					}
+				} else {
+					return TypedResult.fail("%s is not a valid answer", answer);
+
+				}
+
 			}
 		}
 
