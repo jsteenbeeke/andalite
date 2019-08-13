@@ -80,8 +80,7 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 		feedbackHandler.info("\tAnswer: %s", answer.toString());
 
 		if (question instanceof AbstractQuestion) {
-			@SuppressWarnings("unchecked")
-			AbstractQuestion<Object> aq = (AbstractQuestion<Object>) question;
+			AbstractQuestion aq = (AbstractQuestion) question;
 			if (!aq.isValidAnswer(answer)) {
 				if (answer instanceof File) {
 					TypedResult<AnalyzedSourceFile> file = new ClassAnalyzer((File) answer).analyze()

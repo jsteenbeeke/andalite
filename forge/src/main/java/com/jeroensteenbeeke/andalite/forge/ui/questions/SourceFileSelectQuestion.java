@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
-public abstract class SourceFileSelectQuestion extends AbstractQuestion<AnalyzedSourceFile> {
+public abstract class SourceFileSelectQuestion extends AbstractQuestion {
 
 	public SourceFileSelectQuestion(String key, String question) {
 		super(key, question);
@@ -29,7 +29,7 @@ public abstract class SourceFileSelectQuestion extends AbstractQuestion<Analyzed
 	public abstract List<AnalyzedSourceFile> getChoices();
 
 	@Override
-	public boolean isValidAnswer(@Nullable AnalyzedSourceFile answer) {
+	public boolean isValidAnswer(@Nullable Object answer) {
 		return answer != null && getChoices().contains(answer);
 	}
 

@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public abstract class QuestionTemplate<T extends QuestionTemplate<T, Q>, Q extends AbstractQuestion<?>> {
+public abstract class QuestionTemplate<T extends QuestionTemplate<T, Q>, Q extends AbstractQuestion> {
 	private final String key;
 
 	private final String question;
