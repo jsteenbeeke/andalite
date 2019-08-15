@@ -23,12 +23,10 @@ import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
-import com.jeroensteenbeeke.andalite.core.IOutputCallback;
-import com.jeroensteenbeeke.andalite.core.Locatable;
-import com.jeroensteenbeeke.andalite.core.Location;
+import com.jeroensteenbeeke.andalite.core.*;
 
-public abstract class Annotatable extends Locatable implements
-		IAnnotatable {
+public abstract class Annotatable<T extends Annotatable<T,I>, I extends Enum<I> & IInsertionPoint<T>> extends Locatable implements
+		IAnnotatable, IAnnotationAddable<T>, IInsertionPointProvider<T,I> {
 	private final Map<String, AnalyzedAnnotation> annotations;
 
 	protected Annotatable(Location location) {
@@ -50,8 +48,11 @@ public abstract class Annotatable extends Locatable implements
 		return annotations.get(type);
 	}
 
-	void addAnnotation(@Nonnull AnalyzedAnnotation annotation) {
+	@SuppressWarnings("unchecked")
+	@Override
+	public T addAnnotation(@Nonnull AnalyzedAnnotation annotation) {
 		this.annotations.put(annotation.getType(), annotation);
+		return (T) this;
 	}
 
 	void addAnnotations(@Nonnull Iterable<AnalyzedAnnotation> annots) {
@@ -77,4 +78,6 @@ public abstract class Annotatable extends Locatable implements
 	}
 
 	public abstract void onOutput(IOutputCallback callback);
+
+	public abstract I getAnnotationInsertPoint();
 }

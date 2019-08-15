@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,9 @@ import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 
-public class HasIfStatementOperation implements IBodyContainerOperation {
+import javax.annotation.Nonnull;
+
+public class HasIfStatementOperation<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> implements IBodyContainerOperation<T,I> {
 	private static final Logger logger = LoggerFactory
 			.getLogger(HasIfStatementOperation.class);
 
@@ -41,16 +44,14 @@ public class HasIfStatementOperation implements IBodyContainerOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(IBodyContainer input)
+	public List<Transformation> perform(@Nonnull T input)
 			throws OperationException {
 		if (input.isAbstract()) {
 			throw new OperationException(
 					"Cannot insert statement into abstract method!");
 		}
 
-		AnalyzedStatement last = null;
-
-		for (AnalyzedStatement analyzedStatement : input.getStatements()) {
+		for (AnalyzedStatement<?,?> analyzedStatement : input.getStatements()) {
 			if (analyzedStatement instanceof IfStatement) {
 				IfStatement stmt = (IfStatement) analyzedStatement;
 
@@ -63,31 +64,12 @@ public class HasIfStatementOperation implements IBodyContainerOperation {
 					return ImmutableList.of();
 				}
 			}
-
-			last = analyzedStatement;
 		}
 
 		final String code = String.format("\t\tif (%s) {\n\t\t\t\n\t\t}\n",
 				condition);
 
-		Transformation t;
-
-		if (last == null) {
-			t = Transformation.insertAt(input.getLocation().getEnd() - 1,
-					String.format("%s\n", code));
-		} else {
-			if (last instanceof ReturnStatement) {
-				// insert before last
-				t = Transformation.insertBefore(last,
-						String.format("%s\n", code));
-			} else {
-
-				t = Transformation.insertAfter(last,
-						String.format("\n%s", code));
-			}
-		}
-
-		return ImmutableList.of(t);
+		return ImmutableList.of(input.insertAt(input.getStatementInsertionPoint(), code));
 	}
 
 	@Override
@@ -97,7 +79,7 @@ public class HasIfStatementOperation implements IBodyContainerOperation {
 	}
 
 	@Override
-	public ActionResult verify(IBodyContainer input) {
+	public ActionResult verify(@Nonnull T input) {
 		for (AnalyzedStatement analyzedStatement : input.getStatements()) {
 			if (analyzedStatement instanceof IfStatement) {
 				IfStatement stmt = (IfStatement) analyzedStatement;

@@ -5,7 +5,7 @@ def quiet_sh(cmd) {
 pipeline {
     agent {
         docker {
-            image 'maven:3.5-jdk-8'
+            image 'maven:3.6-jdk-11'
             label 'docker'
             args '-u root'
         }
@@ -26,6 +26,17 @@ pipeline {
         stage('Maven') {
             steps {
                 sh 'mvn -B -U clean verify package -P-disable-slow-tests'
+            }
+        }
+        stage('Coverage') {
+            when {
+                expression {
+                    currentBuild.result == 'SUCCESS' || currentBuild.result == null
+                }
+            }
+
+            steps {
+                jacoco changeBuildStatus: false, exclusionPattern: '**/*Test*.class,**/HelpMojo.class'
             }
         }
         stage('Deploy') {

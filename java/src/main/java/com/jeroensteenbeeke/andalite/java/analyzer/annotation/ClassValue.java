@@ -18,34 +18,51 @@ package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public class ClassValue extends BaseValue<String> {
+public class ClassValue extends BaseValue<String,ClassValue, ClassValue.ClassValueInsertionPoint> {
 
 	public ClassValue(@Nonnull Location location, @Nullable String name,
-			@Nullable String value) {
+			@Nonnull String value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(IOutputCallback callback) {
 		String value = getValue();
-		if (value != null) {
-			callback.write(value);
-			callback.write(".class");
-		} else {
-			callback.write(null);
-		}
+		callback.write(value);
+		callback.write(".class");
 	}
 
 	@Override
 	public String toJavaString() {
 		String value = getValue();
-		if (value != null) {
-			return String.format("%s.class", value);
-		} else {
-			return "null";
-		}
+		return String.format("%s.class", value);
+	}
+
+	@Override
+	public ClassValue.ClassValueInsertionPoint getBeforeInsertionPoint() {
+		return ClassValue.ClassValueInsertionPoint.BEFORE;
+	}
+
+	@Override
+	public ClassValue.ClassValueInsertionPoint getAfterInsertionPoint() {
+		return ClassValue.ClassValueInsertionPoint.AFTER;
+	}
+
+	public enum ClassValueInsertionPoint implements IInsertionPoint<ClassValue> {
+		BEFORE {
+			@Override
+			public int position(ClassValue container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(ClassValue container) {
+				return container.getLocation().getEnd();
+			}
+		};
 	}
 }

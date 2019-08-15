@@ -15,7 +15,9 @@
 
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import com.github.antlrjavaparser.api.body.ModifierSet;
+import com.github.javaparser.ast.Modifier;
+
+import java.util.List;
 
 public enum AccessModifier {
 	PUBLIC, DEFAULT {
@@ -35,14 +37,14 @@ public enum AccessModifier {
 		return name().toLowerCase();
 	}
 
-	public static AccessModifier fromModifiers(int modifiers) {
-		if (ModifierSet.isPrivate(modifiers)) {
+	public static AccessModifier fromModifiers(List<Modifier.Keyword> modifiers) {
+		if (modifiers.contains(Modifier.Keyword.PRIVATE)) {
 			return PRIVATE;
 		}
-		if (ModifierSet.isProtected(modifiers)) {
+		if (modifiers.contains(Modifier.Keyword.PROTECTED)) {
 			return PROTECTED;
 		}
-		if (ModifierSet.isPublic(modifiers)) {
+		if (modifiers.contains(Modifier.Keyword.PUBLIC)) {
 			return PUBLIC;
 		}
 

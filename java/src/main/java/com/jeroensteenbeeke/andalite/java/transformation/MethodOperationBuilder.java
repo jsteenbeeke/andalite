@@ -58,8 +58,8 @@ public class MethodOperationBuilder
 	@Nonnull
 	public AnnotatableOperationBuilder<AnalyzedMethod> forAnnotation(
 			@Nonnull String type) {
-		return new AnnotatableOperationBuilder<AnalyzedMethod>(getCollector(),
-				getNavigation(), type);
+		return new AnnotatableOperationBuilder<>(getCollector(),
+												 getNavigation(), type);
 	}
 
 	public ParameterLocator forParameterNamed(String name) {
@@ -67,8 +67,14 @@ public class MethodOperationBuilder
 	}
 
 	public BodyContainerOperationBuilder inBody() {
-		return new BodyContainerOperationBuilder(getCollector(),
-				new BodyContainerNavigation<AnalyzedMethod>(getNavigation()));
+		return new BodyContainerOperationBuilder<>(getCollector(),
+												   new BodyContainerNavigation<>(getNavigation())) {
+
+			@Override
+			public AnalyzedMethod.MethodInsertionPoint getLastStatementLocation() {
+				return AnalyzedMethod.MethodInsertionPoint.END_OF_BODY;
+			}
+		};
 	}
 
 	/**

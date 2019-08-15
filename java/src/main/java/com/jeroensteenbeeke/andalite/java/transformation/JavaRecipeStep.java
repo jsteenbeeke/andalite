@@ -36,6 +36,8 @@ public class JavaRecipeStep<T extends ILocatable> {
 
 	private final IJavaOperation<T> operation;
 
+	private boolean navigationInvalidated = false;
+
 	JavaRecipeStep(IJavaNavigation<T> navigation, IJavaOperation<T> operation) {
 		super();
 		this.navigation = navigation;
@@ -52,28 +54,27 @@ public class JavaRecipeStep<T extends ILocatable> {
 					"Navigation (%s) failed: %s", navigation.getDescription(),
 					e.getMessage()));
 		}
-		if (target != null) {
-			List<Transformation> transformations;
-			try {
-				transformations = operation.perform(target);
-			} catch (OperationException e) {
-				logger.error(e.getMessage(), e);
-				return ActionResult.error("Operation cannot be performed: %s",
-						e.getMessage());
-			}
-			for (Transformation transformation : transformations) {
-				ActionResult result = transformation.applyTo(file
-						.getOriginalFile());
-				if (!result.isOk()) {
-					return result;
-				}
+		List<Transformation> transformations;
+		try {
+			transformations = operation.perform(target);
+		} catch (OperationException e) {
+			logger.error(e.getMessage(), e);
+			return ActionResult.error("Operation cannot be performed: %s",
+					e.getMessage());
+		}
+		for (Transformation transformation : transformations) {
+			ActionResult result = transformation.applyTo(file
+					.getOriginalFile());
+			if (!result.isOk()) {
+				return result;
 			}
 
-			return ActionResult.ok();
-		} else {
-			return ActionResult.error("Could not navigate to %s",
-					navigation.getDescription());
+			if (transformation.invalidatesNavigation()) {
+				this.navigationInvalidated = true;
+			}
 		}
+
+		return ActionResult.ok();
 	}
 
 	@Override
@@ -84,6 +85,10 @@ public class JavaRecipeStep<T extends ILocatable> {
 
 	public ActionResult verify(AnalyzedSourceFile sourceFile) {
 		try {
+			if (navigationInvalidated) {
+				logger.warn("Transformation marked navigation as invalidated: {}", operationToString());
+				return ActionResult.ok();
+			}
 			T target = navigation.navigate(sourceFile);
 			return operation.verify(target);
 		} catch (NavigationException e) {

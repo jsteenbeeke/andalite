@@ -11,35 +11,32 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.java.analyzer.Annotatable;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 
-public abstract class AbstractRemoveAnnotation<T extends Annotatable>
+import javax.annotation.Nonnull;
+
+public abstract class AbstractRemoveAnnotation<T extends Annotatable<T,?>>
 		implements IJavaOperation<T> {
 	private final String annotation;
 
-	public AbstractRemoveAnnotation(String annotation) {
+	AbstractRemoveAnnotation(String annotation) {
 		this.annotation = annotation;
 	}
 
 	@Override
-	public List<Transformation> perform(T input) throws OperationException {
+	public List<Transformation> perform(@Nonnull T input) throws OperationException {
 		ImmutableList.Builder<Transformation> transformations = ImmutableList
 				.builder();
 
 		for (AnalyzedAnnotation analyzedAnnotation : input.getAnnotations()) {
 			if (analyzedAnnotation.getType().equals(annotation)) {
-				transformations.add(Transformation
-						.replace(getLocation(analyzedAnnotation), ""));
+				transformations.add(analyzedAnnotation.replace(""));
 			}
 		}
 
 		return transformations.build();
 	}
 
-	public Location getLocation(AnalyzedAnnotation annotation) {
-		return annotation.getLocation();
-	}
-
 	@Override
-	public ActionResult verify(T input) {
+	public ActionResult verify(@Nonnull T input) {
 		for (AnalyzedAnnotation analyzedAnnotation : input.getAnnotations()) {
 			if (analyzedAnnotation.getType().equals(annotation)) {
 				return ActionResult.error("Parameter still has annotation @%s",

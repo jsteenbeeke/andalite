@@ -20,7 +20,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IFieldOperation;
 
 public class EnsureFieldAnnotation extends
-		AbstractEnsureAnnotation<AnalyzedField> implements IFieldOperation {
+		AbstractEnsureAnnotation<AnalyzedField, AnalyzedField.FieldInsertionPoint> implements IFieldOperation {
 	public EnsureFieldAnnotation(String type) {
 		super(type);
 	}

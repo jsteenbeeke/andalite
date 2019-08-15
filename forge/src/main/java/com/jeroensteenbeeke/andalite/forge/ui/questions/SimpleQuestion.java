@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -18,21 +18,21 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class SimpleQuestion extends AbstractQuestion<String> {
+public class SimpleQuestion extends AbstractQuestion {
 	public SimpleQuestion(String key, String question) {
 		super(key, question);
 	}
 
 	@Override
-	public boolean isValidAnswer(@Nullable String answer) {
-		return answer != null && !answer.isEmpty();
+	public boolean isValidAnswer(@Nullable Object answer) {
+		return answer instanceof String && !((String) answer).isEmpty();
 	}
 
 	public SimpleQuestion matching(@Nonnull final String pattern) {
 		return new SimpleQuestion(getKey(), getQuestion()) {
 			@Override
-			public boolean isValidAnswer(@Nullable String answer) {
-				return super.isValidAnswer(answer) && answer.matches(pattern);
+			public boolean isValidAnswer(@Nullable Object answer) {
+				return super.isValidAnswer(answer) && answer instanceof String && ((String) answer).matches(pattern);
 			}
 		};
 	}

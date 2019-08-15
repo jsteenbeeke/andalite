@@ -63,11 +63,11 @@ public class IfStatementTest extends DummyAwareTest {
 
 		assertThat(emptyIf, notNullValue());
 
-		List<AnalyzedStatement> statements = emptyIf.getStatements();
+		List<AnalyzedStatement<?,?>> statements = emptyIf.getStatements();
 		assertThat(statements, notNullValue());
 		assertThat(statements.size(), is(1));
 
-		AnalyzedStatement first = statements.get(0);
+		AnalyzedStatement<?,?> first = statements.get(0);
 		assertThat(first, instanceOf(IfStatement.class));
 		IfStatement ifStatement = (IfStatement) first;
 
@@ -78,8 +78,8 @@ public class IfStatementTest extends DummyAwareTest {
 
 		JavaRecipeBuilder java = new JavaRecipeBuilder();
 		java.inPublicClass().forMethod().named("emptyIf").inBody()
-				.inIfExpression().withExpression("1 == 2").thenStatement()
-				.body().ensureStatement("System.out.println()");
+			.inIfStatement().withExpression("1 == 2").thenStatement()
+			.body().ensureStatement("System.out.println()");
 
 		java.build().applyTo(file);
 
@@ -106,11 +106,11 @@ public class IfStatementTest extends DummyAwareTest {
 
 		assertThat(emptyIf, notNullValue());
 
-		List<AnalyzedStatement> statements = emptyIf.getStatements();
+		List<AnalyzedStatement<?,?>> statements = emptyIf.getStatements();
 		assertThat(statements, notNullValue());
 		assertThat(statements.size(), is(1));
 
-		AnalyzedStatement first = statements.get(0);
+		AnalyzedStatement<?,?> first = statements.get(0);
 		assertThat(first, instanceOf(IfStatement.class));
 		IfStatement ifStatement = (IfStatement) first;
 
@@ -119,7 +119,7 @@ public class IfStatementTest extends DummyAwareTest {
 
 		BlockStatement block = (BlockStatement) ifStatement.getThenStatement();
 
-		List<AnalyzedStatement> thenStatements = block.getStatements();
+		List<AnalyzedStatement<?,?>> thenStatements = block.getStatements();
 		assertThat(thenStatements, notNullValue());
 
 		assertThat(thenStatements.size(), is(1));
@@ -147,11 +147,11 @@ public class IfStatementTest extends DummyAwareTest {
 
 		assertThat(emptyIfElse, notNullValue());
 
-		List<AnalyzedStatement> statements = emptyIfElse.getStatements();
+		List<AnalyzedStatement<?,?>> statements = emptyIfElse.getStatements();
 		assertThat(statements, notNullValue());
 		assertThat(statements.size(), is(1));
 
-		AnalyzedStatement first = statements.get(0);
+		AnalyzedStatement<?,?> first = statements.get(0);
 		assertThat(first, instanceOf(IfStatement.class));
 
 		IfStatement ifElseStatement = (IfStatement) first;

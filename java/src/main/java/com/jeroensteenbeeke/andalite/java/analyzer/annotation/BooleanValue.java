@@ -18,24 +18,49 @@ package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public final class BooleanValue extends BaseValue<Boolean> {
+public final class BooleanValue extends BaseValue<Boolean,BooleanValue, BooleanValue.BooleanValueInsertionPoint> {
 
 	public BooleanValue(@Nonnull Location location, @Nullable String name,
-			@Nullable boolean value) {
+			boolean value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(IOutputCallback callback) {
 		Boolean value = getValue();
-		callback.write(value != null ? Boolean.toString(value) : null);
+		callback.write(Boolean.toString(value));
 	}
 
 	@Override
 	public String toJavaString() {
 		return Boolean.toString(getValue());
+	}
+
+	@Override
+	public BooleanValue.BooleanValueInsertionPoint getBeforeInsertionPoint() {
+		return BooleanValue.BooleanValueInsertionPoint.BEFORE;
+	}
+
+	@Override
+	public BooleanValue.BooleanValueInsertionPoint getAfterInsertionPoint() {
+		return BooleanValue.BooleanValueInsertionPoint.AFTER;
+	}
+
+	public enum BooleanValueInsertionPoint implements IInsertionPoint<BooleanValue> {
+		BEFORE {
+			@Override
+			public int position(BooleanValue container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(BooleanValue container) {
+				return container.getLocation().getEnd();
+			}
+		};
 	}
 }

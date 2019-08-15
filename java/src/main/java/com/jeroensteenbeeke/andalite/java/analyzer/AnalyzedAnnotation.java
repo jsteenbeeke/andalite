@@ -3,38 +3,38 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import java.io.Serializable;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
+import com.jeroensteenbeeke.andalite.core.*;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
 
 import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import com.google.common.base.Function;
-import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
-import com.google.common.collect.Maps;
-import com.jeroensteenbeeke.andalite.core.IOutputCallback;
-import com.jeroensteenbeeke.andalite.core.Locatable;
-import com.jeroensteenbeeke.andalite.core.Location;
-import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
-
-public final class AnalyzedAnnotation extends Locatable {
+public final class AnalyzedAnnotation extends Locatable implements IInsertionPointProvider<AnalyzedAnnotation, AnalyzedAnnotation.AnnotationInsertionPoint> {
 	private final String type;
 
-	private final Map<String, BaseValue<?>> annotationValues;
+	private final Map<String, BaseValue<?, ?, ?>> annotationValues;
 
 	private Location parametersLocation;
 
@@ -46,12 +46,16 @@ public final class AnalyzedAnnotation extends Locatable {
 		this.annotationValues = Maps.newLinkedHashMap();
 	}
 
-	@CheckForNull
-	public Location getParametersLocation() {
-		return parametersLocation;
+	public List<BaseValue<?, ?, ?>> getValues() {
+		return ImmutableList.copyOf(annotationValues.values());
 	}
 
-	void setParametersLocation(@Nonnull Location parametersLocation) {
+	@Nonnull
+	public Optional<Location> getParametersLocation() {
+		return Optional.ofNullable(parametersLocation);
+	}
+
+	void setParametersLocation(@Nullable Location parametersLocation) {
 		this.parametersLocation = parametersLocation;
 	}
 
@@ -60,14 +64,14 @@ public final class AnalyzedAnnotation extends Locatable {
 		return type;
 	}
 
-	void addAnnotation(BaseValue<?> value) {
+	void addAnnotation(BaseValue<?, ?, ?> value) {
 		annotationValues.put(value.getName(), value);
 	}
 
-	public <T extends BaseValue<?>> boolean hasValueOfType(
-			Class<T> expectedType, String name) {
+	public <T extends BaseValue<?, ?, ?>> boolean hasValueOfType(
+		Class<T> expectedType, String name) {
 		if (annotationValues.containsKey(name)) {
-			BaseValue<?> value = annotationValues.get(name);
+			BaseValue<?, ?, ?> value = annotationValues.get(name);
 			if (expectedType.isAssignableFrom(value.getClass())) {
 				return true;
 			}
@@ -78,8 +82,8 @@ public final class AnalyzedAnnotation extends Locatable {
 
 	@SuppressWarnings("unchecked")
 	@CheckForNull
-	public <T extends BaseValue<?>> T getValue(Class<T> expectedType,
-			String name) {
+	public <T extends BaseValue<?, ?, ?>> T getValue(Class<T> expectedType,
+													 String name) {
 		if (hasValueOfType(expectedType, name)) {
 			return (T) annotationValues.get(name);
 
@@ -98,8 +102,8 @@ public final class AnalyzedAnnotation extends Locatable {
 			callback.newline();
 
 			int i = 0;
-			for (Entry<String, BaseValue<?>> entry : annotationValues
-					.entrySet()) {
+			for (Entry<String, BaseValue<?, ?, ?>> entry : annotationValues
+				.entrySet()) {
 				if (i++ > 0) {
 					callback.write(",");
 					callback.newline();
@@ -116,6 +120,16 @@ public final class AnalyzedAnnotation extends Locatable {
 
 		callback.write(" ");
 
+	}
+
+	@Nonnull
+	@Override
+	public Transformation insertAt(@Nonnull AnnotationInsertionPoint insertionPoint, @Nonnull String code) {
+		if (!hasParentheses()) {
+			return IInsertionPointProvider.super.insertAt(insertionPoint, String.format("(%s)", code));
+		}
+
+		return IInsertionPointProvider.super.insertAt(insertionPoint, code);
 	}
 
 	public boolean hasValues() {
@@ -151,45 +165,48 @@ public final class AnalyzedAnnotation extends Locatable {
 		if (!annotationValues.isEmpty()) {
 			java.append("(");
 			Joiner.on(", ").appendTo(
-					java,
-					FluentIterable.from(annotationValues.entrySet()).transform(
-							ENTRY_TO_JAVASTRING_FUNCTION));
+				java,
+				annotationValues
+					.entrySet()
+					.stream()
+					.map(e -> String.format("%s=%s", e
+						.getKey(), e
+												.getValue()
+												.toJavaString()))
+					.collect(Collectors.toList()));
 			java.append(")");
 		}
 
 		return java.toString();
 	}
 
-	public static Function<AnalyzedAnnotation, String> toJavaStringFunction() {
-		return TO_JAVASTRING_FUNCTION;
-	}
-
-	private static final Function<AnalyzedAnnotation, String> TO_JAVASTRING_FUNCTION = new ToJavaStringFunction();
-
-	private static final Function<Entry<String, BaseValue<?>>, String> ENTRY_TO_JAVASTRING_FUNCTION = new EntryToString();
-
-	private static final class ToJavaStringFunction implements
-			Function<AnalyzedAnnotation, String>, Serializable {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public String apply(AnalyzedAnnotation input) {
-			return input.toJavaString();
-		}
-	}
-
-	private static final class EntryToString implements
-			Function<Entry<String, BaseValue<?>>, String>, Serializable {
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		public String apply(Entry<String, BaseValue<?>> input) {
-			return String.format("%s=%s", input.getKey(), input.getValue()
-					.toJavaString());
-		}
-	}
-
 	public Object getValueRaw(String name) {
 		return this.annotationValues.get(name).getValue();
+	}
+
+	public enum AnnotationInsertionPoint implements IInsertionPoint<AnalyzedAnnotation> {
+		BEFORE {
+			@Override
+			public int position(AnalyzedAnnotation container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(AnalyzedAnnotation container) {
+				return container.getLocation().getEnd() + 1;
+			}
+		}, AFTER_LAST_ARGUMENT {
+			@Override
+			public int position(AnalyzedAnnotation container) {
+				return container.getValues().stream()
+								.map(BaseValue::getLocation)
+								.map(Location::getEnd)
+								.map(e -> e + 1)
+								.max(Integer::compareTo)
+								.or(() -> container.getParametersLocation()
+												   .map(Location::getEnd))
+								.orElseGet(() -> AFTER.position(container));
+			}
+		};
 	}
 }

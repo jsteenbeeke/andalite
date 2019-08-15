@@ -1,21 +1,23 @@
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.google.common.collect.ImmutableList;
-import com.jeroensteenbeeke.lux.ActionResult;
-import com.jeroensteenbeeke.andalite.core.Location;
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
+import com.jeroensteenbeeke.andalite.java.analyzer.ConstructableDenomination;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
+import com.jeroensteenbeeke.lux.ActionResult;
 
-public class EnsureConstructorOperation implements IClassOperation {
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public abstract class EnsureConstructorOperation<T extends ConstructableDenomination<T,I>,I extends Enum<I> & IInsertionPoint<T>> implements IJavaOperation<T> {
 	private final AccessModifier modifier;
 
 	private final List<ParameterDescriptor> parameters;
@@ -30,9 +32,8 @@ public class EnsureConstructorOperation implements IClassOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedClass input)
+	public List<Transformation> perform(@Nonnull T input)
 			throws OperationException {
-		Location last = input.getBodyLocation();
 
 		for (AnalyzedConstructor ctor : input.getConstructors()) {
 			if (!checkSignature
@@ -47,35 +48,22 @@ public class EnsureConstructorOperation implements IClassOperation {
 
 				return ImmutableList.of();
 			}
-
-			last = ctor.getLocation();
 		}
 		StringBuilder code = new StringBuilder();
-		code.append("\t");
+
+		code.append("\n\n\t");
 		code.append(modifier.getOutput());
 		code.append(" ");
-		code.append(input.getClassName());
+		code.append(input.getDenominationName());
 		code.append("(");
 		code.append(createParameterList());
 		code.append(") {\n");
 		code.append("\t}\n\n");
 
-		ImmutableList.Builder<Transformation> transforms = ImmutableList
-				.builder();
-
-		int l = last.getEnd() + 2;
-
-		if (last.getLength() == 0) {
-			transforms
-					.add(Transformation.insertAt(last.getStart() + 2, "\n\n"));
-
-			l = last.getStart() + 3;
-		}
-
-		transforms.add(Transformation.insertAt(l, code.toString()));
-
-		return transforms.build();
+		return ImmutableList.of(input.insertAt(getInsertionPoint(), code.toString()));
 	}
+
+	public abstract I getInsertionPoint();
 
 	public EnsureConstructorOperation withAnySignature() {
 		this.checkSignature = false;
@@ -96,7 +84,7 @@ public class EnsureConstructorOperation implements IClassOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedClass input) {
+	public ActionResult verify(@Nonnull T input) {
 
 		for (AnalyzedConstructor ctor : input.getConstructors()) {
 			if (AnalyzeUtil.matchesSignature(ctor, parameters)) {

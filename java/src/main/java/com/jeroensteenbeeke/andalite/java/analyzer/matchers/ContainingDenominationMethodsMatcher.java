@@ -22,14 +22,14 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.analyzer.ContainingDenomination;
 
 class ContainingDenominationMethodsMatcher extends
-		ByPropertyMatcher<ContainingDenomination, List<AnalyzedMethod>> {
+		ByPropertyMatcher<ContainingDenomination<?,?>, List<AnalyzedMethod>> {
 	ContainingDenominationMethodsMatcher(
 			Matcher<List<AnalyzedMethod>> delegateMatcher) {
 		super(delegateMatcher);
 	}
 
 	@Override
-	protected List<AnalyzedMethod> transform(ContainingDenomination item) {
+	protected List<AnalyzedMethod> transform(ContainingDenomination<?,?> item) {
 		return item.getMethods();
 	}
 

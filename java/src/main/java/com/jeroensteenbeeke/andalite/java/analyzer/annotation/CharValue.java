@@ -18,24 +18,49 @@ package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public final class CharValue extends BaseValue<Character> {
+public final class CharValue extends BaseValue<Character,CharValue, CharValue.CharValueInsertionPoint> {
 
 	public CharValue(@Nonnull Location location, @Nullable String name,
-			@Nullable Character value) {
+			@Nonnull Character value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(IOutputCallback callback) {
 		Character value = getValue();
-		callback.write(value != null ? Character.toString(value) : null);
+		callback.write(Character.toString(value));
 	}
 
 	@Override
 	public String toJavaString() {
 		return Character.toString(getValue());
+	}
+
+	@Override
+	public CharValue.CharValueInsertionPoint getBeforeInsertionPoint() {
+		return CharValue.CharValueInsertionPoint.BEFORE;
+	}
+
+	@Override
+	public CharValue.CharValueInsertionPoint getAfterInsertionPoint() {
+		return CharValue.CharValueInsertionPoint.AFTER;
+	}
+
+	public enum CharValueInsertionPoint implements IInsertionPoint<CharValue> {
+		BEFORE {
+			@Override
+			public int position(CharValue container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(CharValue container) {
+				return container.getLocation().getEnd();
+			}
+		};
 	}
 }

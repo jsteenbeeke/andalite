@@ -1,14 +1,13 @@
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import javax.annotation.CheckForNull;
 import javax.annotation.Nonnull;
+import java.util.Optional;
 
 public interface Javadocable {
 	/**
-	 * @return Any javadoc for this element, or {@code null} if none is present
+	 * @return Any javadoc for this element, or an empty optional if none is present
 	 */
-	@CheckForNull
-	String getJavadoc();
+	Optional<String> getJavadoc();
 
 	/**
 	 * @non.public

@@ -14,32 +14,31 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class TryStatement extends AnalyzedStatement {
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.Collectors;
 
-	private final AnalyzedStatement block;
+public class TryStatement extends BaseStatement {
 
-	private final AnalyzedStatement finallyStatement;
+	private final AnalyzedStatement<?,?> block;
+
+	private final AnalyzedStatement<?,?> finallyStatement;
 
 	private final List<ResourceStatement> resourceStatements;
 
 	private final List<CatchStatement> catchClauses;
 
 	public TryStatement(@Nonnull Location location,
-			@Nonnull AnalyzedStatement block,
-			@Nullable AnalyzedStatement finallyStatement) {
+			@Nonnull AnalyzedStatement<?,?> block,
+			@Nullable AnalyzedStatement<?,?> finallyStatement) {
 		super(location);
 		this.block = block;
 		this.finallyStatement = finallyStatement;
@@ -48,12 +47,12 @@ public class TryStatement extends AnalyzedStatement {
 	}
 
 	@Nonnull
-	public AnalyzedStatement getBlock() {
+	public AnalyzedStatement<?,?> getBlock() {
 		return block;
 	}
 
 	@CheckForNull
-	public AnalyzedStatement getFinallyStatement() {
+	public AnalyzedStatement<?,?> getFinallyStatement() {
 		return finallyStatement;
 	}
 
@@ -83,8 +82,7 @@ public class TryStatement extends AnalyzedStatement {
 		java.append(block.toJavaString());
 		Joiner.on(' ').appendTo(
 				java,
-				FluentIterable.from(catchClauses).transform(
-						AnalyzedStatement.toJavaStringFunction()));
+				catchClauses.stream().map(AnalyzedStatement::toJavaString).collect(Collectors.toList()));
 		if (finallyStatement != null) {
 			java.append(finallyStatement.toJavaString());
 		}

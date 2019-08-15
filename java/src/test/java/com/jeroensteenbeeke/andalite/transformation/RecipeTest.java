@@ -27,6 +27,7 @@ import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 import com.jeroensteenbeeke.lux.Result;
@@ -161,12 +162,12 @@ public class RecipeTest extends DummyAwareTest {
 		ArrayValue uniqueConstraints = tableAnnotation
 				.getValue(ArrayValue.class, "uniqueConstraints");
 
-		List<BaseValue<?>> values = uniqueConstraints.getValue();
+		List<BaseValue<?,?,?>> values = uniqueConstraints.getValue();
 
 		assertThat(values.size(), equalTo(2));
 
-		BaseValue<?> firstConstraintBase = values.get(0);
-		BaseValue<?> secondConstraintBase = values.get(1);
+		BaseValue<?,?,?> firstConstraintBase = values.get(0);
+		BaseValue<?,?,?> secondConstraintBase = values.get(1);
 
 		assertThat(firstConstraintBase, instanceOf(AnnotationValue.class));
 		assertThat(secondConstraintBase, instanceOf(AnnotationValue.class));

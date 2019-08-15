@@ -16,8 +16,10 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import javax.annotation.Nonnull;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
+import com.jeroensteenbeeke.andalite.java.analyzer.statements.BaseStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.AfterStatementNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
@@ -27,40 +29,59 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureE
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.HasIfStatementOperation;
 
-public class BodyContainerOperationBuilder extends
-		AbstractOperationBuilder<IBodyContainer, IBodyContainerOperation> {
+public abstract class BodyContainerOperationBuilder<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> extends
+		AbstractOperationBuilder<T, IBodyContainerOperation<T,I>> {
 	BodyContainerOperationBuilder(IStepCollector collector,
-			IJavaNavigation<IBodyContainer> navigation) {
+			IJavaNavigation<T> navigation) {
 		super(collector, navigation);
 	}
 
 	@Nonnull
-	public IfStatementLocator inIfExpression() {
-		return new IfStatementLocator(this);
+	public IfStatementLocator<T,I> inIfStatement() {
+		return new IfStatementLocator<>(this);
 	}
 
 	@Nonnull
 	public StatementOperationBuilder<ReturnStatement> forReturnStatement() {
-		return new StatementOperationBuilder<ReturnStatement>(getCollector(),
-				new ReturnStatementNavigation(getNavigation()));
+		return new StatementOperationBuilder<>(getCollector(),
+											   new ReturnStatementNavigation<>(getNavigation()));
 	}
 
 	@Nonnull
-	public StatementOperationBuilder<AnalyzedStatement> afterStatement(
+	public <S extends AnalyzedStatement<S,?>> StatementOperationBuilder<S> afterStatement(
 			String statement) {
-		return new StatementOperationBuilder<AnalyzedStatement>(getCollector(),
-				new AfterStatementNavigation(statement, getNavigation()));
+		String stmt = statement.endsWith(";") ? statement.substring(0, statement.length()-1) : statement;
+
+		return new StatementOperationBuilder<S>(getCollector(),
+				new AfterStatementNavigation<>(stmt, getNavigation()));
 	}
 
 	public void ensureReturnAsLastStatement(@Nonnull String expression) {
-		ensure(new EnsureEndReturnStatement(expression));
+		ensure(new EnsureEndReturnStatement<>(expression) {
+
+			@Override
+			public I getLastStatementLocation() {
+				return BodyContainerOperationBuilder.this.getLastStatementLocation();
+			}
+		});
 	}
 
-	public void ensureStatement(@Nonnull String statement) {
-		ensure(new EnsureStatement(statement));
+	public EnsureStatement<T,I> ensureStatement(@Nonnull String statement) {
+		EnsureStatement<T, I> ensureStatement = new EnsureStatement<>(statement) {
+
+			@Override
+			public I getLastStatementLocation() {
+				return BodyContainerOperationBuilder.this.getLastStatementLocation();
+			}
+		};
+		ensure(ensureStatement);
+
+		return ensureStatement;
 	}
 
 	public void ensureIfStatement(@Nonnull String condition) {
-		ensure(new HasIfStatementOperation(condition));
+		ensure(new HasIfStatementOperation<>(condition));
 	}
+
+	public abstract I getLastStatementLocation();
 }

@@ -41,6 +41,8 @@ public abstract class RecipeMojo extends AbstractMojo {
 	protected List<ForgeRecipe> determineRecipes() throws MojoFailureException {
 		List<ForgeRecipe> recipeList = Lists.newArrayList();
 
+		boolean recipesWithConfigErrors = false;
+
 		for (String className : recipes) {
 			try {
 				Class<?> recipeClass = Class.forName(className);
@@ -60,11 +62,12 @@ public abstract class RecipeMojo extends AbstractMojo {
 							recipeList.add(recipe);
 						} else {
 							getLog().warn(String.format("Recipe %s not correctly configured: %s", className, configured.getMessage()));
+							recipesWithConfigErrors = true;
 						}
 					} catch (NoSuchMethodException e) {
 						// And if it doesn't exist, go for a default no-argument
 						// constructor
-						recipeList.add((ForgeRecipe) recipeClass.newInstance());
+						recipeList.add((ForgeRecipe) recipeClass.getConstructor().newInstance());
 
 					}
 				} else {
@@ -76,15 +79,20 @@ public abstract class RecipeMojo extends AbstractMojo {
 			} catch (ClassNotFoundException e) {
 				getLog().error("Recipe not found: " + className);
 				getLog().error(e);
-			} catch (InstantiationException | IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+			} catch (InstantiationException | IllegalArgumentException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 				getLog().error("Could not instantiate recipe: " + className);
 				getLog().error(e);
 			}
 		}
 
+		if (recipesWithConfigErrors) {
+			extraConfiguration.forEach((k,v) -> getLog().debug(String.format("%-30s: %s", k, v)));
+		}
+
 		if (recipeList.isEmpty()) {
 			throw new MojoFailureException("Unable to instantiate any recipes!");
 		}
+
 		return recipeList;
 	}
 

@@ -21,17 +21,17 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.expression.VariableDeclarationExpression;
 
-public class ForEachStatement extends AnalyzedStatement {
+public class ForEachStatement extends BaseStatement<ForEachStatement> {
 	private final VariableDeclarationExpression variableExpression;
 
 	private final AnalyzedExpression iterable;
 
-	private final AnalyzedStatement body;
+	private final AnalyzedStatement<?,?> body;
 
 	public ForEachStatement(@Nonnull Location location,
 			@Nonnull VariableDeclarationExpression variableExpression,
 			@Nonnull AnalyzedExpression iterable,
-			@Nonnull AnalyzedStatement body) {
+			@Nonnull AnalyzedStatement<?,?> body) {
 		super(location);
 		this.variableExpression = variableExpression;
 		this.iterable = iterable;
@@ -39,7 +39,7 @@ public class ForEachStatement extends AnalyzedStatement {
 	}
 
 	@Nonnull
-	public AnalyzedStatement getBody() {
+	public AnalyzedStatement<?,?> getBody() {
 		return body;
 	}
 

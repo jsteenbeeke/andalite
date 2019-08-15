@@ -29,11 +29,11 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureI
 
 public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJavaOperation<T>>
 		extends IScopedOperationBuilder<T, O> {
-	static final String NULL = "null";
+	String NULL = "null";
 
 	default void ensureBooleanValue(@Nonnull String name, boolean value) {
-		ensure(new EnsureAnnotationField<Boolean>(name, BooleanValue.class,
-				value) {
+		ensure(new EnsureAnnotationField<>(name, BooleanValue.class,
+										   value) {
 			@Override
 			public String format(Boolean value) {
 				return value != null ? Boolean.toString(value) : NULL;
@@ -43,8 +43,8 @@ public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJa
 
 	default void ensureFieldAccessValue(@Nonnull String name,
 			@Nonnull String fieldAccess) {
-		ensure(new EnsureAnnotationField<String>(name, FieldAccessValue.class,
-				fieldAccess) {
+		ensure(new EnsureAnnotationField<>(name, FieldAccessValue.class,
+										   fieldAccess) {
 			@Override
 			public String format(String value) {
 				return value;
@@ -54,8 +54,8 @@ public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJa
 	}
 
 	default void ensureStringValue(@Nonnull String name, String value) {
-		ensure(new EnsureAnnotationField<String>(name, StringValue.class,
-				value) {
+		ensure(new EnsureAnnotationField<>(name, StringValue.class,
+										   value) {
 			@Override
 			public String format(String value) {
 				return value != null ? String.format("\"%s\"", value) : NULL;
@@ -64,8 +64,8 @@ public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJa
 	}
 
 	default void ensureIntegerValue(@Nonnull String name, Integer value) {
-		ensure(new EnsureAnnotationField<Integer>(name, IntegerValue.class,
-				value) {
+		ensure(new EnsureAnnotationField<>(name, IntegerValue.class,
+										   value) {
 			@Override
 			public String format(Integer value) {
 				return value != null ? Integer.toString(value) : NULL;
@@ -74,8 +74,8 @@ public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJa
 	}
 
 	default void ensureCharValue(@Nonnull String name, Character value) {
-		ensure(new EnsureAnnotationField<Character>(name, CharValue.class,
-				value) {
+		ensure(new EnsureAnnotationField<>(name, CharValue.class,
+										   value) {
 			@Override
 			public String format(Character value) {
 				return value != null ? String.format("'%c'", value) : NULL;

@@ -25,6 +25,11 @@ import org.slf4j.LoggerFactory;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.xml.util.XMLUtil;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
 
 public class XMLRecipe {
 	private static final Logger logger = LoggerFactory

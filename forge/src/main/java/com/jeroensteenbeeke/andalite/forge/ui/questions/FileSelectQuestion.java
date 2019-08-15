@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.List;
 
-public abstract class FileSelectQuestion extends AbstractQuestion<File> {
+public abstract class FileSelectQuestion extends AbstractQuestion {
 
 	public FileSelectQuestion(String key, String question) {
 		super(key, question);
@@ -27,7 +27,9 @@ public abstract class FileSelectQuestion extends AbstractQuestion<File> {
 	public abstract List<File> getChoices();
 
 	@Override
-	public boolean isValidAnswer(@Nullable File answer) {
+	public boolean isValidAnswer(@Nullable Object answer) {
+
+
 		return answer != null && getChoices().contains(answer);
 	}
 

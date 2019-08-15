@@ -28,7 +28,7 @@ public class NoValueCondition<T> implements InnerAnnotationCondition {
 	}
 
 	@Override
-	public boolean isSatisfiedBy(AnnotationValue value) {
+	public boolean test(AnnotationValue value) {
 		return !value.getValue().hasValueNamed(name)
 				|| expectedValue.equals(value.getValue().getValueRaw(name));
 	}

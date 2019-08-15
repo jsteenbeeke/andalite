@@ -17,12 +17,13 @@ package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public class FieldAccessValue extends BaseValue<String> {
+public class FieldAccessValue extends BaseValue<String,FieldAccessValue, FieldAccessValue.FieldAccessValueInsertionPoint> {
 	public FieldAccessValue(@Nonnull Location location, @Nullable String name,
-			@Nullable String scope, @Nullable String value) {
+			@Nullable String scope, @Nonnull String value) {
 		super(location, name, createValue(scope, value));
 	}
 
@@ -45,11 +46,35 @@ public class FieldAccessValue extends BaseValue<String> {
 	}
 
 	private static String createValue(@Nullable String scope,
-			@Nullable String value) {
-		if (scope != null && value != null) {
+			@Nonnull String value) {
+		if (scope != null) {
 			return String.format("%s.%s", scope, value);
 		}
 
-		return null;
+		return value;
+	}
+
+	@Override
+	public FieldAccessValue.FieldAccessValueInsertionPoint getBeforeInsertionPoint() {
+		return FieldAccessValue.FieldAccessValueInsertionPoint.BEFORE;
+	}
+
+	@Override
+	public FieldAccessValue.FieldAccessValueInsertionPoint getAfterInsertionPoint() {
+		return FieldAccessValue.FieldAccessValueInsertionPoint.AFTER;
+	}
+
+	public enum FieldAccessValueInsertionPoint implements IInsertionPoint<FieldAccessValue> {
+		BEFORE {
+			@Override
+			public int position(FieldAccessValue container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(FieldAccessValue container) {
+				return container.getLocation().getEnd();
+			}
+		};
 	}
 }

@@ -21,6 +21,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.lux.Result;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -32,6 +33,7 @@ import java.util.Map;
 import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
 import static org.junit.Assert.assertThat;
 
+@Ignore
 public class MassiveTransformationTest extends DummyAwareTest {
 	private static final int OPERATIONS = 100;
 

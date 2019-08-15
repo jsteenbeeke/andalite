@@ -21,7 +21,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.Denomination;
 
-class DenominationNameMatcher extends TypeSafeDiagnosingMatcher<Denomination> {
+class DenominationNameMatcher extends TypeSafeDiagnosingMatcher<Denomination<?,?>> {
 	private final String expectedName;
 
 	public DenominationNameMatcher(@Nonnull String expectedName) {
@@ -34,7 +34,7 @@ class DenominationNameMatcher extends TypeSafeDiagnosingMatcher<Denomination> {
 	}
 
 	@Override
-	protected boolean matchesSafely(Denomination item,
+	protected boolean matchesSafely(Denomination<?,?> item,
 			Description mismatchDescription) {
 		boolean match = expectedName.equals(item.getDenominationName());
 

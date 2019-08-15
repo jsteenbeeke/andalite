@@ -22,10 +22,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.InnerClassNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureClassAnnotation;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureField;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureImplements;
-import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperClass;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.*;
 
 public class ClassScopeOperationBuilder
 		extends AbstractOperationBuilder<AnalyzedClass, IClassOperation> {
@@ -43,14 +40,13 @@ public class ClassScopeOperationBuilder
 	@Nonnull
 	public ClassScopeOperationBuilder forInnerClass(String name) {
 		return new ClassScopeOperationBuilder(getCollector(),
-				new InnerClassNavigation<AnalyzedClass>(getNavigation(), name));
+			new InnerClassNavigation<>(getNavigation(), name));
 	}
 
 	@Nonnull
 	public AnnotatableOperationBuilder<AnalyzedClass> forAnnotation(
 			String type) {
-		return new AnnotatableOperationBuilder<AnalyzedClass>(getCollector(),
-				getNavigation(), type);
+		return new AnnotatableOperationBuilder<>(getCollector(), getNavigation(), type);
 	}
 
 	@Nonnull
@@ -69,17 +65,32 @@ public class ClassScopeOperationBuilder
 
 	@Nonnull
 	public EnsureClassMethodBuilder ensureMethod() {
-		return new EnsureClassMethodBuilder(o -> ensure(o));
+		return new EnsureClassMethodBuilder(this::ensure);
 	}
 
 	@Nonnull
-	public HasConstructorBuilder ensureConstructor() {
-		return new HasConstructorBuilder(o -> ensure(o));
+	public HasConstructorBuilder<EnsureClassConstructorOperation,AnalyzedClass, AnalyzedClass.ClassInsertionPoint> ensureConstructor() {
+		return new HasConstructorBuilder<>(this::ensure,
+			EnsureClassConstructorOperation::new);
 	}
 
 	@Nonnull
-	public HasFieldBuilderName ensureField(@Nonnull String name) {
-		return new HasFieldBuilderName(name);
+	public WithType ensureField(@Nonnull String name) {
+		return type -> accessModifier -> {
+			EnsureClassField operation = new EnsureClassField(name, type, accessModifier);
+			ensure(operation);
+			return operation;
+		};
+	}
+
+	public interface WithType {
+		@Nonnull
+		WithAccessModifier typed(@Nonnull String type);
+	}
+
+	public interface WithAccessModifier {
+		@Nonnull
+		EnsureField withAccess(@Nonnull AccessModifier modifier);
 	}
 
 	public void ensureImplements(@Nonnull String iface) {
@@ -90,35 +101,5 @@ public class ClassScopeOperationBuilder
 		ensure(new EnsureSuperClass(superClass));
 	}
 
-	public class HasFieldBuilderName {
-		private final String name;
 
-		private HasFieldBuilderName(@Nonnull String name) {
-			super();
-			this.name = name;
-		}
-
-		public HasFieldBuilderNameType typed(@Nonnull String type) {
-			return new HasFieldBuilderNameType(name, type);
-		}
-	}
-
-	public class HasFieldBuilderNameType {
-		private final String name;
-
-		private final String type;
-
-		private HasFieldBuilderNameType(@Nonnull String name,
-				@Nonnull String type) {
-			super();
-			this.name = name;
-			this.type = type;
-		}
-
-		public EnsureField withAccess(@Nonnull AccessModifier modifier) {
-			EnsureField operation = new EnsureField(name, type, modifier);
-			ensure(operation);
-			return operation;
-		}
-	}
 }

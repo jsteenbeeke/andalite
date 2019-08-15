@@ -47,27 +47,29 @@ public class AnnotationFieldNavigation extends
 			AnnotationValue value = target.getValue(AnnotationValue.class,
 					fieldName);
 
-			if (condition == null || condition.isSatisfiedBy(value)) {
+			if (value != null && (condition == null || condition.isSatisfiedBy(value))) {
 				return value.getValue();
 			}
 		} else if (condition != null
 				&& target.hasValueOfType(ArrayValue.class, fieldName)) {
 			ArrayValue array = target.getValue(ArrayValue.class, fieldName);
 
-			for (BaseValue<?> baseValue : array.getValue()) {
-				if (baseValue instanceof AnnotationValue) {
-					AnnotationValue annot = (AnnotationValue) baseValue;
+			if (array != null) {
+				for (BaseValue<?, ?, ?> baseValue : array.getValue()) {
+					if (baseValue instanceof AnnotationValue) {
+						AnnotationValue annot = (AnnotationValue) baseValue;
 
-					if (condition.isSatisfiedBy(annot)) {
-						return annot.getValue();
+						if (condition.isSatisfiedBy(annot)) {
+							return annot.getValue();
+						}
 					}
 				}
 			}
 		}
 
 		throw new NavigationException(
-				"Could not find annotation field named %s that satisfies specified conditions: %s",
-				fieldName != null ? fieldName : null, condition.toString());
+			"Could not find annotation field named %s that satisfies specified conditions: %s",
+			fieldName, condition);
 	}
 
 	@Override

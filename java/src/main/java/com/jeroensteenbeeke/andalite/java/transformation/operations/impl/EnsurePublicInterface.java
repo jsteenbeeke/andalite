@@ -30,14 +30,14 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilation
 public class EnsurePublicInterface implements ICompilationUnitOperation {
 
 	@Override
-	public List<Transformation> perform(AnalyzedSourceFile input) {
+	public List<Transformation> perform(@Nonnull AnalyzedSourceFile input) {
 		for (AnalyzedInterface iface : input.getInterfaces()) {
 			if (iface.getAccessModifier() == AccessModifier.PUBLIC) {
 				return ImmutableList.of();
 			}
 		}
 
-		return ImmutableList.of(Transformation.insertAfter(input,
+		return ImmutableList.of(input.insertAt(AnalyzedSourceFile.SourceFileInsertionPoint.AFTER_LAST_DENOMINATION,
 				String.format("public interface %s {\n\n}\n",
 						stripExtension(input.getOriginalFile().getName()))));
 	}
@@ -62,7 +62,7 @@ public class EnsurePublicInterface implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedSourceFile input) {
+	public ActionResult verify(@Nonnull AnalyzedSourceFile input) {
 		for (AnalyzedInterface iface : input.getInterfaces()) {
 			if (iface.getAccessModifier() == AccessModifier.PUBLIC) {
 				return ActionResult.ok();

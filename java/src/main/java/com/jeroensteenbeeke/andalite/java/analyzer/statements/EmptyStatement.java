@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class EmptyStatement extends AnalyzedStatement {
+public class EmptyStatement extends BaseStatement<EmptyStatement> {
 
 	public EmptyStatement(Location location) {
 		super(location);

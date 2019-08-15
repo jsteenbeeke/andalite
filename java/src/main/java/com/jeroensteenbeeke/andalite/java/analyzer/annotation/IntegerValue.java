@@ -18,25 +18,50 @@ package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public final class IntegerValue extends BaseValue<Integer> {
+public final class IntegerValue extends BaseValue<Integer,IntegerValue, IntegerValue.IntegerValueInsertionPoint> {
 
 	public IntegerValue(@Nonnull Location location, @Nullable String name,
-			@Nullable Integer value) {
+			@Nonnull Integer value) {
 		super(location, name, value);
 	}
 
 	@Override
 	public void output(IOutputCallback callback) {
 		Integer value = getValue();
-		callback.write(value != null ? Integer.toString(value) : null);
+		callback.write(Integer.toString(value));
 	}
 
 	@Override
 	public String toJavaString() {
 		Integer value = getValue();
-		return value != null ? Integer.toString(value) : "null";
+		return Integer.toString(value);
+	}
+
+	@Override
+	public IntegerValueInsertionPoint getBeforeInsertionPoint() {
+		return IntegerValueInsertionPoint.BEFORE;
+	}
+
+	@Override
+	public IntegerValueInsertionPoint getAfterInsertionPoint() {
+		return IntegerValueInsertionPoint.AFTER;
+	}
+
+	public enum IntegerValueInsertionPoint implements IInsertionPoint<IntegerValue> {
+		BEFORE {
+			@Override
+			public int position(IntegerValue container) {
+				return container.getLocation().getStart();
+			}
+		}, AFTER {
+			@Override
+			public int position(IntegerValue container) {
+				return container.getLocation().getEnd();
+			}
+		};
 	}
 }

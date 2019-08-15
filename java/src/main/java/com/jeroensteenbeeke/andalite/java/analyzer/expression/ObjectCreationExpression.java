@@ -14,13 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
-
 import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
@@ -28,6 +22,11 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.java.analyzer.types.ClassOrInterface;
+
+import javax.annotation.CheckForNull;
+import javax.annotation.Nonnull;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ObjectCreationExpression extends AnalyzedExpression {
 	private final ClassOrInterface type;
@@ -40,12 +39,18 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 
 	private AnalyzedClass declaredAnonymousClass;
 
+	private boolean diamond = false;
+
 	public ObjectCreationExpression(@Nonnull Location location,
 			@Nonnull ClassOrInterface type) {
 		super(location);
 		this.type = type;
 		this.arguments = Lists.newArrayList();
 		this.typeArguments = Lists.newArrayList();
+	}
+
+	public void setDiamond(boolean diamond) {
+		this.diamond = diamond;
 	}
 
 	@CheckForNull
@@ -120,20 +125,21 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 			java.append(".");
 		}
 		java.append(type.toJavaString());
-		if (!typeArguments.isEmpty()) {
+		if (diamond || !typeArguments.isEmpty()) {
 			java.append("<");
 			Joiner.on(",").appendTo(
 					java,
-					FluentIterable.from(typeArguments).transform(
-							AnalyzedType.toJavaStringFunction()));
+					typeArguments.stream().map(AnalyzedType::toJavaString).collect(Collectors.toList()));
 			java.append(">");
 		}
 		java.append("(");
 		if (!arguments.isEmpty()) {
 			Joiner.on(",").appendTo(
 					java,
-					FluentIterable.from(arguments).transform(
-							AnalyzedExpression.toJavaStringFunction()));
+					arguments
+						.stream()
+						.map(AnalyzedExpression::toJavaString)
+						.collect(Collectors.toList()));
 		}
 		java.append(")");
 

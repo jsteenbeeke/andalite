@@ -30,7 +30,7 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedEnum input)
+	public List<Transformation> perform(@Nonnull AnalyzedEnum input)
 			throws OperationException {
 		Optional<OperationException> validationError = checkEnum(input,
 				OperationException::new, Optional::empty);
@@ -40,40 +40,17 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 		}
 
 		List<AnalyzedEnumConstant> constants = input.getConstants();
-		AnalyzedEnumConstant last = constants.isEmpty() ? null : constants
-				.get(constants.size() - 1);
 
-		Transformation t = null;
+		final String prefix = constants.isEmpty() ? "" : ", ";
 
-		if (last == null) {
-			Location separatorLocation = input.getSeparatorLocation();
-			final String code = String.format(
-					"%s(%s)",
-					name,
-					expectedParameterExpressions.stream().collect(
-							Collectors.joining(", ")));
-
-			if (separatorLocation == null) {
-				// Insert before body
-				t = Transformation.insertAt(input.getBodyLocation().getStart(),
-						code);
-			} else {
-
-				t = Transformation.insertBefore(separatorLocation, code);
-			}
-		} else {
-			t = Transformation.insertAfter(last, String.format(
-					", %s(%s)",
-					name,
-					expectedParameterExpressions.stream().collect(
-							Collectors.joining(", "))));
-		}
-
-		return ImmutableList.of(t);
+		return ImmutableList.of(input.insertAt(AnalyzedEnum.EnumInsertionPoint.AFTER_LAST_CONSTANT, String.format(
+			"%s%s(%s)", prefix,
+			name,
+			String.join(", ", expectedParameterExpressions))));
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedEnum input) {
+	public ActionResult verify(@Nonnull AnalyzedEnum input) {
 		Optional<ActionResult> checked = checkEnum(input, ActionResult::error,
 				() -> Optional.of(ActionResult.error(
 						"Enum constant %s not found", name)));
@@ -104,7 +81,7 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 
 					String found = analyzedExpression.toJavaString();
 					String expected = expectedParameterExpressions.get(i);
-					if (!expected.equals(expected)) {
+					if (!expected.equals(found)) {
 						return Optional
 								.of(errorMessageToReturnType.apply(String
 										.format("Constant named %s exist, but parameter %d is invalid (expected %s, found %s)",
@@ -126,8 +103,7 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 		return String.format(
 				"Ensure presence of enum constant %s with parameters (%s)",
 				name,
-				expectedParameterExpressions.stream().collect(
-						Collectors.joining(", ")));
+				String.join(", ", expectedParameterExpressions));
 	}
 
 }

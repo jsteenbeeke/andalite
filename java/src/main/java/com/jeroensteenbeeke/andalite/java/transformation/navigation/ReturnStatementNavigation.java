@@ -14,18 +14,19 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
 
-public class ReturnStatementNavigation extends
-		ChainedNavigation<IBodyContainer, ReturnStatement> {
-	public ReturnStatementNavigation(IJavaNavigation<IBodyContainer> chained) {
+public class ReturnStatementNavigation<T extends IBodyContainer<? super T, ?>, I extends Enum<I> & IInsertionPoint<? super ReturnStatement>> extends
+		ChainedNavigation<T, ReturnStatement> {
+	public ReturnStatementNavigation(IJavaNavigation<T> chained) {
 		super(chained);
 	}
 
 	@Override
-	public ReturnStatement navigate(IBodyContainer chainedTarget)
+	public ReturnStatement navigate(T chainedTarget)
 			throws NavigationException {
 		return (ReturnStatement) chainedTarget
 				.getStatements()

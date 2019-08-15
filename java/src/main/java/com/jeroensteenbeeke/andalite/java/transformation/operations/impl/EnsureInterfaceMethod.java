@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -30,77 +30,105 @@ import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
+import javax.annotation.Nonnull;
+
 public class EnsureInterfaceMethod implements IInterfaceOperation {
 	private final String name;
 
 	private final String type;
 
+	private final InterfaceMethodType methodType;
+
 	private final List<ParameterDescriptor> descriptors;
 
-	public EnsureInterfaceMethod(String name, String type,
-			List<ParameterDescriptor> descriptors) {
+	public EnsureInterfaceMethod(String name, String type, InterfaceMethodType methodType,
+								 List<ParameterDescriptor> descriptors) {
 		this.name = name;
 		this.type = type;
+		this.methodType = methodType;
 		this.descriptors = descriptors;
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedInterface input)
-			throws OperationException {
-		Location last = input.getBodyLocation();
-
+	public List<Transformation> perform(@Nonnull AnalyzedInterface input)
+		throws OperationException {
 		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
 					AnalyzedType returnType = analyzedMethod.getReturnType();
-					final String returnTypeAsString = returnType != null ? returnType
-							.toJavaString() : "void";
+					final String returnTypeAsString = returnType
+						.toJavaString();
 
 					if (!type.equals(returnTypeAsString)) {
 						throw new OperationException(
-								String.format(
-										"Method with expected signature exists, but has incorrect return type %s (expected %s)",
-										returnTypeAsString, type));
+							String.format(
+								"Method with expected signature exists, but has incorrect return type %s (expected %s)",
+								returnTypeAsString, type));
 					}
 
 					return ImmutableList.of();
 				}
 			}
-
-			last = analyzedMethod.getLocation();
 		}
 		StringBuilder code = new StringBuilder();
 		code.append("\t");
+		switch (methodType) {
+			case DEFAULT:
+				code.append("default ");
+				break;
+			case PRIVATE:
+				code.append("private ");
+				break;
+			case PRIVATE_STATIC:
+				code.append("private ");
+			case PUBLIC_STATIC:
+				code.append("static ");
+				break;
+		}
+
 		code.append(type);
 		code.append(" ");
 		code.append(name);
 		code.append("(");
 		code.append(Joiner.on(", ").join(descriptors));
-		code.append(");\n\n");
+		code.append(")");
 
-		return ImmutableList.of(Transformation.insertBefore(last,
-				code.toString()));
+		switch (methodType) {
+			case DEFAULT:
+			case PRIVATE:
+			case PRIVATE_STATIC:
+			case PUBLIC_STATIC:
+				code.append(" {}");
+				break;
+			case ABSTRACT:
+				code.append(";");
+				break;
+		}
+
+		code.append("\n\n");
+
+		return ImmutableList.of(input.insertAt(AnalyzedInterface.InterfaceInsertionPoint.AFTER_LAST_METHOD, code.toString()));
 	}
 
 	@Override
 	public String getDescription() {
 		return String.format("existence of method: %s %s", type,
-				AnalyzeUtil.getMethodSignature(name, descriptors));
+							 AnalyzeUtil.getMethodSignature(name, descriptors));
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedInterface input) {
+	public ActionResult verify(@Nonnull AnalyzedInterface input) {
 		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
 					AnalyzedType returnType = analyzedMethod.getReturnType();
 					final String returnTypeAsString = returnType != null ? returnType
-							.toJavaString() : "void";
+						.toJavaString() : "void";
 
 					if (!type.equals(returnTypeAsString)) {
 						return ActionResult
-								.error("Method with expected signature exists, but has incorrect return type %s (expected %s)",
-										returnTypeAsString, type);
+							.error("Method with expected signature exists, but has incorrect return type %s (expected %s)",
+								   returnTypeAsString, type);
 					}
 
 					return ActionResult.ok();
@@ -109,9 +137,9 @@ public class EnsureInterfaceMethod implements IInterfaceOperation {
 		}
 
 		return ActionResult.error(
-				"No method named %s returning %s with parameters ( %s ) found",
-				name, type,
-				descriptors.stream().map(ParameterDescriptor::toString)
-						.collect(Collectors.joining(", ")));
+			"No method named %s returning %s with parameters ( %s ) found",
+			name, type,
+			descriptors.stream().map(ParameterDescriptor::toString)
+					   .collect(Collectors.joining(", ")));
 	}
 }

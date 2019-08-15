@@ -20,6 +20,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.java.analyzer.ClassDefinition;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedImport;
@@ -47,25 +48,22 @@ public class EnsureImports implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedSourceFile input) {
-		AnalyzedImport last = null;
+	public List<Transformation> perform(@Nonnull AnalyzedSourceFile input) {
+		ClassDefinition def = ClassDefinition.fromFQDN(input.getFullyQualifiedName());
+		ClassDefinition desired = ClassDefinition.fromFQDN(fqdn);
+
+		if (desired.getPackageName().equals(def.getPackageName())) {
+			// No need to import classes from same package
+			return ImmutableList.of();
+		}
 
 		for (AnalyzedImport analyzedImport : input.getImports()) {
 			if (analyzedImport.matchesClass(fqdn)) {
 				return ImmutableList.of();
 			}
-
-			last = analyzedImport;
 		}
 
-		if (last != null) {
-			return ImmutableList.of(Transformation.insertAfter(last,
-					String.format("\nimport %s;", fqdn)));
-		} else {
-			return ImmutableList.of(Transformation.insertAfter(
-					input.getPackageDefinitionLocation(),
-					String.format("\n\nimport %s;", fqdn)));
-		}
+		return ImmutableList.of(input.insertAt(AnalyzedSourceFile.SourceFileInsertionPoint.AFTER_IMPORTS, String.format("\nimport %s;", fqdn)));
 	}
 
 	@Override
@@ -74,7 +72,15 @@ public class EnsureImports implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedSourceFile input) {
+	public ActionResult verify(@Nonnull AnalyzedSourceFile input) {
+		ClassDefinition def = ClassDefinition.fromFQDN(input.getFullyQualifiedName());
+		ClassDefinition desired = ClassDefinition.fromFQDN(fqdn);
+
+		if (desired.getPackageName().equals(def.getPackageName())) {
+			// No need to import classes from same package
+			return ActionResult.ok();
+		}
+
 		if (input.hasImport(fqdn)) {
 			return ActionResult.ok();
 		}

@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,10 +20,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.collect.SortedSetMultimap;
 import com.jeroensteenbeeke.lux.ActionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,15 +37,15 @@ import com.google.common.io.Files;
 
 public class FileRewriter {
 	private static final Logger logger = LoggerFactory
-			.getLogger(FileRewriter.class);
+		.getLogger(FileRewriter.class);
 
 	private static final int FIRST_INDEX = 1;
 
 	private final File targetFile;
 
-	private final Multimap<Index, String> mutations;
+	private final TreeMultimap<Index, String> mutations;
 
-	private final Multimap<Integer, Index> pointIndexes;
+	private final TreeMultimap<Integer, Index> pointIndexes;
 
 	public FileRewriter(File targetFile) {
 		super();
@@ -73,12 +75,12 @@ public class FileRewriter {
 			logger.debug("Input: {}", targetFile.getAbsolutePath());
 			final File temp = File.createTempFile("rewrite", ".java");
 			try (final FileInputStream in = new FileInputStream(targetFile);
-					final FileOutputStream out = new FileOutputStream(temp)) {
+				 final FileOutputStream out = new FileOutputStream(temp)) {
 				int point = FIRST_INDEX;
 				int data;
 				int threshold = FIRST_INDEX - 1;
 				int unicodeBytesRemaining = 0;
-				
+
 				List<Integer> previous = Lists.newLinkedList();
 
 				StringBuilder output = new StringBuilder();
@@ -101,7 +103,7 @@ public class FileRewriter {
 									output.append("\u001B[0m");
 
 									threshold = Math.max(index.getTo(),
-											threshold);
+														 threshold);
 								}
 							}
 						}
@@ -130,6 +132,35 @@ public class FileRewriter {
 
 				logger.debug("Outputted: {}", output);
 
+				SortedSet<Integer> remainingIndexes = pointIndexes.keySet().tailSet(point);
+				if (!remainingIndexes.isEmpty()) {
+					if (remainingIndexes.size() > 1 || !remainingIndexes.contains(point)) {
+
+						return ActionResult.error("Transformations beyond file end! Requested: %s, but index is %d",
+												  remainingIndexes
+													  .stream()
+													  .map(i -> Integer.toString(i))
+													  .collect(Collectors.joining(", ", "{", "}"))
+							, point);
+					} else {
+						// Transformations remaining for end of file
+						for (Index index : pointIndexes.get(point)) {
+							if (mutations.containsKey(index)) {
+								for (String insert : mutations.get(index)) {
+									out.write(insert.getBytes());
+
+									output.append("\u001B[33m");
+									output.append(insert);
+									output.append("\u001B[0m");
+
+									threshold = Math.max(index.getTo(),
+														 threshold);
+								}
+							}
+						}
+					}
+				}
+
 				Files.copy(temp, targetFile);
 				temp.deleteOnExit();
 
@@ -156,14 +187,17 @@ public class FileRewriter {
 		} else if (byte8 == 1 && byte7 == 1 && byte6 == 1 && byte5 == 0) {
 			return 2;
 		} else if (byte8 == 1 && byte7 == 1 && byte6 == 1 && byte5 == 1
-				&& byte4 == 0) {
+			&& byte4 == 0) {
 			return 3;
 		}
 
 		throw new IllegalArgumentException(
-				String.format(
-						"I have no idea what to do with this character: %s [%d%d%d%d%d] (previous: %s)",
-						(char) data, byte8, byte7, byte6, byte5, byte4, previous.stream().map(Integer::toBinaryString).collect(Collectors.joining(", "))));
+			String.format(
+				"I have no idea what to do with this character: %s [%d%d%d%d%d] (previous: %s)",
+				(char) data, byte8, byte7, byte6, byte5, byte4, previous
+					.stream()
+					.map(Integer::toBinaryString)
+					.collect(Collectors.joining(", "))));
 
 	}
 

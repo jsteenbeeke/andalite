@@ -14,20 +14,21 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 
-public class BodyContainerNavigation<T extends IBodyContainer> extends
-		ChainedNavigation<T, IBodyContainer> {
+public class BodyContainerNavigation<T extends IBodyContainer<T,I>, I extends Enum<I> & IInsertionPoint<T>> extends
+		ChainedNavigation<T, T> {
 
 	public BodyContainerNavigation(IJavaNavigation<T> chained) {
 		super(chained);
 	}
 
 	@Override
-	public IBodyContainer navigate(T chainedTarget) throws NavigationException {
+	public T navigate(T chainedTarget) throws NavigationException {
 
-		return (IBodyContainer) chainedTarget;
+		return chainedTarget;
 	}
 
 	@Override

@@ -20,7 +20,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
 
 public class EnsureConstructorAnnotation
-		extends AbstractEnsureAnnotation<AnalyzedConstructor>
+		extends AbstractEnsureAnnotation<AnalyzedConstructor, AnalyzedConstructor.ConstructorInsertionPoint>
 		implements IConstructorOperation {
 	public EnsureConstructorAnnotation(String type) {
 		super(type);

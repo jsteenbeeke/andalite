@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.core;
 
 import javax.annotation.Nonnull;
 
-public abstract class Locatable implements ILocatable {
+public abstract class Locatable implements IReplaceable {
 	private final Location location;
 
 	public Locatable(@Nonnull Location location) {

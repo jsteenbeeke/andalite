@@ -21,7 +21,7 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Locatable;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public abstract class AnalyzedExpression extends Locatable {
+public abstract class  AnalyzedExpression extends Locatable {
 
 	protected AnalyzedExpression(Location location) {
 		super(location);

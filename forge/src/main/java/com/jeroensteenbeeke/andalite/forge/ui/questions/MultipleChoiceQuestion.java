@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class MultipleChoiceQuestion extends AbstractQuestion<String> {
+public abstract class MultipleChoiceQuestion extends AbstractQuestion {
 
 	public MultipleChoiceQuestion(String key, String question) {
 		super(key, question);
@@ -26,7 +26,7 @@ public abstract class MultipleChoiceQuestion extends AbstractQuestion<String> {
 	public abstract List<String> getChoices();
 
 	@Override
-	public boolean isValidAnswer(@Nullable String answer) {
+	public boolean isValidAnswer(@Nullable Object answer) {
 		return answer != null && getChoices().contains(answer);
 	}
 

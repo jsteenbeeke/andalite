@@ -18,7 +18,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.Question;
 
 import javax.annotation.Nullable;
 
-public abstract class AbstractQuestion<T> implements Question {
+public abstract class AbstractQuestion implements Question {
 	private final String key;
 
 	private final String question;
@@ -38,5 +38,5 @@ public abstract class AbstractQuestion<T> implements Question {
 		return question;
 	}
 
-	public abstract boolean isValidAnswer(@Nullable T answer);
+	public abstract boolean isValidAnswer(@Nullable Object answer);
 }

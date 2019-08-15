@@ -3,25 +3,27 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import javax.annotation.Nonnull;
-
-import com.github.antlrjavaparser.api.body.ModifierSet;
+import com.github.javaparser.ast.Modifier;
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-public abstract class AccessModifiable extends Annotatable {
+import javax.annotation.Nonnull;
+import java.util.List;
+
+public abstract class AccessModifiable<T extends AccessModifiable<T, I>, I extends Enum<I> & IInsertionPoint<T>> extends Annotatable<T, I> {
 	private final AccessModifier modifier;
 
 	private final boolean modifierStatic;
@@ -39,18 +41,18 @@ public abstract class AccessModifiable extends Annotatable {
 	private final boolean modifierVolatile;
 
 	private final boolean modifierTransient;
-	
-	public AccessModifiable(@Nonnull Location location, int modifiers) {
+
+	public AccessModifiable(@Nonnull Location location, List<Modifier.Keyword> modifiers) {
 		super(location);
 		this.modifier = AccessModifier.fromModifiers(modifiers);
-		this.modifierFinal = ModifierSet.isFinal(modifiers);
-		this.modifierStatic = ModifierSet.isStatic(modifiers);
-		this.modifierAbstract = ModifierSet.isAbstract(modifiers);
-		this.modifierSynchronized = ModifierSet.isSynchronized(modifiers);
-		this.modifierStrictFp = ModifierSet.isStrictfp(modifiers);
-		this.modifierNative = ModifierSet.isNative(modifiers);
-		this.modifierVolatile = ModifierSet.isVolatile(modifiers);
-		this.modifierTransient = ModifierSet.isTransient(modifiers);
+		this.modifierFinal = modifiers.contains(Modifier.Keyword.FINAL);
+		this.modifierStatic = modifiers.contains(Modifier.Keyword.STATIC);
+		this.modifierAbstract = modifiers.contains(Modifier.Keyword.ABSTRACT);
+		this.modifierSynchronized = modifiers.contains(Modifier.Keyword.SYNCHRONIZED);
+		this.modifierStrictFp = modifiers.contains(Modifier.Keyword.STRICTFP);
+		this.modifierNative = modifiers.contains(Modifier.Keyword.NATIVE);
+		this.modifierVolatile = modifiers.contains(Modifier.Keyword.VOLATILE);
+		this.modifierTransient = modifiers.contains(Modifier.Keyword.TRANSIENT);
 	}
 
 	public AccessModifier getAccessModifier() {

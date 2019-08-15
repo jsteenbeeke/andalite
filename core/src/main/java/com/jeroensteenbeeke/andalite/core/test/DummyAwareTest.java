@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,11 +27,11 @@ import com.google.common.collect.Sets;
 public abstract class DummyAwareTest implements ITempFileRegister {
 	protected enum BaseDummies implements IDummyDescriptor {
 		BareClass("BareClass"), BareClassWithGenericType(
-				"BareClassWithGenericType"), BareInterface("BareInterface"), Empty(
-				"Empty"), BareEnum("BareEnum"), ReverseIntComparator(
-				"ReverseIntComparator"), IfStatements("IfStatements"), EnumWithStringParam(
-				"EnumWithStringParam"), OhMyGodThisIsNotARealClass(
-				"OhMyGodThisIsNotARealClass");
+			"BareClassWithGenericType"), BareInterface("BareInterface"), Empty(
+			"Empty"), BareEnum("BareEnum"), BarestEnum("BarestEnum"), ReverseIntComparator(
+			"ReverseIntComparator"), IfStatements("IfStatements"), EnumWithStringParam(
+			"EnumWithStringParam"), OhMyGodThisIsNotARealClass(
+			"OhMyGodThisIsNotARealClass"), EnumWithValuesPresent("EnumWithValuesPresent"), EnumWithValuesPresentNoSemi("EnumWithValuesPresentNoSemi");
 
 		private final String className;
 
@@ -45,12 +45,12 @@ public abstract class DummyAwareTest implements ITempFileRegister {
 			tempFiles.add(tempFile);
 
 			try (InputStream stream = DummyAwareTest.class
-					.getResourceAsStream("/com/jeroensteenbeeke/andalite/dummy/"
-							.concat(String.format("%s.java", className)));
-					FileOutputStream fos = new FileOutputStream(tempFile)) {
+				.getResourceAsStream("/com/jeroensteenbeeke/andalite/dummy/"
+										 .concat(String.format("%s.java", className)));
+				 FileOutputStream fos = new FileOutputStream(tempFile)) {
 				if (stream == null) {
 					throw new IllegalArgumentException(String.format(
-							"Invalid class name %s", className));
+						"Invalid class name %s", className));
 				}
 
 				int in;
@@ -85,7 +85,7 @@ public abstract class DummyAwareTest implements ITempFileRegister {
 	private final Set<File> dummyFiles = Sets.newConcurrentHashSet();
 
 	protected final File getDummy(IDummyDescriptor descriptor)
-			throws IOException {
+		throws IOException {
 		return descriptor.getDummy(this);
 	}
 

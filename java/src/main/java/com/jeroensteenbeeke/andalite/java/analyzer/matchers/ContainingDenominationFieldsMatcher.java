@@ -22,14 +22,14 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.java.analyzer.ContainingDenomination;
 
 class ContainingDenominationFieldsMatcher extends
-		ByPropertyMatcher<ContainingDenomination, List<AnalyzedField>> {
+		ByPropertyMatcher<ContainingDenomination<?,?>, List<AnalyzedField>> {
 	ContainingDenominationFieldsMatcher(
 			Matcher<List<AnalyzedField>> delegateMatcher) {
 		super(delegateMatcher);
 	}
 
 	@Override
-	protected List<AnalyzedField> transform(ContainingDenomination item) {
+	protected List<AnalyzedField> transform(ContainingDenomination<?,?> item) {
 		return item.getFields();
 	}
 

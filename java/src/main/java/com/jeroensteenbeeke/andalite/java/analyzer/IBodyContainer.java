@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -16,10 +16,14 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import java.util.List;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
+import com.jeroensteenbeeke.andalite.core.IInsertionPointProvider;
 import com.jeroensteenbeeke.andalite.core.ILocatable;
 
-public interface IBodyContainer extends ILocatable {
-	List<AnalyzedStatement> getStatements();
+public interface IBodyContainer<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> extends ILocatable, IInsertionPointProvider<T, I> {
+	List<AnalyzedStatement<?,?>> getStatements();
 
 	boolean isAbstract();
+
+	I getStatementInsertionPoint();
 }

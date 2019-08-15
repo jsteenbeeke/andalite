@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class ContinueStatement extends AnalyzedStatement {
+public class ContinueStatement extends BaseStatement<ContinueStatement> {
 	private final String labelId;
 
 	public ContinueStatement(Location from, String labelId) {

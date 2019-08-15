@@ -17,15 +17,15 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
 import javax.annotation.Nullable;
 
-public class YesNoQuestion extends AbstractQuestion<Boolean> {
+public class YesNoQuestion extends AbstractQuestion {
 
 	public YesNoQuestion(String key, String question) {
 		super(key, question);
 	}
 
 	@Override
-	public boolean isValidAnswer(@Nullable Boolean answer) {
-		return answer != null;
+	public boolean isValidAnswer(@Nullable Object answer) {
+		return answer instanceof Boolean;
 	}
 
 }

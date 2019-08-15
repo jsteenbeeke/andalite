@@ -14,8 +14,9 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations;
 
+import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public interface IStatementOperation extends IJavaOperation<AnalyzedStatement> {
+public interface IStatementOperation<T extends AnalyzedStatement<T,I>, I extends Enum<I> & IInsertionPoint<? super T>> extends IJavaOperation<T> {
 
 }

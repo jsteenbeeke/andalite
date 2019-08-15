@@ -18,13 +18,13 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class DoStatement extends AnalyzedStatement {
+public class DoStatement extends BaseStatement<DoStatement> {
 	private final AnalyzedExpression condition;
 
-	private final AnalyzedStatement body;
+	private final AnalyzedStatement<?,?> body;
 
 	public DoStatement(Location location, AnalyzedExpression condition,
-			AnalyzedStatement body) {
+			AnalyzedStatement<?,?> body) {
 		super(location);
 		this.condition = condition;
 		this.body = body;
@@ -34,7 +34,7 @@ public class DoStatement extends AnalyzedStatement {
 		return condition;
 	}
 
-	public AnalyzedStatement getBody() {
+	public AnalyzedStatement<?,?> getBody() {
 		return body;
 	}
 

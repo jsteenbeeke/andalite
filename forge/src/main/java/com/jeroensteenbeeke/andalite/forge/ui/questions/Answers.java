@@ -10,7 +10,7 @@ import java.io.File;
 import java.util.Map;
 
 public class Answers {
-	private final Map<String,Object> answers;
+	private final Map<String, Object> answers;
 
 	private Answers(Map<String, Object> answers) {
 		this.answers = answers;
@@ -21,9 +21,9 @@ public class Answers {
 	}
 
 	public Answers plus(String key, Object value) {
-		ImmutableMap.Builder<String,Object> builder = ImmutableMap.builder();
+		ImmutableMap.Builder<String, Object> builder = ImmutableMap.builder();
 		builder.putAll(answers);
-		return new Answers(builder.put(key,value).build());
+		return new Answers(builder.put(key, value).build());
 	}
 
 	public boolean hasAnswer(@Nonnull String key) {
@@ -34,8 +34,10 @@ public class Answers {
 		return getAnswer(String.class, key);
 	}
 
-	public int getInteger(@Nonnull String key) { return Integer.parseInt(getAnswer(String.class,
-			key));}
+	public int getInteger(@Nonnull String key) {
+		return Integer.parseInt(getAnswer(String.class,
+										  key));
+	}
 
 	public File getFile(@Nonnull String key) {
 		return getAnswer(File.class, key);
@@ -45,8 +47,8 @@ public class Answers {
 		return getAnswer(Boolean.class, key);
 	}
 
-	public TypedResult<AnalyzedSourceFile> getSource(@Nonnull String key) {
-		return new ClassAnalyzer(getFile(key)).analyze();
+	public AnalyzedSourceFile getSource(@Nonnull String key) {
+		return getAnswer(AnalyzedSourceFile.class, key);
 	}
 
 	private boolean hasAnswer(@Nonnull Class<?> type, @Nonnull String key) {
@@ -59,9 +61,15 @@ public class Answers {
 			Object object = answers.get(key);
 
 			if (!type.isAssignableFrom(object.getClass())) {
+				if (type.isAssignableFrom(AnalyzedSourceFile.class) && object instanceof File) {
+					return (T) new ClassAnalyzer((File) object).analyze().throwIfNotOk(IllegalStateException::new);
+				} else if (type.isAssignableFrom(File.class) && object instanceof AnalyzedSourceFile) {
+					return (T) ((AnalyzedSourceFile) object).getOriginalFile();
+				}
+
 				throw new IllegalStateException("Answer with key " + key
-						+ " not of type " + type.getName()
-						+ " but of type " + object.getClass().getName());
+													+ " not of type " + type.getName()
+													+ " but of type " + object.getClass().getName());
 			}
 
 			return (T) object;
@@ -71,6 +79,6 @@ public class Answers {
 		answers.keySet().forEach(k -> System.err.printf("\t%s", k));
 
 		throw new IllegalArgumentException("No answer registered with key "
-				+ key);
+											   + key);
 	}
 }

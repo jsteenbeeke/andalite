@@ -3,12 +3,12 @@
  * it under the terms of the GNU Lesser General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,10 +26,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+import javax.xml.xpath.*;
 
 import com.jeroensteenbeeke.lux.TypedResult;
 import org.slf4j.Logger;
@@ -48,7 +45,7 @@ public class XMLTransformation<T extends Node> {
 	private static final TransformerFactory tfFactory = createTransformerFactory();
 
 	private static final XPathFactory xpFactory = createXPathFactory();
-	
+
 	private static final Logger log = LoggerFactory.getLogger(XMLTransformation.class);
 
 	private final IXMLNavigation<T> navigation;
@@ -56,7 +53,7 @@ public class XMLTransformation<T extends Node> {
 	private final IXMLOperation<T> operation;
 
 	private XMLTransformation(IXMLNavigation<T> navigation,
-			IXMLOperation<T> operation) {
+							  IXMLOperation<T> operation) {
 		this.navigation = navigation;
 		this.operation = operation;
 	}
@@ -69,9 +66,9 @@ public class XMLTransformation<T extends Node> {
 
 			XPath xpath = xpFactory.newXPath();
 			NodeList results = (NodeList) xpath.evaluate(
-					navigation.getXPathExpression(), document,
-					XPathConstants.NODESET);
-			
+				navigation.getXPathExpression(), document,
+				XPathConstants.NODESET);
+
 			if (results.getLength() == 0) {
 				log.warn("XML Transformation does not match any elements: {}", navigation.getXPathExpression());
 			}
@@ -79,6 +76,15 @@ public class XMLTransformation<T extends Node> {
 			for (int i = 0; i < results.getLength(); i++) {
 				T node = navigation.castNode(results.item(i));
 				operation.transform(node);
+			}
+
+			// Remove unneccesary whitespaces
+			document.normalize();
+			XPathExpression expr = xpath.compile("//text()[normalize-space(.) = '']");
+			NodeList blankTextNodes = (NodeList) expr.evaluate(document, XPathConstants.NODESET);
+
+			for (int i = 0; i < blankTextNodes.getLength(); i++) {
+				blankTextNodes.item(i).getParentNode().removeChild(blankTextNodes.item(i));
 			}
 
 			// Document already changed at this point, this is just the most
@@ -89,24 +95,24 @@ public class XMLTransformation<T extends Node> {
 
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 			transformer.setOutputProperty(
-					"{http://xml.apache.org/xslt}indent-amount", "2");
+				"{http://xml.apache.org/xslt}indent-amount", "2");
 
 			transformer.transform(new DOMSource(document), new StreamResult(
-					file));
+				file));
 
 			return TypedResult.ok(document);
 		} catch (OperationException | ParserConfigurationException | SAXException | IOException
-				| XPathExpressionException | TransformerException cause) {
+			| XPathExpressionException | TransformerException cause) {
 			cause.printStackTrace(System.err);
 			return TypedResult.fail("Could not perform transformation: %s",
-					cause.getMessage());
+									cause.getMessage());
 		}
 
 	}
 
 	public static <T extends Node> XMLTransformation<T> create(
-			IXMLNavigation<T> navigation, IXMLOperation<T> operation) {
-		return new XMLTransformation<T>(navigation, operation);
+		IXMLNavigation<T> navigation, IXMLOperation<T> operation) {
+		return new XMLTransformation<>(navigation, operation);
 	}
 
 	private static DocumentBuilderFactory createDocumentBuilderFactory() {

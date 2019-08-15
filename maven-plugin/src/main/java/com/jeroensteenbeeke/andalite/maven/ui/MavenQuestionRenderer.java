@@ -19,6 +19,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.FeedbackHandler;
 import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.*;
 import com.jeroensteenbeeke.andalite.forge.ui.renderer.QuestionRenderer;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.lux.TypedResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,11 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 			return renderFileSelectQuestion((FileSelectQuestion) question)
 					.map(o -> answers.plus(question.getKey(), o));
 		}
+
+		if (question instanceof SourceFileSelectQuestion) {
+			return renderSourceFileSelectQuestion((SourceFileSelectQuestion) question)
+				.map(o -> answers.plus(question.getKey(), o));
+		}
 		return TypedResult.fail("Unknown question type: %s", question.getClass());
 	}
 
@@ -80,10 +86,21 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 
 			}
 
+			System.out.print("\t[");
+			System.out.print(++i);
+			System.out.println("] Exit forge");
+
 			response = getNumberResponse(1, i);
 		}
 
-		ForgeRecipe answer = recipeList.get(response.getObject() - 1);
+
+		int selection = response.getObject() - 1;
+
+		if (selection >= recipeList.size()) {
+			return TypedResult.ok(ForgeRecipe.ExitRecipe.instance());
+		}
+
+		ForgeRecipe answer = recipeList.get(selection);
 
 		return TypedResult.ok(answer);	}
 
@@ -141,6 +158,37 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 					System.out.print(++i);
 					System.out.print("] ");
 					System.out.println(choice.getPath());
+				}
+
+				response = getNumberResponse(1, i);
+			}
+
+			answer = question.getChoices().get(response.getObject() - 1);
+		}
+
+		return TypedResult.ok(answer);
+	}
+
+	private TypedResult<AnalyzedSourceFile> renderSourceFileSelectQuestion(
+		SourceFileSelectQuestion question) {
+		TypedResult<Integer> response = createPlaceholder();
+
+		AnalyzedSourceFile answer = null;
+
+		while (!question.isValidAnswer(answer)) {
+			while (!response.isOk()) {
+				String message = response.getMessage();
+				if (message != null && !message.isEmpty()) {
+					System.out.println(message);
+					System.out.println();
+				}
+				System.out.println(question.getQuestion());
+				int i = 0;
+				for (AnalyzedSourceFile choice : question.getChoices()) {
+					System.out.print("\t[");
+					System.out.print(++i);
+					System.out.print("] ");
+					System.out.println(choice.getFullyQualifiedName());
 				}
 
 				response = getNumberResponse(1, i);

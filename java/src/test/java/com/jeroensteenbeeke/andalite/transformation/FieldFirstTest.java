@@ -38,6 +38,8 @@ public class FieldFirstTest extends DummyAwareTest {
 		java.ensurePublicClass();
 		java.inPublicClass().ensureField("foo").typed("String")
 				.withAccess(AccessModifier.PRIVATE);
+		java.inPublicClass().forField("foo").ensureInitialization("\"foo\"");
+
 
 		JavaRecipe recipe = java.build();
 

@@ -1,95 +1,20 @@
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
+import com.github.javaparser.Position;
+import com.github.javaparser.ast.*;
+import com.github.javaparser.ast.body.*;
+import com.github.javaparser.ast.comments.BlockComment;
+import com.github.javaparser.ast.comments.JavadocComment;
+import com.github.javaparser.ast.comments.LineComment;
+import com.github.javaparser.ast.expr.*;
+import com.github.javaparser.ast.modules.*;
+import com.github.javaparser.ast.stmt.*;
+import com.github.javaparser.ast.type.*;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import org.slf4j.Logger;
 
-import com.github.antlrjavaparser.api.BlockComment;
-import com.github.antlrjavaparser.api.Comment;
-import com.github.antlrjavaparser.api.CompilationUnit;
-import com.github.antlrjavaparser.api.ImportDeclaration;
-import com.github.antlrjavaparser.api.LineComment;
-import com.github.antlrjavaparser.api.Node;
-import com.github.antlrjavaparser.api.PackageDeclaration;
-import com.github.antlrjavaparser.api.TypeParameter;
-import com.github.antlrjavaparser.api.body.AnnotationDeclaration;
-import com.github.antlrjavaparser.api.body.AnnotationMemberDeclaration;
-import com.github.antlrjavaparser.api.body.CatchParameter;
-import com.github.antlrjavaparser.api.body.ClassOrInterfaceDeclaration;
-import com.github.antlrjavaparser.api.body.ConstructorDeclaration;
-import com.github.antlrjavaparser.api.body.EmptyMemberDeclaration;
-import com.github.antlrjavaparser.api.body.EmptyTypeDeclaration;
-import com.github.antlrjavaparser.api.body.EnumConstantDeclaration;
-import com.github.antlrjavaparser.api.body.EnumDeclaration;
-import com.github.antlrjavaparser.api.body.FieldDeclaration;
-import com.github.antlrjavaparser.api.body.InitializerDeclaration;
-import com.github.antlrjavaparser.api.body.JavadocComment;
-import com.github.antlrjavaparser.api.body.MethodDeclaration;
-import com.github.antlrjavaparser.api.body.Parameter;
-import com.github.antlrjavaparser.api.body.Resource;
-import com.github.antlrjavaparser.api.body.VariableDeclarator;
-import com.github.antlrjavaparser.api.body.VariableDeclaratorId;
-import com.github.antlrjavaparser.api.expr.ArrayAccessExpr;
-import com.github.antlrjavaparser.api.expr.ArrayCreationExpr;
-import com.github.antlrjavaparser.api.expr.ArrayInitializerExpr;
-import com.github.antlrjavaparser.api.expr.AssignExpr;
-import com.github.antlrjavaparser.api.expr.BinaryExpr;
-import com.github.antlrjavaparser.api.expr.BooleanLiteralExpr;
-import com.github.antlrjavaparser.api.expr.CastExpr;
-import com.github.antlrjavaparser.api.expr.CharLiteralExpr;
-import com.github.antlrjavaparser.api.expr.ClassExpr;
-import com.github.antlrjavaparser.api.expr.ConditionalExpr;
-import com.github.antlrjavaparser.api.expr.DoubleLiteralExpr;
-import com.github.antlrjavaparser.api.expr.EnclosedExpr;
-import com.github.antlrjavaparser.api.expr.FieldAccessExpr;
-import com.github.antlrjavaparser.api.expr.InstanceOfExpr;
-import com.github.antlrjavaparser.api.expr.IntegerLiteralExpr;
-import com.github.antlrjavaparser.api.expr.IntegerLiteralMinValueExpr;
-import com.github.antlrjavaparser.api.expr.LambdaExpr;
-import com.github.antlrjavaparser.api.expr.LongLiteralExpr;
-import com.github.antlrjavaparser.api.expr.LongLiteralMinValueExpr;
-import com.github.antlrjavaparser.api.expr.MarkerAnnotationExpr;
-import com.github.antlrjavaparser.api.expr.MemberValuePair;
-import com.github.antlrjavaparser.api.expr.MethodCallExpr;
-import com.github.antlrjavaparser.api.expr.MethodReferenceExpr;
-import com.github.antlrjavaparser.api.expr.NameExpr;
-import com.github.antlrjavaparser.api.expr.NormalAnnotationExpr;
-import com.github.antlrjavaparser.api.expr.NullLiteralExpr;
-import com.github.antlrjavaparser.api.expr.ObjectCreationExpr;
-import com.github.antlrjavaparser.api.expr.QualifiedNameExpr;
-import com.github.antlrjavaparser.api.expr.SingleMemberAnnotationExpr;
-import com.github.antlrjavaparser.api.expr.StringLiteralExpr;
-import com.github.antlrjavaparser.api.expr.SuperExpr;
-import com.github.antlrjavaparser.api.expr.ThisExpr;
-import com.github.antlrjavaparser.api.expr.UnaryExpr;
-import com.github.antlrjavaparser.api.expr.VariableDeclarationExpr;
-import com.github.antlrjavaparser.api.stmt.AssertStmt;
-import com.github.antlrjavaparser.api.stmt.BlockStmt;
-import com.github.antlrjavaparser.api.stmt.BreakStmt;
-import com.github.antlrjavaparser.api.stmt.CatchClause;
-import com.github.antlrjavaparser.api.stmt.ContinueStmt;
-import com.github.antlrjavaparser.api.stmt.DoStmt;
-import com.github.antlrjavaparser.api.stmt.EmptyStmt;
-import com.github.antlrjavaparser.api.stmt.ExplicitConstructorInvocationStmt;
-import com.github.antlrjavaparser.api.stmt.ExpressionStmt;
-import com.github.antlrjavaparser.api.stmt.ForStmt;
-import com.github.antlrjavaparser.api.stmt.ForeachStmt;
-import com.github.antlrjavaparser.api.stmt.IfStmt;
-import com.github.antlrjavaparser.api.stmt.LabeledStmt;
-import com.github.antlrjavaparser.api.stmt.ReturnStmt;
-import com.github.antlrjavaparser.api.stmt.SwitchEntryStmt;
-import com.github.antlrjavaparser.api.stmt.SwitchStmt;
-import com.github.antlrjavaparser.api.stmt.SynchronizedStmt;
-import com.github.antlrjavaparser.api.stmt.ThrowStmt;
-import com.github.antlrjavaparser.api.stmt.TryStmt;
-import com.github.antlrjavaparser.api.stmt.TypeDeclarationStmt;
-import com.github.antlrjavaparser.api.stmt.WhileStmt;
-import com.github.antlrjavaparser.api.type.ClassOrInterfaceType;
-import com.github.antlrjavaparser.api.type.PrimitiveType;
-import com.github.antlrjavaparser.api.type.ReferenceType;
-import com.github.antlrjavaparser.api.type.VoidType;
-import com.github.antlrjavaparser.api.type.WildcardType;
-import com.github.antlrjavaparser.api.visitor.VoidVisitor;
 
-public class DebugVisitor implements VoidVisitor<Logger> {
+public class DebugVisitor extends VoidVisitorAdapter<Logger> {
 	private int indent = 0;
 
 	private void visitNode(Node n, Logger arg) {
@@ -98,9 +23,11 @@ public class DebugVisitor implements VoidVisitor<Logger> {
 			prefix = "\t".concat(prefix);
 		}
 
-		arg.debug(String.format("%s%s [%d:%d - %d:%d]", prefix, n.toString(),
-				n.getBeginLine(), n.getBeginColumn(), n.getEndIndex(),
-				n.getEndColumn()));
+
+		arg.debug(String.format("%s%s [%s - %s]", prefix, n.toString(),
+								n.getBegin().map(Position::toString).orElse("unknown start"),
+								n.getEnd().map(Position::toString).orElse("unknown end")
+		));
 	}
 
 	@Override
@@ -140,12 +67,6 @@ public class DebugVisitor implements VoidVisitor<Logger> {
 	}
 
 	@Override
-	public void visit(EmptyTypeDeclaration n, Logger arg) {
-		visitNode(n, arg);
-
-	}
-
-	@Override
 	public void visit(EnumConstantDeclaration n, Logger arg) {
 		visitNode(n, arg);
 
@@ -175,11 +96,6 @@ public class DebugVisitor implements VoidVisitor<Logger> {
 
 	}
 
-	@Override
-	public void visit(VariableDeclaratorId n, Logger arg) {
-		visitNode(n, arg);
-
-	}
 
 	@Override
 	public void visit(ConstructorDeclaration n, Logger arg) {
@@ -199,25 +115,7 @@ public class DebugVisitor implements VoidVisitor<Logger> {
 
 	}
 
-	@Override
-	public void visit(CatchParameter n, Logger arg) {
-		visitNode(n, arg);
 
-	}
-
-	@Override
-	public void visit(Resource n, Logger arg) {
-		visitNode(n, arg);
-
-	}
-
-	@Override
-	public void visit(EmptyMemberDeclaration n, Logger arg) {
-		visitNode(n, arg);
-
-	}
-
-	@Override
 	public void visit(InitializerDeclaration n, Logger arg) {
 		visitNode(n, arg);
 
@@ -231,12 +129,6 @@ public class DebugVisitor implements VoidVisitor<Logger> {
 
 	@Override
 	public void visit(PrimitiveType n, Logger arg) {
-		visitNode(n, arg);
-
-	}
-
-	@Override
-	public void visit(ReferenceType n, Logger arg) {
 		visitNode(n, arg);
 
 	}
@@ -338,18 +230,6 @@ public class DebugVisitor implements VoidVisitor<Logger> {
 	}
 
 	@Override
-	public void visit(IntegerLiteralMinValueExpr n, Logger arg) {
-		visitNode(n, arg);
-
-	}
-
-	@Override
-	public void visit(LongLiteralMinValueExpr n, Logger arg) {
-		visitNode(n, arg);
-
-	}
-
-	@Override
 	public void visit(CharLiteralExpr n, Logger arg) {
 		visitNode(n, arg);
 
@@ -393,12 +273,6 @@ public class DebugVisitor implements VoidVisitor<Logger> {
 
 	@Override
 	public void visit(ObjectCreationExpr n, Logger arg) {
-		visitNode(n, arg);
-
-	}
-
-	@Override
-	public void visit(QualifiedNameExpr n, Logger arg) {
 		visitNode(n, arg);
 
 	}
@@ -464,12 +338,6 @@ public class DebugVisitor implements VoidVisitor<Logger> {
 	}
 
 	@Override
-	public void visit(TypeDeclarationStmt n, Logger arg) {
-		visitNode(n, arg);
-
-	}
-
-	@Override
 	public void visit(AssertStmt n, Logger arg) {
 		visitNode(n, arg);
 
@@ -501,12 +369,6 @@ public class DebugVisitor implements VoidVisitor<Logger> {
 
 	@Override
 	public void visit(SwitchStmt n, Logger arg) {
-		visitNode(n, arg);
-
-	}
-
-	@Override
-	public void visit(SwitchEntryStmt n, Logger arg) {
 		visitNode(n, arg);
 
 	}
@@ -548,12 +410,6 @@ public class DebugVisitor implements VoidVisitor<Logger> {
 	}
 
 	@Override
-	public void visit(ForeachStmt n, Logger arg) {
-		visitNode(n, arg);
-
-	}
-
-	@Override
 	public void visit(ForStmt n, Logger arg) {
 		visitNode(n, arg);
 
@@ -585,20 +441,126 @@ public class DebugVisitor implements VoidVisitor<Logger> {
 
 	@Override
 	public void visit(LineComment n, Logger arg) {
+		visitNode(n, arg);
 	}
 
 	@Override
 	public void visit(BlockComment n, Logger arg) {
-	}
-
-	@Override
-	public void visit(Comment n, Logger arg) {
-
+		visitNode(n, arg);
 	}
 
 	@Override
 	public void visit(JavadocComment n, Logger arg) {
-
+		visitNode(n, arg);
 	}
 
+	@Override
+	public void visit(ForEachStmt n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(Name n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(ArrayType n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(ArrayCreationLevel n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(IntersectionType n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(LocalClassDeclarationStmt n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(ModuleDeclaration n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(ModuleRequiresDirective n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(ModuleExportsDirective n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(ModuleProvidesDirective n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(ModuleUsesDirective n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(ModuleOpensDirective n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(Modifier n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(SimpleName n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(UnionType n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(SwitchEntry n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(UnknownType n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(TypeExpr n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(UnparsableStmt n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(ReceiverParameter n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(VarType n, Logger arg) {
+		visitNode(n, arg);
+	}
+
+	@Override
+	public void visit(SwitchExpr n, Logger arg) {
+		visitNode(n, arg);
+	}
 }

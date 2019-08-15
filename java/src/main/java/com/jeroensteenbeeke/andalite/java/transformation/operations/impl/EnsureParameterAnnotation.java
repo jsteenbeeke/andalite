@@ -21,18 +21,11 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedParameter;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IParameterOperation;
 
 public class EnsureParameterAnnotation
-		extends AbstractEnsureAnnotation<AnalyzedParameter>
+		extends AbstractEnsureAnnotation<AnalyzedParameter, AnalyzedParameter.ParameterInsertionPoint>
 		implements IParameterOperation {
 
 	public EnsureParameterAnnotation(String type) {
 		super(type);
-	}
-
-	@Override
-	protected Transformation createFirst(AnalyzedParameter input, String code) {
-		int startPlusOne = input.getLocation().getStart() + 1;
-
-		return Transformation.insertAt(startPlusOne, code);
 	}
 
 	@Override

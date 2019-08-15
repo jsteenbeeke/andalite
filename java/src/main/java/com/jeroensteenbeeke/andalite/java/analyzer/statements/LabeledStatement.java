@@ -17,14 +17,14 @@ package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class LabeledStatement extends AnalyzedStatement {
+public class LabeledStatement extends BaseStatement<LabeledStatement> {
 
 	private final String label;
 
-	private final AnalyzedStatement statement;
+	private final AnalyzedStatement<?,?> statement;
 
 	public LabeledStatement(Location from, String label,
-			AnalyzedStatement statement) {
+			AnalyzedStatement<?,?> statement) {
 		super(from);
 		this.label = label;
 		this.statement = statement;
@@ -34,7 +34,7 @@ public class LabeledStatement extends AnalyzedStatement {
 		return label;
 	}
 
-	public AnalyzedStatement getStatement() {
+	public AnalyzedStatement<?,?> getStatement() {
 		return statement;
 	}
 

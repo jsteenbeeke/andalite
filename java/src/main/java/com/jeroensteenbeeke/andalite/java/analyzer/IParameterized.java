@@ -18,4 +18,6 @@ import java.util.List;
 
 public interface IParameterized {
 	List<AnalyzedParameter> getParameters();
+
+	void addParameter(AnalyzedParameter parameter);
 }

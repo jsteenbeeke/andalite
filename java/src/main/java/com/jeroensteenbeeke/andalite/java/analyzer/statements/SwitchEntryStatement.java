@@ -14,23 +14,22 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
-import java.util.List;
-
-import javax.annotation.CheckForNull;
-import javax.annotation.Nullable;
-
 import com.google.common.base.Joiner;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class SwitchEntryStatement extends AnalyzedStatement {
+import javax.annotation.CheckForNull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class SwitchEntryStatement extends BaseStatement<SwitchEntryStatement> {
 
 	private final AnalyzedExpression value;
 
-	private final List<AnalyzedStatement> statements;
+	private final List<AnalyzedStatement<?,?>> statements;
 
 	public SwitchEntryStatement(Location from, @Nullable AnalyzedExpression value) {
 		super(from);
@@ -43,11 +42,11 @@ public class SwitchEntryStatement extends AnalyzedStatement {
 		return value;
 	}
 
-	public void addStatement(AnalyzedStatement statement) {
+	public void addStatement(AnalyzedStatement<?,?> statement) {
 		this.statements.add(statement);
 	}
 
-	public List<AnalyzedStatement> getStatements() {
+	public List<AnalyzedStatement<?,?>> getStatements() {
 		return statements;
 	}
 
@@ -57,7 +56,6 @@ public class SwitchEntryStatement extends AnalyzedStatement {
 				"case %s: %s",
 				getValue(),
 				Joiner.on("; ").join(
-						FluentIterable.from(statements).transform(
-								AnalyzedStatement.toJavaStringFunction())));
+					statements.stream().map(AnalyzedStatement::toJavaString).collect(Collectors.toList())));
 	}
 }

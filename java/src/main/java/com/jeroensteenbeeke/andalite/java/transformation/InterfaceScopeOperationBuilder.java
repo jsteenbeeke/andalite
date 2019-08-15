@@ -22,6 +22,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigat
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.InnerClassNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureSuperInterface;
+import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.InterfaceMethodType;
 
 public class InterfaceScopeOperationBuilder extends
 		AbstractOperationBuilder<AnalyzedInterface, IInterfaceOperation> {
@@ -33,14 +34,14 @@ public class InterfaceScopeOperationBuilder extends
 
 	public ClassScopeOperationBuilder forInnerClass(String name) {
 		return new ClassScopeOperationBuilder(getCollector(),
-				new InnerClassNavigation<AnalyzedInterface>(getNavigation(),
-						name));
+											  new InnerClassNavigation<>(getNavigation(),
+																		 name));
 	}
 
 	public AnnotatableOperationBuilder<AnalyzedInterface> forAnnotation(
 			String type) {
-		return new AnnotatableOperationBuilder<AnalyzedInterface>(
-				getCollector(), getNavigation(), type);
+		return new AnnotatableOperationBuilder<>(
+			getCollector(), getNavigation(), type);
 	}
 
 	public InterfaceMethodLocator forMethod() {
@@ -48,8 +49,25 @@ public class InterfaceScopeOperationBuilder extends
 	}
 
 	public EnsureInterfaceMethodBuilder ensureMethod() {
-		return new EnsureInterfaceMethodBuilder(o -> ensure(o));
+		return new EnsureInterfaceMethodBuilder(InterfaceMethodType.ABSTRACT, this::ensure);
 	}
+
+	public EnsureInterfaceMethodBuilder ensureDefaultMethod() {
+		return new EnsureInterfaceMethodBuilder(InterfaceMethodType.DEFAULT, this::ensure);
+	}
+
+	public EnsureInterfaceMethodBuilder ensurePrivateMethod() {
+		return new EnsureInterfaceMethodBuilder(InterfaceMethodType.PRIVATE, this::ensure);
+	}
+
+	public EnsureInterfaceMethodBuilder ensureStaticMethod() {
+		return new EnsureInterfaceMethodBuilder(InterfaceMethodType.PUBLIC_STATIC, this::ensure);
+	}
+
+	public EnsureInterfaceMethodBuilder ensurePrivateStaticMethod() {
+		return new EnsureInterfaceMethodBuilder(InterfaceMethodType.PRIVATE_STATIC, this::ensure);
+	}
+
 
 	public void ensureSuperInterface(@Nonnull String iface) {
 		ensure(new EnsureSuperInterface(iface));

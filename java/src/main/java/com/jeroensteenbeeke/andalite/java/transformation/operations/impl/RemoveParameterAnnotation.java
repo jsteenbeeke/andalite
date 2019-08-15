@@ -13,10 +13,4 @@ public class RemoveParameterAnnotation
 		super(annotation);
 	}
 
-	@Override
-	public Location getLocation(AnalyzedAnnotation annotation) {
-		Location location = annotation.getLocation();
-		return new Location(location.getStart() + 1, location.getEnd());
-	}
-
 }

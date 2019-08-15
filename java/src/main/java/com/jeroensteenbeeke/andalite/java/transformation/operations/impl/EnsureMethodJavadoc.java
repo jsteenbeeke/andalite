@@ -9,32 +9,34 @@ import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
 
+import javax.annotation.Nonnull;
+
 public class EnsureMethodJavadoc implements IMethodOperation {
 	private final String javadoc;
 
 	public EnsureMethodJavadoc(String javadoc) {
-		this.javadoc = String.format("/**\n * %s\n */\n", javadoc);
+		this.javadoc = javadoc;
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedMethod input)
-			throws OperationException {
-		if (!javadoc.equals(input.getJavadoc())) {
+	public List<Transformation> perform(@Nonnull AnalyzedMethod input)
+		throws OperationException {
+		if (input.getJavadoc().map(String::trim).filter(javadoc::equals).isEmpty()) {
 			return ImmutableList
-					.of(Transformation.insertBefore(input, javadoc));
+				.of(input.insertAt(AnalyzedMethod.MethodInsertionPoint.BEFORE, String.format("/**\n * %s\n */", javadoc)));
 		}
 
 		return ImmutableList.of();
 	}
 
 	@Override
-	public ActionResult verify(AnalyzedMethod input) {
-		if (javadoc.equals(input.getJavadoc())) {
+	public ActionResult verify(@Nonnull AnalyzedMethod input) {
+		if (input.getJavadoc().map(String::trim).filter(javadoc::equals).isPresent()) {
 			return ActionResult.ok();
 		}
 
 		return ActionResult.error("Missing javadoc: %s (actual: %s)", javadoc,
-				input.getJavadoc());
+								  input.getJavadoc());
 	}
 
 	@Override

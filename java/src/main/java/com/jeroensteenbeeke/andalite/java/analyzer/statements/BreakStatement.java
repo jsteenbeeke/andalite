@@ -15,20 +15,30 @@
 package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
 import com.jeroensteenbeeke.andalite.core.Location;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-public class BreakStatement extends AnalyzedStatement {
-	private final String labelId;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Optional;
 
-	public BreakStatement(Location from, String labelId) {
-		super(from);
-		this.labelId = labelId;
+public class BreakStatement extends BaseStatement<BreakStatement> {
+	private final AnalyzedExpression expression;
+
+	public BreakStatement(@Nonnull Location location, @Nullable AnalyzedExpression expression) {
+		super(location);
+		this.expression = expression;
+	}
+
+	@Nonnull
+	public Optional<AnalyzedExpression> getExpression() {
+		return Optional.ofNullable(expression);
 	}
 
 	@Override
 	public String toJavaString() {
-		if (labelId != null) {
-			return String.format("break %s", labelId);
+		if (expression != null) {
+			return String.format("break %s", expression.toJavaString());
 		}
 
 		return "break";

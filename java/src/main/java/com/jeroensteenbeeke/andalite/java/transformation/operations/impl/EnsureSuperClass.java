@@ -15,8 +15,11 @@
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.java.analyzer.GenerifiedName;
+import com.jeroensteenbeeke.andalite.java.analyzer.LocatedName;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
@@ -34,34 +37,19 @@ public class EnsureSuperClass implements IClassOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(AnalyzedClass input)
-			throws OperationException {
-		if (superClass.equals(input.getSuperClass())) {
+	public List<Transformation> perform(@Nonnull AnalyzedClass input)
+		throws OperationException {
+		if (input
+			.getSuperClass()
+			.map(GenerifiedName::getName)
+			.map(this::stripWhitespaces)
+			.filter(stripWhitespaces(superClass)::equals)
+			.isPresent()) {
 			return ImmutableList.of();
 		} else {
-			Location extendsLocation = input.getExtendsLocation();
-			if (input.getSuperClass() != null && extendsLocation != null) {
-				return ImmutableList.of(Transformation.replace(extendsLocation,
-						superClass));
-			} else {
-				if (extendsLocation != null) {
-					if (extendsLocation.getLength() == 0) {
-						// Prefix with space
-						return ImmutableList
-								.of(Transformation.insertAfter(extendsLocation,
-										" extends ".concat(superClass)));
-					} else {
-						return ImmutableList
-								.of(Transformation.insertAfter(extendsLocation,
-										"extends ".concat(superClass)));
-					}
-				} else {
-					// Rare
-					return ImmutableList.of(Transformation.insertAfter(
-							input.getNameLocation(),
-							" extends ".concat(superClass)));
-				}
-			}
+			return input.getSuperClass().map(name -> name.replace(superClass)).or(() ->
+																					  Optional.of(input.insertAt(AnalyzedClass.ClassInsertionPoint.AFTER_NAME, " extends " + superClass))
+			).map(ImmutableList::of).orElseGet(ImmutableList::of);
 		}
 	}
 
@@ -72,11 +60,16 @@ public class EnsureSuperClass implements IClassOperation {
 
 	@Override
 	public ActionResult verify(@Nonnull AnalyzedClass input) {
-		if (stripWhitespaces(superClass).equals(stripWhitespaces(input.getSuperClass()))) {
+		if (input
+			.getSuperClass()
+			.map(GenerifiedName::getName)
+			.map(this::stripWhitespaces)
+			.filter(stripWhitespaces(superClass)::equals)
+			.isPresent()) {
 			return ActionResult.ok();
 		}
 		return ActionResult.error("Invalid superclass: %s, expected %s",
-				input.getSuperClass(), superClass);
+								  input.getSuperClass(), superClass);
 	}
 
 
@@ -84,7 +77,7 @@ public class EnsureSuperClass implements IClassOperation {
 		if (s == null) {
 			return null;
 		}
-		
+
 		return s.replaceAll("\\s", "");
 	}
 }
