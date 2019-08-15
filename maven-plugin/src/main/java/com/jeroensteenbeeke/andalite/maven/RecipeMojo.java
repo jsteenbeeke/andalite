@@ -41,6 +41,8 @@ public abstract class RecipeMojo extends AbstractMojo {
 	protected List<ForgeRecipe> determineRecipes() throws MojoFailureException {
 		List<ForgeRecipe> recipeList = Lists.newArrayList();
 
+		boolean recipesWithConfigErrors = false;
+
 		for (String className : recipes) {
 			try {
 				Class<?> recipeClass = Class.forName(className);
@@ -60,6 +62,7 @@ public abstract class RecipeMojo extends AbstractMojo {
 							recipeList.add(recipe);
 						} else {
 							getLog().warn(String.format("Recipe %s not correctly configured: %s", className, configured.getMessage()));
+							recipesWithConfigErrors = true;
 						}
 					} catch (NoSuchMethodException e) {
 						// And if it doesn't exist, go for a default no-argument
@@ -82,9 +85,14 @@ public abstract class RecipeMojo extends AbstractMojo {
 			}
 		}
 
+		if (recipesWithConfigErrors) {
+			extraConfiguration.forEach((k,v) -> getLog().debug(String.format("%-30s: %s", k, v)));
+		}
+
 		if (recipeList.isEmpty()) {
 			throw new MojoFailureException("Unable to instantiate any recipes!");
 		}
+
 		return recipeList;
 	}
 

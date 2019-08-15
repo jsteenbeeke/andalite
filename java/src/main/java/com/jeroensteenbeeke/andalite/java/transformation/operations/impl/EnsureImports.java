@@ -20,6 +20,7 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.java.analyzer.ClassDefinition;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedImport;
@@ -48,6 +49,13 @@ public class EnsureImports implements ICompilationUnitOperation {
 
 	@Override
 	public List<Transformation> perform(@Nonnull AnalyzedSourceFile input) {
+		ClassDefinition def = ClassDefinition.fromFQDN(input.getFullyQualifiedName());
+		ClassDefinition desired = ClassDefinition.fromFQDN(fqdn);
+
+		if (desired.getPackageName().equals(def.getPackageName())) {
+			// No need to import classes from same package
+			return ImmutableList.of();
+		}
 
 		for (AnalyzedImport analyzedImport : input.getImports()) {
 			if (analyzedImport.matchesClass(fqdn)) {
@@ -65,6 +73,14 @@ public class EnsureImports implements ICompilationUnitOperation {
 
 	@Override
 	public ActionResult verify(@Nonnull AnalyzedSourceFile input) {
+		ClassDefinition def = ClassDefinition.fromFQDN(input.getFullyQualifiedName());
+		ClassDefinition desired = ClassDefinition.fromFQDN(fqdn);
+
+		if (desired.getPackageName().equals(def.getPackageName())) {
+			// No need to import classes from same package
+			return ActionResult.ok();
+		}
+
 		if (input.hasImport(fqdn)) {
 			return ActionResult.ok();
 		}

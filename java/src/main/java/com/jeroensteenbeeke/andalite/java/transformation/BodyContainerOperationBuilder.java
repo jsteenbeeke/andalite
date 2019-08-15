@@ -66,14 +66,17 @@ public abstract class BodyContainerOperationBuilder<T extends IBodyContainer<T, 
 		});
 	}
 
-	public void ensureStatement(@Nonnull String statement) {
-		ensure(new EnsureStatement<>(statement) {
+	public EnsureStatement<T,I> ensureStatement(@Nonnull String statement) {
+		EnsureStatement<T, I> ensureStatement = new EnsureStatement<>(statement) {
 
 			@Override
 			public I getLastStatementLocation() {
 				return BodyContainerOperationBuilder.this.getLastStatementLocation();
 			}
-		});
+		};
+		ensure(ensureStatement);
+
+		return ensureStatement;
 	}
 
 	public void ensureIfStatement(@Nonnull String condition) {

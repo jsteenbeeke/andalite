@@ -103,8 +103,8 @@ public class Templates {
 		return new Returns(expression);
 	}
 
-	public static Statement statement(@Nonnull String statement) {
-		return new Statement(statement);
+	public static StatementTemplate statement(@Nonnull String statement) {
+		return new StatementTemplate(statement);
 	}
 
 	public static FieldAnnotation fieldAnnotation(@Nonnull String type) {

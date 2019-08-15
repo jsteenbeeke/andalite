@@ -37,9 +37,25 @@ public abstract class EnsureStatement<T extends IBodyContainer<T, I>, I extends 
 
 	private final String statement;
 
+	private final boolean verification;
+
 	public EnsureStatement(String statement) {
-		this.statement = statement.endsWith(";") ? statement : String.format(
-				"%s;", statement);
+		this(statement.endsWith(";") ? statement : String.format(
+				"%s;", statement), false);
+	}
+
+	private EnsureStatement(String statement, boolean verification) {
+		this.statement = statement;
+		this.verification = verification;
+	}
+
+	public EnsureStatement<T,I> withoutVerification() {
+		return new EnsureStatement<>(statement, false) {
+			@Override
+			public I getLastStatementLocation() {
+				return EnsureStatement.this.getLastStatementLocation();
+			}
+		};
 	}
 
 	@Override
@@ -80,6 +96,10 @@ public abstract class EnsureStatement<T extends IBodyContainer<T, I>, I extends 
 
 	@Override
 	public ActionResult verify(@Nonnull T input) {
+		if (!verification) {
+			return ActionResult.ok();
+		}
+
 		for (AnalyzedStatement<?,?> analyzedStatement : input.getStatements()) {
 			if (analyzedStatement == null)
 				continue;

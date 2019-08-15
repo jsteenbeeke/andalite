@@ -17,12 +17,12 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import javax.annotation.Nonnull;
 
-final class ClassDefinition {
+public final class ClassDefinition {
 	private final String packageName;
 
 	private final String className;
 
-	ClassDefinition(@Nonnull String packageName, @Nonnull String className) {
+	private ClassDefinition(@Nonnull String packageName, @Nonnull String className) {
 		super();
 		this.packageName = packageName;
 		this.className = className;
