@@ -41,7 +41,7 @@ public class EnsureImplements implements IClassOperation {
 	public List<Transformation> perform(@Nonnull AnalyzedClass input)
 			throws OperationException {
 
-		if (input.getInterfaces().contains(interfaceName)) {
+		if (input.getInterfaces().stream().map(GenerifiedName::getName).anyMatch(interfaceName::equals)) {
 			return ImmutableList.of();
 		}
 

@@ -59,6 +59,7 @@ public class TemplatesTest extends DummyAwareTest {
 	@Test
 	public void testRegularClassWithInterface() throws IOException {
 		JavaRecipe recipe = aPublicClass()
+			.withImplementedInterface("java.io.Serializable")
 			.withImplementedInterface("java.io.Serializable").toRecipe();
 
 		File bare = getDummy(BaseDummies.Empty);
@@ -74,6 +75,7 @@ public class TemplatesTest extends DummyAwareTest {
 		AnalyzedClass analyzedClass = classes.get(0);
 
 		assertTrue(analyzedClass.getSuperClass().isEmpty());
+		assertThat(analyzedClass.getInterfaces().size(), equalTo(1));
 		assertTrue(analyzedClass.implementsInterface("Serializable"));
 	}
 
