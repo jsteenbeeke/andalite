@@ -14,11 +14,13 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Set;
 
 public class SimpleQuestion extends AbstractQuestion {
+	private static final String MATCH_ALL = "^.*$";
+
 	public SimpleQuestion(String key, String question) {
 		super(key, question);
 	}
@@ -29,10 +31,34 @@ public class SimpleQuestion extends AbstractQuestion {
 	}
 
 	public SimpleQuestion matching(@Nonnull final String pattern) {
+		if (pattern.equals(MATCH_ALL)) {
+			return this;
+		}
+
 		return new SimpleQuestion(getKey(), getQuestion()) {
 			@Override
 			public boolean isValidAnswer(@Nullable Object answer) {
-				return super.isValidAnswer(answer) && answer instanceof String && ((String) answer).matches(pattern);
+				return SimpleQuestion.this.isValidAnswer(answer)
+					&& answer instanceof String && ((String) answer)
+					.matches(pattern);
+			}
+		};
+	}
+
+	public SimpleQuestion withDisallowedWords(Boolean caseSensitive,
+		@Nonnull Set<String> disallowedWords) {
+		if (caseSensitive == null) {
+			return this;
+		}
+
+		return new SimpleQuestion(getKey(), getQuestion()) {
+			@Override
+			public boolean isValidAnswer(@Nullable Object answer) {
+				return SimpleQuestion.this.isValidAnswer(answer)
+					&& answer instanceof String && caseSensitive ?
+					!disallowedWords.contains(answer) :
+					answer instanceof String && disallowedWords.stream()
+						.noneMatch(((String) answer)::equalsIgnoreCase);
 			}
 		};
 	}
