@@ -227,7 +227,7 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 
 	private TypedResult<String> renderSimpleQuestion(
 			SimpleQuestion question) {
-		String answer = "";
+		String answer = null;
 		while (!question.isValidAnswer(answer)) {
 			System.out.println(question.getQuestion());
 			answer = System.console().readLine();
