@@ -139,6 +139,10 @@ public class Templates {
 		return value -> new AnnotationValueTemplate<>(name, value, IAnnotationOperationBuilder::ensureFieldAccessValue);
 	}
 
+	public static AnnotationValueBuilder<String> classField(@Nonnull String name) {
+		return value -> new AnnotationValueTemplate<>(name, value, IAnnotationOperationBuilder::ensureClassValue);
+	}
+
 	@FunctionalInterface
 	public interface AnnotationValueBuilder<T> {
 		AnnotationValueTemplate<T> withValue(T value);

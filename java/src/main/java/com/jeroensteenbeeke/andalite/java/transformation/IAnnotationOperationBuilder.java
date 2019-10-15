@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import com.jeroensteenbeeke.andalite.core.ILocatable;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BooleanValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.CharValue;
+import com.jeroensteenbeeke.andalite.java.analyzer.annotation.ClassValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.FieldAccessValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.IntegerValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
@@ -92,4 +93,14 @@ public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJa
 	}
 
 	void ensure(IAnnotationOperation operation);
+
+	default void ensureClassValue(@Nonnull String name, @Nonnull String type) {
+		ensure(new EnsureAnnotationField<>(name, ClassValue.class,
+										   type) {
+			@Override
+			public String format(String value) {
+				return value != null ? String.format("%s.class", type) : NULL;
+			}
+		});
+	}
 }
