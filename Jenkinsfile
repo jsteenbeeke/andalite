@@ -5,7 +5,7 @@ def quiet_sh(cmd) {
 pipeline {
     agent {
         docker {
-            image 'maven:3.6-jdk-11'
+            image 'maven:3.8-jdk-17'
             label 'docker'
             args '-u root'
         }
