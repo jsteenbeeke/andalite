@@ -38,8 +38,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.*;
 import com.jeroensteenbeeke.andalite.java.analyzer.expression.*;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.*;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ConstructorInvocationStatement.InvocationType;
-import com.jeroensteenbeeke.andalite.java.analyzer.types.*;
 import com.jeroensteenbeeke.andalite.java.analyzer.types.ArrayType;
+import com.jeroensteenbeeke.andalite.java.analyzer.types.*;
 import com.jeroensteenbeeke.andalite.java.util.Locations;
 import com.jeroensteenbeeke.lux.TypedResult;
 import org.slf4j.Logger;
@@ -147,8 +147,7 @@ public class ClassAnalyzer {
 	private Denomination<?, ?> analyzeTypeDeclaration(@Nonnull AnalyzedSourceFile sourceFile,
 													  @Nonnull AnalyzerContext context,
 													  @Nonnull TypeDeclaration<?> typeDeclaration) {
-		if (typeDeclaration instanceof ClassOrInterfaceDeclaration) {
-			ClassOrInterfaceDeclaration decl = (ClassOrInterfaceDeclaration) typeDeclaration;
+		if (typeDeclaration instanceof ClassOrInterfaceDeclaration decl) {
 
 			if (decl.isInterface()) {
 
@@ -176,8 +175,7 @@ public class ClassAnalyzer {
 
 				return setJavadoc(decl, element);
 			}
-		} else if (typeDeclaration instanceof EnumDeclaration) {
-			EnumDeclaration decl = (EnumDeclaration) typeDeclaration;
+		} else if (typeDeclaration instanceof EnumDeclaration decl) {
 
 			AnalyzedEnum element = new AnalyzedEnum(sourceFile, Locations.from(decl, indexes),
 													keywords(Modifier.Keyword.DEFAULT, decl.getModifiers()), context.getScope(), locate(decl.getName())
@@ -189,8 +187,7 @@ public class ClassAnalyzer {
 			sourceFile.addEnum(element);
 
 			return setJavadoc(decl, element);
-		} else if (typeDeclaration instanceof AnnotationDeclaration) {
-			AnnotationDeclaration decl = (AnnotationDeclaration) typeDeclaration;
+		} else if (typeDeclaration instanceof AnnotationDeclaration decl) {
 
 			AnalyzedAnnotationType element = new AnalyzedAnnotationType(sourceFile,
 																		Locations.from(decl, indexes), keywords(Modifier.Keyword.DEFAULT, decl.getModifiers()),
@@ -398,8 +395,7 @@ public class ClassAnalyzer {
 			AnalyzedConstructor constr = analyzeConstructor(typeName,
 															(ConstructorDeclaration) member, element, analyzerContext);
 			addConstructor(element, constr);
-		} else if (member instanceof ClassOrInterfaceDeclaration) {
-			ClassOrInterfaceDeclaration innerClassDecl = (ClassOrInterfaceDeclaration) member;
+		} else if (member instanceof ClassOrInterfaceDeclaration innerClassDecl) {
 
 			if (innerClassDecl.isInterface()) {
 				AnalyzedInterface innerInterface = new AnalyzedInterface(element.getSourceFile(),
@@ -431,8 +427,7 @@ public class ClassAnalyzer {
 				element.addInnerDenomination(innerClass);
 			}
 
-		} else if (member instanceof EnumDeclaration) {
-			EnumDeclaration decl = (EnumDeclaration) member;
+		} else if (member instanceof EnumDeclaration decl) {
 
 			AnalyzedEnum elem = new AnalyzedEnum(element.getSourceFile(), Locations.from(decl, indexes),
 												 keywords(Modifier.Keyword.DEFAULT, decl.getModifiers()), analyzerContext
@@ -443,8 +438,7 @@ public class ClassAnalyzer {
 								   analyzerContext.innerDeclaration(decl.getName()), elem);
 
 			element.addInnerDenomination(elem);
-		} else if (member instanceof AnnotationDeclaration) {
-			AnnotationDeclaration decl = (AnnotationDeclaration) member;
+		} else if (member instanceof AnnotationDeclaration decl) {
 
 			AnalyzedAnnotationType elem = new AnalyzedAnnotationType(element.getSourceFile(),
 																	 Locations.from(decl, indexes), keywords(Modifier.Keyword.PUBLIC, decl
@@ -491,8 +485,7 @@ public class ClassAnalyzer {
 
 	private void addConstructor(ContainingDenomination<?, ?> element,
 								AnalyzedConstructor constr) {
-		if (element instanceof ConstructableDenomination) {
-			ConstructableDenomination<?, ?> constructable = (ConstructableDenomination<?, ?>) element;
+		if (element instanceof ConstructableDenomination<?, ?> constructable) {
 
 			constructable.addConstructor(constr);
 		}
@@ -708,12 +701,10 @@ public class ClassAnalyzer {
 			Location firstThrownException = Locations.from(thrownExceptions.get(0), indexes);
 
 			return last(characterMap.findBetweenExclusive(')', nameLocation, firstThrownException));
-		} else if (member instanceof NodeWithBlockStmt) {
-			NodeWithBlockStmt<?> nodeWithBlockStmt = (NodeWithBlockStmt<?>) member;
+		} else if (member instanceof NodeWithBlockStmt<?> nodeWithBlockStmt) {
 
 			return last(characterMap.findBetweenExclusive(')', nameLocation, Locations.from(nodeWithBlockStmt.getBody(), indexes)));
-		} else if (member instanceof NodeWithOptionalBlockStmt) {
-			NodeWithOptionalBlockStmt<?> nodeWithOptionalBlockStmt = (NodeWithOptionalBlockStmt<?>) member;
+		} else if (member instanceof NodeWithOptionalBlockStmt<?> nodeWithOptionalBlockStmt) {
 			Optional<BlockStmt> body = nodeWithOptionalBlockStmt.getBody();
 			if (body.isPresent()) {
 				return last(characterMap.findBetweenExclusive(')', nameLocation, Locations.from(body.get(), indexes)));
@@ -836,8 +827,7 @@ public class ClassAnalyzer {
 		AnalyzedAnnotation annotation = new AnalyzedAnnotation(
 			Locations.from(expr, indexes), expr.getName().toString());
 
-		if (expr instanceof SingleMemberAnnotationExpr) {
-			SingleMemberAnnotationExpr annot = (SingleMemberAnnotationExpr) expr;
+		if (expr instanceof SingleMemberAnnotationExpr annot) {
 
 			Expression memberValue = annot.getMemberValue();
 
@@ -845,8 +835,7 @@ public class ClassAnalyzer {
 						containingDenomination, analyzerContext);
 
 			annotation.setParametersLocation(Locations.from(memberValue, indexes));
-		} else if (expr instanceof NormalAnnotationExpr) {
-			NormalAnnotationExpr annot = (NormalAnnotationExpr) expr;
+		} else if (expr instanceof NormalAnnotationExpr annot) {
 			List<MemberValuePair> pairs = annot.getPairs();
 
 			Location annotLocation = Locations.from(annot, indexes);
@@ -911,49 +900,40 @@ public class ClassAnalyzer {
 	private BaseValue<?, ?, ?> translateExpression(String name, Expression expr,
 												   ContainingDenomination<?, ?> containingDenomination,
 												   AnalyzerContext analyzerContext) {
-		if (expr instanceof AnnotationExpr) {
-			AnnotationExpr annot = (AnnotationExpr) expr;
+		if (expr instanceof AnnotationExpr annot) {
 			AnalyzedAnnotation sub = analyze(annot, containingDenomination,
 											 analyzerContext);
 
 			return new AnnotationValue(Locations.from(expr, indexes), name, sub);
-		} else if (expr instanceof BooleanLiteralExpr) {
-			BooleanLiteralExpr bool = (BooleanLiteralExpr) expr;
+		} else if (expr instanceof BooleanLiteralExpr bool) {
 
 			return new BooleanValue(Locations.from(expr, indexes), name, bool.getValue());
-		} else if (expr instanceof CharLiteralExpr) {
-			CharLiteralExpr charLit = (CharLiteralExpr) expr;
+		} else if (expr instanceof CharLiteralExpr charLit) {
 
 			return new CharValue(Locations.from(expr, indexes), name,
 								 charLit.getValue().charAt(0));
 
-		} else if (expr instanceof DoubleLiteralExpr) {
-			DoubleLiteralExpr doubLit = (DoubleLiteralExpr) expr;
+		} else if (expr instanceof DoubleLiteralExpr doubLit) {
 
 			return new DoubleValue(Locations.from(expr, indexes), name,
 								   Double.parseDouble(doubLit.getValue()));
-		} else if (expr instanceof IntegerLiteralExpr) {
-			IntegerLiteralExpr intLit = (IntegerLiteralExpr) expr;
+		} else if (expr instanceof IntegerLiteralExpr intLit) {
 
 			return new IntegerValue(Locations.from(expr, indexes), name,
 									Integer.parseInt(intLit.getValue()));
-		} else if (expr instanceof LongLiteralExpr) {
-			LongLiteralExpr longLit = (LongLiteralExpr) expr;
+		} else if (expr instanceof LongLiteralExpr longLit) {
 
 			return new LongValue(Locations.from(expr, indexes), name,
 								 Long.parseLong(longLit.getValue()));
-		} else if (expr instanceof StringLiteralExpr) {
-			StringLiteralExpr str = (StringLiteralExpr) expr;
+		} else if (expr instanceof StringLiteralExpr str) {
 
 			return new StringValue(Locations.from(expr, indexes), name, str.getValue());
-		} else if (expr instanceof ClassExpr) {
-			ClassExpr classExpr = (ClassExpr) expr;
+		} else if (expr instanceof ClassExpr classExpr) {
 
 			return new ClassValue(Locations.from(expr, indexes), name,
 								  classExpr.getType().toString());
 
-		} else if (expr instanceof ArrayInitializerExpr) {
-			ArrayInitializerExpr array = (ArrayInitializerExpr) expr;
+		} else if (expr instanceof ArrayInitializerExpr array) {
 
 			Builder<BaseValue<?, ?, ?>> builder = ImmutableList.builder();
 			for (Expression expression : array.getValues()) {
@@ -965,10 +945,9 @@ public class ClassAnalyzer {
 			}
 
 			return new ArrayValue(Locations.from(expr, indexes), name, builder.build());
-		} else if (expr instanceof FieldAccessExpr) {
+		} else if (expr instanceof FieldAccessExpr fieldAccess) {
 			// Enum field reference or similar, just turn it into a big string,
 			// ignore type params (shouldn't be there in enums)
-			FieldAccessExpr fieldAccess = (FieldAccessExpr) expr;
 
 			final String scope = analyzeExpression(fieldAccess.getScope(),
 												   containingDenomination, analyzerContext).toJavaString();
@@ -1006,8 +985,7 @@ public class ClassAnalyzer {
 													 @Nonnull ContainingDenomination<?, ?> containingDenomination,
 													 @Nonnull AnalyzerContext analyzerContext) {
 		Location location = Locations.from(statement, indexes);
-		if (statement instanceof ReturnStmt) {
-			ReturnStmt returnStatement = (ReturnStmt) statement;
+		if (statement instanceof ReturnStmt returnStatement) {
 
 
 			AnalyzedExpression returnExpression = returnStatement
@@ -1018,8 +996,7 @@ public class ClassAnalyzer {
 			return addComments(statement,
 							   new ReturnStatement(location, returnExpression));
 
-		} else if (statement instanceof IfStmt) {
-			IfStmt ifStmt = (IfStmt) statement;
+		} else if (statement instanceof IfStmt ifStmt) {
 
 			AnalyzedExpression condition = analyzeExpression(
 				ifStmt.getCondition(), containingDenomination,
@@ -1036,21 +1013,18 @@ public class ClassAnalyzer {
 
 			return addComments(statement, ifStatement);
 
-		} else if (statement instanceof AssertStmt) {
-			AssertStmt assertStmt = (AssertStmt) statement;
+		} else if (statement instanceof AssertStmt assertStmt) {
 
 			return addComments(statement,
 							   new AssertStatement(Locations.from(assertStmt, indexes),
 												   analyzeExpression(assertStmt.getCheck(),
 																	 containingDenomination, analyzerContext)));
-		} else if (statement instanceof BlockStmt) {
-			BlockStmt blockStmt = (BlockStmt) statement;
+		} else if (statement instanceof BlockStmt blockStmt) {
 
 			return addComments(statement, analyzeBlockStatement(blockStmt,
 																containingDenomination, analyzerContext));
 
-		} else if (statement instanceof BreakStmt) {
-			BreakStmt breakStatement = (BreakStmt) statement;
+		} else if (statement instanceof BreakStmt breakStatement) {
 
 			return addComments(statement, new BreakStatement(
 				Locations.from(breakStatement, indexes), breakStatement
@@ -1058,13 +1032,11 @@ public class ClassAnalyzer {
 				.map(SimpleName::asString)
 				.orElse(null)));
 
-		} else if (statement instanceof ContinueStmt) {
-			ContinueStmt continueStatement = (ContinueStmt) statement;
+		} else if (statement instanceof ContinueStmt continueStatement) {
 
 			return addComments(statement, new ContinueStatement(
 				Locations.from(continueStatement, indexes), continueStatement.getLabelAsString().orElse(null)));
-		} else if (statement instanceof DoStmt) {
-			DoStmt doStatement = (DoStmt) statement;
+		} else if (statement instanceof DoStmt doStatement) {
 
 			AnalyzedExpression condition = analyzeExpression(
 				doStatement.getCondition(), containingDenomination,
@@ -1076,8 +1048,7 @@ public class ClassAnalyzer {
 							   new DoStatement(Locations.from(doStatement, indexes), condition, body));
 		} else if (statement instanceof EmptyStmt) {
 			return new EmptyStatement(Locations.from(statement, indexes));
-		} else if (statement instanceof ExplicitConstructorInvocationStmt) {
-			ExplicitConstructorInvocationStmt explicitConstructorInvocationStatement = (ExplicitConstructorInvocationStmt) statement;
+		} else if (statement instanceof ExplicitConstructorInvocationStmt explicitConstructorInvocationStatement) {
 
 			InvocationType invocationType = explicitConstructorInvocationStatement
 				.isThis() ? InvocationType.THIS : InvocationType.SUPER;
@@ -1117,16 +1088,14 @@ public class ClassAnalyzer {
 			}
 
 			return addComments(statement, invocation);
-		} else if (statement instanceof ExpressionStmt) {
-			ExpressionStmt expr = (ExpressionStmt) statement;
+		} else if (statement instanceof ExpressionStmt expr) {
 			AnalyzedExpression e = analyzeExpression(expr.getExpression(),
 													 containingDenomination, analyzerContext);
 
 			return addComments(statement,
 							   new ExpressionStatement(Locations.from(expr, indexes), e));
 
-		} else if (statement instanceof ForEachStmt) {
-			ForEachStmt foreachStatement = (ForEachStmt) statement;
+		} else if (statement instanceof ForEachStmt foreachStatement) {
 
 			AnalyzedStatement<?, ?> body = analyzeStatement(foreachStatement.getBody(),
 															containingDenomination, analyzerContext);
@@ -1140,8 +1109,7 @@ public class ClassAnalyzer {
 			return addComments(statement,
 							   new ForEachStatement(Locations.from(foreachStatement, indexes),
 													declareExpression, iterable, body));
-		} else if (statement instanceof ForStmt) {
-			ForStmt forStmt = (ForStmt) statement;
+		} else if (statement instanceof ForStmt forStmt) {
 
 			AnalyzedExpression compare = forStmt
 				.getCompare()
@@ -1170,8 +1138,7 @@ public class ClassAnalyzer {
 			}
 
 			return addComments(statement, forStatement);
-		} else if (statement instanceof LabeledStmt) {
-			LabeledStmt labeledStatement = (LabeledStmt) statement;
+		} else if (statement instanceof LabeledStmt labeledStatement) {
 
 			String label = labeledStatement.getLabel().asString();
 			AnalyzedStatement<?, ?> analyzedStatement = analyzeStatement(
@@ -1180,8 +1147,7 @@ public class ClassAnalyzer {
 
 			return new LabeledStatement(Locations.from(labeledStatement, indexes), label,
 										analyzedStatement);
-		} else if (statement instanceof SwitchStmt) {
-			SwitchStmt switchStmt = (SwitchStmt) statement;
+		} else if (statement instanceof SwitchStmt switchStmt) {
 
 			SwitchStatement switchStatement = new SwitchStatement(
 				Locations.from(switchStmt, indexes),
@@ -1197,8 +1163,7 @@ public class ClassAnalyzer {
 			}
 
 			return addComments(statement, switchStatement);
-		} else if (statement instanceof SynchronizedStmt) {
-			SynchronizedStmt synchronizedStatement = (SynchronizedStmt) statement;
+		} else if (statement instanceof SynchronizedStmt synchronizedStatement) {
 
 			AnalyzedStatement<?, ?> block = analyzeStatement(
 				synchronizedStatement.getBody(), containingDenomination,
@@ -1209,15 +1174,13 @@ public class ClassAnalyzer {
 
 			return addComments(statement, new SynchronizedStatement(
 				Locations.from(synchronizedStatement, indexes), syncExpression, block));
-		} else if (statement instanceof ThrowStmt) {
-			ThrowStmt throwStatement = (ThrowStmt) statement;
+		} else if (statement instanceof ThrowStmt throwStatement) {
 
 			return addComments(statement,
 							   new ThrowStatement(Locations.from(throwStatement, indexes),
 												  analyzeExpression(throwStatement.getExpression(),
 																	containingDenomination, analyzerContext)));
-		} else if (statement instanceof TryStmt) {
-			TryStmt tryStmt = (TryStmt) statement;
+		} else if (statement instanceof TryStmt tryStmt) {
 
 			BlockStatement finallyBlock = tryStmt
 				.getFinallyBlock()
@@ -1234,8 +1197,7 @@ public class ClassAnalyzer {
 
 			List<Expression> resources = tryStmt.getResources();
 			for (Expression resource : resources) {
-				if (resource instanceof VariableDeclarationExpr) {
-					VariableDeclarationExpr expr = (VariableDeclarationExpr) resource;
+				if (resource instanceof VariableDeclarationExpr expr) {
 
 					AnalyzedType type = analyzeType(expr.getElementType());
 
@@ -1300,16 +1262,14 @@ public class ClassAnalyzer {
 			}
 
 			return addComments(statement, tryStatement);
-		} else if (statement instanceof LocalClassDeclarationStmt) {
-			LocalClassDeclarationStmt typeDeclarationStatement = (LocalClassDeclarationStmt) statement;
+		} else if (statement instanceof LocalClassDeclarationStmt typeDeclarationStatement) {
 
 			return addComments(statement,
 							   new TypeDeclarationStatement(
 								   Locations.from(typeDeclarationStatement, indexes),
 								   analyzeTypeDeclaration(containingDenomination.getSourceFile(), analyzerContext.anonymousInnerClass(),
 														  typeDeclarationStatement.getClassDeclaration())));
-		} else if (statement instanceof WhileStmt) {
-			WhileStmt whileStatement = (WhileStmt) statement;
+		} else if (statement instanceof WhileStmt whileStatement) {
 
 			AnalyzedExpression condition = analyzeExpression(
 				whileStatement.getCondition(), containingDenomination,
@@ -1346,10 +1306,8 @@ public class ClassAnalyzer {
 
 	private <T extends Commentable> void checkJavadoc(T commentable,
 													  Comment comment) {
-		if (comment instanceof JavadocComment
-			&& commentable instanceof Javadocable) {
-			JavadocComment jdc = (JavadocComment) comment;
-			Javadocable jda = (Javadocable) commentable;
+		if (comment instanceof JavadocComment jdc
+			&& commentable instanceof Javadocable jda) {
 
 			if (!jda.getJavadoc().isPresent()) {
 				String content = sanitizeJavadoc(jdc.getContent());
@@ -1446,46 +1404,38 @@ public class ClassAnalyzer {
 			return new NullExpression(location);
 
 		}
-		if (expr instanceof BooleanLiteralExpr) {
-			BooleanLiteralExpr bool = (BooleanLiteralExpr) expr;
+		if (expr instanceof BooleanLiteralExpr bool) {
 
 			return new BooleanLiteralExpression(location, bool.getValue());
 		}
-		if (expr instanceof CharLiteralExpr) {
-			CharLiteralExpr charLit = (CharLiteralExpr) expr;
+		if (expr instanceof CharLiteralExpr charLit) {
 
 			return new CharLiteralExpression(location,
 											 charLit.getValue().charAt(0));
 		}
-		if (expr instanceof DoubleLiteralExpr) {
-			DoubleLiteralExpr doubLit = (DoubleLiteralExpr) expr;
+		if (expr instanceof DoubleLiteralExpr doubLit) {
 
 			return new DoubleLiteralExpression(location, doubLit.getValue());
 		}
-		if (expr instanceof IntegerLiteralExpr) {
-			IntegerLiteralExpr intLit = (IntegerLiteralExpr) expr;
+		if (expr instanceof IntegerLiteralExpr intLit) {
 
 			return new IntegerLiteralExpression(location,
 												Integer.parseInt(intLit.getValue()));
 		}
-		if (expr instanceof LongLiteralExpr) {
-			LongLiteralExpr longLit = (LongLiteralExpr) expr;
+		if (expr instanceof LongLiteralExpr longLit) {
 
 			return new LongLiteralExpression(location, longLit.getValue());
 		}
-		if (expr instanceof StringLiteralExpr) {
-			StringLiteralExpr lit = (StringLiteralExpr) expr;
+		if (expr instanceof StringLiteralExpr lit) {
 
 			return new StringLiteralExpression(location, lit.getValue());
 		}
-		if (expr instanceof NameExpr) {
-			NameExpr name = (NameExpr) expr;
+		if (expr instanceof NameExpr name) {
 
 			return new NameReferenceExpression(location,
 											   name.getNameAsString());
 		}
-		if (expr instanceof MethodCallExpr) {
-			MethodCallExpr methodCall = (MethodCallExpr) expr;
+		if (expr instanceof MethodCallExpr methodCall) {
 
 			List<AnalyzedType> analyzedTypeArguments = Lists.newArrayList();
 			methodCall.getTypeArguments().ifPresent(typeArgs -> {
@@ -1517,15 +1467,13 @@ public class ClassAnalyzer {
 			return expression;
 
 		}
-		if (expr instanceof MarkerAnnotationExpr) {
-			MarkerAnnotationExpr annotationExpr = (MarkerAnnotationExpr) expr;
+		if (expr instanceof MarkerAnnotationExpr annotationExpr) {
 
 
 			return new MarkerAnnotationExpression(location,
 												  annotationExpr.getNameAsString());
 		}
-		if (expr instanceof NormalAnnotationExpr) {
-			NormalAnnotationExpr annotationExpr = (NormalAnnotationExpr) expr;
+		if (expr instanceof NormalAnnotationExpr annotationExpr) {
 
 			NormalAnnotationExpression normalAnnotationExpression = new NormalAnnotationExpression(Locations.from(annotationExpr, indexes), annotationExpr
 				.getNameAsString());
@@ -1541,8 +1489,7 @@ public class ClassAnalyzer {
 
 			return normalAnnotationExpression;
 		}
-		if (expr instanceof SingleMemberAnnotationExpr) {
-			SingleMemberAnnotationExpr singleMemberAnnotationExpr = (SingleMemberAnnotationExpr) expr;
+		if (expr instanceof SingleMemberAnnotationExpr singleMemberAnnotationExpr) {
 
 			AnalyzedExpression member = analyzeExpression(singleMemberAnnotationExpr.getMemberValue(), containingDenomination, analyzerContext);
 
@@ -1550,8 +1497,7 @@ public class ClassAnalyzer {
 				.getNameAsString(), member);
 		}
 
-		if (expr instanceof ArrayAccessExpr) {
-			ArrayAccessExpr arrayAccessExpr = (ArrayAccessExpr) expr;
+		if (expr instanceof ArrayAccessExpr arrayAccessExpr) {
 
 			AnalyzedExpression index = analyzeExpression(
 				arrayAccessExpr.getIndex(), containingDenomination,
@@ -1562,8 +1508,7 @@ public class ClassAnalyzer {
 
 			return new ArrayAccessExpression(location, name, index);
 		}
-		if (expr instanceof ArrayCreationExpr) {
-			ArrayCreationExpr arrayCreationExpr = (ArrayCreationExpr) expr;
+		if (expr instanceof ArrayCreationExpr arrayCreationExpr) {
 
 			ArrayInitializerExpression initializer = arrayCreationExpr.getInitializer().map(init -> parseInitializer(
 				init, containingDenomination,
@@ -1587,14 +1532,12 @@ public class ClassAnalyzer {
 
 			return creationExpression;
 		}
-		if (expr instanceof ArrayInitializerExpr) {
-			ArrayInitializerExpr arrayInitializerExpr = (ArrayInitializerExpr) expr;
+		if (expr instanceof ArrayInitializerExpr arrayInitializerExpr) {
 
 			return parseInitializer(arrayInitializerExpr,
 									containingDenomination, analyzerContext);
 		}
-		if (expr instanceof AssignExpr) {
-			AssignExpr assignExpr = (AssignExpr) expr;
+		if (expr instanceof AssignExpr assignExpr) {
 
 			AnalyzedExpression value = analyzeExpression(assignExpr.getValue(),
 														 containingDenomination, analyzerContext);
@@ -1606,8 +1549,7 @@ public class ClassAnalyzer {
 
 			return new AssignExpression(location, target, operator, value);
 		}
-		if (expr instanceof BinaryExpr) {
-			BinaryExpr binaryExpr = (BinaryExpr) expr;
+		if (expr instanceof BinaryExpr binaryExpr) {
 
 			AnalyzedExpression left = analyzeExpression(binaryExpr.getLeft(),
 														containingDenomination, analyzerContext);
@@ -1618,8 +1560,7 @@ public class ClassAnalyzer {
 
 			return new BinaryExpression(location, left, operator, right);
 		}
-		if (expr instanceof CastExpr) {
-			CastExpr castExpr = (CastExpr) expr;
+		if (expr instanceof CastExpr castExpr) {
 
 			AnalyzedExpression expression = analyzeExpression(
 				castExpr.getExpression(), containingDenomination,
@@ -1629,14 +1570,12 @@ public class ClassAnalyzer {
 			return new CastExpression(location, type, expression);
 
 		}
-		if (expr instanceof ClassExpr) {
-			ClassExpr classExpr = (ClassExpr) expr;
+		if (expr instanceof ClassExpr classExpr) {
 
 			return new ClassExpression(location,
 									   analyzeType(classExpr.getType()));
 		}
-		if (expr instanceof ConditionalExpr) {
-			ConditionalExpr conditionalExpr = (ConditionalExpr) expr;
+		if (expr instanceof ConditionalExpr conditionalExpr) {
 
 			AnalyzedExpression condition = analyzeExpression(
 				conditionalExpr.getCondition(), containingDenomination,
@@ -1651,8 +1590,7 @@ public class ClassAnalyzer {
 			return new ConditionalExpression(Locations.from(conditionalExpr, indexes),
 											 condition, primary, alternate);
 		}
-		if (expr instanceof EnclosedExpr) {
-			EnclosedExpr enclosedExpr = (EnclosedExpr) expr;
+		if (expr instanceof EnclosedExpr enclosedExpr) {
 
 			AnalyzedExpression inner = analyzeExpression(
 				enclosedExpr.getInner(), containingDenomination,
@@ -1660,8 +1598,7 @@ public class ClassAnalyzer {
 
 			return new EnclosedExpression(Locations.from(enclosedExpr, indexes), inner);
 		}
-		if (expr instanceof FieldAccessExpr) {
-			FieldAccessExpr fieldAccessExpr = (FieldAccessExpr) expr;
+		if (expr instanceof FieldAccessExpr fieldAccessExpr) {
 
 			String fieldName = fieldAccessExpr.getNameAsString();
 			Expression scopeExpr = fieldAccessExpr.getScope();
@@ -1683,8 +1620,7 @@ public class ClassAnalyzer {
 
 			return fieldAccessExpression;
 		}
-		if (expr instanceof InstanceOfExpr) {
-			InstanceOfExpr instanceOfExpr = (InstanceOfExpr) expr;
+		if (expr instanceof InstanceOfExpr instanceOfExpr) {
 
 			AnalyzedType target = analyzeType(instanceOfExpr.getType());
 			AnalyzedExpression expression = analyzeExpression(
@@ -1695,8 +1631,7 @@ public class ClassAnalyzer {
 											expression, target);
 
 		}
-		if (expr instanceof LambdaExpr) {
-			LambdaExpr lambdaExpr = (LambdaExpr) expr;
+		if (expr instanceof LambdaExpr lambdaExpr) {
 
 			return new LambdaExpression(Locations.from(lambdaExpr, indexes), analyzeStatement(lambdaExpr.getBody(), containingDenomination, analyzerContext),
 										lambdaExpr
@@ -1707,15 +1642,13 @@ public class ClassAnalyzer {
 			);
 
 		}
-		if (expr instanceof MethodReferenceExpr) {
-			MethodReferenceExpr methodReferenceExpr = (MethodReferenceExpr) expr;
+		if (expr instanceof MethodReferenceExpr methodReferenceExpr) {
 
 			return new MethodReferenceExpression(
 				Locations.from(methodReferenceExpr, indexes), methodReferenceExpr.getIdentifier(), analyzeExpression(methodReferenceExpr
 																														 .getScope(), containingDenomination, analyzerContext));
 		}
-		if (expr instanceof ObjectCreationExpr) {
-			ObjectCreationExpr objectCreationExpr = (ObjectCreationExpr) expr;
+		if (expr instanceof ObjectCreationExpr objectCreationExpr) {
 
 			ClassOrInterfaceType objectType = objectCreationExpr.getType();
 			return analyzeClassOrInterface(
@@ -1768,8 +1701,7 @@ public class ClassAnalyzer {
 				return creationExpression;
 			}).orElseThrow(IllegalStateException::new);
 		}
-		if (expr instanceof SuperExpr) {
-			SuperExpr superExpr = (SuperExpr) expr;
+		if (expr instanceof SuperExpr superExpr) {
 
 			LocatedName<Name> classExpression = superExpr
 				.getTypeName()
@@ -1779,8 +1711,7 @@ public class ClassAnalyzer {
 			return new SuperExpression(Locations.from(superExpr, indexes),
 									   classExpression);
 		}
-		if (expr instanceof ThisExpr) {
-			ThisExpr thisExpr = (ThisExpr) expr;
+		if (expr instanceof ThisExpr thisExpr) {
 
 			LocatedName<Name> classExpression = thisExpr
 				.getTypeName()
@@ -1789,8 +1720,7 @@ public class ClassAnalyzer {
 
 			return new ThisExpression(Locations.from(thisExpr, indexes), classExpression);
 		}
-		if (expr instanceof UnaryExpr) {
-			UnaryExpr unaryExpr = (UnaryExpr) expr;
+		if (expr instanceof UnaryExpr unaryExpr) {
 
 			AnalyzedExpression expression = analyzeExpression(
 				unaryExpr.getExpression(), containingDenomination,
@@ -1807,8 +1737,7 @@ public class ClassAnalyzer {
 				(VariableDeclarationExpr) expr, containingDenomination,
 				analyzerContext);
 		}
-		if (expr instanceof SwitchExpr) {
-			SwitchExpr switchExpr = (SwitchExpr) expr;
+		if (expr instanceof SwitchExpr switchExpr) {
 
 			SwitchExpression switchExpression = new SwitchExpression(Locations.from(switchExpr, indexes), analyzeExpression(switchExpr
 																																.getSelector(), containingDenomination, analyzerContext));
@@ -1889,28 +1818,24 @@ public class ClassAnalyzer {
 	}
 
 	private AnalyzedType analyzeBaseType(Type type, Location location) {
-		if (type instanceof ClassOrInterfaceType) {
-			ClassOrInterfaceType classOrInterface = (ClassOrInterfaceType) type;
+		if (type instanceof ClassOrInterfaceType classOrInterface) {
 
 			return analyzeClassOrInterface(classOrInterface).orElseThrow(IllegalStateException::new);
 		}
 
-		if (type instanceof PrimitiveType) {
-			PrimitiveType prim = (PrimitiveType) type;
+		if (type instanceof PrimitiveType prim) {
 
 			return new Primitive(location,
 								 Primitive.PrimitiveType.fromParserType(prim.getType()));
 		}
-		if (type instanceof ReferenceType) {
-			ReferenceType ref = (ReferenceType) type;
+		if (type instanceof ReferenceType ref) {
 
 			Reference rt = processReferenceType(location, ref);
 			if (rt != null) {
 				return rt;
 			}
 		}
-		if (type instanceof WildcardType) {
-			WildcardType wildcard = (WildcardType) type;
+		if (type instanceof WildcardType wildcard) {
 
 			Optional<ReferenceType> superType = wildcard.getSuperType();
 			Reference superRef = superType.map(rt -> processReferenceType(Locations.from(rt, indexes), rt))
