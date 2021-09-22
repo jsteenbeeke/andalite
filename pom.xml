@@ -336,7 +336,7 @@
 		<findbugs.annotations.version>3.0.0</findbugs.annotations.version>
 		<javaparser.version>3.23.0</javaparser.version>
 		<junit.version>4.13.1</junit.version>
-		<lux.version>1.0-SNAPSHOT</lux.version>
+		<lux.version>1.1-SNAPSHOT</lux.version>
 		<parser.version>1.0.17</parser.version>
 		<slf4j.api.version>1.7.10</slf4j.api.version>
 
