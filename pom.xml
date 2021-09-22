@@ -6,7 +6,7 @@
 	<artifactId>andalite-parent</artifactId>
 	<groupId>com.jeroensteenbeeke.andalite</groupId>
 	<packaging>pom</packaging>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.2-SNAPSHOT</version>
 
 	<name>Andalite Parent</name>
 	<inceptionYear>2014</inceptionYear>
