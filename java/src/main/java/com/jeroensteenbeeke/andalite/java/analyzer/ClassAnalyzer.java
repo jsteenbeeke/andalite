@@ -1054,8 +1054,8 @@ public class ClassAnalyzer {
 
 			return addComments(statement, new BreakStatement(
 				Locations.from(breakStatement, indexes), breakStatement
-				.getValue()
-				.map(e -> analyzeExpression(e, containingDenomination, analyzerContext))
+				.getLabel()
+				.map(SimpleName::asString)
 				.orElse(null)));
 
 		} else if (statement instanceof ContinueStmt) {

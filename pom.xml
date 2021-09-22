@@ -231,7 +231,6 @@
 					<configuration>
 						<target>17</target>
 						<source>17</source>
-						<release>17</release>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -344,13 +343,13 @@
 		<!-- Plugin Versions -->
 		<maven.antlr.plugin.version>4.5.3</maven.antlr.plugin.version>
 		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
-		<maven.jacoco.plugin.version>0.8.4</maven.jacoco.plugin.version>
-		<maven.jar.plugin.version>3.1.1</maven.jar.plugin.version>
-		<maven.javadoc.plugin.version>3.1.0</maven.javadoc.plugin.version>
+		<maven.jacoco.plugin.version>0.8.7</maven.jacoco.plugin.version>
+		<maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
+		<maven.javadoc.plugin.version>3.3.1</maven.javadoc.plugin.version>
 		<maven.license.plugin.version>2.3</maven.license.plugin.version>
 		<maven.lifecycle.plugin.version>1.0.0</maven.lifecycle.plugin.version>
-		<maven.source.plugin.version>2.4</maven.source.plugin.version>
-		<maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
+		<maven.source.plugin.version>3.2.1</maven.source.plugin.version>
+		<maven.surefire.plugin.version>3.0.0-M5</maven.surefire.plugin.version>
 
 		<!-- Other settings -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

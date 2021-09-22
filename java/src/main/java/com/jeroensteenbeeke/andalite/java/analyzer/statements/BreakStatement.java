@@ -23,22 +23,22 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class BreakStatement extends BaseStatement<BreakStatement> {
-	private final AnalyzedExpression expression;
+	private final String labelId;
 
-	public BreakStatement(@Nonnull Location location, @Nullable AnalyzedExpression expression) {
+	public BreakStatement(@Nonnull Location location, @Nullable String labelId) {
 		super(location);
-		this.expression = expression;
+		this.labelId = labelId;
 	}
 
 	@Nonnull
-	public Optional<AnalyzedExpression> getExpression() {
-		return Optional.ofNullable(expression);
+	public Optional<String> getExpression() {
+		return Optional.ofNullable(labelId);
 	}
 
 	@Override
 	public String toJavaString() {
-		if (expression != null) {
-			return String.format("break %s", expression.toJavaString());
+		if (labelId != null) {
+			return String.format("break %s", labelId);
 		}
 
 		return "break";
