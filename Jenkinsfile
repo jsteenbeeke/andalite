@@ -5,7 +5,7 @@ def quiet_sh(cmd) {
 pipeline {
     agent {
         docker {
-            image 'maven:3.8-openjdk-17'
+            image 'registry.jeroensteenbeeke.nl/maven:latest'
             label 'docker'
         }
     }
@@ -53,9 +53,9 @@ pipeline {
                         error('Deployment password not set')
                     }
                 }
-                quiet_sh 'mkdir -p /root/.m2'
-                quiet_sh 'echo "<settings><servers><server><id>repo-jeroensteenbeeke-releases</id><username>'+ env.MAVEN_DEPLOY_USER +'</username><password>'+ env.MAVEN_DEPLOY_PASSWORD +'</password></server><server><id>repo-jeroensteenbeeke-snapshots</id><username>'+ env.MAVEN_DEPLOY_USER + '</username><password>'+ env.MAVEN_DEPLOY_PASSWORD +'</password></server></servers></settings>" > /root/.m2/settings.xml'
-                sh 'mvn deploy -s /root/.m2/settings.xml -DskipTests=true'
+                quiet_sh 'mkdir -p /home/jenkins/.m2'
+                quiet_sh 'echo "<settings><servers><server><id>repo-jeroensteenbeeke-releases</id><username>'+ env.MAVEN_DEPLOY_USER +'</username><password>'+ env.MAVEN_DEPLOY_PASSWORD +'</password></server><server><id>repo-jeroensteenbeeke-snapshots</id><username>'+ env.MAVEN_DEPLOY_USER + '</username><password>'+ env.MAVEN_DEPLOY_PASSWORD +'</password></server></servers></settings>" > /home/jenkins/.m2/settings.xml'
+                sh 'mvn deploy -s /home/jenkins/.m2/settings.xml -DskipTests=true'
             }
         }
     }
@@ -67,7 +67,7 @@ pipeline {
                     currentBuild.result = 'SUCCESS'
                 }
             }
-            sh 'rm $MAVEN_CONFIG/settings.xml'
+            sh 'rm -f /home/jenkins/.m2/settings.xml'
 
             step([$class                  : 'Mailer',
                   notifyEveryUnstableBuild: true,
