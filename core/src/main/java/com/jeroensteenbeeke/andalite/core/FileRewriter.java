@@ -15,6 +15,14 @@
 
 package com.jeroensteenbeeke.andalite.core;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.TreeMultimap;
+import com.google.common.io.Files;
+import com.jeroensteenbeeke.lux.ActionResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,18 +30,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
-
-import com.google.common.collect.SortedSetMultimap;
-import com.jeroensteenbeeke.lux.ActionResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
-import com.google.common.io.Files;
 
 public class FileRewriter {
 	private static final Logger logger = LoggerFactory

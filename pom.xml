@@ -173,38 +173,38 @@
 			<dependency>
 				<groupId>com.jeroensteenbeeke.andalite</groupId>
 				<artifactId>andalite-core</artifactId>
-				<version>${andalite.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.jeroensteenbeeke.andalite</groupId>
 				<artifactId>andalite-testbase</artifactId>
-				<version>${andalite.version}</version>
+				<version>${project.version}</version>
 				<scope>test</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>com.jeroensteenbeeke.andalite</groupId>
 				<artifactId>andalite-java</artifactId>
-				<version>${andalite.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.jeroensteenbeeke.andalite</groupId>
 				<artifactId>andalite-xml</artifactId>
-				<version>${andalite.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.jeroensteenbeeke.andalite</groupId>
 				<artifactId>andalite-forge</artifactId>
-				<version>${andalite.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 
 			<dependency>
 				<groupId>com.jeroensteenbeeke.andalite</groupId>
 				<artifactId>andalite-maven-plugin</artifactId>
-				<version>${andalite.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -326,7 +326,6 @@
 	</build>
 
 	<properties>
-		<andalite.version>1.1-SNAPSHOT</andalite.version>
 		<antlr.version>4.5.3</antlr.version>
 
 		<!-- Dependency Versions -->
@@ -342,7 +341,7 @@
 
 		<!-- Plugin Versions -->
 		<maven.antlr.plugin.version>4.5.3</maven.antlr.plugin.version>
-		<maven.compiler.plugin.version>3.2</maven.compiler.plugin.version>
+		<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
 		<maven.jacoco.plugin.version>0.8.7</maven.jacoco.plugin.version>
 		<maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
 		<maven.javadoc.plugin.version>3.3.1</maven.javadoc.plugin.version>
@@ -354,8 +353,8 @@
 		<!-- Other settings -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
-		<archunit.version>0.10.1</archunit.version>
-		<google-java-format.version>1.7</google-java-format.version>
+		<archunit.version>0.21.0</archunit.version>
+		<google-java-format.version>1.11.0</google-java-format.version>
 	</properties>
 
 	<modules>
