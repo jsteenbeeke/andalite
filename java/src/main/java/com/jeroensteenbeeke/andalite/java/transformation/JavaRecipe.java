@@ -79,14 +79,14 @@ public class JavaRecipe {
 			ActionResult stepResult = step.perform(result.getObject());
 
 			if (!stepResult.isOk()) {
-				logger.error("ERROR: {} {}", result.getMessage(),
-							 step.toString());
+				logger.error("ERROR: {} {}", stepResult.getMessage(),
+							 step);
 				return TypedResult.fail("Navigation: %s\nOperation: %s\nTransformation result: %s",
 										step.navigationToString(),
 										step.operationToString(),
 										stepResult.getMessage());
 			} else {
-				logger.debug("OK: {}", step.toString());
+				logger.debug("OK: {}", step);
 			}
 
 			result = new ClassAnalyzer(file).analyze();

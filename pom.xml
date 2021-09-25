@@ -329,7 +329,7 @@
 		<antlr.version>4.5.3</antlr.version>
 
 		<!-- Dependency Versions -->
-		<guava.version>29.0-jre</guava.version>
+		<guava.version>31.0-jre</guava.version>
 		<hamcrest.version>1.3</hamcrest.version>
 		<javaee.version>7.0</javaee.version>
 		<findbugs.annotations.version>3.0.0</findbugs.annotations.version>

@@ -472,7 +472,7 @@ public class AnalyzerTest extends DummyAwareTest {
 			file);
 
 		TypedResult<AnalyzedSourceFile> result = classAnalyzer.analyze();
-		assertTrue(result.isOk());
+		assertTrue(String.format("File %s should be parseable", file.getAbsolutePath()), result.isOk());
 
 		StringBuilder builder = new StringBuilder();
 		result.getObject().output(new StringBuilderCallback(builder));

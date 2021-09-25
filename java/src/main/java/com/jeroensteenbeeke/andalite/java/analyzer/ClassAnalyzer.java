@@ -85,7 +85,7 @@ public class ClassAnalyzer {
 	public TypedResult<AnalyzedSourceFile> analyze() {
 		log.debug("Starting analysis of {}", targetFile.getAbsolutePath());
 
-		JavaParser parser = new JavaParser(new ParserConfiguration().setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_11));
+		JavaParser parser = new JavaParser(new ParserConfiguration().setLanguageLevel(ParserConfiguration.LanguageLevel.JAVA_17));
 
 		return TypedResult.attempt(() -> parser.parse(targetFile))
 						  .filter(ParseResult::isSuccessful, pr -> pr
