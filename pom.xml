@@ -143,9 +143,21 @@
 			</dependency>
 
 			<dependency>
-				<groupId>com.google.googlejavaformat</groupId>
-				<artifactId>google-java-format</artifactId>
-				<version>${google-java-format.version}</version>
+				<groupId>io.spring.javaformat</groupId>
+				<artifactId>spring-javaformat-formatter</artifactId>
+				<version>${spring.java.format.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.spring.javaformat</groupId>
+				<artifactId>spring-javaformat-formatter-eclipse-runtime</artifactId>
+				<version>${spring.java.format.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>*</groupId>
+						<artifactId>*</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<!-- Logging -->
@@ -338,6 +350,7 @@
 		<lux.version>1.1-SNAPSHOT</lux.version>
 		<parser.version>1.0.17</parser.version>
 		<slf4j.api.version>1.7.10</slf4j.api.version>
+		<spring.java.format.version>0.0.28</spring.java.format.version>
 
 		<!-- Plugin Versions -->
 		<maven.antlr.plugin.version>4.5.3</maven.antlr.plugin.version>
@@ -354,7 +367,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
 		<archunit.version>0.21.0</archunit.version>
-		<google-java-format.version>1.11.0</google-java-format.version>
 	</properties>
 
 	<modules>

@@ -14,27 +14,18 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.List;
-
-import com.google.common.io.CharSink;
-import com.google.common.io.CharSource;
-import com.google.googlejavaformat.java.Formatter;
-import com.google.googlejavaformat.java.FormatterException;
-import com.google.googlejavaformat.java.ImportOrderer;
-import com.google.googlejavaformat.java.JavaFormatterOptions;
-import com.google.googlejavaformat.java.filer.FormattingFiler;
-import com.jeroensteenbeeke.lux.Result;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
+import com.jeroensteenbeeke.lux.ActionResult;
+import com.jeroensteenbeeke.lux.TypedResult;
+import io.spring.javaformat.formatter.FileFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jeroensteenbeeke.lux.ActionResult;
-import com.jeroensteenbeeke.lux.TypedResult;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
-import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.List;
 
 public class JavaRecipe {
 	private static final Logger logger = LoggerFactory
@@ -110,11 +101,14 @@ public class JavaRecipe {
 			}
 
 			try {
-				Formatter formatter = new Formatter(JavaFormatterOptions.builder().style(JavaFormatterOptions.Style.AOSP).build());
 
-				Files.writeString(file.toPath(), ImportOrderer.reorderImports(formatter.formatSource(Files.readString(file.toPath()))));
+				FileFormatter formatter = new FileFormatter();
 
-			} catch (FormatterException | IOException e) {
+				String contents = formatter.formatFile(file, StandardCharsets.UTF_8).getFormattedContent();
+
+				Files.writeString(file.toPath(), contents);
+
+			} catch (Exception e) {
 				return TypedResult.fail("Could not format source after transform: %s, %s", e
 					.getClass()
 					.getSimpleName(), e.getMessage());
