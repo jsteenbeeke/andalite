@@ -1,6 +1,4 @@
-def quiet_sh(cmd) {
-    sh('#!/bin/sh -e\n' + cmd)
-}
+library 'jenkins-shared-library@main'
 
 pipeline {
     agent {
@@ -20,11 +18,10 @@ pipeline {
         MAVEN_DEPLOY_PASSWORD = credentials('MAVEN_DEPLOY_PASSWORD')
     }
 
-
     stages {
         stage('Maven') {
             steps {
-                sh 'mvn -B -U clean verify package -P-disable-slow-tests'
+                sh 'mvn -B -U clean verify package'
             }
         }
         stage('Coverage') {
@@ -46,16 +43,9 @@ pipeline {
             }
 
             steps {
-                script {
-                    if (env.MAVEN_DEPLOY_USER == null || env.MAVEN_DEPLOY_USER.isEmpty()) {
-                        error('Deployment user not set')
-                    } else if (env.MAVEN_DEPLOY_PASSWORD == null || env.MAVEN_DEPLOY_PASSWORD.isEmpty()) {
-                        error('Deployment password not set')
-                    }
-                }
-                quiet_sh 'mkdir -p /home/jenkins/.m2'
-                quiet_sh 'echo "<settings><servers><server><id>repo-jeroensteenbeeke-releases</id><username>'+ env.MAVEN_DEPLOY_USER +'</username><password>'+ env.MAVEN_DEPLOY_PASSWORD +'</password></server><server><id>repo-jeroensteenbeeke-snapshots</id><username>'+ env.MAVEN_DEPLOY_USER + '</username><password>'+ env.MAVEN_DEPLOY_PASSWORD +'</password></server></servers></settings>" > /home/jenkins/.m2/settings.xml'
-                sh 'mvn deploy -s /home/jenkins/.m2/settings.xml -DskipTests=true'
+                mavenDeploy deployUser: env.MAVEN_DEPLOY_USER,
+                        deployPassword: env.MAVEN_DEPLOY_PASSWORD,
+                        projects: [".", "core", "forge", "java", "maven-plugin", "testbase", "xml"]
             }
         }
     }
