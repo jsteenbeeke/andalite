@@ -68,7 +68,7 @@ public class Questions {
 				throw new IllegalArgumentException("Empty list of files supplied");
 			}
 
-			return withFiles(files.get(0), files.subList(0, files.size()).toArray(new File[files.size() - 1]));
+			return withFiles(files.get(0), files.subList(1, files.size()).toArray(File[]::new));
 		}
 	}
 
