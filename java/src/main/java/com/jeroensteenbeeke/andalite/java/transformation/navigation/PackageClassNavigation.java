@@ -18,7 +18,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
@@ -29,12 +29,12 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 public class PackageClassNavigation implements IJavaNavigation<AnalyzedClass> {
 	private final String name;
 
-	public PackageClassNavigation(@Nonnull String name) {
+	public PackageClassNavigation(@NotNull String name) {
 		this.name = name;
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public AnalyzedClass navigate(AnalyzedSourceFile file)
 			throws NavigationException {
 		List<String> found = Lists.newArrayList();
@@ -58,7 +58,7 @@ public class PackageClassNavigation implements IJavaNavigation<AnalyzedClass> {
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public String getDescription() {
 		return String.format("Go to package class %s", name);
 	}

@@ -20,7 +20,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumOperati
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEnumConstantMethod;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEnumMethod;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
 public class EnsureEnumConstantMethodBuilder
@@ -33,7 +33,7 @@ public class EnsureEnumConstantMethodBuilder
 	}
 
 	@Override
-	public IEnumConstantOperation named(@Nonnull String name) {
+	public IEnumConstantOperation named(@NotNull String name) {
 		EnsureEnumConstantMethod ensureEnumMethod = new EnsureEnumConstantMethod(name,
 																		 getType(), getModifier(), getDescriptors());
 		onCreate.accept(ensureEnumMethod);

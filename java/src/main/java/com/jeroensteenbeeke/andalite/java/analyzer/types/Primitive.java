@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.types;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
@@ -22,8 +22,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 public class Primitive extends AnalyzedType {
 	private final PrimitiveType type;
 
-	public Primitive(@Nonnull final Location location,
-			@Nonnull final PrimitiveType type) {
+	public Primitive(@NotNull final Location location,
+			@NotNull final PrimitiveType type) {
 		super(location);
 		this.type = type;
 	}

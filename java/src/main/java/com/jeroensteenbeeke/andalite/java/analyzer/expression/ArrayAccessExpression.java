@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -25,19 +25,19 @@ public class ArrayAccessExpression extends AnalyzedExpression {
 
 	private final AnalyzedExpression index;
 
-	public ArrayAccessExpression(@Nonnull Location location,
-			@Nonnull AnalyzedExpression name, @Nonnull AnalyzedExpression index) {
+	public ArrayAccessExpression(@NotNull Location location,
+			@NotNull AnalyzedExpression name, @NotNull AnalyzedExpression index) {
 		super(location);
 		this.name = name;
 		this.index = index;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedExpression getIndex() {
 		return index;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedExpression getName() {
 		return name;
 	}

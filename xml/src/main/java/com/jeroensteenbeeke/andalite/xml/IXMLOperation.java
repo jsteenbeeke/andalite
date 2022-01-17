@@ -14,16 +14,13 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-import javax.annotation.Nonnull;
-
+import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Node;
 
-import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
-
 public interface IXMLOperation<T extends Node> {
-	@Nonnull
 	void transform(T node) throws OperationException;
 
-	@Nonnull
+	@NotNull
 	String getDescription();
 }

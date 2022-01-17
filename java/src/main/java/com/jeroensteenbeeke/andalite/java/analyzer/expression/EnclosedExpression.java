@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -22,13 +22,13 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 public class EnclosedExpression extends AnalyzedExpression {
 	private final AnalyzedExpression enclosed;
 
-	public EnclosedExpression(@Nonnull Location location,
-			@Nonnull AnalyzedExpression enclosed) {
+	public EnclosedExpression(@NotNull Location location,
+			@NotNull AnalyzedExpression enclosed) {
 		super(location);
 		this.enclosed = enclosed;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedExpression getEnclosed() {
 		return enclosed;
 	}

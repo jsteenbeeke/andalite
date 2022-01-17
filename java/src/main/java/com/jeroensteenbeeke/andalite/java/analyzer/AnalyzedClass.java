@@ -23,7 +23,7 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,8 +31,8 @@ public final class AnalyzedClass extends ConstructableDenomination<AnalyzedClass
 
 	private GenerifiedName superClass = null;
 
-	public AnalyzedClass(@Nonnull AnalyzedSourceFile sourceFile, @Nonnull Location location, @Nonnull List<Modifier.Keyword> modifiers,
-						 @Nonnull String packageName, @Nonnull LocatedName<SimpleName> name) {
+	public AnalyzedClass(@NotNull AnalyzedSourceFile sourceFile, @NotNull Location location, @NotNull List<Modifier.Keyword> modifiers,
+						 @NotNull String packageName, @NotNull LocatedName<SimpleName> name) {
 		super(sourceFile, location, modifiers, packageName, name);
 	}
 
@@ -40,7 +40,7 @@ public final class AnalyzedClass extends ConstructableDenomination<AnalyzedClass
 		return getDenominationName();
 	}
 
-	@Nonnull
+	@NotNull
 	public Optional<GenerifiedName> getSuperClass() {
 		return Optional.ofNullable(superClass);
 	}

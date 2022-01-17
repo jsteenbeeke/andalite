@@ -15,7 +15,7 @@
 
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Locatable;
@@ -30,15 +30,15 @@ public final class AnalyzedImport extends Locatable {
 
 	private final boolean asterisk;
 
-	public AnalyzedImport(@Nonnull Location location,
-			@Nonnull String statement, boolean staticImport, boolean asterisk) {
+	public AnalyzedImport(@NotNull Location location,
+			@NotNull String statement, boolean staticImport, boolean asterisk) {
 		super(location);
 		this.statement = statement;
 		this.staticImport = staticImport;
 		this.asterisk = asterisk;
 	}
 
-	public boolean importsMethodStatically(@Nonnull String fqdn) {
+	public boolean importsMethodStatically(@NotNull String fqdn) {
 		ClassDefinition def = ClassDefinition.fromFQDN(fqdn);
 
 		if (ASTERISK.equals(def.getClassName())) {
@@ -70,7 +70,7 @@ public final class AnalyzedImport extends Locatable {
 
 	}
 
-	public boolean matchesClass(@Nonnull String fqdn) {
+	public boolean matchesClass(@NotNull String fqdn) {
 		ClassDefinition def = ClassDefinition.fromFQDN(fqdn);
 
 		if (ASTERISK.equals(def.getClassName())) {
@@ -91,7 +91,7 @@ public final class AnalyzedImport extends Locatable {
 
 	}
 
-	@Nonnull
+	@NotNull
 	public String getStatement() {
 		return statement;
 	}

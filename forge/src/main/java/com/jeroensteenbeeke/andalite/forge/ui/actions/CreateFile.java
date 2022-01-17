@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
@@ -41,13 +41,13 @@ public final class CreateFile extends AbstractCompoundableAction {
 
 		private String defaultNamespaceUrl = null;
 
-		public CreateXMLBuilder(@Nonnull File file) {
+		public CreateXMLBuilder(@NotNull File file) {
 			this.file = file;
 			this.namespaces = new HashMap<>();
 			this.xsds = new HashMap<>();
 		}
 
-		public CreateXMLBuilder withDefaultNamespace(@Nonnull String url,
+		public CreateXMLBuilder withDefaultNamespace(@NotNull String url,
 				@Nullable String xsd) {
 			this.defaultNamespaceUrl = url;
 			if (xsd != null) {
@@ -56,8 +56,8 @@ public final class CreateFile extends AbstractCompoundableAction {
 			return this;
 		}
 
-		public CreateXMLBuilder withXmlNameSpace(@Nonnull String prefix,
-				@Nonnull String url, @Nullable String xsd) {
+		public CreateXMLBuilder withXmlNameSpace(@NotNull String prefix,
+				@NotNull String url, @Nullable String xsd) {
 			this.namespaces.put(prefix, url);
 
 			if (xsd != null) {
@@ -67,7 +67,7 @@ public final class CreateFile extends AbstractCompoundableAction {
 			return this;
 		}
 
-		public CreateFile withRootElement(@Nonnull String element) {
+		public CreateFile withRootElement(@NotNull String element) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
 
@@ -201,7 +201,7 @@ public final class CreateFile extends AbstractCompoundableAction {
 		return new CreateFile(file).withInitialContents(initial.toString());
 	}
 
-	public static CreateXMLBuilder emptyXmlFile(@Nonnull File file) {
+	public static CreateXMLBuilder emptyXmlFile(@NotNull File file) {
 		return new CreateXMLBuilder(file);
 	}
 

@@ -7,7 +7,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.templates.fn.CheckedBiFunction;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.templates.fn.CheckedFunction;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class ConditionalMultipleChoiceQuestionTemplate extends QuestionTemplate<ConditionalMultipleChoiceQuestionTemplate, MultipleChoiceQuestion> {
@@ -16,7 +16,7 @@ public class ConditionalMultipleChoiceQuestionTemplate extends QuestionTemplate<
 
 	private final QuestionCreator questionCreator;
 
-	ConditionalMultipleChoiceQuestionTemplate(@Nonnull String key, @Nonnull String question, @Nonnull CheckedFunction<Answers, List<String>> choices) {
+	ConditionalMultipleChoiceQuestionTemplate(@NotNull String key, @NotNull String question, @NotNull CheckedFunction<Answers, List<String>> choices) {
 		super(key, question);
 		this.choices = choices;
 		this.questionCreator = MultipleChoiceQuestion.SimpleMultipleChoiceQuestion::new;
@@ -29,22 +29,22 @@ public class ConditionalMultipleChoiceQuestionTemplate extends QuestionTemplate<
 	}
 
 	@Override
-	protected ConditionalMultipleChoiceQuestionTemplate newInstance(@Nonnull String key, @Nonnull String question, @Nonnull ImmutableList<FollowUp> followupQuestions, @Nonnull CheckedBiFunction<Answers, String, String> formatter) {
+	protected ConditionalMultipleChoiceQuestionTemplate newInstance(@NotNull String key, @NotNull String question, @NotNull ImmutableList<FollowUp> followupQuestions, @NotNull CheckedBiFunction<Answers, String, String> formatter) {
 		return new ConditionalMultipleChoiceQuestionTemplate(key, question, followupQuestions, choices, questionCreator, formatter);
 	}
 
 
-	public ConditionalMultipleChoiceQuestionTemplate withQuestionCreator(@Nonnull QuestionCreator questionCreator) {
+	public ConditionalMultipleChoiceQuestionTemplate withQuestionCreator(@NotNull QuestionCreator questionCreator) {
 		return new ConditionalMultipleChoiceQuestionTemplate(getKey(), getQuestion(), getFollowupQuestion(), choices, questionCreator, getFormatter());
 	}
 
 	@FunctionalInterface
 	public interface QuestionCreator {
-		MultipleChoiceQuestion createQuestion(@Nonnull String key, @Nonnull String question, @Nonnull List<String> choices);
+		MultipleChoiceQuestion createQuestion(@NotNull String key, @NotNull String question, @NotNull List<String> choices);
 	}
 
 	@Override
-	public MultipleChoiceQuestion toQuestion(@Nonnull Answers answers) throws ForgeException {
+	public MultipleChoiceQuestion toQuestion(@NotNull Answers answers) throws ForgeException {
 		return questionCreator.createQuestion(getKey(), getFormattedQuestion(answers), choices.apply(answers));
 	}
 }

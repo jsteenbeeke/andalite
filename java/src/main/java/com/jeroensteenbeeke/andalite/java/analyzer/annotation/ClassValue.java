@@ -15,7 +15,7 @@
 
 package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
@@ -24,8 +24,8 @@ import com.jeroensteenbeeke.andalite.core.Location;
 
 public class ClassValue extends BaseValue<String,ClassValue, ClassValue.ClassValueInsertionPoint> {
 
-	public ClassValue(@Nonnull Location location, @Nullable String name,
-			@Nonnull String value) {
+	public ClassValue(@NotNull Location location, @Nullable String name,
+			@NotNull String value) {
 		super(location, name, value);
 	}
 

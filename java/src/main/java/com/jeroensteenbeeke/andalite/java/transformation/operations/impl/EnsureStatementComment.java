@@ -25,7 +25,7 @@ import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnsureStatementComment<I extends Enum<I> & IInsertionPoint<?>> implements
 	IJavaOperation<AnalyzedStatement<?, I>> {
@@ -41,7 +41,7 @@ public class EnsureStatementComment<I extends Enum<I> & IInsertionPoint<?>> impl
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedStatement<?, I> input) throws OperationException {
+	public List<Transformation> perform(@NotNull AnalyzedStatement<?, I> input) throws OperationException {
 		if (!input.getComments().contains("// ".concat(comment))) {
 			if (prefix) {
 				return ImmutableList.of(input.insertAt(input.getBeforeInsertionPoint(),
@@ -61,7 +61,7 @@ public class EnsureStatementComment<I extends Enum<I> & IInsertionPoint<?>> impl
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedStatement<?, I> input) {
+	public ActionResult verify(@NotNull AnalyzedStatement<?, I> input) {
 		if (input.getComments().stream().map(String::trim).noneMatch(comment::equals)) {
 			return ActionResult.error("Missing comment: %s (found: %s)", comment, input
 				.getComments()

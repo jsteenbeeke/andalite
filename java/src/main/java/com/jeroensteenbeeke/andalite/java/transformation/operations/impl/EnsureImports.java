@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.analyzer.ClassDefinition;
@@ -31,7 +31,7 @@ public class EnsureImports implements ICompilationUnitOperation {
 	private static final String WILDCARD = "*";
 	private final String fqdn;
 
-	public EnsureImports(@Nonnull String fqdn) {
+	public EnsureImports(@NotNull String fqdn) {
 		// Assume developers follow Java conventions and don't use
 		// lowercase class names
 		if (fqdn.toLowerCase().equals(fqdn) && !fqdn.endsWith(WILDCARD)) {
@@ -48,7 +48,7 @@ public class EnsureImports implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedSourceFile input) {
+	public List<Transformation> perform(@NotNull AnalyzedSourceFile input) {
 		ClassDefinition def = ClassDefinition.fromFQDN(input.getFullyQualifiedName());
 		ClassDefinition desired = ClassDefinition.fromFQDN(fqdn);
 
@@ -72,7 +72,7 @@ public class EnsureImports implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedSourceFile input) {
+	public ActionResult verify(@NotNull AnalyzedSourceFile input) {
 		ClassDefinition def = ClassDefinition.fromFQDN(input.getFullyQualifiedName());
 		ClassDefinition desired = ClassDefinition.fromFQDN(fqdn);
 

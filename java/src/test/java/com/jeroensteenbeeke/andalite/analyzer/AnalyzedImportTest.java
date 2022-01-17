@@ -15,12 +15,11 @@
 
 package com.jeroensteenbeeke.andalite.analyzer;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedImport;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AnalyzedImportTest {
 	private static final String ORG_JUNIT = "org.junit";

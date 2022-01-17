@@ -30,7 +30,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnsureInterfaceMethod implements IInterfaceOperation {
 	private final String name;
@@ -50,7 +50,7 @@ public class EnsureInterfaceMethod implements IInterfaceOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedInterface input)
+	public List<Transformation> perform(@NotNull AnalyzedInterface input)
 		throws OperationException {
 		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {
@@ -117,7 +117,7 @@ public class EnsureInterfaceMethod implements IInterfaceOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedInterface input) {
+	public ActionResult verify(@NotNull AnalyzedInterface input) {
 		for (AnalyzedMethod analyzedMethod : input.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {

@@ -2,7 +2,7 @@ package com.jeroensteenbeeke.andalite.java.util;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.lux.TypedResult;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.SortedSet;
 

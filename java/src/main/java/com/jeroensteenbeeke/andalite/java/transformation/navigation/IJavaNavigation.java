@@ -15,17 +15,17 @@
 
 package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.ILocatable;
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 
 public interface IJavaNavigation<T extends ILocatable> {
-	@Nonnull
-	T navigate(@Nonnull AnalyzedSourceFile file) throws NavigationException;
+	@NotNull
+	T navigate(@NotNull AnalyzedSourceFile file) throws NavigationException;
 
-	@Nonnull
+	@NotNull
 	String getDescription();
 
 }

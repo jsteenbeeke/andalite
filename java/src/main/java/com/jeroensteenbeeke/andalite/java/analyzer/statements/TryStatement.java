@@ -21,7 +21,7 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,8 +36,8 @@ public class TryStatement extends BaseStatement {
 
 	private final List<CatchStatement> catchClauses;
 
-	public TryStatement(@Nonnull Location location,
-			@Nonnull AnalyzedStatement<?,?> block,
+	public TryStatement(@NotNull Location location,
+			@NotNull AnalyzedStatement<?,?> block,
 			@Nullable AnalyzedStatement<?,?> finallyStatement) {
 		super(location);
 		this.block = block;
@@ -46,7 +46,7 @@ public class TryStatement extends BaseStatement {
 		this.catchClauses = Lists.newArrayList();
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedStatement<?,?> getBlock() {
 		return block;
 	}
@@ -56,20 +56,20 @@ public class TryStatement extends BaseStatement {
 		return finallyStatement;
 	}
 
-	public void addResourceStatement(@Nonnull ResourceStatement statement) {
+	public void addResourceStatement(@NotNull ResourceStatement statement) {
 		this.resourceStatements.add(statement);
 	}
 
-	@Nonnull
+	@NotNull
 	public List<ResourceStatement> getResourceStatements() {
 		return ImmutableList.copyOf(resourceStatements);
 	}
 
-	public void addCatchClause(@Nonnull CatchStatement statement) {
+	public void addCatchClause(@NotNull CatchStatement statement) {
 		this.catchClauses.add(statement);
 	}
 
-	@Nonnull
+	@NotNull
 	public List<CatchStatement> getCatchClauses() {
 		return ImmutableList.copyOf(catchClauses);
 	}

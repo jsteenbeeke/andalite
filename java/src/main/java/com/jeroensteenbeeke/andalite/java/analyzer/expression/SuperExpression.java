@@ -15,7 +15,7 @@
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.github.javaparser.ast.expr.Name;
@@ -29,7 +29,7 @@ public class SuperExpression extends AnalyzedExpression {
 
 	private final LocatedName<Name> typeName;
 
-	public SuperExpression(@Nonnull Location location,
+	public SuperExpression(@NotNull Location location,
 			@Nullable LocatedName<Name> typeName) {
 		super(location);
 		this.typeName = typeName;
@@ -40,7 +40,7 @@ public class SuperExpression extends AnalyzedExpression {
 		return typeName;
 	}
 
-	@Nonnull
+	@NotNull
 	public Optional<LocatedName<Name>> typeName() {
 		return Optional.ofNullable(getTypeName());
 	}

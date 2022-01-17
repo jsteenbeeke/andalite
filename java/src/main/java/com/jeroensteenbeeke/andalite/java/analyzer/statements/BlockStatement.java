@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -46,7 +46,7 @@ public class BlockStatement extends AnalyzedStatement<BlockStatement, BlockState
 	 * @param location
 	 *            The location of the statement
 	 */
-	public BlockStatement(@Nonnull Location location) {
+	public BlockStatement(@NotNull Location location) {
 		super(location);
 		this.statements = Lists.newArrayList();
 	}
@@ -66,7 +66,7 @@ public class BlockStatement extends AnalyzedStatement<BlockStatement, BlockState
 	 * @param statement
 	 *            The statement to add to this block
 	 */
-	public void addStatement(@Nonnull AnalyzedStatement<?,?> statement) {
+	public void addStatement(@NotNull AnalyzedStatement<?,?> statement) {
 		this.statements.add(statement);
 	}
 
@@ -74,7 +74,7 @@ public class BlockStatement extends AnalyzedStatement<BlockStatement, BlockState
 	 * Returns the list of contained statements
 	 */
 	@Override
-	@Nonnull
+	@NotNull
 	public List<AnalyzedStatement<?,?>> getStatements() {
 		return ImmutableList.copyOf(statements);
 	}
@@ -83,7 +83,7 @@ public class BlockStatement extends AnalyzedStatement<BlockStatement, BlockState
 	 * Creates a simplified Java representation of the analyzed block statement
 	 */
 	@Override
-	@Nonnull
+	@NotNull
 	public final String toJavaString() {
 		StringBuilder block = new StringBuilder();
 

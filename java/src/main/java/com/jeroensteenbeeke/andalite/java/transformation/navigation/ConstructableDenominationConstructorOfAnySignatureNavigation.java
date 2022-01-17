@@ -20,7 +20,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 import com.jeroensteenbeeke.andalite.java.analyzer.ConstructableDenomination;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public class ConstructableDenominationConstructorOfAnySignatureNavigation<T extends ConstructableDenomination<T,?>>
@@ -29,7 +29,7 @@ public class ConstructableDenominationConstructorOfAnySignatureNavigation<T exte
 	private final AccessModifier modifier;
 
 	public ConstructableDenominationConstructorOfAnySignatureNavigation(
-			@Nonnull IJavaNavigation<T> classNavigation,
+			@NotNull IJavaNavigation<T> classNavigation,
 			@Nullable AccessModifier modifier) {
 		super(classNavigation);
 		this.modifier = modifier;

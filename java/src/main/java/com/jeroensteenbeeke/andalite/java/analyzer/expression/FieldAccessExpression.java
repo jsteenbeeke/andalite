@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 import java.util.List;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.google.common.base.Joiner;
@@ -37,14 +37,14 @@ public class FieldAccessExpression extends AnalyzedExpression {
 	private final List<AnalyzedType> typeArguments;
 
 	public FieldAccessExpression(Location location,
-			@Nullable AnalyzedExpression scope, @Nonnull String field) {
+			@Nullable AnalyzedExpression scope, @NotNull String field) {
 		super(location);
 		this.scope = scope;
 		this.field = field;
 		this.typeArguments = Lists.newArrayList();
 	}
 
-	@Nonnull
+	@NotNull
 	public String getField() {
 		return field;
 	}
@@ -54,7 +54,7 @@ public class FieldAccessExpression extends AnalyzedExpression {
 		return scope;
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedType> getTypeArguments() {
 		return ImmutableList.copyOf(typeArguments);
 	}
@@ -64,7 +64,7 @@ public class FieldAccessExpression extends AnalyzedExpression {
 	 *            The type argument to add to the list
 	 * @non.public
 	 */
-	public void addTypeArgument(@Nonnull AnalyzedType type) {
+	public void addTypeArgument(@NotNull AnalyzedType type) {
 		this.typeArguments.add(type);
 	}
 

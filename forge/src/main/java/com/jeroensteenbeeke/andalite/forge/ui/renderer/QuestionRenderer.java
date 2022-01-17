@@ -19,12 +19,12 @@ import com.jeroensteenbeeke.andalite.forge.ui.Question;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.lux.TypedResult;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public interface QuestionRenderer {
-	TypedResult<Answers> renderQuestion(@Nonnull Answers answers,
-									   @Nonnull Question question);
+	TypedResult<Answers> renderQuestion(@NotNull Answers answers,
+									   @NotNull Question question);
 
-	TypedResult<ForgeRecipe> renderRecipeSelection(@Nonnull List<ForgeRecipe> recipeList);
+	TypedResult<ForgeRecipe> renderRecipeSelection(@NotNull List<ForgeRecipe> recipeList);
 }

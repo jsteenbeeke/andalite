@@ -25,7 +25,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.IAnnotationO
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot.InnerAnnotationCondition;
 import com.jeroensteenbeeke.lux.ActionResult;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class EnsureInnerAnnotationField implements IAnnotationOperation {
@@ -37,7 +37,7 @@ public class EnsureInnerAnnotationField implements IAnnotationOperation {
 
 	private InnerAnnotationCondition condition = annotationValue -> true;
 
-	public EnsureInnerAnnotationField(@Nonnull String name, @Nonnull String type) {
+	public EnsureInnerAnnotationField(@NotNull String name, @NotNull String type) {
 		super();
 		this.name = name;
 		this.type = type;
@@ -53,7 +53,7 @@ public class EnsureInnerAnnotationField implements IAnnotationOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedAnnotation input)
+	public List<Transformation> perform(@NotNull AnalyzedAnnotation input)
 		throws OperationException {
 		final String actualName = name != null ? name : "value";
 
@@ -102,14 +102,14 @@ public class EnsureInnerAnnotationField implements IAnnotationOperation {
 		return ImmutableList.of();
 	}
 
-	@Nonnull
+	@NotNull
 	public String getDescription() {
 		return String.format("presence of annotation field %s of type @%s",
 							 name, type);
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedAnnotation input) {
+	public ActionResult verify(@NotNull AnalyzedAnnotation input) {
 		if (input.hasValueNamed(name)) {
 
 			if (input.hasValueOfType(AnnotationValue.class, name)) {
@@ -148,7 +148,7 @@ public class EnsureInnerAnnotationField implements IAnnotationOperation {
 		return ActionResult.error("No value named %s", name);
 	}
 
-	@Nonnull
+	@NotNull
 	EnsureInnerAnnotationField setCondition(InnerAnnotationCondition condition) {
 		this.condition = condition;
 		return this;

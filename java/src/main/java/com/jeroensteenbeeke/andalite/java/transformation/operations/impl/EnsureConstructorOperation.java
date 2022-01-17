@@ -13,7 +13,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperati
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 import com.jeroensteenbeeke.lux.ActionResult;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +32,7 @@ public abstract class EnsureConstructorOperation<T extends ConstructableDenomina
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull T input)
+	public List<Transformation> perform(@NotNull T input)
 			throws OperationException {
 
 		for (AnalyzedConstructor ctor : input.getConstructors()) {
@@ -84,7 +84,7 @@ public abstract class EnsureConstructorOperation<T extends ConstructableDenomina
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull T input) {
+	public ActionResult verify(@NotNull T input) {
 
 		for (AnalyzedConstructor ctor : input.getConstructors()) {
 			if (AnalyzeUtil.matchesSignature(ctor, parameters)) {

@@ -14,18 +14,17 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-import static com.jeroensteenbeeke.andalite.xml.XMLOperations.*;
-import static org.junit.Assert.*;
+import com.jeroensteenbeeke.andalite.testbase.XMLTest;
+import com.jeroensteenbeeke.lux.Result;
+import org.junit.jupiter.api.Test;
+import org.w3c.dom.Node;
 
 import java.io.File;
 import java.util.List;
 
-import com.jeroensteenbeeke.lux.Result;
-import org.junit.Test;
-import org.w3c.dom.Node;
-
-import com.jeroensteenbeeke.lux.ActionResult;
-import com.jeroensteenbeeke.andalite.testbase.XMLTest;
+import static com.jeroensteenbeeke.andalite.xml.XMLOperations.hasAttribute;
+import static com.jeroensteenbeeke.andalite.xml.XMLOperations.hasElement;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TransformationTest extends XMLTest {
 

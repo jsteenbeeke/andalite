@@ -7,7 +7,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.ClassScopeOperationBuil
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 
 public class PropertyTemplate implements ClassElementTemplate {
@@ -64,7 +64,7 @@ public class PropertyTemplate implements ClassElementTemplate {
 		);
 	}
 
-	public ConditionalInclusion ifMatched(@Nonnull Predicate<PropertyTemplate> condition) {
+	public ConditionalInclusion ifMatched(@NotNull Predicate<PropertyTemplate> condition) {
 		return templates -> {
 			if (!condition.test(this)) {
 				return this;
@@ -74,7 +74,7 @@ public class PropertyTemplate implements ClassElementTemplate {
 		};
 	}
 
-	public ConditionalInclusion ifNotMatched(@Nonnull Predicate<PropertyTemplate> condition) {
+	public ConditionalInclusion ifNotMatched(@NotNull Predicate<PropertyTemplate> condition) {
 		return ifMatched(condition.negate());
 	}
 
@@ -164,7 +164,7 @@ public class PropertyTemplate implements ClassElementTemplate {
 
 	@FunctionalInterface
 	public interface ConditionalInclusion {
-		@Nonnull
-		PropertyTemplate include(@Nonnull PropertyElementTemplate... templates);
+		@NotNull
+		PropertyTemplate include(@NotNull PropertyElementTemplate... templates);
 	}
 }

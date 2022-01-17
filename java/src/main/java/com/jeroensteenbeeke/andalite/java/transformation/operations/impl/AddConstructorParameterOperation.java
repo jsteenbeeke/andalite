@@ -10,7 +10,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedParameter;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IConstructorOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class AddConstructorParameterOperation implements IConstructorOperation {
 	private final String identifier;
@@ -23,7 +23,7 @@ public class AddConstructorParameterOperation implements IConstructorOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedConstructor input)
+	public List<Transformation> perform(@NotNull AnalyzedConstructor input)
 			throws OperationException {
 		if (!hasParameter(input)) {
 				String prefix = input.getParameters().isEmpty() ? "" : ", ";
@@ -36,7 +36,7 @@ public class AddConstructorParameterOperation implements IConstructorOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedConstructor input) {
+	public ActionResult verify(@NotNull AnalyzedConstructor input) {
 		return hasParameter(input) ? ActionResult.ok() : ActionResult.error(
 				"Parameter %s of type %s not present", identifier, type);
 	}

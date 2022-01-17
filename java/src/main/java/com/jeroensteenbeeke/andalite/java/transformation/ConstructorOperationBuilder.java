@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedConstructor;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.BodyContainerNavigation;
@@ -33,48 +33,48 @@ public class ConstructorOperationBuilder extends
 
 		private final String name;
 
-		private ParameterLocator(@Nonnull ConstructorOperationBuilder parent,
-								 @Nonnull String name) {
+		private ParameterLocator(@NotNull ConstructorOperationBuilder parent,
+								 @NotNull String name) {
 			super();
 			this.parent = parent;
 			this.name = name;
 		}
 
-		public ParameterScopeOperationBuilder ofType(@Nonnull String type) {
+		public ParameterScopeOperationBuilder ofType(@NotNull String type) {
 			return new ParameterScopeOperationBuilder(parent.getCollector(),
 													  new ConstructorParameterNavigation(parent.getNavigation(),
 																						 type, name));
 		}
 	}
 
-	ConstructorOperationBuilder(@Nonnull IStepCollector collector,
-								@Nonnull IJavaNavigation<AnalyzedConstructor> navigation) {
+	ConstructorOperationBuilder(@NotNull IStepCollector collector,
+								@NotNull IJavaNavigation<AnalyzedConstructor> navigation) {
 		super(collector, navigation);
 	}
 
-	@Nonnull
+	@NotNull
 	public AnnotatableOperationBuilder<AnalyzedConstructor> forAnnotation(
-		@Nonnull String type) {
+		@NotNull String type) {
 		return new AnnotatableOperationBuilder<>(
 			getCollector(), getNavigation(), type);
 	}
 
-	@Nonnull
-	public ParameterLocator forParameterNamed(@Nonnull String name) {
+	@NotNull
+	public ParameterLocator forParameterNamed(@NotNull String name) {
 		return new ParameterLocator(this, name);
 	}
 
 	/**
 	 * @param index The 0-based index of the parameter
 	 */
-	@Nonnull
+	@NotNull
 	public ParameterScopeOperationBuilder forParameterAtIndex(int index) {
 		return new ParameterScopeOperationBuilder(getCollector(),
 												  new ByIndexConstructorParameterNavigation(getNavigation(),
 																							index));
 	}
 
-	@Nonnull
+	@NotNull
 	public BodyContainerOperationBuilder<AnalyzedConstructor, AnalyzedConstructor.ConstructorInsertionPoint> inBody() {
 		return new BodyContainerOperationBuilder<>(
 			getCollector(),
@@ -88,13 +88,13 @@ public class ConstructorOperationBuilder extends
 		};
 	}
 
-	@Nonnull
+	@NotNull
 	public ConstructorParameterAdditionBuilder addConstructorParameter(
-		@Nonnull String name) {
+		@NotNull String name) {
 		return new ConstructorParameterAdditionBuilder(name, this::ensure);
 	}
 
-	public void ensureAnnotation(@Nonnull String annotation) {
+	public void ensureAnnotation(@NotNull String annotation) {
 		ensure(new EnsureConstructorAnnotation(annotation));
 	}
 }

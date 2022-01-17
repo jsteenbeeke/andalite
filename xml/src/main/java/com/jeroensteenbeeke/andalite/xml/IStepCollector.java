@@ -14,10 +14,10 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public interface IStepCollector {
 
-	void addStep(@Nonnull XMLRecipeStep<?> step);
+	void addStep(@NotNull XMLRecipeStep<?> step);
 
 }

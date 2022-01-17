@@ -18,7 +18,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedEnumConstant;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ContainingDenominationMethodNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnumConstantMethodLocator extends
 		AbstractMethodBuilder<MethodOperationBuilder, EnumConstantMethodLocator> {
@@ -35,8 +35,8 @@ public class EnumConstantMethodLocator extends
 
 	}
 
-	@Nonnull
-	public MethodOperationBuilder named(@Nonnull String name) {
+	@NotNull
+	public MethodOperationBuilder named(@NotNull String name) {
 		return new MethodOperationBuilder(collector, new ContainingDenominationMethodNavigation<>(
 			parentNavigation, name, getType(), getModifier(),
 			getDescriptors()));

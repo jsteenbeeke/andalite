@@ -1,6 +1,6 @@
 package com.jeroensteenbeeke.andalite.java.transformation.template;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public interface TypeReference {
@@ -10,7 +10,7 @@ public interface TypeReference {
 
 	boolean nullable();
 
-	static TypeReference of(@Nonnull String representation) {
+	static TypeReference of(@NotNull String representation) {
 		if (representation.endsWith("[]")) {
 			return new ArrayReference(TypeReference.of(representation.substring(0, representation.length()-2)));
 		}

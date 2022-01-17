@@ -16,7 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
@@ -43,161 +43,161 @@ public abstract class InnerAnnotationConditionBuilder<T extends InnerAnnotationC
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
+	@NotNull
 	public T value(@Nullable final Boolean value) {
 		conditions.add(new BooleanValueCondition(null, value));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
+	@NotNull
 	public T value(@Nullable final Character value) {
 		conditions.add(new CharValueCondition(null, value));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
+	@NotNull
 	public T value(@Nullable final Long value) {
 		conditions.add(new LongValueCondition(null, value));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
+	@NotNull
 	public T value(@Nullable final Double value) {
 		conditions.add(new DoubleValueCondition(null, value));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
+	@NotNull
 	public T value(@Nullable final Integer value) {
 		conditions.add(new IntegerValueCondition(null, value));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
+	@NotNull
 	public T value(@Nullable final String value) {
 		conditions.add(new StringValueCondition(null, value));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T value(@Nonnull final String name, @Nullable final Boolean value) {
+	@NotNull
+	public T value(@NotNull final String name, @Nullable final Boolean value) {
 		conditions.add(new BooleanValueCondition(name, value));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T value(@Nonnull final String name, @Nullable final Long value) {
+	@NotNull
+	public T value(@NotNull final String name, @Nullable final Long value) {
 		conditions.add(new LongValueCondition(name, value));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T value(@Nonnull final String name, @Nullable final Double value) {
+	@NotNull
+	public T value(@NotNull final String name, @Nullable final Double value) {
 		conditions.add(new DoubleValueCondition(name, value));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T value(@Nonnull final String name, @Nullable final Integer value) {
+	@NotNull
+	public T value(@NotNull final String name, @Nullable final Integer value) {
 		conditions.add(new IntegerValueCondition(name, value));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T value(@Nonnull final String name, @Nullable final String value) {
+	@NotNull
+	public T value(@NotNull final String name, @Nullable final String value) {
 		conditions.add(new StringValueCondition(name, value));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public <O> T noValueOrEquals(@Nonnull final String name,
-			@Nonnull final O expectedRawValue) {
+	@NotNull
+	public <O> T noValueOrEquals(@NotNull final String name,
+			@NotNull final O expectedRawValue) {
 		conditions.add(new NoValueCondition<O>(name, expectedRawValue));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T arrayValue(@Nonnull final String name,
-			@Nonnull final Boolean... values) {
+	@NotNull
+	public T arrayValue(@NotNull final String name,
+			@NotNull final Boolean... values) {
 		conditions.add(new BooleanArrayValueCondition(name, values));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T arrayValue(@Nonnull final String name,
-			@Nonnull final Double... values) {
+	@NotNull
+	public T arrayValue(@NotNull final String name,
+			@NotNull final Double... values) {
 		conditions.add(new DoubleArrayValueCondition(name, values));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T arrayValue(@Nonnull final String name,
-			@Nonnull final Integer... values) {
+	@NotNull
+	public T arrayValue(@NotNull final String name,
+			@NotNull final Integer... values) {
 		conditions.add(new IntegerArrayValueCondition(name, values));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T arrayValue(@Nonnull final String name,
-			@Nonnull final Long... values) {
+	@NotNull
+	public T arrayValue(@NotNull final String name,
+			@NotNull final Long... values) {
 		conditions.add(new LongArrayValueCondition(name, values));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T arrayValue(@Nonnull final String name,
-			@Nonnull final String... values) {
+	@NotNull
+	public T arrayValue(@NotNull final String name,
+			@NotNull final String... values) {
 		conditions.add(new StringArrayValueCondition(name, values));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T arrayValue(@Nonnull final Boolean... values) {
+	@NotNull
+	public T arrayValue(@NotNull final Boolean... values) {
 		conditions.add(new BooleanArrayValueCondition(null, values));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T arrayValue(@Nonnull final Double... values) {
+	@NotNull
+	public T arrayValue(@NotNull final Double... values) {
 		conditions.add(new DoubleArrayValueCondition(null, values));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T arrayValue(@Nonnull final Integer... values) {
+	@NotNull
+	public T arrayValue(@NotNull final Integer... values) {
 		conditions.add(new IntegerArrayValueCondition(null, values));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T arrayValue(@Nonnull final Long... values) {
+	@NotNull
+	public T arrayValue(@NotNull final Long... values) {
 		conditions.add(new LongArrayValueCondition(null, values));
 		return (T) this;
 	}
 
 	@SuppressWarnings("unchecked")
-	@Nonnull
-	public T defaultArrayValue(@Nonnull final String... values) {
+	@NotNull
+	public T defaultArrayValue(@NotNull final String... values) {
 		conditions.add(new StringArrayValueCondition(null, values));
 		return (T) this;
 	}
@@ -206,7 +206,7 @@ public abstract class InnerAnnotationConditionBuilder<T extends InnerAnnotationC
 		return get();
 	}
 
-	@Nonnull
+	@NotNull
 	public R get() {
 		List<InnerAnnotationCondition> list = conditions.build();
 

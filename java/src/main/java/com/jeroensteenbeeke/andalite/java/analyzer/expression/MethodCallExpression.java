@@ -16,7 +16,7 @@ package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.core.Location;
@@ -32,10 +32,10 @@ public class MethodCallExpression extends AnalyzedExpression {
 
 	private AnalyzedExpression scope;
 
-	public MethodCallExpression(@Nonnull final Location location,
-			@Nonnull final String name,
-			@Nonnull final List<AnalyzedType> analyzedTypeArguments,
-			@Nonnull final List<AnalyzedExpression> arguments) {
+	public MethodCallExpression(@NotNull final Location location,
+			@NotNull final String name,
+			@NotNull final List<AnalyzedType> analyzedTypeArguments,
+			@NotNull final List<AnalyzedExpression> arguments) {
 		super(location);
 		this.name = name;
 		this.typeArguments = ImmutableList.copyOf(analyzedTypeArguments);

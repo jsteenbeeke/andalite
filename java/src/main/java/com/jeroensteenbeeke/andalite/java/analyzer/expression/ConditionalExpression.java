@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -26,27 +26,27 @@ public class ConditionalExpression extends AnalyzedExpression {
 
 	private final AnalyzedExpression elseExpression;
 
-	public ConditionalExpression(@Nonnull Location location,
-			@Nonnull AnalyzedExpression condition,
-			@Nonnull AnalyzedExpression thenExpression,
-			@Nonnull AnalyzedExpression elseExpression) {
+	public ConditionalExpression(@NotNull Location location,
+			@NotNull AnalyzedExpression condition,
+			@NotNull AnalyzedExpression thenExpression,
+			@NotNull AnalyzedExpression elseExpression) {
 		super(location);
 		this.condition = condition;
 		this.thenExpression = thenExpression;
 		this.elseExpression = elseExpression;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedExpression getCondition() {
 		return condition;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedExpression getElseExpression() {
 		return elseExpression;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedExpression getThenExpression() {
 		return thenExpression;
 	}

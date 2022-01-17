@@ -18,15 +18,15 @@ package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 import com.google.common.base.Joiner;
 import com.jeroensteenbeeke.andalite.core.*;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public final class ArrayValue extends BaseValue<List<BaseValue<?,?,?>>,ArrayValue, ArrayValue.ArrayValueInsertionPoint> {
 
-	public ArrayValue(@Nonnull Location location, @Nullable String name,
-					  @Nonnull List<BaseValue<?,?,?>> value) {
+	public ArrayValue(@NotNull Location location, @Nullable String name,
+					  @NotNull List<BaseValue<?,?,?>> value) {
 		super(location, name, value);
 	}
 
@@ -64,9 +64,9 @@ public final class ArrayValue extends BaseValue<List<BaseValue<?,?,?>>,ArrayValu
 		return ArrayValueInsertionPoint.AFTER;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	public Transformation insertAt(@Nonnull ArrayValueInsertionPoint insertionPoint, @Nonnull String replacement) {
+	public Transformation insertAt(@NotNull ArrayValueInsertionPoint insertionPoint, @NotNull String replacement) {
 		if (getValue().isEmpty()) {
 			return super.insertAt(insertionPoint, String.format("{%s}", replacement));
 		}

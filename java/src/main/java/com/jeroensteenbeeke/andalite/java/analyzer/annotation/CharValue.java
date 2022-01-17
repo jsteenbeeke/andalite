@@ -15,7 +15,7 @@
 
 package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
@@ -24,8 +24,8 @@ import com.jeroensteenbeeke.andalite.core.Location;
 
 public final class CharValue extends BaseValue<Character,CharValue, CharValue.CharValueInsertionPoint> {
 
-	public CharValue(@Nonnull Location location, @Nullable String name,
-			@Nonnull Character value) {
+	public CharValue(@NotNull Location location, @Nullable String name,
+			@NotNull Character value) {
 		super(location, name, value);
 	}
 

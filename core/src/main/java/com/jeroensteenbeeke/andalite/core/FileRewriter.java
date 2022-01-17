@@ -15,20 +15,23 @@
 
 package com.jeroensteenbeeke.andalite.core;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.TreeMultimap;
-import com.google.common.io.Files;
 import com.jeroensteenbeeke.lux.ActionResult;
+import io.vavr.collection.Array;
+import io.vavr.collection.SortedMultimap;
+import io.vavr.collection.SortedSet;
+import io.vavr.collection.TreeMultimap;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 public class FileRewriter {
@@ -39,30 +42,30 @@ public class FileRewriter {
 
 	private final File targetFile;
 
-	private final TreeMultimap<Index, String> mutations;
+	private SortedMultimap<Index, String> mutations;
 
-	private final TreeMultimap<Integer, Index> pointIndexes;
+	private SortedMultimap<Integer, Index> pointIndexes;
 
 	public FileRewriter(File targetFile) {
 		super();
 		this.targetFile = targetFile;
-		this.mutations = TreeMultimap.create();
-		this.pointIndexes = TreeMultimap.create();
+		this.mutations = TreeMultimap.withSeq().empty();
+		this.pointIndexes = TreeMultimap.withSeq().empty();
 	}
 
-	@Nonnull
-	public FileRewriter insert(int index, @Nonnull String code) {
+	@NotNull
+	public FileRewriter insert(int index, @NotNull String code) {
 		Index location = Index.insertion(index);
-		mutations.put(location, code);
-		pointIndexes.put(index, location);
+		mutations = mutations.put(location, code);
+		pointIndexes = pointIndexes.put(index, location);
 		return this;
 	}
 
-	@Nonnull
-	public FileRewriter replace(int from, int to, @Nonnull String code) {
+	@NotNull
+	public FileRewriter replace(int from, int to, @NotNull String code) {
 		Index location = Index.replacement(from, to);
-		mutations.put(location, code);
-		pointIndexes.put(from, location);
+		mutations = mutations.put(location, code);
+		pointIndexes = pointIndexes.put(from, location);
 		return this;
 	}
 
@@ -77,7 +80,7 @@ public class FileRewriter {
 				int threshold = FIRST_INDEX - 1;
 				int unicodeBytesRemaining = 0;
 
-				List<Integer> previous = Lists.newLinkedList();
+				List<Integer> previous = new ArrayList<>();
 
 				StringBuilder output = new StringBuilder();
 				boolean inUnicode = false;
@@ -89,9 +92,9 @@ public class FileRewriter {
 					}
 
 					if (pointIndexes.containsKey(point)) {
-						for (Index index : pointIndexes.get(point)) {
+						for (Index index : pointIndexes.get(point).getOrElse(Array::empty)) {
 							if (mutations.containsKey(index)) {
-								for (String insert : mutations.get(index)) {
+								for (String insert : mutations.get(index).getOrElse(Array::empty)) {
 									out.write(insert.getBytes());
 
 									output.append("\u001B[33m");
@@ -128,21 +131,21 @@ public class FileRewriter {
 
 				logger.debug("Outputted: {}", output);
 
-				SortedSet<Integer> remainingIndexes = pointIndexes.keySet().tailSet(point);
+				final var mark = point;
+				SortedSet<Integer> remainingIndexes = pointIndexes.keySet().dropUntil(i -> mark == i);
 				if (!remainingIndexes.isEmpty()) {
 					if (remainingIndexes.size() > 1 || !remainingIndexes.contains(point)) {
 
 						return ActionResult.error("Transformations beyond file end! Requested: %s, but index is %d",
 												  remainingIndexes
-													  .stream()
 													  .map(i -> Integer.toString(i))
 													  .collect(Collectors.joining(", ", "{", "}"))
 							, point);
 					} else {
 						// Transformations remaining for end of file
-						for (Index index : pointIndexes.get(point)) {
+						for (Index index : pointIndexes.get(point).getOrElse(Array::empty)) {
 							if (mutations.containsKey(index)) {
-								for (String insert : mutations.get(index)) {
+								for (String insert : mutations.get(index).getOrElse(Array::empty)) {
 									out.write(insert.getBytes());
 
 									output.append("\u001B[33m");
@@ -157,7 +160,7 @@ public class FileRewriter {
 					}
 				}
 
-				Files.copy(temp, targetFile);
+				Files.copy(temp.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 				temp.deleteOnExit();
 
 				return ActionResult.ok();

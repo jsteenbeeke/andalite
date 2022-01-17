@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.ILocatable;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BooleanValue;
@@ -32,7 +32,7 @@ public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJa
 		extends IScopedOperationBuilder<T, O> {
 	String NULL = "null";
 
-	default void ensureBooleanValue(@Nonnull String name, boolean value) {
+	default void ensureBooleanValue(@NotNull String name, boolean value) {
 		ensure(new EnsureAnnotationField<>(name, BooleanValue.class,
 										   value) {
 			@Override
@@ -42,8 +42,8 @@ public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJa
 		});
 	}
 
-	default void ensureFieldAccessValue(@Nonnull String name,
-			@Nonnull String fieldAccess) {
+	default void ensureFieldAccessValue(@NotNull String name,
+			@NotNull String fieldAccess) {
 		ensure(new EnsureAnnotationField<>(name, FieldAccessValue.class,
 										   fieldAccess) {
 			@Override
@@ -54,7 +54,7 @@ public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJa
 
 	}
 
-	default void ensureStringValue(@Nonnull String name, String value) {
+	default void ensureStringValue(@NotNull String name, String value) {
 		ensure(new EnsureAnnotationField<>(name, StringValue.class,
 										   value) {
 			@Override
@@ -64,7 +64,7 @@ public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJa
 		});
 	}
 
-	default void ensureIntegerValue(@Nonnull String name, Integer value) {
+	default void ensureIntegerValue(@NotNull String name, Integer value) {
 		ensure(new EnsureAnnotationField<>(name, IntegerValue.class,
 										   value) {
 			@Override
@@ -74,7 +74,7 @@ public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJa
 		});
 	}
 
-	default void ensureCharValue(@Nonnull String name, Character value) {
+	default void ensureCharValue(@NotNull String name, Character value) {
 		ensure(new EnsureAnnotationField<>(name, CharValue.class,
 										   value) {
 			@Override
@@ -85,7 +85,7 @@ public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJa
 	}
 
 	default EnsureInnerAnnotationField ensureAnnotationValue(
-			@Nonnull String name, @Nonnull String type) {
+			@NotNull String name, @NotNull String type) {
 		EnsureInnerAnnotationField field = new EnsureInnerAnnotationField(name,
 				type);
 		ensure(field);
@@ -94,7 +94,7 @@ public interface IAnnotationOperationBuilder<T extends ILocatable, O extends IJa
 
 	void ensure(IAnnotationOperation operation);
 
-	default void ensureClassValue(@Nonnull String name, @Nonnull String type) {
+	default void ensureClassValue(@NotNull String name, @NotNull String type) {
 		ensure(new EnsureAnnotationField<>(name, ClassValue.class,
 										   type) {
 			@Override

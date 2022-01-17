@@ -41,7 +41,7 @@ public class XMLTest extends TempFileCleaningTest {
 	private static final DocumentBuilder DOCUMENT_BUILDER = createDocumentBuilder();
 
 	protected List<Node> extractNodes(File xmlFile, String xpathExpression)
-			throws SAXException, IOException, ParserConfigurationException,
+			throws SAXException, IOException,
 			XPathExpressionException {
 		Document doc = DOCUMENT_BUILDER.parse(xmlFile);
 		XPathExpression expression = xpath.compile(xpathExpression);

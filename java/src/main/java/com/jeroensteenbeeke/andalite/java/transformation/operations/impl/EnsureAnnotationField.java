@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.lux.ActionResult;
@@ -37,9 +37,9 @@ public abstract class EnsureAnnotationField<T> implements IAnnotationOperation {
 
 	private final Class<? extends BaseValue<T,?,?>> expectedType;
 
-	public EnsureAnnotationField(@Nonnull String name,
-								 @Nonnull Class<? extends BaseValue<T,?,?>> expectedType,
-								 @Nonnull T value) {
+	public EnsureAnnotationField(@NotNull String name,
+								 @NotNull Class<? extends BaseValue<T,?,?>> expectedType,
+								 @NotNull T value) {
 		super();
 		this.name = name;
 		this.expectedType = expectedType;
@@ -47,7 +47,7 @@ public abstract class EnsureAnnotationField<T> implements IAnnotationOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedAnnotation input)
+	public List<Transformation> perform(@NotNull AnalyzedAnnotation input)
 		throws OperationException {
 		final String actualName = name != null ? name : "value";
 
@@ -93,7 +93,7 @@ public abstract class EnsureAnnotationField<T> implements IAnnotationOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedAnnotation input) {
+	public ActionResult verify(@NotNull AnalyzedAnnotation input) {
 		if (input.hasValueOfType(expectedType, name)) {
 			BaseValue<T,?,?> value = input.getValue(expectedType, name);
 

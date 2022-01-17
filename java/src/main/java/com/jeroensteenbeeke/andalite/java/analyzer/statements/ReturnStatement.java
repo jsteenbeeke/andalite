@@ -18,20 +18,20 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class ReturnStatement extends BaseStatement<ReturnStatement> {
 	private final AnalyzedExpression returnExpression;
 
-	public ReturnStatement(@Nonnull final Location location,
+	public ReturnStatement(@NotNull final Location location,
 			@Nullable final AnalyzedExpression returnExpression) {
 		super(location);
 		this.returnExpression = returnExpression;
 	}
 
-	@Nonnull
+	@NotNull
 	public Optional<AnalyzedExpression> getReturnExpression() {
 		return Optional.ofNullable(returnExpression);
 	}

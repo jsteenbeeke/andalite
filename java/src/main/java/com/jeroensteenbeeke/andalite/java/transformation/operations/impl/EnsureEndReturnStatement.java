@@ -16,7 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -34,12 +34,12 @@ public abstract class EnsureEndReturnStatement<T extends IBodyContainer<T, I>, I
 
 	private final String returnValue;
 
-	public EnsureEndReturnStatement(@Nonnull final String returnValue) {
+	public EnsureEndReturnStatement(@NotNull final String returnValue) {
 		this.returnValue = returnValue;
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull T input)
+	public List<Transformation> perform(@NotNull T input)
 		throws OperationException {
 		if (input.isAbstract()) {
 			throw new OperationException(
@@ -81,7 +81,7 @@ public abstract class EnsureEndReturnStatement<T extends IBodyContainer<T, I>, I
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull T input) {
+	public ActionResult verify(@NotNull T input) {
 		AnalyzedStatement last = Iterables.getLast(input.getStatements(), null);
 
 		if (last instanceof ReturnStatement) {

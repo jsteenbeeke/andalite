@@ -5,7 +5,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.ClassScopeOperationBuil
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Type;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -48,7 +48,7 @@ public class ClassTemplate {
 		return new ClassTemplate(creator, classLocator, TypeReference.of(fqdn), interfaces, templates);
 	}
 
-	public ClassTemplate withImplementedInterface(@Nonnull String fqdn) {
+	public ClassTemplate withImplementedInterface(@NotNull String fqdn) {
 		return new ClassTemplate(creator, classLocator, superclass, ImmutableList.<TypeReference>builder()
 			.addAll(interfaces)
 			.add(TypeReference.of(fqdn))
@@ -75,7 +75,7 @@ public class ClassTemplate {
 
 	@FunctionalInterface
 	public interface OptionalInclusion {
-		ClassTemplate include(@Nonnull ClassElementTemplate...templates);
+		ClassTemplate include(@NotNull ClassElementTemplate...templates);
 	}
 
 	public JavaRecipe toRecipe() {

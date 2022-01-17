@@ -6,13 +6,15 @@ import com.jeroensteenbeeke.andalite.forge.ui.PerformableAction;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.lux.ActionResult;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestRecipe implements ForgeRecipe {
 	private final QuestionTemplate<?,?> template;
@@ -23,47 +25,47 @@ public class TestRecipe implements ForgeRecipe {
 		this.template = template;
 	}
 
-	public TestRecipe expecting(@Nonnull String key, @Nonnull String answer) {
+	public TestRecipe expecting(@NotNull String key, @NotNull String answer) {
 		assertions.add(new AnswerAssertion<>(key, answer, Answers::getString));
 		return this;
 	}
 
-	public TestRecipe expecting(@Nonnull String key, @Nonnull Integer answer) {
+	public TestRecipe expecting(@NotNull String key, @NotNull Integer answer) {
 		assertions.add(new AnswerAssertion<>(key, answer, Answers::getInteger));
 		return this;
 	}
 
-	public TestRecipe expecting(@Nonnull String key, @Nonnull Boolean answer) {
+	public TestRecipe expecting(@NotNull String key, @NotNull Boolean answer) {
 		assertions.add(new AnswerAssertion<>(key, answer, Answers::getBoolean));
 		return this;
 	}
 
-	public TestRecipe notExpecting(@Nonnull String key) {
+	public TestRecipe notExpecting(@NotNull String key) {
 		assertions.add(new NoAnswerAssertion(key));
 		return this;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public ActionResult checkCorrectlyConfigured() {
 		return ActionResult.ok();
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public String getName() {
 		return "Test recipe";
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public QuestionTemplate<?, ?> getInitialQuestion() {
 		return template;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	public Action createAction(@Nonnull Answers answers) {
+	public Action createAction(@NotNull Answers answers) {
 		return (PerformableAction) () -> {
 			assertions.forEach(a -> a.assertMatches(answers));
 
@@ -84,7 +86,7 @@ public class TestRecipe implements ForgeRecipe {
 
 		@Override
 		public void assertMatches(Answers answers) {
-			assertFalse("Unexpected answer for key "+ key, answers.hasAnswer(key));
+			assertFalse(answers.hasAnswer(key), "Unexpected answer for key "+ key);
 		}
 	}
 
@@ -103,7 +105,7 @@ public class TestRecipe implements ForgeRecipe {
 
 		@Override
 		public void assertMatches(Answers answers) {
-			assertTrue("No answer with key "+ key, answers.hasAnswer(key));
+			assertTrue(answers.hasAnswer(key), "No answer with key "+ key);
 			assertThat("Answer is not valid", getAnswer.apply(answers, key), equalTo(expectedAnswer));
 		}
 	}

@@ -16,7 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
@@ -26,7 +26,7 @@ public class EnsureClassMethodBuilder extends
 		AbstractMethodBuilder<IClassOperation, EnsureClassMethodBuilder> {
 	private final Consumer<IClassOperation> onCreate;
 
-	EnsureClassMethodBuilder(@Nonnull Consumer<IClassOperation> onCreate) {
+	EnsureClassMethodBuilder(@NotNull Consumer<IClassOperation> onCreate) {
 		super("void", AccessModifier.PUBLIC);
 		this.onCreate = onCreate;
 	}

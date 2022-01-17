@@ -16,10 +16,9 @@
 package com.jeroensteenbeeke.andalite.core;
 
 import com.jeroensteenbeeke.lux.ActionResult;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-
-import javax.annotation.Nonnull;
 
 public class Transformation {
 	private final int from;
@@ -45,7 +44,7 @@ public class Transformation {
 		return new Transformation(from, to, code, true);
 	}
 
-	public ActionResult applyTo(@Nonnull File targetFile) {
+	public ActionResult applyTo(@NotNull File targetFile) {
 		FileRewriter rewriter = new FileRewriter(targetFile);
 		rewriter.replace(from, to, code);
 		return rewriter.rewrite();
@@ -55,15 +54,15 @@ public class Transformation {
 		return invalidatesNavigation;
 	}
 
-	public static Transformation replace(@Nonnull IReplaceable replaceable, @Nonnull String code) {
+	public static Transformation replace(@NotNull IReplaceable replaceable, @NotNull String code) {
 		Location location = replaceable.getLocation();
 
 		return new Transformation(location.getStart(), location.getEnd()+1, code, false);
 	}
 
-	public static <T extends IInsertionPointProvider<T, I>, I extends Enum<I> & IInsertionPoint<? super T>> Transformation atInsertionPoint(@Nonnull T container,
-																																	@Nonnull IInsertionPoint<? super T> point,
-																																	@Nonnull String code) {
+	public static <T extends IInsertionPointProvider<T, I>, I extends Enum<I> & IInsertionPoint<? super T>> Transformation atInsertionPoint(@NotNull T container,
+																																	@NotNull IInsertionPoint<? super T> point,
+																																	@NotNull String code) {
 		return new Transformation(point.position(container), code);
 	}
 

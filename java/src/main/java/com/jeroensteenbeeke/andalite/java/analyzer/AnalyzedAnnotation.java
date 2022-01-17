@@ -22,7 +22,7 @@ import com.jeroensteenbeeke.andalite.core.*;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +40,7 @@ public final class AnalyzedAnnotation extends Locatable implements IInsertionPoi
 
 	private boolean hasParentheses = true;
 
-	public AnalyzedAnnotation(@Nonnull Location location, @Nonnull String type) {
+	public AnalyzedAnnotation(@NotNull Location location, @NotNull String type) {
 		super(location);
 		this.type = type;
 		this.annotationValues = Maps.newLinkedHashMap();
@@ -50,7 +50,7 @@ public final class AnalyzedAnnotation extends Locatable implements IInsertionPoi
 		return ImmutableList.copyOf(annotationValues.values());
 	}
 
-	@Nonnull
+	@NotNull
 	public Optional<Location> getParametersLocation() {
 		return Optional.ofNullable(parametersLocation);
 	}
@@ -59,7 +59,7 @@ public final class AnalyzedAnnotation extends Locatable implements IInsertionPoi
 		this.parametersLocation = parametersLocation;
 	}
 
-	@Nonnull
+	@NotNull
 	public String getType() {
 		return type;
 	}
@@ -122,9 +122,9 @@ public final class AnalyzedAnnotation extends Locatable implements IInsertionPoi
 
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	public Transformation insertAt(@Nonnull AnnotationInsertionPoint insertionPoint, @Nonnull String code) {
+	public Transformation insertAt(@NotNull AnnotationInsertionPoint insertionPoint, @NotNull String code) {
 		if (!hasParentheses()) {
 			return IInsertionPointProvider.super.insertAt(insertionPoint, String.format("(%s)", code));
 		}
@@ -144,12 +144,12 @@ public final class AnalyzedAnnotation extends Locatable implements IInsertionPoi
 		this.hasParentheses = hasParentheses;
 	}
 
-	public boolean hasValueNamed(@Nonnull final String name) {
+	public boolean hasValueNamed(@NotNull final String name) {
 		return annotationValues.containsKey(name);
 	}
 
 	@CheckForNull
-	public String getValueType(@Nonnull final String name) {
+	public String getValueType(@NotNull final String name) {
 		if (hasValueNamed(name)) {
 			return annotationValues.get(name).getClass().getName();
 		}

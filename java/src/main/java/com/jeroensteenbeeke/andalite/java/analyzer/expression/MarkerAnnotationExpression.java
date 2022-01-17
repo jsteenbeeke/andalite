@@ -2,11 +2,11 @@ package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class MarkerAnnotationExpression extends AnnotationExpression {
 
-	public MarkerAnnotationExpression(@Nonnull Location location, @Nonnull String qualifiedName) {
+	public MarkerAnnotationExpression(@NotNull Location location, @NotNull String qualifiedName) {
 		super(location, qualifiedName);
 	}
 

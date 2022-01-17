@@ -6,13 +6,13 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class EnsureClassField extends EnsureField<AnalyzedClass, AnalyzedClass.ClassInsertionPoint, EnsureClassField> implements
 	IClassOperation {
-	public EnsureClassField(@Nonnull String name, @Nonnull String type,
-		@Nonnull AccessModifier modifier) {
+	public EnsureClassField(@NotNull String name, @NotNull String type,
+		@NotNull AccessModifier modifier) {
 		super(name, type, modifier);
 	}
 

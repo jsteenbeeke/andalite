@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
@@ -43,13 +43,13 @@ public abstract class AbstractForgeRecipe implements ForgeRecipe {
 		this.identifier = name;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public String getName() {
 		return identifier;
 	}
 
-	@Nonnull
+	@NotNull
 	public final Map<String, String> getExtraSettings() {
 		return extraSettings;
 	}

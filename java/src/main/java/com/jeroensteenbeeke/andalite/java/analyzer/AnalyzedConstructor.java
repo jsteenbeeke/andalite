@@ -18,7 +18,7 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.javaparser.ast.Modifier;
 import com.google.common.collect.ImmutableList;
@@ -39,9 +39,9 @@ public final class AnalyzedConstructor extends AccessModifiable<AnalyzedConstruc
 
 	private Location bodyLocation;
 
-	public AnalyzedConstructor(@Nonnull Location location,
-							   @Nonnull String className, @Nonnull List<Modifier.Keyword> modifiers,
-							   @Nonnull Location rightParenthesisLocation) {
+	public AnalyzedConstructor(@NotNull Location location,
+							   @NotNull String className, @NotNull List<Modifier.Keyword> modifiers,
+							   @NotNull Location rightParenthesisLocation) {
 		super(location, modifiers);
 
 		this.className = className;
@@ -53,7 +53,7 @@ public final class AnalyzedConstructor extends AccessModifiable<AnalyzedConstruc
 	}
 
 	@Override
-	@Nonnull
+	@NotNull
 	public final List<AnalyzedStatement<?,?>> getStatements() {
 		return statements;
 	}
@@ -63,11 +63,11 @@ public final class AnalyzedConstructor extends AccessModifiable<AnalyzedConstruc
 	}
 
 	@Override
-	public void addParameter(@Nonnull AnalyzedParameter analyzedParameter) {
+	public void addParameter(@NotNull AnalyzedParameter analyzedParameter) {
 		this.parameters.add(analyzedParameter);
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public List<AnalyzedParameter> getParameters() {
 		return ImmutableList.copyOf(parameters);
@@ -77,12 +77,12 @@ public final class AnalyzedConstructor extends AccessModifiable<AnalyzedConstruc
 		return rightParenthesisLocation;
 	}
 
-	@Nonnull
+	@NotNull
 	public Optional<Location> getBodyLocation() {
 		return Optional.ofNullable(bodyLocation);
 	}
 
-	public void setBodyLocation(@Nonnull Location bodyLocation) {
+	public void setBodyLocation(@NotNull Location bodyLocation) {
 		this.bodyLocation = bodyLocation;
 	}
 
@@ -108,9 +108,9 @@ public final class AnalyzedConstructor extends AccessModifiable<AnalyzedConstruc
 		return ConstructorInsertionPoint.BEFORE;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	public Transformation insertAt(@Nonnull ConstructorInsertionPoint insertionPoint, @Nonnull String replacement) {
+	public Transformation insertAt(@NotNull ConstructorInsertionPoint insertionPoint, @NotNull String replacement) {
 		if (ConstructorInsertionPoint.END_OF_BODY == insertionPoint && !statements.isEmpty()) {
 			AnalyzedStatement<?,?> lastStatement = statements.get(statements.size() - 1);
 			if (lastStatement instanceof ReturnStatement) {

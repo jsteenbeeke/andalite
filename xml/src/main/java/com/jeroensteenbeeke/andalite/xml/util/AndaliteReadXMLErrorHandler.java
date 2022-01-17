@@ -25,7 +25,7 @@ public class AndaliteReadXMLErrorHandler implements ErrorHandler {
 			.getLogger(AndaliteReadXMLErrorHandler.class);
 
 	@Override
-	public void warning(SAXParseException exception) throws SAXException {
+	public void warning(SAXParseException exception) {
 		log.warn("SAX Warning: {}", exception.getMessage());
 
 	}

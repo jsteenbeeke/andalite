@@ -50,37 +50,24 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
+			<groupId>org.jetbrains</groupId>
+			<artifactId>annotations</artifactId>
 		</dependency>
 
-		<!-- Test Dependencies -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
+			<groupId>io.vavr</groupId>
+			<artifactId>vavr</artifactId>
+		</dependency>
+
+		<!-- Test Dependencies -->
+		<dependency>
+			<groupId>com.jeroensteenbeeke.andalite</groupId>
+			<artifactId>andalite-core-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -96,13 +83,6 @@
 				<excludes>
 					<exclude>**/*.java</exclude>
 				</excludes>
-			</resource>
-			<resource>
-				<filtering>false</filtering>
-				<directory>src/dummy/java</directory>
-				<includes>
-					<include>**/*.java</include>
-				</includes>
 			</resource>
 		</resources>
 		<testResources>

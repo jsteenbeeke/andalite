@@ -26,7 +26,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilationUnitOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Ensures that a given compilation unit will have an interface with default
@@ -55,7 +55,7 @@ public class EnsurePackageInterface implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedSourceFile input) {
+	public List<Transformation> perform(@NotNull AnalyzedSourceFile input) {
 		for (AnalyzedInterface iface : input.getInterfaces()) {
 			if (iface.getAccessModifier() == AccessModifier.DEFAULT
 					&& expectedInterfaceName.equals(iface.getInterfaceName())) {
@@ -74,7 +74,7 @@ public class EnsurePackageInterface implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedSourceFile input) {
+	public ActionResult verify(@NotNull AnalyzedSourceFile input) {
 		for (AnalyzedInterface iface : input.getInterfaces()) {
 			if (iface.getAccessModifier() == AccessModifier.DEFAULT
 					&& expectedInterfaceName.equals(iface.getInterfaceName())) {

@@ -20,7 +20,7 @@ import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public abstract class AccessModifiable<T extends AccessModifiable<T, I>, I extends Enum<I> & IInsertionPoint<T>> extends Annotatable<T, I> {
@@ -42,7 +42,7 @@ public abstract class AccessModifiable<T extends AccessModifiable<T, I>, I exten
 
 	private final boolean modifierTransient;
 
-	public AccessModifiable(@Nonnull Location location, List<Modifier.Keyword> modifiers) {
+	public AccessModifiable(@NotNull Location location, List<Modifier.Keyword> modifiers) {
 		super(location);
 		this.modifier = AccessModifier.fromModifiers(modifiers);
 		this.modifierFinal = modifiers.contains(Modifier.Keyword.FINAL);

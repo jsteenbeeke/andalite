@@ -22,7 +22,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,8 +34,8 @@ public class ArrayCreationExpression extends AnalyzedExpression {
 
 	private final AnalyzedType type;
 
-	public ArrayCreationExpression(@Nonnull Location location,
-								   @Nonnull AnalyzedType type,
+	public ArrayCreationExpression(@NotNull Location location,
+								   @NotNull AnalyzedType type,
 								   @Nullable ArrayInitializerExpression initializer) {
 		super(location);
 		this.type = type;
@@ -43,7 +43,7 @@ public class ArrayCreationExpression extends AnalyzedExpression {
 		this.dimensions = Lists.newArrayList();
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedType getType() {
 		return type;
 	}
@@ -53,7 +53,7 @@ public class ArrayCreationExpression extends AnalyzedExpression {
 		return initializer;
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedExpression> getDimensions() {
 		return ImmutableList.copyOf(dimensions);
 	}
@@ -74,7 +74,7 @@ public class ArrayCreationExpression extends AnalyzedExpression {
 		return builder.toString();
 	}
 
-	public void addDimension(@Nonnull AnalyzedExpression analyzeExpression) {
+	public void addDimension(@NotNull AnalyzedExpression analyzeExpression) {
 		dimensions.add(analyzeExpression);
 	}
 }

@@ -7,7 +7,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.templates.fn.CheckedBiFunction;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.templates.fn.CheckedPredicate;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,7 +20,7 @@ public abstract class QuestionTemplate<T extends QuestionTemplate<T, Q>, Q exten
 
 	private final CheckedBiFunction<Answers, String, String> formatter;
 
-	protected QuestionTemplate(@Nonnull String key, @Nonnull String question) {
+	protected QuestionTemplate(@NotNull String key, @NotNull String question) {
 		this.key = key;
 		this.question = question;
 		this.followupQuestion = ImmutableList.of();
@@ -50,11 +50,11 @@ public abstract class QuestionTemplate<T extends QuestionTemplate<T, Q>, Q exten
 		return formatter;
 	}
 
-	protected abstract T newInstance(@Nonnull String key, @Nonnull String question, @Nonnull ImmutableList<FollowUp> followupQuestions, @Nonnull CheckedBiFunction<Answers, String, String> formatter);
+	protected abstract T newInstance(@NotNull String key, @NotNull String question, @NotNull ImmutableList<FollowUp> followupQuestions, @NotNull CheckedBiFunction<Answers, String, String> formatter);
 
-	public abstract Q toQuestion(@Nonnull Answers answers) throws ForgeException;
+	public abstract Q toQuestion(@NotNull Answers answers) throws ForgeException;
 
-	public List<QuestionTemplate<?, ?>> getFollowUpQuestions(@Nonnull Answers answers) throws ForgeException {
+	public List<QuestionTemplate<?, ?>> getFollowUpQuestions(@NotNull Answers answers) throws ForgeException {
 		try {
 			return followupQuestion
 				.stream()
@@ -77,11 +77,11 @@ public abstract class QuestionTemplate<T extends QuestionTemplate<T, Q>, Q exten
 		}
 	}
 
-	public T withFormatter(@Nonnull CheckedBiFunction<Answers,String,String> formatter) {
+	public T withFormatter(@NotNull CheckedBiFunction<Answers,String,String> formatter) {
 		return newInstance(key, question, followupQuestion, formatter);
 	}
 
-	protected String getFormattedQuestion(@Nonnull Answers answers) throws ForgeException {
+	protected String getFormattedQuestion(@NotNull Answers answers) throws ForgeException {
 		return formatter.apply(answers, getQuestion());
 	}
 
@@ -92,16 +92,16 @@ public abstract class QuestionTemplate<T extends QuestionTemplate<T, Q>, Q exten
 			.build(), formatter);
 	}
 
-	public ThenAsk<T> whenAnswer(@Nonnull String answer) {
+	public ThenAsk<T> whenAnswer(@NotNull String answer) {
 		return when(a -> a.hasAnswer(key) && a.getString(key).equals(answer));
 
 	}
 
-	public ThenAsk<T> whenAnswer(@Nonnull Integer answer) {
+	public ThenAsk<T> whenAnswer(@NotNull Integer answer) {
 		return when(a -> a.hasAnswer(key) && a.getInteger(key) == answer);
 	}
 
-	public ThenAsk<T> whenAnswer(@Nonnull Boolean answer) {
+	public ThenAsk<T> whenAnswer(@NotNull Boolean answer) {
 		return when(a -> a.hasAnswer(key) && a.getBoolean(key) == answer);
 	}
 

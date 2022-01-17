@@ -15,14 +15,17 @@
 
 package com.jeroensteenbeeke.andalite.core.exceptions;
 
-import javax.annotation.Nonnull;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serial;
 
 public class NavigationException extends Exception {
-
+	@Serial
 	private static final long serialVersionUID = 1L;
 
-	public NavigationException(@Nonnull String message,
-			@Nonnull Object... params) {
+	public NavigationException(@NotNull String message,
+			@NotNull Object... params) {
 		super(params.length > 0 ? String.format(message, params) : message);
 	}
 

@@ -21,14 +21,14 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class AnalyzedEnumConstant extends ContainingDenomination<AnalyzedEnumConstant, AnalyzedEnumConstant.EnumConstantInsertionPoint> {
 	private final List<AnalyzedExpression> parameters;
 
-	public AnalyzedEnumConstant(@Nonnull AnalyzedSourceFile sourceFile, @Nonnull Location location, @Nonnull List<Modifier.Keyword> modifiers,
-								@Nonnull String packageName, @Nonnull LocatedName<SimpleName> name, @Nonnull List<AnalyzedExpression> parameters) {
+	public AnalyzedEnumConstant(@NotNull AnalyzedSourceFile sourceFile, @NotNull Location location, @NotNull List<Modifier.Keyword> modifiers,
+								@NotNull String packageName, @NotNull LocatedName<SimpleName> name, @NotNull List<AnalyzedExpression> parameters) {
 		super(sourceFile, location, modifiers, packageName, name);
 		this.parameters = parameters;
 	}
@@ -61,9 +61,9 @@ public class AnalyzedEnumConstant extends ContainingDenomination<AnalyzedEnumCon
 		callback.newline();
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	public Transformation insertAt(@Nonnull EnumConstantInsertionPoint insertionPoint, @Nonnull String code) {
+	public Transformation insertAt(@NotNull EnumConstantInsertionPoint insertionPoint, @NotNull String code) {
 		String actualCode = code;
 
 		if (insertionPoint.requiresBody() && getBodyLocation().isEmpty()) {

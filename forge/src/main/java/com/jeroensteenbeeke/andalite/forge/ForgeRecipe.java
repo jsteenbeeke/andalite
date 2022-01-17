@@ -21,23 +21,23 @@ import com.jeroensteenbeeke.andalite.forge.ui.questions.templates.QuestionTempla
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.lux.TypedResult;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 public interface ForgeRecipe {
-	@Nonnull
+	@NotNull
 	ActionResult checkCorrectlyConfigured();
 
-	@Nonnull
+	@NotNull
 	String getName();
 
-	@Nonnull
+	@NotNull
 	QuestionTemplate<?, ?> getInitialQuestion() throws ForgeException;
 
-	@Nonnull
-	Action createAction(@Nonnull Answers answers);
+	@NotNull
+	Action createAction(@NotNull Answers answers);
 
 	class ExitRecipe implements ForgeRecipe {
 
@@ -47,27 +47,27 @@ public interface ForgeRecipe {
 			return INSTANCE;
 		}
 
-		@Nonnull
+		@NotNull
 		@Override
 		public ActionResult checkCorrectlyConfigured() {
 			throw new UnsupportedOperationException("Not implemented");
 		}
 
-		@Nonnull
+		@NotNull
 		@Override
 		public String getName() {
 			throw new UnsupportedOperationException("Not implemented");
 		}
 
-		@Nonnull
+		@NotNull
 		@Override
 		public QuestionTemplate<?, ?> getInitialQuestion() {
 			throw new UnsupportedOperationException("Not implemented");
 		}
 
-		@Nonnull
+		@NotNull
 		@Override
-		public Action createAction(@Nonnull Answers answers) {
+		public Action createAction(@NotNull Answers answers) {
 			throw new UnsupportedOperationException("Not implemented");
 		}
 	}

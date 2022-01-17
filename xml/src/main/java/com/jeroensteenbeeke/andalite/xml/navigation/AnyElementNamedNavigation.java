@@ -14,6 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.xml.navigation;
 
+import org.jetbrains.annotations.NotNull;
+
 public class AnyElementNamedNavigation implements IElementNavigation {
 	private final String elementName;
 
@@ -23,11 +25,13 @@ public class AnyElementNamedNavigation implements IElementNavigation {
 	}
 
 	@Override
+	@NotNull
 	public String getXPathExpression() {
 		return String.format("//%s", elementName);
 	}
 
 	@Override
+	@NotNull
 	public String getDescription() {
 		return String.format("Any descending element named %s", elementName);
 	}

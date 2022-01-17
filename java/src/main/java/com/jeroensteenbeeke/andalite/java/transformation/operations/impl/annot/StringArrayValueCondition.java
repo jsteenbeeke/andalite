@@ -14,13 +14,13 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
 
 public class StringArrayValueCondition extends ArrayValueCondition<String> {
-	public StringArrayValueCondition(@Nonnull final String name,
-			@Nonnull final String... values) {
+	public StringArrayValueCondition(@NotNull final String name,
+			@NotNull final String... values) {
 		super(name, StringValue.class, values);
 	}
 }

@@ -14,6 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.xml.operations;
 
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 
 import com.jeroensteenbeeke.andalite.xml.IElementOperation;
@@ -48,6 +49,7 @@ public class EnsureAttribute implements IElementOperation {
 	}
 
 	@Override
+	@NotNull
 	public String getDescription() {
 		return String.format("Ensure that attribute %s is %s", attributeName,
 				value);

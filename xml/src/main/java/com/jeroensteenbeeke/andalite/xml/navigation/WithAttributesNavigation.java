@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.jeroensteenbeeke.andalite.xml.IXMLNavigation;
+import org.jetbrains.annotations.NotNull;
 
 public class WithAttributesNavigation implements IElementNavigation {
 	private final IXMLNavigation<?> parentNav;
@@ -32,6 +33,7 @@ public class WithAttributesNavigation implements IElementNavigation {
 	}
 
 	@Override
+	@NotNull
 	public String getXPathExpression() {
 		if (attributes.isEmpty()) {
 			return parentNav.getXPathExpression();
@@ -52,6 +54,7 @@ public class WithAttributesNavigation implements IElementNavigation {
 	}
 
 	@Override
+	@NotNull
 	public String getDescription() {
 		StringBuilder attributeMatch = new StringBuilder();
 		for (Entry<String, String> e : attributes.entrySet()) {

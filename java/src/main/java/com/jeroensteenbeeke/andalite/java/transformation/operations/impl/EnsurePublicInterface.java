@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.lux.ActionResult;
@@ -30,7 +30,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilation
 public class EnsurePublicInterface implements ICompilationUnitOperation {
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedSourceFile input) {
+	public List<Transformation> perform(@NotNull AnalyzedSourceFile input) {
 		for (AnalyzedInterface iface : input.getInterfaces()) {
 			if (iface.getAccessModifier() == AccessModifier.PUBLIC) {
 				return ImmutableList.of();
@@ -42,7 +42,7 @@ public class EnsurePublicInterface implements ICompilationUnitOperation {
 						stripExtension(input.getOriginalFile().getName()))));
 	}
 
-	private String stripExtension(@Nonnull String name) {
+	private String stripExtension(@NotNull String name) {
 		StringBuilder builder = new StringBuilder();
 
 		for (char c : name.toCharArray()) {
@@ -62,7 +62,7 @@ public class EnsurePublicInterface implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedSourceFile input) {
+	public ActionResult verify(@NotNull AnalyzedSourceFile input) {
 		for (AnalyzedInterface iface : input.getInterfaces()) {
 			if (iface.getAccessModifier() == AccessModifier.PUBLIC) {
 				return ActionResult.ok();

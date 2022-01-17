@@ -2,7 +2,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -15,19 +15,19 @@ public class HasEnumConstantBuilder {
 	private final Consumer<EnsureEnumConstantOperation> onCreate;
 
 	HasEnumConstantBuilder(
-			@Nonnull Consumer<EnsureEnumConstantOperation> onCreate) {
+			@NotNull Consumer<EnsureEnumConstantOperation> onCreate) {
 		this.descriptors = ImmutableList.builder();
 		this.onCreate = onCreate;
 	}
 
 	public HasEnumConstantBuilder withParameterExpression(
-			@Nonnull String expression) {
+			@NotNull String expression) {
 		descriptors.add(expression);
 		return this;
 	}
 
 	public HasEnumConstantBuilder withStringParameterExpression(
-			@Nonnull String expression) {
+			@NotNull String expression) {
 		// FIXME: This probably does not cover the full range of expressions
 		String escaped = String.format("\"%s\"",
 				expression.replace("\"", "\\\""));
@@ -36,7 +36,7 @@ public class HasEnumConstantBuilder {
 		return this;
 	}
 
-	public IEnumOperation named(@Nonnull String name) {
+	public IEnumOperation named(@NotNull String name) {
 		EnsureEnumConstantOperation enumConstantOperation = new EnsureEnumConstantOperation(
 				name, descriptors.build());
 		onCreate.accept(enumConstantOperation);

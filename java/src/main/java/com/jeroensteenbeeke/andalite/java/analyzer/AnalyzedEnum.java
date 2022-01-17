@@ -24,7 +24,7 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,19 +34,19 @@ public class AnalyzedEnum extends
 
 	private Location separatorLocation;
 
-	public AnalyzedEnum(@Nonnull AnalyzedSourceFile sourceFile,
-		@Nonnull Location location, @Nonnull List<Modifier.Keyword> modifiers,
-		@Nonnull String packageName, @Nonnull LocatedName<SimpleName> name) {
+	public AnalyzedEnum(@NotNull AnalyzedSourceFile sourceFile,
+		@NotNull Location location, @NotNull List<Modifier.Keyword> modifiers,
+		@NotNull String packageName, @NotNull LocatedName<SimpleName> name) {
 		super(sourceFile, location, modifiers, packageName, name);
 		this.constants = Lists.newArrayList();
 	}
 
-	@Nonnull
+	@NotNull
 	public String getEnumName() {
 		return getDenominationName();
 	}
 
-	public void setSeparatorLocation(@Nonnull Location separatorLocation) {
+	public void setSeparatorLocation(@NotNull Location separatorLocation) {
 		this.separatorLocation = separatorLocation;
 	}
 
@@ -88,19 +88,19 @@ public class AnalyzedEnum extends
 
 	}
 
-	void addConstant(@Nonnull AnalyzedEnumConstant constant) {
+	void addConstant(@NotNull AnalyzedEnumConstant constant) {
 		constants.add(constant);
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedEnumConstant> getConstants() {
 		return ImmutableList.copyOf(constants);
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	public Transformation insertAt(@Nonnull EnumInsertionPoint insertionPoint,
-		@Nonnull String replacement) {
+	public Transformation insertAt(@NotNull EnumInsertionPoint insertionPoint,
+		@NotNull String replacement) {
 		if (getSeparatorLocation() == null && insertionPoint
 			.isAfterSeparator()) {
 			return super.insertAt(EnumInsertionPoint.AFTER_LAST_CONSTANT,

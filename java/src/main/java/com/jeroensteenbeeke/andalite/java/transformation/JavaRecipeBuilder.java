@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.ILocatable;
@@ -54,19 +54,19 @@ public class JavaRecipeBuilder implements IStepCollector,
 		this.steps.add(new JavaRecipeStep<T>(nav, oper));
 	}
 
-	@Nonnull
+	@NotNull
 	public JavaRecipe build() {
 		return new JavaRecipe(steps);
 	}
 
-	@Nonnull
+	@NotNull
 	public ClassScopeOperationBuilder inPublicClass() {
 		return new ClassScopeOperationBuilder(this,
 				new PublicClassNavigation());
 	}
 
-	@Nonnull
-	public ClassScopeOperationBuilder inPackageClass(@Nonnull String name) {
+	@NotNull
+	public ClassScopeOperationBuilder inPackageClass(@NotNull String name) {
 		return new ClassScopeOperationBuilder(this,
 				new PackageClassNavigation(name));
 	}
@@ -77,7 +77,7 @@ public class JavaRecipeBuilder implements IStepCollector,
 	}
 
 	public InterfaceScopeOperationBuilder inPackageInterface(
-			@Nonnull String name) {
+			@NotNull String name) {
 		return new InterfaceScopeOperationBuilder(this,
 				new PackageInterfaceNavigation(name));
 	}
@@ -86,12 +86,12 @@ public class JavaRecipeBuilder implements IStepCollector,
 		return new EnumScopeOperationBuilder(this, new PublicEnumNavigation());
 	}
 
-	public EnumScopeOperationBuilder inPackageEnum(@Nonnull String name) {
+	public EnumScopeOperationBuilder inPackageEnum(@NotNull String name) {
 		return new EnumScopeOperationBuilder(this,
 				new PackageEnumNavigation(name));
 	}
 
-	public void ensureImport(@Nonnull String fqdn) {
+	public void ensureImport(@NotNull String fqdn) {
 		ensure(new EnsureImports(fqdn));
 	}
 
@@ -99,7 +99,7 @@ public class JavaRecipeBuilder implements IStepCollector,
 		ensure(new EnsurePublicClass());
 	}
 
-	public void ensurePackageClass(@Nonnull String name) {
+	public void ensurePackageClass(@NotNull String name) {
 		ensure(new EnsurePackageClass(name));
 	}
 
@@ -107,7 +107,7 @@ public class JavaRecipeBuilder implements IStepCollector,
 		ensure(new EnsurePublicInterface());
 	}
 
-	public void ensurePackageInterface(@Nonnull String name) {
+	public void ensurePackageInterface(@NotNull String name) {
 		ensure(new EnsurePackageInterface(name));
 	}
 
@@ -115,7 +115,7 @@ public class JavaRecipeBuilder implements IStepCollector,
 		ensure(new EnsurePublicEnum());
 	}
 
-	public void ensurePackageEnum(@Nonnull String name) {
+	public void ensurePackageEnum(@NotNull String name) {
 		ensure(new EnsurePackageEnum(name));
 	}
 

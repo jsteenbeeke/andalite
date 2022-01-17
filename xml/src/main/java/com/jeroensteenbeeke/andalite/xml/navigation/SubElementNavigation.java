@@ -15,6 +15,7 @@
 package com.jeroensteenbeeke.andalite.xml.navigation;
 
 import com.jeroensteenbeeke.andalite.xml.IXMLNavigation;
+import org.jetbrains.annotations.NotNull;
 
 public class SubElementNavigation implements IElementNavigation {
 	private final IXMLNavigation<?> parentNavigation;
@@ -29,12 +30,14 @@ public class SubElementNavigation implements IElementNavigation {
 	}
 
 	@Override
+	@NotNull
 	public String getXPathExpression() {
 		return String.format("%s/%s", parentNavigation.getXPathExpression(),
 				elementName);
 	}
 
 	@Override
+	@NotNull
 	public String getDescription() {
 		return String.format("%s with child element <%s> ",
 				parentNavigation.getDescription(), elementName);

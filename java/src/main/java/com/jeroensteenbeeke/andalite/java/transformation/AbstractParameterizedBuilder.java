@@ -2,7 +2,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -20,12 +20,12 @@ public abstract class AbstractParameterizedBuilder<T, B extends AbstractParamete
 	}
 
 	@SuppressWarnings("unchecked")
-	public ParameterDescriber<T, B> withParameter(@Nonnull String name) {
+	public ParameterDescriber<T, B> withParameter(@NotNull String name) {
 		return new ParameterDescriber<T, B>((B) this, name);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public B withParameterOfType(@Nonnull String type) {
+	public B withParameterOfType(@NotNull String type) {
 		descriptors.add(new ParameterDescriptor(type, null));
 		return (B) this;
 	}
@@ -39,7 +39,7 @@ public abstract class AbstractParameterizedBuilder<T, B extends AbstractParamete
 	}
 
 	@SuppressWarnings("unchecked")
-	public B withModifier(@Nonnull AccessModifier modifier) {
+	public B withModifier(@NotNull AccessModifier modifier) {
 		this.modifier = modifier;
 		return (B) this;
 	}
@@ -54,7 +54,7 @@ public abstract class AbstractParameterizedBuilder<T, B extends AbstractParamete
 			this.name = name;
 		}
 
-		public B ofType(@Nonnull String type) {
+		public B ofType(@NotNull String type) {
 			builder.descriptors.add(new ParameterDescriptor(type, name));
 			return builder;
 		}

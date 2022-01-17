@@ -7,13 +7,13 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedEnumConstant;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumConstantOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class EnsureEnumConstantField extends EnsureField<AnalyzedEnumConstant, AnalyzedEnumConstant.EnumConstantInsertionPoint, EnsureEnumConstantField> implements
 	IEnumConstantOperation {
-	public EnsureEnumConstantField(@Nonnull String name, @Nonnull String type,
-		@Nonnull AccessModifier modifier) {
+	public EnsureEnumConstantField(@NotNull String name, @NotNull String type,
+		@NotNull AccessModifier modifier) {
 		super(name, type, modifier);
 	}
 

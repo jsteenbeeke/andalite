@@ -21,7 +21,7 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.*;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ResourceStatement extends BaseStatement<ResourceStatement> implements IAnnotationAddable<ResourceStatement> {
 	private final AnalyzedType type;
@@ -45,12 +45,12 @@ public class ResourceStatement extends BaseStatement<ResourceStatement> implemen
 	}
 
 
-	public ResourceStatement addAnnotation(@Nonnull AnalyzedAnnotation annotation) {
+	public ResourceStatement addAnnotation(@NotNull AnalyzedAnnotation annotation) {
 		this.annotations.add(annotation);
 		return this;
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedAnnotation> getAnnotations() {
 		return annotations;
 	}

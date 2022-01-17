@@ -1,7 +1,7 @@
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public interface IAnnotationAddable<T extends IAnnotationAddable<T>> {
-	T addAnnotation(@Nonnull AnalyzedAnnotation annotation);
+	T addAnnotation(@NotNull AnalyzedAnnotation annotation);
 }

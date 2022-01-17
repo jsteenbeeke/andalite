@@ -2,21 +2,21 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ConstructorParameterAdditionBuilder {
 	private final String identifier;
 
 	private final Consumer<AddConstructorParameterOperation> onCreate;
 
-	public ConstructorParameterAdditionBuilder(@Nonnull String identifier,
-			@Nonnull Consumer<AddConstructorParameterOperation> onCreate) {
+	public ConstructorParameterAdditionBuilder(@NotNull String identifier,
+			@NotNull Consumer<AddConstructorParameterOperation> onCreate) {
 		this.identifier = identifier;
 		this.onCreate = onCreate;
 	}
 
-	@Nonnull
-	public AddConstructorParameterOperation ofType(@Nonnull String type) {
+	@NotNull
+	public AddConstructorParameterOperation ofType(@NotNull String type) {
 		AddConstructorParameterOperation operation = new AddConstructorParameterOperation(
 				identifier, type);
 		onCreate.accept(operation);

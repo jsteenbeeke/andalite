@@ -15,7 +15,7 @@
 
 package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
@@ -24,7 +24,7 @@ import com.jeroensteenbeeke.andalite.core.Location;
 
 public final class BooleanValue extends BaseValue<Boolean,BooleanValue, BooleanValue.BooleanValueInsertionPoint> {
 
-	public BooleanValue(@Nonnull Location location, @Nullable String name,
+	public BooleanValue(@NotNull Location location, @Nullable String name,
 			boolean value) {
 		super(location, name, value);
 	}

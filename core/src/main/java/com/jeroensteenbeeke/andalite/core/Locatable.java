@@ -15,17 +15,18 @@
 
 package com.jeroensteenbeeke.andalite.core;
 
-import javax.annotation.Nonnull;
+
+import org.jetbrains.annotations.NotNull;
 
 public abstract class Locatable implements IReplaceable {
 	private final Location location;
 
-	public Locatable(@Nonnull Location location) {
+	public Locatable(@NotNull Location location) {
 		super();
 		this.location = location;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public final Location getLocation() {
 		return location;

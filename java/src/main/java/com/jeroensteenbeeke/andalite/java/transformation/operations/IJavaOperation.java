@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.IOutputable;
@@ -34,7 +34,7 @@ public interface IJavaOperation<T extends IOutputable> {
 	 * @throws OperationException
 	 *             If the operation fails, for whatever reason
 	 */
-	List<Transformation> perform(@Nonnull T input) throws OperationException;
+	List<Transformation> perform(@NotNull T input) throws OperationException;
 
 	/**
 	 * Verifies the success of this operation, by re-analyzing the given element
@@ -44,11 +44,11 @@ public interface IJavaOperation<T extends IOutputable> {
 	 * @return An ActionResult object, that indicated either success, or the
 	 *         reason for failure
 	 */
-	ActionResult verify(@Nonnull T input);
+	ActionResult verify(@NotNull T input);
 
 	String getDescription();
 
-	default boolean isValidJavaIdentifier(@Nonnull String candidate) {
+	default boolean isValidJavaIdentifier(@NotNull String candidate) {
 		if (candidate.isEmpty()) {
 			return false;
 		}

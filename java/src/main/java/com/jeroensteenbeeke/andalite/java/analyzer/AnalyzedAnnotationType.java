@@ -20,14 +20,14 @@ import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
 public class AnalyzedAnnotationType extends ContainingDenomination<AnalyzedAnnotationType, AnalyzedAnnotationType.AnnotationTypeInsertionPoint> {
 
-	protected AnalyzedAnnotationType(@Nonnull AnalyzedSourceFile sourceFile, @Nonnull Location location, @Nonnull List<Modifier.Keyword> modifiers,
-									 @Nonnull String packageName, @Nonnull LocatedName<SimpleName> name) {
+	protected AnalyzedAnnotationType(@NotNull AnalyzedSourceFile sourceFile, @NotNull Location location, @NotNull List<Modifier.Keyword> modifiers,
+									 @NotNull String packageName, @NotNull LocatedName<SimpleName> name) {
 		super(sourceFile, location, modifiers, packageName, name);
 	}
 

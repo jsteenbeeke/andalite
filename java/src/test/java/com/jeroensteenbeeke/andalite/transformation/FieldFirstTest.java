@@ -15,20 +15,18 @@
 
 package com.jeroensteenbeeke.andalite.transformation;
 
-import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
-import static org.junit.Assert.assertThat;
-
-import java.io.File;
-import java.io.IOException;
-
-import com.jeroensteenbeeke.lux.Result;
-import org.junit.Test;
-
-import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
+import com.jeroensteenbeeke.lux.Result;
+import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.IOException;
+
+import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class FieldFirstTest extends DummyAwareTest {
 	@Test

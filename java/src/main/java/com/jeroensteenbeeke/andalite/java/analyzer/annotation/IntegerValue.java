@@ -15,7 +15,7 @@
 
 package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
@@ -24,8 +24,8 @@ import com.jeroensteenbeeke.andalite.core.Location;
 
 public final class IntegerValue extends BaseValue<Integer,IntegerValue, IntegerValue.IntegerValueInsertionPoint> {
 
-	public IntegerValue(@Nonnull Location location, @Nullable String name,
-			@Nonnull Integer value) {
+	public IntegerValue(@NotNull Location location, @Nullable String name,
+			@NotNull Integer value) {
 		super(location, name, value);
 	}
 

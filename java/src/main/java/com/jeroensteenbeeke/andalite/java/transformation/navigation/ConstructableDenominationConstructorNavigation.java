@@ -22,7 +22,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.ConstructableDenomination;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -33,9 +33,9 @@ public class ConstructableDenominationConstructorNavigation<T extends Constructa
 	private final List<ParameterDescriptor> descriptors;
 
 	public ConstructableDenominationConstructorNavigation(
-			@Nonnull IJavaNavigation<T> denominationNavigation,
+			@NotNull IJavaNavigation<T> denominationNavigation,
 			@Nullable AccessModifier modifier,
-			@Nonnull List<ParameterDescriptor> descriptors) {
+			@NotNull List<ParameterDescriptor> descriptors) {
 		super(denominationNavigation);
 		this.modifier = modifier;
 		this.descriptors = descriptors;

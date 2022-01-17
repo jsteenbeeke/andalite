@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import org.w3c.dom.Node;
 
@@ -24,25 +24,25 @@ public abstract class AbstractContextBuilder<N extends Node, T extends IXMLOpera
 
 	private final IXMLNavigation<N> navigation;
 
-	protected AbstractContextBuilder(@Nonnull IStepCollector collector,
-			@Nonnull IXMLNavigation<N> navigation) {
+	protected AbstractContextBuilder(@NotNull IStepCollector collector,
+			@NotNull IXMLNavigation<N> navigation) {
 		super();
 		this.collector = collector;
 		this.navigation = navigation;
 	}
 
 	@Override
-	public void ensure(@Nonnull T operation) {
+	public void ensure(@NotNull T operation) {
 		addStep(new XMLRecipeStep<N>(navigation, operation));
 	}
 
-	@Nonnull
+	@NotNull
 	public IXMLNavigation<N> getNavigation() {
 		return navigation;
 	}
 
 	@Override
-	public void addStep(@Nonnull XMLRecipeStep<?> step) {
+	public void addStep(@NotNull XMLRecipeStep<?> step) {
 		collector.addStep(step);
 	}
 }

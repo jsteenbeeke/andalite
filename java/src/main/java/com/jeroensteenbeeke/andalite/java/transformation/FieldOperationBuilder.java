@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
@@ -32,18 +32,18 @@ public class FieldOperationBuilder
 		super(collector, new FieldNavigation<>(parentNav, fieldName));
 	}
 
-	@Nonnull
+	@NotNull
 	public AnnotatableOperationBuilder<AnalyzedField> forAnnotation(
-			@Nonnull String type) {
+			@NotNull String type) {
 		return new AnnotatableOperationBuilder<>(getCollector(),
 												 getNavigation(), type);
 	}
 
-	public void ensureAnnotation(@Nonnull String annotation) {
+	public void ensureAnnotation(@NotNull String annotation) {
 		ensure(new EnsureFieldAnnotation(annotation));
 	}
 
-	public void ensureInitialization(@Nonnull String expression) {
+	public void ensureInitialization(@NotNull String expression) {
 		ensure(new EnsureFieldInitialization(expression));
 	}
 

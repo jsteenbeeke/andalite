@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class OptionalGetterAnnotation extends AnnotationAdditionTemplate<OptionalGetterAnnotation> implements PropertyElementTemplate {
 	private final TypeReference type;
@@ -18,9 +18,9 @@ public class OptionalGetterAnnotation extends AnnotationAdditionTemplate<Optiona
 		this.type = type;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	protected OptionalGetterAnnotation newInstance(@Nonnull ImmutableList<AnnotationValueTemplate<?>> templates) {
+	protected OptionalGetterAnnotation newInstance(@NotNull ImmutableList<AnnotationValueTemplate<?>> templates) {
 		return new OptionalGetterAnnotation(type, templates);
 	}
 

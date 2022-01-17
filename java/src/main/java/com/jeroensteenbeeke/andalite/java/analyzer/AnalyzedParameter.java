@@ -15,7 +15,7 @@
 
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.*;
 
@@ -26,8 +26,8 @@ public class AnalyzedParameter extends Annotatable<AnalyzedParameter, AnalyzedPa
 
 	private final String name;
 
-	public AnalyzedParameter(@Nonnull Location location, @Nonnull String type,
-							 @Nonnull String name) {
+	public AnalyzedParameter(@NotNull Location location, @NotNull String type,
+							 @NotNull String name) {
 		super(location);
 		this.type = type;
 		this.name = name;

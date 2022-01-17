@@ -5,7 +5,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
@@ -24,18 +24,18 @@ public class HasConstructorBuilder<O extends EnsureConstructorOperation<T,I>, T 
 
 	private final BiFunction<AccessModifier, List<ParameterDescriptor>, O> finalizer;
 
-	HasConstructorBuilder(@Nonnull Consumer<O> onCreate, BiFunction<AccessModifier, List<ParameterDescriptor>, O> finalizer) {
+	HasConstructorBuilder(@NotNull Consumer<O> onCreate, BiFunction<AccessModifier, List<ParameterDescriptor>, O> finalizer) {
 		this.descriptors = ImmutableList.builder();
 		this.onCreate = onCreate;
 		this.finalizer = finalizer;
 	}
 
-	public ParameterDescriber withParameter(@Nonnull String name) {
+	public ParameterDescriber withParameter(@NotNull String name) {
 		return new ParameterDescriber(this, name);
 	}
 
 	public EnsureConstructorOperation<T,I> withAccessModifier(
-			@Nonnull AccessModifier constructorModifier) {
+			@NotNull AccessModifier constructorModifier) {
 		O ensureConstructorOperation = finalizer.apply(
 				constructorModifier, descriptors.build());
 		onCreate.accept(ensureConstructorOperation);
@@ -52,7 +52,7 @@ public class HasConstructorBuilder<O extends EnsureConstructorOperation<T,I>, T 
 			this.name = name;
 		}
 
-		public HasConstructorBuilder ofType(@Nonnull String type) {
+		public HasConstructorBuilder ofType(@NotNull String type) {
 			builder.descriptors.add(new ParameterDescriptor(type, name));
 			return builder;
 		}

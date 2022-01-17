@@ -15,7 +15,7 @@
 
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
@@ -32,50 +32,50 @@ public class ClassScopeOperationBuilder
 		super(collector, navigation);
 	}
 
-	@Nonnull
+	@NotNull
 	public FieldOperationBuilder forField(String name) {
 		return new FieldOperationBuilder(getCollector(), getNavigation(), name);
 	}
 
-	@Nonnull
+	@NotNull
 	public ClassScopeOperationBuilder forInnerClass(String name) {
 		return new ClassScopeOperationBuilder(getCollector(),
 			new InnerClassNavigation<>(getNavigation(), name));
 	}
 
-	@Nonnull
+	@NotNull
 	public AnnotatableOperationBuilder<AnalyzedClass> forAnnotation(
 			String type) {
 		return new AnnotatableOperationBuilder<>(getCollector(), getNavigation(), type);
 	}
 
-	@Nonnull
+	@NotNull
 	public ClassMethodLocator forMethod() {
 		return new ClassMethodLocator(getCollector(), getNavigation());
 	}
 
-	@Nonnull
+	@NotNull
 	public ClassConstructorLocator forConstructor() {
 		return new ClassConstructorLocator(getCollector(), getNavigation());
 	}
 
-	public void ensureAnnotation(@Nonnull String annotation) {
+	public void ensureAnnotation(@NotNull String annotation) {
 		ensure(new EnsureClassAnnotation(annotation));
 	}
 
-	@Nonnull
+	@NotNull
 	public EnsureClassMethodBuilder ensureMethod() {
 		return new EnsureClassMethodBuilder(this::ensure);
 	}
 
-	@Nonnull
+	@NotNull
 	public HasConstructorBuilder<EnsureClassConstructorOperation,AnalyzedClass, AnalyzedClass.ClassInsertionPoint> ensureConstructor() {
 		return new HasConstructorBuilder<>(this::ensure,
 			EnsureClassConstructorOperation::new);
 	}
 
-	@Nonnull
-	public WithType ensureField(@Nonnull String name) {
+	@NotNull
+	public WithType ensureField(@NotNull String name) {
 		return type -> accessModifier -> {
 			EnsureClassField operation = new EnsureClassField(name, type, accessModifier);
 			ensure(operation);
@@ -84,20 +84,20 @@ public class ClassScopeOperationBuilder
 	}
 
 	public interface WithType {
-		@Nonnull
-		WithAccessModifier typed(@Nonnull String type);
+		@NotNull
+		WithAccessModifier typed(@NotNull String type);
 	}
 
 	public interface WithAccessModifier {
-		@Nonnull
-		EnsureField withAccess(@Nonnull AccessModifier modifier);
+		@NotNull
+		EnsureField withAccess(@NotNull AccessModifier modifier);
 	}
 
-	public void ensureImplements(@Nonnull String iface) {
+	public void ensureImplements(@NotNull String iface) {
 		ensure(new EnsureImplements(iface));
 	}
 
-	public void ensureSuperclass(@Nonnull String superClass) {
+	public void ensureSuperclass(@NotNull String superClass) {
 		ensure(new EnsureSuperClass(superClass));
 	}
 

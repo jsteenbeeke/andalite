@@ -14,19 +14,18 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
-import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.xml.navigation.AnyElementNamedNavigation;
 import com.jeroensteenbeeke.andalite.xml.navigation.RootElementNavigation;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class XMLRecipeBuilder implements IStepCollector {
 	private final List<XMLRecipeStep<?>> steps;
 
 	public XMLRecipeBuilder() {
-		this.steps = Lists.newLinkedList();
+		this.steps = new ArrayList<>();
 	}
 
 	public XMLElementContextBuilder atRoot() {
@@ -40,7 +39,7 @@ public class XMLRecipeBuilder implements IStepCollector {
 	}
 
 	@Override
-	public void addStep(@Nonnull XMLRecipeStep<?> step) {
+	public void addStep(@NotNull XMLRecipeStep<?> step) {
 		this.steps.add(step);
 	}
 

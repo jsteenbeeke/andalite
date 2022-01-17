@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.transformation.ClassScopeOperationBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ClassAnnotation extends AnnotationAdditionTemplate<ClassAnnotation> implements ClassElementTemplate {
 	private final TypeReference type;
@@ -14,9 +14,9 @@ public class ClassAnnotation extends AnnotationAdditionTemplate<ClassAnnotation>
 		this.type = type;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	protected ClassAnnotation newInstance(@Nonnull ImmutableList<AnnotationValueTemplate<?>> templates) {
+	protected ClassAnnotation newInstance(@NotNull ImmutableList<AnnotationValueTemplate<?>> templates) {
 		return new ClassAnnotation(type, templates);
 	}
 

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -34,28 +34,28 @@ public abstract class Annotatable<T extends Annotatable<T,I>, I extends Enum<I> 
 		this.annotations = Maps.newHashMap();
 	}
 
-	@Nonnull
+	@NotNull
 	public final List<AnalyzedAnnotation> getAnnotations() {
 		return ImmutableList.copyOf(annotations.values());
 	}
 
-	public final boolean hasAnnotation(@Nonnull String type) {
+	public final boolean hasAnnotation(@NotNull String type) {
 		return annotations.containsKey(type);
 	}
 
 	@CheckForNull
-	public final AnalyzedAnnotation getAnnotation(@Nonnull String type) {
+	public final AnalyzedAnnotation getAnnotation(@NotNull String type) {
 		return annotations.get(type);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public T addAnnotation(@Nonnull AnalyzedAnnotation annotation) {
+	public T addAnnotation(@NotNull AnalyzedAnnotation annotation) {
 		this.annotations.put(annotation.getType(), annotation);
 		return (T) this;
 	}
 
-	void addAnnotations(@Nonnull Iterable<AnalyzedAnnotation> annots) {
+	void addAnnotations(@NotNull Iterable<AnalyzedAnnotation> annots) {
 		for (AnalyzedAnnotation analyzedAnnotation : annots) {
 			addAnnotation(analyzedAnnotation);
 		}

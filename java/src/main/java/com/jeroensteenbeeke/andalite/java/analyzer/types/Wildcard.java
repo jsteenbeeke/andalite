@@ -15,7 +15,7 @@
 package com.jeroensteenbeeke.andalite.java.analyzer.types;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.core.Location;
@@ -26,7 +26,7 @@ public class Wildcard extends AnalyzedType {
 
 	private final Reference extendsReference;
 
-	public Wildcard(@Nonnull Location location,
+	public Wildcard(@NotNull Location location,
 			@Nullable Reference superReference,
 			@Nullable Reference extendsReference) {
 		super(location);

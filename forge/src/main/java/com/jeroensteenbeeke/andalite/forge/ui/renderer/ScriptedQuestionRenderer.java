@@ -31,7 +31,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.lux.TypedResult;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +50,7 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 
 	@Override
 	public TypedResult<ForgeRecipe> renderRecipeSelection(
-		@Nonnull List<ForgeRecipe> recipeList) {
+		@NotNull List<ForgeRecipe> recipeList) {
 		Object answer = scriptedAnswers.remove(0);
 
 		if (answer instanceof Integer) {
@@ -62,8 +62,8 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 
 	@Override
 	public TypedResult<Answers> renderQuestion(
-		@Nonnull Answers answers,
-		@Nonnull Question question) {
+		@NotNull Answers answers,
+		@NotNull Question question) {
 		if (scriptedAnswers.isEmpty()) {
 			return TypedResult.fail(
 				"Scenario incorrect, no answers left but questions remaining");

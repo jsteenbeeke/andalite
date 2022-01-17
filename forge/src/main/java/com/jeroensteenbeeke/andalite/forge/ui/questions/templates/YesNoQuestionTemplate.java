@@ -6,10 +6,10 @@ import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.YesNoQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.templates.fn.CheckedBiFunction;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class YesNoQuestionTemplate extends QuestionTemplate<YesNoQuestionTemplate, YesNoQuestion> {
-	YesNoQuestionTemplate(@Nonnull String key, @Nonnull String question) {
+	YesNoQuestionTemplate(@NotNull String key, @NotNull String question) {
 		super(key, question);
 	}
 
@@ -18,12 +18,12 @@ public class YesNoQuestionTemplate extends QuestionTemplate<YesNoQuestionTemplat
 	}
 
 	@Override
-	protected YesNoQuestionTemplate newInstance(@Nonnull String key, @Nonnull String question, @Nonnull ImmutableList<FollowUp> followupQuestions, @Nonnull CheckedBiFunction<Answers, String, String> formatter) {
+	protected YesNoQuestionTemplate newInstance(@NotNull String key, @NotNull String question, @NotNull ImmutableList<FollowUp> followupQuestions, @NotNull CheckedBiFunction<Answers, String, String> formatter) {
 		return new YesNoQuestionTemplate(key, question, followupQuestions, formatter);
 	}
 
 	@Override
-	public YesNoQuestion toQuestion(@Nonnull Answers answers) throws ForgeException {
+	public YesNoQuestion toQuestion(@NotNull Answers answers) throws ForgeException {
 		return new YesNoQuestion(getKey(), getFormattedQuestion(answers));
 	}
 }

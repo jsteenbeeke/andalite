@@ -3,8 +3,8 @@ package com.jeroensteenbeeke.andalite.java.transformation.template;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public interface MethodElementTemplate {
-	void onMethod(@Nonnull JavaRecipeBuilder builder, @Nonnull MethodOperationBuilder methodBuilder);
+	void onMethod(@NotNull JavaRecipeBuilder builder, @NotNull MethodOperationBuilder methodBuilder);
 }

@@ -18,7 +18,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ContainingDenominationMethodNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ClassMethodLocator extends
 		AbstractMethodBuilder<MethodOperationBuilder, ClassMethodLocator> {
@@ -35,8 +35,8 @@ public class ClassMethodLocator extends
 
 	}
 
-	@Nonnull
-	public MethodOperationBuilder named(@Nonnull String name) {
+	@NotNull
+	public MethodOperationBuilder named(@NotNull String name) {
 		return new MethodOperationBuilder(collector, new ContainingDenominationMethodNavigation<>(
 				parentNavigation, name, getType(), getModifier(),
 				getDescriptors()));

@@ -24,7 +24,7 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -48,11 +48,11 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 
 	private String javadoc;
 
-	protected ContainingDenomination(@Nonnull AnalyzedSourceFile sourceFile,
-									 @Nonnull Location location,
-									 @Nonnull List<Modifier.Keyword> modifiers,
-									 @Nonnull String packageName,
-									 @Nonnull LocatedName<SimpleName> name) {
+	protected ContainingDenomination(@NotNull AnalyzedSourceFile sourceFile,
+									 @NotNull Location location,
+									 @NotNull List<Modifier.Keyword> modifiers,
+									 @NotNull String packageName,
+									 @NotNull LocatedName<SimpleName> name) {
 		super(sourceFile, location, modifiers, packageName, name);
 		this.methods = LinkedHashMultimap.create();
 		this.innerDenominations = Maps.newHashMap();
@@ -60,43 +60,43 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 		this.interfaces = Sets.newHashSet();
 	}
 
-	@Nonnull
+	@NotNull
 	public Optional<Location> getLastImplementsLocation() {
 		return Optional.ofNullable(lastImplementsLocation);
 	}
 
-	void setLastImplementsLocation(@Nonnull Location lastImplementsLocation) {
+	void setLastImplementsLocation(@NotNull Location lastImplementsLocation) {
 		this.lastImplementsLocation = lastImplementsLocation;
 	}
 
-	protected void addField(@Nonnull AnalyzedField field) {
+	protected void addField(@NotNull AnalyzedField field) {
 		this.fields.put(field.getName(), field);
 	}
 
-	protected void addMethod(@Nonnull AnalyzedMethod method) {
+	protected void addMethod(@NotNull AnalyzedMethod method) {
 		if (!methods.containsValue(method)) {
 			this.methods.put(method.getName(), method);
 		}
 	}
 
-	protected void addInnerDenomination(@Nonnull Denomination innerDenomination) {
+	protected void addInnerDenomination(@NotNull Denomination innerDenomination) {
 		this.innerDenominations.put(innerDenomination.getDenominationName(),
 									innerDenomination);
 	}
 
-	public boolean hasInnerClass(@Nonnull String name) {
+	public boolean hasInnerClass(@NotNull String name) {
 		return hasDenominationOfType(name, AnalyzedClass.class);
 	}
 
-	public boolean hasInnerInterface(@Nonnull String name) {
+	public boolean hasInnerInterface(@NotNull String name) {
 		return hasDenominationOfType(name, AnalyzedInterface.class);
 	}
 
-	public boolean hasInnerEnum(@Nonnull String name) {
+	public boolean hasInnerEnum(@NotNull String name) {
 		return hasDenominationOfType(name, AnalyzedEnum.class);
 	}
 
-	public boolean hasInnerAnnotation(@Nonnull String name) {
+	public boolean hasInnerAnnotation(@NotNull String name) {
 		return hasDenominationOfType(name, AnalyzedAnnotationType.class);
 	}
 
@@ -114,7 +114,7 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 	}
 
 	@CheckForNull
-	public AnalyzedClass getInnerClass(@Nonnull String name) {
+	public AnalyzedClass getInnerClass(@NotNull String name) {
 		if (hasInnerClass(name)) {
 			return (AnalyzedClass) innerDenominations.get(name);
 		}
@@ -122,17 +122,17 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 		return null;
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedField> getFields() {
 		return ImmutableList.copyOf(fields.values());
 	}
 
-	public boolean hasField(@Nonnull String name) {
+	public boolean hasField(@NotNull String name) {
 		return fields.containsKey(name);
 	}
 
 	@CheckForNull
-	public AnalyzedField getField(@Nonnull String name) {
+	public AnalyzedField getField(@NotNull String name) {
 		if (hasField(name)) {
 			return fields.get(name);
 		}
@@ -140,20 +140,20 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 		return null;
 	}
 
-	@Nonnull
+	@NotNull
 	public Set<GenerifiedName> getInterfaces() {
 		return ImmutableSet.copyOf(interfaces);
 	}
 
-	protected void addInterface(@Nonnull GenerifiedName interfaceName) {
+	protected void addInterface(@NotNull GenerifiedName interfaceName) {
 		this.interfaces.add(interfaceName);
 	}
 
-	public boolean implementsInterface(@Nonnull String interfaceName) {
+	public boolean implementsInterface(@NotNull String interfaceName) {
 		return this.interfaces.stream().map(GenerifiedName::getName).anyMatch(interfaceName::equals);
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedMethod> getMethods() {
 		return ImmutableList.copyOf(methods.values());
 	}
@@ -162,7 +162,7 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 		return new GetMethodBuilder(this);
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedClass> getInnerClasses() {
 		return ImmutableList.copyOf(innerDenominations
 										.values()
@@ -172,7 +172,7 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 										.collect(Collectors.toList()));
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedInterface> getInnerInterfaces() {
 		return ImmutableList.copyOf(innerDenominations
 										.values()
@@ -182,7 +182,7 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 										.collect(Collectors.toList()));
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedEnum> getInnerEnums() {
 		return ImmutableList.copyOf(innerDenominations
 										.values()
@@ -192,7 +192,7 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 										.collect(Collectors.toList()));
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedAnnotationType> getInnerAnnotations() {
 		return ImmutableList.copyOf(innerDenominations
 										.values()
@@ -202,12 +202,12 @@ public abstract class ContainingDenomination<T extends ContainingDenomination<T,
 										.collect(Collectors.toList()));
 	}
 
-	@Nonnull
+	@NotNull
 	public Optional<Location> getBodyLocation() {
 		return Optional.ofNullable(bodyLocation);
 	}
 
-	public void setBodyLocation(@Nonnull Location bodyLocation) {
+	public void setBodyLocation(@NotNull Location bodyLocation) {
 		this.bodyLocation = bodyLocation;
 	}
 

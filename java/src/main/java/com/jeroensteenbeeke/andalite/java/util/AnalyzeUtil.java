@@ -16,7 +16,7 @@ package com.jeroensteenbeeke.andalite.java.util;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.FluentIterable;
@@ -31,8 +31,8 @@ public final class AnalyzeUtil {
 	}
 
 	public static boolean matchesSignature(
-			@Nonnull AnalyzedMethod analyzedMethod,
-			@Nonnull List<ParameterDescriptor> descriptors) {
+			@NotNull AnalyzedMethod analyzedMethod,
+			@NotNull List<ParameterDescriptor> descriptors) {
 
 		List<AnalyzedParameter> parameters = analyzedMethod.getParameters();
 		if (parameters.size() == descriptors.size()) {
@@ -52,8 +52,8 @@ public final class AnalyzeUtil {
 	}
 	
 	public static boolean matchesSignature(
-			@Nonnull AnalyzedConstructor ctor,
-			@Nonnull List<ParameterDescriptor> descriptors) {
+			@NotNull AnalyzedConstructor ctor,
+			@NotNull List<ParameterDescriptor> descriptors) {
 
 		List<AnalyzedParameter> parameters = ctor.getParameters();
 		if (parameters.size() == descriptors.size()) {
@@ -72,8 +72,8 @@ public final class AnalyzeUtil {
 		return false;
 	}
 
-	public static String getMethodSignature(@Nonnull String name,
-			@Nonnull List<ParameterDescriptor> descriptors) {
+	public static String getMethodSignature(@NotNull String name,
+			@NotNull List<ParameterDescriptor> descriptors) {
 		return String.format(
 				"%s(%s)",
 				name,

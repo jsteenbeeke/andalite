@@ -20,7 +20,7 @@ import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.core.Location;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public abstract class Denomination<T extends Denomination<T,I>, I extends Enum<I> & IInsertionPoint<T>> extends AccessModifiable<T,I> {
@@ -35,10 +35,10 @@ public abstract class Denomination<T extends Denomination<T,I>, I extends Enum<I
 
 	private final AnalyzedSourceFile sourceFile;
 
-	public Denomination(@Nonnull AnalyzedSourceFile sourceFile,
-						@Nonnull Location location, List<Modifier.Keyword> modifiers,
-						@Nonnull String packageName,
-						@Nonnull LocatedName<SimpleName> name
+	public Denomination(@NotNull AnalyzedSourceFile sourceFile,
+						@NotNull Location location, List<Modifier.Keyword> modifiers,
+						@NotNull String packageName,
+						@NotNull LocatedName<SimpleName> name
 	) {
 		super(location, modifiers);
 		this.sourceFile = sourceFile;
@@ -48,27 +48,27 @@ public abstract class Denomination<T extends Denomination<T,I>, I extends Enum<I
 		this.denominationName = name.getName();
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedSourceFile getSourceFile() {
 		return sourceFile;
 	}
 
-	@Nonnull
+	@NotNull
 	public SimpleName getRawNameNode() {
 		return rawNameNode;
 	}
 
-	@Nonnull
+	@NotNull
 	public Location getNameLocation() {
 		return nameLocation;
 	}
 
-	@Nonnull
+	@NotNull
 	public String getDenominationName() {
 		return denominationName;
 	}
 
-	@Nonnull
+	@NotNull
 	public String getPackageName() {
 		return packageName;
 	}

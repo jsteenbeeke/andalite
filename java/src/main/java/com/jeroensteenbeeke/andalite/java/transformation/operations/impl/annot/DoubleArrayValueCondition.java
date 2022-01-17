@@ -14,13 +14,13 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.DoubleValue;
 
 public class DoubleArrayValueCondition extends ArrayValueCondition<Double> {
-	public DoubleArrayValueCondition(@Nonnull final String name,
-			@Nonnull final Double... values) {
+	public DoubleArrayValueCondition(@NotNull final String name,
+			@NotNull final Double... values) {
 		super(name, DoubleValue.class, values);
 	}
 }

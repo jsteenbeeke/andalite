@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.statements;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -28,27 +28,27 @@ public class ForEachStatement extends BaseStatement<ForEachStatement> {
 
 	private final AnalyzedStatement<?,?> body;
 
-	public ForEachStatement(@Nonnull Location location,
-			@Nonnull VariableDeclarationExpression variableExpression,
-			@Nonnull AnalyzedExpression iterable,
-			@Nonnull AnalyzedStatement<?,?> body) {
+	public ForEachStatement(@NotNull Location location,
+			@NotNull VariableDeclarationExpression variableExpression,
+			@NotNull AnalyzedExpression iterable,
+			@NotNull AnalyzedStatement<?,?> body) {
 		super(location);
 		this.variableExpression = variableExpression;
 		this.iterable = iterable;
 		this.body = body;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedStatement<?,?> getBody() {
 		return body;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedExpression getIterable() {
 		return iterable;
 	}
 
-	@Nonnull
+	@NotNull
 	public VariableDeclarationExpression getVariableExpression() {
 		return variableExpression;
 	}

@@ -15,7 +15,7 @@
 
 package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
@@ -26,15 +26,15 @@ public class FieldNavigation<T extends ContainingDenomination<?,?>> extends
 		ChainedNavigation<T, AnalyzedField> {
 	private final String fieldName;
 
-	public FieldNavigation(@Nonnull IJavaNavigation<T> chained,
-			@Nonnull String fieldName) {
+	public FieldNavigation(@NotNull IJavaNavigation<T> chained,
+			@NotNull String fieldName) {
 		super(chained);
 		this.fieldName = fieldName;
 	}
 
 	@Override
-	@Nonnull
-	public AnalyzedField navigate(@Nonnull T chainedTarget)
+	@NotNull
+	public AnalyzedField navigate(@NotNull T chainedTarget)
 			throws NavigationException {
 		AnalyzedField field = chainedTarget.getField(fieldName);
 
@@ -47,7 +47,7 @@ public class FieldNavigation<T extends ContainingDenomination<?,?>> extends
 				chainedTarget.getDenominationName(), fieldName));
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
 	public String getStepDescription() {
 		return String.format("Field named %s", fieldName);

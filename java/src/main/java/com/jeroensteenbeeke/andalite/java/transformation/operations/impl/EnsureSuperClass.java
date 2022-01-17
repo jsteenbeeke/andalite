@@ -27,7 +27,7 @@ import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnsureSuperClass implements IClassOperation {
 	private final String superClass;
@@ -37,7 +37,7 @@ public class EnsureSuperClass implements IClassOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedClass input)
+	public List<Transformation> perform(@NotNull AnalyzedClass input)
 		throws OperationException {
 		if (input
 			.getSuperClass()
@@ -59,7 +59,7 @@ public class EnsureSuperClass implements IClassOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedClass input) {
+	public ActionResult verify(@NotNull AnalyzedClass input) {
 		if (input
 			.getSuperClass()
 			.map(GenerifiedName::getName)

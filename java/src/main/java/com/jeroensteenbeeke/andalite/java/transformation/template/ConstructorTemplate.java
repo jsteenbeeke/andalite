@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.*;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.BiFunction;
 
 public class ConstructorTemplate
@@ -34,7 +34,7 @@ public class ConstructorTemplate
 	}
 
 	public ConstructorTemplate withAccessModifier(
-		@Nonnull AccessModifier accessModifier) {
+		@NotNull AccessModifier accessModifier) {
 		return new ConstructorTemplate(accessModifier, shouldBeFinal, templates,
 			parameters);
 	}
@@ -143,8 +143,8 @@ public class ConstructorTemplate
 	}
 
 	private interface ParameterAcceptor<T> {
-		T withParameter(@Nonnull T base, @Nonnull String name,
-			@Nonnull String type);
+		T withParameter(@NotNull T base, @NotNull String name,
+			@NotNull String type);
 	}
 }
 

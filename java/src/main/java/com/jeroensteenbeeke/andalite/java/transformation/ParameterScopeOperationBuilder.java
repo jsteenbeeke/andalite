@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedParameter;
@@ -31,11 +31,11 @@ public class ParameterScopeOperationBuilder extends
 		super(collector, navigation);
 	}
 
-	public void ensureAnnotation(@Nonnull String annotation) {
+	public void ensureAnnotation(@NotNull String annotation) {
 		ensure(new EnsureParameterAnnotation(annotation));
 	}
 
-	public void removeAnnotation(@Nonnull String annotation) {
+	public void removeAnnotation(@NotNull String annotation) {
 		ensure(new RemoveParameterAnnotation(annotation));
 	}
 

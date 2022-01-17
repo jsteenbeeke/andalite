@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IFieldOperation;
@@ -31,12 +31,12 @@ public class EnsureFieldAnnotation extends
 	}
 
 	@Override
-	protected boolean isNewlineBefore(@Nonnull AnalyzedField input) {
+	protected boolean isNewlineBefore(@NotNull AnalyzedField input) {
 		return false;
 	}
 
 	@Override
-	protected boolean isNewlineAfter(@Nonnull AnalyzedField input) {
+	protected boolean isNewlineAfter(@NotNull AnalyzedField input) {
 		return true;
 	}
 }

@@ -11,7 +11,7 @@ import com.jeroensteenbeeke.lux.TypedResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -32,7 +32,7 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 
 	@Override
 	public TypedResult<ForgeRecipe> renderRecipeSelection(
-		@Nonnull
+		@NotNull
 			List<ForgeRecipe> recipeList) {
 		log.info("Select recipe:");
 		for (int i = 0; i < recipeList.size(); i++) {
@@ -49,8 +49,8 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 
 	@Override
 	public TypedResult<Answers> renderQuestion(
-		@Nonnull Answers answers,
-		@Nonnull Question question) {
+		@NotNull Answers answers,
+		@NotNull Question question) {
 
 		String nextInput = input.remove(0);
 

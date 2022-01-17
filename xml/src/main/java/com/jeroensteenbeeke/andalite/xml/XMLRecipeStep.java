@@ -15,15 +15,12 @@
 
 package com.jeroensteenbeeke.andalite.xml;
 
-import java.io.File;
-
-import com.jeroensteenbeeke.lux.Result;
+import com.jeroensteenbeeke.andalite.xml.util.XMLUtil;
+import com.jeroensteenbeeke.lux.TypedResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.jeroensteenbeeke.lux.ActionResult;
-import com.jeroensteenbeeke.lux.TypedResult;
-import com.jeroensteenbeeke.andalite.xml.util.XMLUtil;
+import java.io.File;
 
 public class XMLRecipeStep<N extends Node> {
 	private final IXMLNavigation<N> navigation;

@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,16 +28,16 @@ public class ArrayInitializerExpression extends AnalyzedExpression {
 
 	private List<AnalyzedExpression> values;
 
-	public ArrayInitializerExpression(@Nonnull Location location) {
+	public ArrayInitializerExpression(@NotNull Location location) {
 		super(location);
 		this.values = Lists.newArrayList();
 	}
 
-	public void addValue(@Nonnull AnalyzedExpression expression) {
+	public void addValue(@NotNull AnalyzedExpression expression) {
 		values.add(expression);
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedExpression> getValues() {
 		return ImmutableList.copyOf(values);
 	}

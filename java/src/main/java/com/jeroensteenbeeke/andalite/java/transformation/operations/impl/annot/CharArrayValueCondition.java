@@ -14,13 +14,13 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.CharValue;
 
 public class CharArrayValueCondition extends ArrayValueCondition<Character> {
-	public CharArrayValueCondition(@Nonnull final String name,
-			@Nonnull final Character... values) {
+	public CharArrayValueCondition(@NotNull final String name,
+			@NotNull final Character... values) {
 		super(name, CharValue.class, values);
 	}
 }

@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
@@ -32,7 +32,7 @@ public class AnnotationFieldNavigation extends
 	private final InnerAnnotationCondition condition;
 
 	public AnnotationFieldNavigation(
-			@Nonnull IJavaNavigation<AnalyzedAnnotation> chained,
+			@NotNull IJavaNavigation<AnalyzedAnnotation> chained,
 			@Nullable String fieldName,
 			@Nullable InnerAnnotationCondition condition) {
 		super(chained);

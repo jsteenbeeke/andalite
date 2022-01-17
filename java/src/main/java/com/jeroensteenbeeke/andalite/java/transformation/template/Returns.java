@@ -3,7 +3,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.template;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class Returns implements MethodElementTemplate{
 	private final String expression;
@@ -13,7 +13,7 @@ public class Returns implements MethodElementTemplate{
 	}
 
 	@Override
-	public void onMethod(@Nonnull JavaRecipeBuilder builder, @Nonnull MethodOperationBuilder methodBuilder) {
+	public void onMethod(@NotNull JavaRecipeBuilder builder, @NotNull MethodOperationBuilder methodBuilder) {
 		methodBuilder.inBody().ensureReturnAsLastStatement(expression);
 	}
 }

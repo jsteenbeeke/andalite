@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
@@ -35,8 +35,8 @@ public class InterfaceMethodLocator extends
 
 	}
 
-	@Nonnull
-	public MethodOperationBuilder named(@Nonnull String name) {
+	@NotNull
+	public MethodOperationBuilder named(@NotNull String name) {
 		return new MethodOperationBuilder(collector,
 				new InterfaceMethodNavigation(parentNavigation, name,
 						getType(), getDescriptors()));

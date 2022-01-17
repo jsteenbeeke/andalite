@@ -58,14 +58,21 @@
 		
 		<!-- Test Dependencies -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -74,15 +81,9 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- Guava -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-
 		<!-- Code Integrity -->
 		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
+			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
 		</dependency>
 

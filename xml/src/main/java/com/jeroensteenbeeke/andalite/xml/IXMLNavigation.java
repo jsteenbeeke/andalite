@@ -14,17 +14,17 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import org.w3c.dom.Node;
 
 public interface IXMLNavigation<T extends Node> {
-	@Nonnull
+	@NotNull
 	String getXPathExpression();
 
-	@Nonnull
+	@NotNull
 	String getDescription();
 	
-	@Nonnull
+	@NotNull
 	T castNode(Node node);
 }

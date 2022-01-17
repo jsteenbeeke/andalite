@@ -7,13 +7,13 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedEnum;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class EnsureEnumField extends EnsureField<AnalyzedEnum, AnalyzedEnum.EnumInsertionPoint, EnsureEnumField> implements
 	IEnumOperation {
-	public EnsureEnumField(@Nonnull String name, @Nonnull String type,
-		@Nonnull AccessModifier modifier) {
+	public EnsureEnumField(@NotNull String name, @NotNull String type,
+		@NotNull AccessModifier modifier) {
 		super(name, type, modifier);
 	}
 

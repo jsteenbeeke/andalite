@@ -10,7 +10,7 @@ import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IMethodOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnsureMethodComment implements IMethodOperation {
 	private final String comment;
@@ -20,7 +20,7 @@ public class EnsureMethodComment implements IMethodOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedMethod input)
+	public List<Transformation> perform(@NotNull AnalyzedMethod input)
 			throws OperationException {
 		if (!input.getComments().contains(comment)) {
 			return ImmutableList
@@ -31,7 +31,7 @@ public class EnsureMethodComment implements IMethodOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedMethod input) {
+	public ActionResult verify(@NotNull AnalyzedMethod input) {
 		if (input.getComments().stream().map(String::trim).anyMatch(comment::equals)) {
 			return ActionResult.ok();
 		}

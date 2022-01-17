@@ -5,7 +5,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.EnumScopeOperationBuild
 import com.jeroensteenbeeke.andalite.java.transformation.HasEnumConstantBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnumConstantTemplate implements EnumElementTemplate {
 	private final String name;
@@ -27,13 +27,13 @@ public class EnumConstantTemplate implements EnumElementTemplate {
 		this.templates = templates;
 	}
 
-	public EnumConstantTemplate withParameterExpression(@Nonnull String expression) {
+	public EnumConstantTemplate withParameterExpression(@NotNull String expression) {
 		return new EnumConstantTemplate(name,
 			ImmutableList.<String>builder().addAll(parameterExpressions)
 				.add(expression).build(), templates);
 	}
 
-	public EnumConstantTemplate withStringParameterExpression(@Nonnull String expression) {
+	public EnumConstantTemplate withStringParameterExpression(@NotNull String expression) {
 		return new EnumConstantTemplate(name,
 			ImmutableList.<String>builder().addAll(parameterExpressions)
 				.add(String.format("\"%s\"", expression)).build(), templates);

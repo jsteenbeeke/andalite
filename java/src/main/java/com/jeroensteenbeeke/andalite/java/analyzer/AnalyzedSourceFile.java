@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.github.javaparser.Range;
@@ -48,8 +48,8 @@ public final class AnalyzedSourceFile extends Locatable implements IInsertionPoi
 
 	private final String compilationUnitName;
 
-	public AnalyzedSourceFile(@Nonnull Location location,
-							  @Nonnull File originalFile, @Nullable String packageName,
+	public AnalyzedSourceFile(@NotNull Location location,
+							  @NotNull File originalFile, @Nullable String packageName,
 							  @Nullable Location packageDefinitionLocation) {
 		super(location);
 		this.originalFile = originalFile;
@@ -73,17 +73,17 @@ public final class AnalyzedSourceFile extends Locatable implements IInsertionPoi
 		return compilationUnitName;
 	}
 
-	@Nonnull
+	@NotNull
 	public Optional<Location> getPackageDefinitionLocation() {
 		return Optional.ofNullable(packageDefinitionLocation);
 	}
 
-	@Nonnull
+	@NotNull
 	public String getPackageName() {
 		return packageName;
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedClass> getClasses() {
 		return ImmutableList.copyOf(classes);
 	}
@@ -100,12 +100,12 @@ public final class AnalyzedSourceFile extends Locatable implements IInsertionPoi
 		return ImmutableList.copyOf(interfaces);
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedImport> getImports() {
 		return ImmutableList.copyOf(imports);
 	}
 
-	public boolean hasImport(@Nonnull String fqdn) {
+	public boolean hasImport(@NotNull String fqdn) {
 		for (AnalyzedImport analyzedImport : imports) {
 			if (analyzedImport.matchesClass(fqdn)) {
 				return true;
@@ -115,23 +115,23 @@ public final class AnalyzedSourceFile extends Locatable implements IInsertionPoi
 		return false;
 	}
 
-	void addClass(@Nonnull AnalyzedClass analyzedClass) {
+	void addClass(@NotNull AnalyzedClass analyzedClass) {
 		this.classes.add(analyzedClass);
 	}
 
-	void addInterface(@Nonnull AnalyzedInterface analyzedInterface) {
+	void addInterface(@NotNull AnalyzedInterface analyzedInterface) {
 		this.interfaces.add(analyzedInterface);
 	}
 
-	void addEnum(@Nonnull AnalyzedEnum analyzedEnum) {
+	void addEnum(@NotNull AnalyzedEnum analyzedEnum) {
 		this.enums.add(analyzedEnum);
 	}
 
-	void addAnnotation(@Nonnull AnalyzedAnnotationType analyzedType) {
+	void addAnnotation(@NotNull AnalyzedAnnotationType analyzedType) {
 		this.annotations.add(analyzedType);
 	}
 
-	void addImport(@Nonnull AnalyzedImport importStatement) {
+	void addImport(@NotNull AnalyzedImport importStatement) {
 		this.imports.add(importStatement);
 	}
 

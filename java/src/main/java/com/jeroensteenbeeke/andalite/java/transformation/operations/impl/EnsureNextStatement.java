@@ -25,7 +25,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IStatementOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnsureNextStatement<T extends AnalyzedStatement<T,I>, I extends Enum<I> & IInsertionPoint<? super T>> implements IStatementOperation<T,I> {
 	private final String statement;
@@ -36,7 +36,7 @@ public class EnsureNextStatement<T extends AnalyzedStatement<T,I>, I extends Enu
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull T last)
+	public List<Transformation> perform(@NotNull T last)
 		throws OperationException {
 
 		final String code = String.format("\t\t%s", statement);
@@ -59,7 +59,7 @@ public class EnsureNextStatement<T extends AnalyzedStatement<T,I>, I extends Enu
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull T input) {
+	public ActionResult verify(@NotNull T input) {
 		// FIXME: Not verifiable?
 
 		return ActionResult.ok();

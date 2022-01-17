@@ -1,14 +1,14 @@
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class AnalyzedSourceFileTest extends DummyAwareTest {
 

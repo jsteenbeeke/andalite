@@ -24,7 +24,7 @@ import com.jeroensteenbeeke.lux.TypedResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.List;
 
@@ -38,8 +38,8 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 
 	@Override
 	public TypedResult<Answers> renderQuestion(
-			@Nonnull Answers answers,
-			@Nonnull Question question) {
+			@NotNull Answers answers,
+			@NotNull Question question) {
 		if (question instanceof SimpleQuestion) {
 			return renderSimpleQuestion((SimpleQuestion) question)
 					.map(o -> answers.plus(question.getKey(), o));
@@ -66,7 +66,7 @@ public class MavenQuestionRenderer implements QuestionRenderer, FeedbackHandler 
 
 	@Override
 	public TypedResult<ForgeRecipe> renderRecipeSelection(
-			@Nonnull
+			@NotNull
 					List<ForgeRecipe> recipeList) {
 		TypedResult<Integer> response = createPlaceholder();
 

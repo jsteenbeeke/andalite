@@ -57,19 +57,26 @@
 
 		<!-- Test Dependencies -->
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>provided</scope>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-core</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>javax</groupId>
-			<artifactId>javaee-api</artifactId>
+			<groupId>com.jeroensteenbeeke.andalite</groupId>
+			<artifactId>andalite-core-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
@@ -94,15 +101,9 @@
 			<artifactId>spring-javaformat-formatter-eclipse-runtime</artifactId>
 		</dependency>
 
-		<!-- Guava -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
-
 		<!-- Code Integrity -->
 		<dependency>
-			<groupId>com.google.code.findbugs</groupId>
+			<groupId>org.jetbrains</groupId>
 			<artifactId>annotations</artifactId>
 		</dependency>
 

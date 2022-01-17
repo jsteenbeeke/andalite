@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.types;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
@@ -24,8 +24,8 @@ public class Reference extends AnalyzedType {
 	private final AnalyzedType referencedType;
 	private final int arrayCount;
 
-	public Reference(@Nonnull final Location location,
-			@Nonnull final AnalyzedType referencedType, int arrayCount) {
+	public Reference(@NotNull final Location location,
+			@NotNull final AnalyzedType referencedType, int arrayCount) {
 		super(location);
 		this.referencedType = referencedType;
 		this.arrayCount = arrayCount;

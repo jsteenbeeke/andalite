@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -43,26 +43,26 @@ public class AssignExpression extends AnalyzedExpression {
 
 	private final AnalyzedExpression value;
 
-	public AssignExpression(@Nonnull Location location,
-			@Nonnull AnalyzedExpression target, @Nonnull Operator operator,
-			@Nonnull AnalyzedExpression value) {
+	public AssignExpression(@NotNull Location location,
+			@NotNull AnalyzedExpression target, @NotNull Operator operator,
+			@NotNull AnalyzedExpression value) {
 		super(location);
 		this.target = target;
 		this.operator = operator;
 		this.value = value;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedExpression getTarget() {
 		return target;
 	}
 
-	@Nonnull
+	@NotNull
 	public Operator getOperator() {
 		return operator;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedExpression getValue() {
 		return value;
 	}

@@ -45,7 +45,7 @@ import com.jeroensteenbeeke.lux.TypedResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
@@ -70,7 +70,7 @@ public class ClassAnalyzer {
 
 	private final Locations.CharacterMap characterMap;
 
-	public ClassAnalyzer(@Nonnull File targetFile) {
+	public ClassAnalyzer(@NotNull File targetFile) {
 		super();
 		this.targetFile = targetFile;
 		this.indexes = Locations
@@ -81,7 +81,7 @@ public class ClassAnalyzer {
 
 	}
 
-	@Nonnull
+	@NotNull
 	public TypedResult<AnalyzedSourceFile> analyze() {
 		log.debug("Starting analysis of {}", targetFile.getAbsolutePath());
 
@@ -144,9 +144,9 @@ public class ClassAnalyzer {
 
 	}
 
-	private Denomination<?, ?> analyzeTypeDeclaration(@Nonnull AnalyzedSourceFile sourceFile,
-													  @Nonnull AnalyzerContext context,
-													  @Nonnull TypeDeclaration<?> typeDeclaration) {
+	private Denomination<?, ?> analyzeTypeDeclaration(@NotNull AnalyzedSourceFile sourceFile,
+													  @NotNull AnalyzerContext context,
+													  @NotNull TypeDeclaration<?> typeDeclaration) {
 		if (typeDeclaration instanceof ClassOrInterfaceDeclaration decl) {
 
 			if (decl.isInterface()) {
@@ -451,7 +451,7 @@ public class ClassAnalyzer {
 		}
 	}
 
-	private List<Modifier.Keyword> keywords(@Nonnull Modifier.Keyword defaultKeyword, @Nonnull NodeList<Modifier> modifiers) {
+	private List<Modifier.Keyword> keywords(@NotNull Modifier.Keyword defaultKeyword, @NotNull NodeList<Modifier> modifiers) {
 		List<Modifier.Keyword> keywords = modifiers.stream().map(Modifier::getKeyword).collect(Collectors.toList());
 		if (keywords.stream().noneMatch(VISIBILITY_KEYWORDS::contains)) {
 			keywords.add(defaultKeyword);
@@ -597,8 +597,8 @@ public class ClassAnalyzer {
 
 	private AnalyzedConstructor analyzeConstructor(String className,
 												   ConstructorDeclaration member,
-												   @Nonnull ContainingDenomination<?, ?> containingDenomination,
-												   @Nonnull AnalyzerContext analyzerContext) {
+												   @NotNull ContainingDenomination<?, ?> containingDenomination,
+												   @NotNull AnalyzerContext analyzerContext) {
 
 		AnalyzedConstructor constructor = new AnalyzedConstructor(
 			Locations.from(member, indexes), className, keywords(Modifier.Keyword.DEFAULT, member.getModifiers()),
@@ -625,7 +625,7 @@ public class ClassAnalyzer {
 		return constructor;
 	}
 
-	private void analyzeAndAddParameters(CallableDeclaration<?> member, @Nonnull ContainingDenomination<?, ?> containingDenomination, @Nonnull AnalyzerContext analyzerContext, IParameterized parameterized) {
+	private void analyzeAndAddParameters(CallableDeclaration<?> member, @NotNull ContainingDenomination<?, ?> containingDenomination, @NotNull AnalyzerContext analyzerContext, IParameterized parameterized) {
 		List<Parameter> parameters = member.getParameters();
 		if (parameters != null) {
 			for (Parameter parameter : parameters) {
@@ -658,9 +658,9 @@ public class ClassAnalyzer {
 	}
 
 	private AnalyzedMethod analyzeMethod(MethodDeclaration member,
-										 @Nonnull Modifier.Keyword defaultKeyword,
-										 @Nonnull ContainingDenomination<?, ?> containingDenomination,
-										 @Nonnull AnalyzerContext analyzerContext) {
+										 @NotNull Modifier.Keyword defaultKeyword,
+										 @NotNull ContainingDenomination<?, ?> containingDenomination,
+										 @NotNull AnalyzerContext analyzerContext) {
 		String nameAsString = member.getNameAsString();
 		final AnalyzedMethod method = new AnalyzedMethod(Locations.from(member, indexes),
 														 analyzeType(member.getType()), keywords(defaultKeyword, member.getModifiers()),
@@ -757,8 +757,8 @@ public class ClassAnalyzer {
 	}
 
 	private AnalyzedParameter analyzeParameter(Parameter parameter,
-											   @Nonnull ContainingDenomination<?, ?> containingDenomination,
-											   @Nonnull AnalyzerContext analyzerContext) {
+											   @NotNull ContainingDenomination<?, ?> containingDenomination,
+											   @NotNull AnalyzerContext analyzerContext) {
 		AnalyzedParameter param = new AnalyzedParameter(
 			Locations.from(parameter, indexes), parameter.getType().asString(),
 			parameter.getNameAsString());
@@ -775,8 +775,8 @@ public class ClassAnalyzer {
 	}
 
 	private List<AnalyzedField> analyzeField(FieldDeclaration member,
-											 @Nonnull ContainingDenomination<?, ?> containingDenomination,
-											 @Nonnull AnalyzerContext analyzerContext) {
+											 @NotNull ContainingDenomination<?, ?> containingDenomination,
+											 @NotNull AnalyzerContext analyzerContext) {
 		final AnalyzedType type = analyzeType(member.getCommonType());
 		final List<Modifier.Keyword> modifiers = keywords(Modifier.Keyword.DEFAULT, member.getModifiers());
 
@@ -806,8 +806,8 @@ public class ClassAnalyzer {
 
 	private List<AnalyzedAnnotation> determineAnnotations(
 		BodyDeclaration<?> member,
-		@Nonnull ContainingDenomination<?, ?> containingDenomination,
-		@Nonnull AnalyzerContext analyzerContext) {
+		@NotNull ContainingDenomination<?, ?> containingDenomination,
+		@NotNull AnalyzerContext analyzerContext) {
 		Builder<AnalyzedAnnotation> annot = ImmutableList.builder();
 
 		for (AnnotationExpr annotExpr : member.getAnnotations()) {
@@ -966,8 +966,8 @@ public class ClassAnalyzer {
 		return pkg != null ? pkg.getName().asString() : "";
 	}
 
-	private void analyzeBodyDeclaration(@Nonnull final BlockStmt body,
-										@Nonnull final IStatementAssigner assigner,
+	private void analyzeBodyDeclaration(@NotNull final BlockStmt body,
+										@NotNull final IStatementAssigner assigner,
 										ContainingDenomination<?, ?> containingDenomination,
 										AnalyzerContext analyzerContext) {
 		List<Statement> statements = body.getStatements();
@@ -980,10 +980,10 @@ public class ClassAnalyzer {
 
 	}
 
-	@Nonnull
-	private AnalyzedStatement<?, ?> analyzeStatement(@Nonnull Statement statement,
-													 @Nonnull ContainingDenomination<?, ?> containingDenomination,
-													 @Nonnull AnalyzerContext analyzerContext) {
+	@NotNull
+	private AnalyzedStatement<?, ?> analyzeStatement(@NotNull Statement statement,
+													 @NotNull ContainingDenomination<?, ?> containingDenomination,
+													 @NotNull AnalyzerContext analyzerContext) {
 		Location location = Locations.from(statement, indexes);
 		if (statement instanceof ReturnStmt returnStatement) {
 
@@ -1285,7 +1285,7 @@ public class ClassAnalyzer {
 			"Unhandled statement type! Go slap the andalite developers!");
 	}
 
-	private <T extends IAnnotationAddable<T>> T processAnnotations(@Nonnull ContainingDenomination<?, ?> containingDenomination, @Nonnull AnalyzerContext analyzerContext, T addable, List<AnnotationExpr> annotations) {
+	private <T extends IAnnotationAddable<T>> T processAnnotations(@NotNull ContainingDenomination<?, ?> containingDenomination, @NotNull AnalyzerContext analyzerContext, T addable, List<AnnotationExpr> annotations) {
 		for (AnnotationExpr annotationExpr : annotations) {
 			AnalyzedAnnotation annotation = analyze(
 				annotationExpr, containingDenomination,
@@ -1394,7 +1394,7 @@ public class ClassAnalyzer {
 
 	}
 
-	@Nonnull
+	@NotNull
 	private AnalyzedExpression analyzeExpression(Expression expr,
 												 ContainingDenomination<?, ?> containingDenomination,
 												 AnalyzerContext analyzerContext) {
@@ -1791,9 +1791,9 @@ public class ClassAnalyzer {
 		return expression;
 	}
 
-	@Nonnull
+	@NotNull
 	private ArrayInitializerExpression parseInitializer(
-		@Nonnull ArrayInitializerExpr initializer,
+		@NotNull ArrayInitializerExpr initializer,
 		ContainingDenomination<?, ?> containingDenomination,
 		AnalyzerContext analyzerContext) {
 		ArrayInitializerExpression expression = new ArrayInitializerExpression(
@@ -1902,7 +1902,7 @@ public class ClassAnalyzer {
 	}
 
 	public interface IStatementAssigner {
-		void assignStatement(@Nonnull AnalyzedStatement<?, ?> statement);
+		void assignStatement(@NotNull AnalyzedStatement<?, ?> statement);
 	}
 
 	private static class AnalyzerContext {

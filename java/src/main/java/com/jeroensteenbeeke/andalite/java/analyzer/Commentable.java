@@ -2,14 +2,14 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public interface Commentable {
 	/**
 	 * @non.public
 	 */
-	void addComment(@Nonnull String comment);
+	void addComment(@NotNull String comment);
 
-	@Nonnull
+	@NotNull
 	List<String> getComments();
 }

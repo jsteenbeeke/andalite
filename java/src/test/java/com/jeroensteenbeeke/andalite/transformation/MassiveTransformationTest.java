@@ -21,8 +21,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.lux.Result;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,9 +31,9 @@ import java.security.SecureRandom;
 import java.util.Map;
 
 import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-@Ignore
+@Disabled
 public class MassiveTransformationTest extends DummyAwareTest {
 	private static final int OPERATIONS = 100;
 
@@ -76,7 +76,7 @@ public class MassiveTransformationTest extends DummyAwareTest {
 		assertThat(result, isOk());
 
 		builder = new JavaRecipeBuilder();
-		builder.ensureImport("javax.annotation.Nonnull");
+		builder.ensureImport("org.jetbrains.annotations.NotNull");
 
 		for (int i = 0; i < OPERATIONS; i++) {
 

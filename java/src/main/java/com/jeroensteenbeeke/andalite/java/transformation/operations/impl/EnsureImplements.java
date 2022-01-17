@@ -28,7 +28,7 @@ import com.jeroensteenbeeke.andalite.core.exceptions.OperationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnsureImplements implements IClassOperation {
 	private final String interfaceName;
@@ -38,7 +38,7 @@ public class EnsureImplements implements IClassOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedClass input)
+	public List<Transformation> perform(@NotNull AnalyzedClass input)
 			throws OperationException {
 
 		if (input.getInterfaces().stream().map(GenerifiedName::getName).anyMatch(interfaceName::equals)) {
@@ -62,7 +62,7 @@ public class EnsureImplements implements IClassOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedClass input) {
+	public ActionResult verify(@NotNull AnalyzedClass input) {
 		if (input.getInterfaces().stream().map(GenerifiedName::getName).map(this::stripWhitespaces).anyMatch(stripWhitespaces(interfaceName)::equals)) {
 			return ActionResult.ok();
 		}

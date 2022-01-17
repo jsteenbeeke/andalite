@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.BodyContainerNavigation;
@@ -55,9 +55,9 @@ public class MethodOperationBuilder
 		super(collector, navigation);
 	}
 
-	@Nonnull
+	@NotNull
 	public AnnotatableOperationBuilder<AnalyzedMethod> forAnnotation(
-			@Nonnull String type) {
+			@NotNull String type) {
 		return new AnnotatableOperationBuilder<>(getCollector(),
 												 getNavigation(), type);
 	}
@@ -90,23 +90,23 @@ public class MethodOperationBuilder
 		ensure(new EnsureMethodFinal());
 	}
 
-	public void ensureAnnotation(@Nonnull String annotation) {
+	public void ensureAnnotation(@NotNull String annotation) {
 		ensure(new EnsureMethodAnnotation(annotation));
 	}
 
-	public void ensureComment(@Nonnull String comment) {
+	public void ensureComment(@NotNull String comment) {
 		ensure(new EnsureMethodComment(comment));
 	}
 
-	public void ensureJavadoc(@Nonnull String javadoc) {
+	public void ensureJavadoc(@NotNull String javadoc) {
 		ensure(new EnsureMethodJavadoc(javadoc));
 	}
 
-	public void ensureException(@Nonnull String exception) {
+	public void ensureException(@NotNull String exception) {
 		ensure(new MethodThrowsException(exception));
 	}
 
-	public void removeAnnotation(@Nonnull String annotation) {
+	public void removeAnnotation(@NotNull String annotation) {
 		ensure(new RemoveMethodAnnotation(annotation));
 	}
 }

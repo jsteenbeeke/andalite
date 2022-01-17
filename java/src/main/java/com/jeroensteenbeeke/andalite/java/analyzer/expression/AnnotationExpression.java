@@ -17,17 +17,17 @@ package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class AnnotationExpression extends AnalyzedExpression {
 	private final String qualifiedName;
 
-	public AnnotationExpression(@Nonnull Location location, @Nonnull String qualifiedName) {
+	public AnnotationExpression(@NotNull Location location, @NotNull String qualifiedName) {
 		super(location);
 		this.qualifiedName = qualifiedName;
 	}
 
-	@Nonnull
+	@NotNull
 	public String getQualifiedName() {
 		return qualifiedName;
 	}

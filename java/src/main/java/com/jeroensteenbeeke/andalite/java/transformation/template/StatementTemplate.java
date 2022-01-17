@@ -4,7 +4,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.ConstructorOperationBui
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class StatementTemplate implements ConstructorElementTemplate, MethodElementTemplate{
 	private final String statement;
@@ -34,7 +34,7 @@ public class StatementTemplate implements ConstructorElementTemplate, MethodElem
 	}
 
 	@Override
-	public void onMethod(@Nonnull JavaRecipeBuilder builder, @Nonnull MethodOperationBuilder methodBuilder) {
+	public void onMethod(@NotNull JavaRecipeBuilder builder, @NotNull MethodOperationBuilder methodBuilder) {
 		if (verification) {
 			methodBuilder.inBody().ensureStatement(statement);
 		} else {

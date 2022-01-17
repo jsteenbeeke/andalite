@@ -26,7 +26,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilationUnitOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Ensures that a given compilation unit will have a class with default
@@ -52,7 +52,7 @@ public class EnsurePackageClass implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedSourceFile input) {
+	public List<Transformation> perform(@NotNull AnalyzedSourceFile input) {
 		if (input
 			.getClasses()
 			.stream()
@@ -81,7 +81,7 @@ public class EnsurePackageClass implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedSourceFile input) {
+	public ActionResult verify(@NotNull AnalyzedSourceFile input) {
 		for (AnalyzedClass analyzedClass : input.getClasses()) {
 			if (analyzedClass.getAccessModifier() == AccessModifier.DEFAULT
 				&& expectedClassName.equals(analyzedClass.getClassName())) {

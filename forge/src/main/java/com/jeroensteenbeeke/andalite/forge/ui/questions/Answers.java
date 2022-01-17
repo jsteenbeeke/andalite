@@ -5,7 +5,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 import com.jeroensteenbeeke.lux.TypedResult;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.Map;
 
@@ -26,37 +26,37 @@ public class Answers {
 		return new Answers(builder.put(key, value).build());
 	}
 
-	public boolean hasAnswer(@Nonnull String key) {
+	public boolean hasAnswer(@NotNull String key) {
 		return answers.containsKey(key);
 	}
 
-	public String getString(@Nonnull String key) {
+	public String getString(@NotNull String key) {
 		return getAnswer(String.class, key);
 	}
 
-	public int getInteger(@Nonnull String key) {
+	public int getInteger(@NotNull String key) {
 		return Integer.parseInt(getAnswer(String.class,
 										  key));
 	}
 
-	public File getFile(@Nonnull String key) {
+	public File getFile(@NotNull String key) {
 		return getAnswer(File.class, key);
 	}
 
-	public boolean getBoolean(@Nonnull String key) {
+	public boolean getBoolean(@NotNull String key) {
 		return getAnswer(Boolean.class, key);
 	}
 
-	public AnalyzedSourceFile getSource(@Nonnull String key) {
+	public AnalyzedSourceFile getSource(@NotNull String key) {
 		return getAnswer(AnalyzedSourceFile.class, key);
 	}
 
-	private boolean hasAnswer(@Nonnull Class<?> type, @Nonnull String key) {
+	private boolean hasAnswer(@NotNull Class<?> type, @NotNull String key) {
 		return answers.containsKey(key) && type.isAssignableFrom(answers.get(key).getClass());
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> T getAnswer(@Nonnull Class<T> type, @Nonnull String key) {
+	private <T> T getAnswer(@NotNull Class<T> type, @NotNull String key) {
 		if (answers.containsKey(key)) {
 			Object object = answers.get(key);
 

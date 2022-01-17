@@ -16,7 +16,7 @@
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.github.javaparser.ast.Modifier;
 import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
@@ -34,8 +34,8 @@ public final class AnalyzedField extends AccessModifiable<AnalyzedField, Analyze
 
 	private AnalyzedExpression initializationExpression;
 
-	public AnalyzedField(@Nonnull Location location, List<Modifier.Keyword> modifiers,
-			@Nonnull String name, @Nonnull AnalyzedType type) {
+	public AnalyzedField(@NotNull Location location, List<Modifier.Keyword> modifiers,
+			@NotNull String name, @NotNull AnalyzedType type) {
 		super(location, modifiers);
 		this.name = name;
 		this.type = type;
@@ -55,12 +55,12 @@ public final class AnalyzedField extends AccessModifiable<AnalyzedField, Analyze
 		this.initializationExpression = initializationExpression;
 	}
 
-	@Nonnull
+	@NotNull
 	public String getName() {
 		return name;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedType getType() {
 		return type;
 	}

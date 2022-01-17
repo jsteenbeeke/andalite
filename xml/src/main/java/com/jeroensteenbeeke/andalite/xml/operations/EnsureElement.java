@@ -14,17 +14,16 @@
  */
 package com.jeroensteenbeeke.andalite.xml.operations;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.jeroensteenbeeke.andalite.xml.IElementOperation;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.jeroensteenbeeke.andalite.xml.IElementOperation;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class EnsureElement implements IElementOperation {
 
@@ -38,7 +37,7 @@ public class EnsureElement implements IElementOperation {
 		private AddInitialAttribute(String elementName, String attributeName) {
 			this.elementName = elementName;
 			this.attributeName = attributeName;
-			this.attr = Maps.newHashMap();
+			this.attr = new HashMap<>();
 		}
 
 		private AddInitialAttribute(String elementName, String attributeName,
@@ -67,7 +66,7 @@ public class EnsureElement implements IElementOperation {
 		}
 
 		public EnsureElement withNoInitialAttributes() {
-			return new EnsureElement(elementName, ImmutableMap.of());
+			return new EnsureElement(elementName, new HashMap<>());
 		}
 	}
 
@@ -135,7 +134,7 @@ public class EnsureElement implements IElementOperation {
 	}
 
 	@Override
-	public String getDescription() {
+	public @NotNull String getDescription() {
 		return String.format("Ensure that there exists an element %s%s",
 				elementName, formatAttributes());
 	}

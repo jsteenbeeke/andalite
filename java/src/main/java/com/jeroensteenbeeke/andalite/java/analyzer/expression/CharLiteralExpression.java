@@ -14,14 +14,14 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 
 public class CharLiteralExpression extends LiteralExpression<Character> {
 
-	public CharLiteralExpression(@Nonnull final Location location,
-			@Nonnull final Character value) {
+	public CharLiteralExpression(@NotNull final Location location,
+			@NotNull final Character value) {
 		super(location, value);
 	}
 

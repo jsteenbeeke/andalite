@@ -1,6 +1,6 @@
 package com.jeroensteenbeeke.andalite.java.transformation.template;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -54,7 +54,7 @@ final class ClassReference implements TypeReference {
 		return Objects.hash(prefix, name);
 	}
 
-	public static ClassReference of(@Nonnull String fqdn) {
+	public static ClassReference of(@NotNull String fqdn) {
 		int lastDotIndex = fqdn.lastIndexOf('.');
 
 		if (lastDotIndex == -1) {

@@ -21,18 +21,18 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 public class AnalyzedInterface extends ContainingDenomination<AnalyzedInterface, AnalyzedInterface.InterfaceInsertionPoint> {
 
-	public AnalyzedInterface(@Nonnull AnalyzedSourceFile sourceFile,
-							 @Nonnull Location location,
-							 @Nonnull List<Modifier.Keyword> modifiers,
-							 @Nonnull String packageName,
-							 @Nonnull LocatedName<SimpleName> name) {
+	public AnalyzedInterface(@NotNull AnalyzedSourceFile sourceFile,
+							 @NotNull Location location,
+							 @NotNull List<Modifier.Keyword> modifiers,
+							 @NotNull String packageName,
+							 @NotNull LocatedName<SimpleName> name) {
 		super(sourceFile, location, modifiers, packageName, name);
 	}
 
@@ -65,9 +65,9 @@ public class AnalyzedInterface extends ContainingDenomination<AnalyzedInterface,
 		callback.newline();
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	public Transformation insertAt(@Nonnull InterfaceInsertionPoint insertionPoint, @Nonnull String replacement) {
+	public Transformation insertAt(@NotNull InterfaceInsertionPoint insertionPoint, @NotNull String replacement) {
 		if (insertionPoint == InterfaceInsertionPoint.AT_SUPERINTERFACE_POINT && getInterfaces().isEmpty()) {
 			return super.insertAt(insertionPoint, " extends " + replacement);
 		}

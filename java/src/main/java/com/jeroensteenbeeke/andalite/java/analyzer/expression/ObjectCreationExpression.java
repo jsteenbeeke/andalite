@@ -24,7 +24,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.java.analyzer.types.ClassOrInterface;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,8 +41,8 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 
 	private boolean diamond = false;
 
-	public ObjectCreationExpression(@Nonnull Location location,
-			@Nonnull ClassOrInterface type) {
+	public ObjectCreationExpression(@NotNull Location location,
+			@NotNull ClassOrInterface type) {
 		super(location);
 		this.type = type;
 		this.arguments = Lists.newArrayList();
@@ -58,7 +58,7 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 		return declaredAnonymousClass;
 	}
 
-	@Nonnull
+	@NotNull
 	public ClassOrInterface getType() {
 		return type;
 	}
@@ -77,7 +77,7 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 		this.scope = scope;
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedExpression> getArguments() {
 		return ImmutableList.copyOf(arguments);
 	}
@@ -88,7 +88,7 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 	 * @non.public
 	 */
 	public void setDeclaredAnonymousClass(
-			@Nonnull AnalyzedClass declaredAnonymousClass) {
+			@NotNull AnalyzedClass declaredAnonymousClass) {
 		this.declaredAnonymousClass = declaredAnonymousClass;
 	}
 
@@ -97,11 +97,11 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 	 *            The expression to add as constructor argument
 	 * @non.public
 	 */
-	public void addArgument(@Nonnull AnalyzedExpression expression) {
+	public void addArgument(@NotNull AnalyzedExpression expression) {
 		arguments.add(expression);
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedType> getTypeArguments() {
 		return ImmutableList.copyOf(typeArguments);
 	}
@@ -111,7 +111,7 @@ public class ObjectCreationExpression extends AnalyzedExpression {
 	 *            The type argument to add to the list
 	 * @non.public
 	 */
-	public void addTypeArgument(@Nonnull AnalyzedType type) {
+	public void addTypeArgument(@NotNull AnalyzedType type) {
 		typeArguments.add(type);
 	}
 

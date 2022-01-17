@@ -14,13 +14,12 @@
  */
 package com.jeroensteenbeeke.andalite.xml;
 
-import java.util.Map;
-
-import org.w3c.dom.Element;
-
-import com.google.common.collect.Maps;
 import com.jeroensteenbeeke.andalite.xml.navigation.SubElementNavigation;
 import com.jeroensteenbeeke.andalite.xml.navigation.WithAttributesNavigation;
+import org.w3c.dom.Element;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class XMLAttributeFilterableElementContextBuilder extends
 		XMLElementContextBuilder {
@@ -30,7 +29,7 @@ public class XMLAttributeFilterableElementContextBuilder extends
 	public XMLAttributeFilterableElementContextBuilder(
 			IStepCollector collector, IXMLNavigation<Element> navigation) {
 		super(collector, navigation);
-		this.attributes = Maps.newHashMap();
+		this.attributes = new HashMap<>();
 	}
 
 	@Override

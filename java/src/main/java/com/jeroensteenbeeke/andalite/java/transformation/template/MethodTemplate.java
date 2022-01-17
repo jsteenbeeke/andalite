@@ -5,7 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.*;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class MethodTemplate implements ClassElementTemplate, InterfaceElementTemplate, EnumElementTemplate, EnumConstantElementTemplate {
 	private final TypeReference type;
@@ -32,7 +32,7 @@ public class MethodTemplate implements ClassElementTemplate, InterfaceElementTem
 		this.parameters = parameters;
 	}
 
-	public MethodTemplate withAccessModifier(@Nonnull AccessModifier accessModifier) {
+	public MethodTemplate withAccessModifier(@NotNull AccessModifier accessModifier) {
 		return new MethodTemplate(type, name, accessModifier, shouldBeFinal, templates, parameters);
 	}
 
@@ -150,7 +150,7 @@ public class MethodTemplate implements ClassElementTemplate, InterfaceElementTem
 		ensureParametersAndRunTemplates(builder, interfaceMethodLocator);
 	}
 
-	private <T extends AbstractMethodBuilder<MethodOperationBuilder,T>> void ensureParametersAndRunTemplates(@Nonnull JavaRecipeBuilder builder, @Nonnull T methodLocator) {
+	private <T extends AbstractMethodBuilder<MethodOperationBuilder,T>> void ensureParametersAndRunTemplates(@NotNull JavaRecipeBuilder builder, @NotNull T methodLocator) {
 		for (ParameterTemplate parameter : parameters) {
 			methodLocator = methodLocator
 				.withParameter(parameter.getName())

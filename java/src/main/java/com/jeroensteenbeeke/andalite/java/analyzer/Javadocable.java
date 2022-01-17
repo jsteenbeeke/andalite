@@ -1,6 +1,6 @@
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public interface Javadocable {
@@ -12,5 +12,5 @@ public interface Javadocable {
 	/**
 	 * @non.public
 	 */
-	void setJavadoc(@Nonnull String javadoc);
+	void setJavadoc(@NotNull String javadoc);
 }

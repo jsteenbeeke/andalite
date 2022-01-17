@@ -94,9 +94,16 @@
 
 			<!-- Test Dependencies -->
 			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-api</artifactId>
+				<version>${junit.jupiter.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-engine</artifactId>
+				<version>${junit.jupiter.version}</version>
 				<scope>test</scope>
 			</dependency>
 
@@ -120,19 +127,11 @@
 				<scope>test</scope>
 			</dependency>
 
-
-			<!-- Guava -->
-			<dependency>
-				<groupId>com.google.guava</groupId>
-				<artifactId>guava</artifactId>
-				<version>${guava.version}</version>
-			</dependency>
-
 			<!-- Code Integrity -->
 			<dependency>
-				<groupId>com.google.code.findbugs</groupId>
+				<groupId>org.jetbrains</groupId>
 				<artifactId>annotations</artifactId>
-				<version>${findbugs.annotations.version}</version>
+				<version>${jetbrains.annotations.version}</version>
 			</dependency>
 
 			<!-- Java parsing -->
@@ -181,7 +180,19 @@
 				<version>${antlr.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>io.vavr</groupId>
+				<artifactId>vavr</artifactId>
+				<version>${vavr.version}</version>
+			</dependency>
+
 			<!-- Modules -->
+			<dependency>
+				<groupId>com.jeroensteenbeeke.andalite</groupId>
+				<artifactId>andalite-core-test</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
 			<dependency>
 				<groupId>com.jeroensteenbeeke.andalite</groupId>
 				<artifactId>andalite-core</artifactId>
@@ -345,12 +356,13 @@
 		<hamcrest.version>1.3</hamcrest.version>
 		<javaee.version>7.0</javaee.version>
 		<findbugs.annotations.version>3.0.0</findbugs.annotations.version>
-		<javaparser.version>3.23.0</javaparser.version>
-		<junit.version>4.13.1</junit.version>
+		<javaparser.version>3.24.0</javaparser.version>
+		<junit.jupiter.version>5.7.2</junit.jupiter.version>
 		<lux.version>1.1-SNAPSHOT</lux.version>
 		<parser.version>1.0.17</parser.version>
 		<slf4j.api.version>1.7.10</slf4j.api.version>
 		<spring.java.format.version>0.0.28</spring.java.format.version>
+		<vavr.version>0.10.4</vavr.version>
 
 		<!-- Plugin Versions -->
 		<maven.antlr.plugin.version>4.5.3</maven.antlr.plugin.version>
@@ -367,9 +379,11 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<argLine>-Djdk.net.URLClassPath.disableClassPathURLCheck=true</argLine>
 		<archunit.version>0.21.0</archunit.version>
+		<jetbrains.annotations.version>23.0.0</jetbrains.annotations.version>
 	</properties>
 
 	<modules>
+		<module>core-test</module>
 		<module>core</module>
 		<module>testbase</module>
 		<module>java</module>

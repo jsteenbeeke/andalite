@@ -14,19 +14,18 @@
  */
 package com.jeroensteenbeeke.andalite.xml.util;
 
-import javax.xml.transform.ErrorListener;
-import javax.xml.transform.TransformerException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.xml.transform.ErrorListener;
+import javax.xml.transform.TransformerException;
 
 public class AndaliteErrorListener implements ErrorListener {
 	private static final Logger log = LoggerFactory
 			.getLogger(AndaliteErrorListener.class);
 
 	@Override
-	public void warning(TransformerException exception)
-			throws TransformerException {
+	public void warning(TransformerException exception) {
 		log.warn("Transformer Warning: {}", exception.getMessage());
 
 	}

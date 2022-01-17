@@ -6,7 +6,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.lux.ActionResult;
@@ -30,7 +30,7 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedEnum input)
+	public List<Transformation> perform(@NotNull AnalyzedEnum input)
 			throws OperationException {
 		Optional<OperationException> validationError = checkEnum(input,
 				OperationException::new, Optional::empty);
@@ -50,7 +50,7 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedEnum input) {
+	public ActionResult verify(@NotNull AnalyzedEnum input) {
 		Optional<ActionResult> checked = checkEnum(input, ActionResult::error,
 				() -> Optional.of(ActionResult.error(
 						"Enum constant %s not found", name)));
@@ -58,7 +58,7 @@ public class EnsureEnumConstantOperation implements IEnumOperation {
 		return checked.orElse(ActionResult.ok());
 	}
 
-	@Nonnull
+	@NotNull
 	private <T> Optional<T> checkEnum(AnalyzedEnum input,
 			Function<String, T> errorMessageToReturnType,
 			Supplier<Optional<T>> notFound) {

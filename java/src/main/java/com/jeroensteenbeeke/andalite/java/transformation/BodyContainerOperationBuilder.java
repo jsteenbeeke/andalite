@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
@@ -36,18 +36,18 @@ public abstract class BodyContainerOperationBuilder<T extends IBodyContainer<T, 
 		super(collector, navigation);
 	}
 
-	@Nonnull
+	@NotNull
 	public IfStatementLocator<T,I> inIfStatement() {
 		return new IfStatementLocator<>(this);
 	}
 
-	@Nonnull
+	@NotNull
 	public StatementOperationBuilder<ReturnStatement> forReturnStatement() {
 		return new StatementOperationBuilder<>(getCollector(),
 											   new ReturnStatementNavigation<>(getNavigation()));
 	}
 
-	@Nonnull
+	@NotNull
 	public <S extends AnalyzedStatement<S,?>> StatementOperationBuilder<S> afterStatement(
 			String statement) {
 		String stmt = statement.endsWith(";") ? statement.substring(0, statement.length()-1) : statement;
@@ -56,7 +56,7 @@ public abstract class BodyContainerOperationBuilder<T extends IBodyContainer<T, 
 				new AfterStatementNavigation<>(stmt, getNavigation()));
 	}
 
-	public void ensureReturnAsLastStatement(@Nonnull String expression) {
+	public void ensureReturnAsLastStatement(@NotNull String expression) {
 		ensure(new EnsureEndReturnStatement<>(expression) {
 
 			@Override
@@ -66,7 +66,7 @@ public abstract class BodyContainerOperationBuilder<T extends IBodyContainer<T, 
 		});
 	}
 
-	public EnsureStatement<T,I> ensureStatement(@Nonnull String statement) {
+	public EnsureStatement<T,I> ensureStatement(@NotNull String statement) {
 		EnsureStatement<T, I> ensureStatement = new EnsureStatement<>(statement) {
 
 			@Override
@@ -79,7 +79,7 @@ public abstract class BodyContainerOperationBuilder<T extends IBodyContainer<T, 
 		return ensureStatement;
 	}
 
-	public void ensureIfStatement(@Nonnull String condition) {
+	public void ensureIfStatement(@NotNull String condition) {
 		ensure(new HasIfStatementOperation<>(condition));
 	}
 

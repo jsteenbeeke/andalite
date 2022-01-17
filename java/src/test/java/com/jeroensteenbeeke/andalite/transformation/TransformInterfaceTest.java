@@ -8,7 +8,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.lux.TypedResult;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,9 +18,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TransformInterfaceTest extends DummyAwareTest {
 	@Test
@@ -88,8 +88,5 @@ public class TransformInterfaceTest extends DummyAwareTest {
 		assertTrue(methodsByName.containsKey("c"));
 		assertTrue(methodsByName.containsKey("d"));
 		assertTrue(methodsByName.containsKey("e"));
-
-
-
 	}
 }

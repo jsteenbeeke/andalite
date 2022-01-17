@@ -18,19 +18,19 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
 public class BreakStatement extends BaseStatement<BreakStatement> {
 	private final String labelId;
 
-	public BreakStatement(@Nonnull Location location, @Nullable String labelId) {
+	public BreakStatement(@NotNull Location location, @Nullable String labelId) {
 		super(location);
 		this.labelId = labelId;
 	}
 
-	@Nonnull
+	@NotNull
 	public Optional<String> getExpression() {
 		return Optional.ofNullable(labelId);
 	}

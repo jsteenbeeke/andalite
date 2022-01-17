@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -22,13 +22,13 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 public abstract class LiteralExpression<T> extends AnalyzedExpression {
 	private final T value;
 
-	public LiteralExpression(@Nonnull final Location location,
-			@Nonnull final T value) {
+	public LiteralExpression(@NotNull final Location location,
+			@NotNull final T value) {
 		super(location);
 		this.value = value;
 	}
 
-	@Nonnull
+	@NotNull
 	public T getValue() {
 		return value;
 	}

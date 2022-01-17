@@ -30,7 +30,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class HasIfStatementOperation<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> implements IBodyContainerOperation<T,I> {
 	private static final Logger logger = LoggerFactory
@@ -44,7 +44,7 @@ public class HasIfStatementOperation<T extends IBodyContainer<T, I>, I extends E
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull T input)
+	public List<Transformation> perform(@NotNull T input)
 			throws OperationException {
 		if (input.isAbstract()) {
 			throw new OperationException(
@@ -79,7 +79,7 @@ public class HasIfStatementOperation<T extends IBodyContainer<T, I>, I extends E
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull T input) {
+	public ActionResult verify(@NotNull T input) {
 		for (AnalyzedStatement analyzedStatement : input.getStatements()) {
 			if (analyzedStatement instanceof IfStatement) {
 				IfStatement stmt = (IfStatement) analyzedStatement;

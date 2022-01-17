@@ -8,7 +8,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureE
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEnumField;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureField;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnumConstantScopeOperationBuilder extends AbstractOperationBuilder<AnalyzedEnumConstant, IEnumConstantOperation> {
 	protected EnumConstantScopeOperationBuilder(IStepCollector collector, IJavaNavigation<AnalyzedEnumConstant> navigation) {
@@ -21,13 +21,13 @@ public class EnumConstantScopeOperationBuilder extends AbstractOperationBuilder<
 		return new EnsureEnumConstantMethodBuilder(this::ensure);
 	}
 
-	@Nonnull
+	@NotNull
 	public EnumConstantMethodLocator forMethod() {
 		return new EnumConstantMethodLocator(getCollector(), getNavigation());
 	}
 
-	@Nonnull
-	public ClassScopeOperationBuilder.WithType ensureField(@Nonnull String name) {
+	@NotNull
+	public ClassScopeOperationBuilder.WithType ensureField(@NotNull String name) {
 		return type -> accessModifier -> {
 			EnsureEnumConstantField operation = new EnsureEnumConstantField(name, type, accessModifier);
 			ensure(operation);
@@ -35,7 +35,7 @@ public class EnumConstantScopeOperationBuilder extends AbstractOperationBuilder<
 		};
 	}
 
-	@Nonnull
+	@NotNull
 	public FieldOperationBuilder forField(String name) {
 		return new FieldOperationBuilder(getCollector(), getNavigation(), name);
 	}

@@ -14,18 +14,19 @@
  */
 package com.jeroensteenbeeke.andalite.testbase;
 
+import com.google.common.collect.Sets;
+import com.google.common.io.Files;
+import org.junit.jupiter.api.AfterAll;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-import org.junit.AfterClass;
-
-import com.google.common.collect.Sets;
-import com.google.common.io.Files;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class TempFileCleaningTest {
 
-	private static Set<File> createdTempFiles = Sets.newHashSet();
+	private static final Set<File> createdTempFiles = Sets.newHashSet();
 
 	protected static File newTempFile(String prefix, String suffix)
 			throws IOException {
@@ -38,10 +39,10 @@ public abstract class TempFileCleaningTest {
 		return new Copyer(pathName);
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void removeTempFiles() {
 		for (File file : createdTempFiles) {
-			file.delete();
+			assertTrue(file.delete());
 		}
 	}
 

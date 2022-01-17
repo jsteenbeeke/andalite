@@ -15,7 +15,7 @@
 
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
@@ -69,7 +69,7 @@ public class InterfaceScopeOperationBuilder extends
 	}
 
 
-	public void ensureSuperInterface(@Nonnull String iface) {
+	public void ensureSuperInterface(@NotNull String iface) {
 		ensure(new EnsureSuperInterface(iface));
 	}
 }

@@ -7,7 +7,7 @@ import com.jeroensteenbeeke.andalite.core.IReplaceable;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class LocatedName<T extends Node & NodeWithIdentifier<T>> implements IReplaceable {
@@ -17,18 +17,18 @@ public class LocatedName<T extends Node & NodeWithIdentifier<T>> implements IRep
 
 	private final T raw;
 
-	public LocatedName(@Nonnull T name, @Nonnull Location location) {
+	public LocatedName(@NotNull T name, @NotNull Location location) {
 		this.name = name.getIdentifier();
 		this.location = location;
 		this.raw = name;
 	}
 
-	@Nonnull
+	@NotNull
 	public String getName() {
 		return name;
 	}
 
-	@Nonnull
+	@NotNull
 	public Location getLocation() {
 		return location;
 	}

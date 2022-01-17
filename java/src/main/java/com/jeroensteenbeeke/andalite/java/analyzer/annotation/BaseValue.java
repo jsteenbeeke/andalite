@@ -21,7 +21,7 @@ import com.jeroensteenbeeke.andalite.core.Locatable;
 import com.jeroensteenbeeke.andalite.core.Location;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public abstract class BaseValue<T, IPP extends IInsertionPointProvider<IPP,I>, I extends Enum<I> & IInsertionPoint<IPP>> extends Locatable implements IInsertionPointProvider<IPP,I> {
@@ -29,8 +29,8 @@ public abstract class BaseValue<T, IPP extends IInsertionPointProvider<IPP,I>, I
 
 	private final T value;
 
-	public BaseValue(@Nonnull Location location, @Nullable String name,
-			@Nonnull T value) {
+	public BaseValue(@NotNull Location location, @Nullable String name,
+			@NotNull T value) {
 		super(location);
 		this.name = name;
 		this.value = value;
@@ -41,7 +41,7 @@ public abstract class BaseValue<T, IPP extends IInsertionPointProvider<IPP,I>, I
 		return name;
 	}
 
-	@Nonnull
+	@NotNull
 	public final T getValue() {
 		return value;
 	}

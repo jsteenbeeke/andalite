@@ -17,16 +17,16 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 import java.util.List;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.ILocatable;
 
 public interface IAnnotatable extends ILocatable {
-	@Nonnull
+	@NotNull
 	List<AnalyzedAnnotation> getAnnotations();
 
-	boolean hasAnnotation(@Nonnull String type);
+	boolean hasAnnotation(@NotNull String type);
 
 	@CheckForNull
-	AnalyzedAnnotation getAnnotation(@Nonnull String type);
+	AnalyzedAnnotation getAnnotation(@NotNull String type);
 }

@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -29,11 +29,11 @@ public class BinaryExpression extends AnalyzedExpression {
 
 		private final String javaRepresentation;
 
-		private Operator(@Nonnull String javaRepresentation) {
+		private Operator(@NotNull String javaRepresentation) {
 			this.javaRepresentation = javaRepresentation;
 		}
 
-		@Nonnull
+		@NotNull
 		public String getJavaRepresentation() {
 			return javaRepresentation;
 		}
@@ -45,26 +45,26 @@ public class BinaryExpression extends AnalyzedExpression {
 
 	private final AnalyzedExpression right;
 
-	public BinaryExpression(@Nonnull Location location,
-			@Nonnull AnalyzedExpression left, @Nonnull Operator operator,
-			@Nonnull AnalyzedExpression right) {
+	public BinaryExpression(@NotNull Location location,
+			@NotNull AnalyzedExpression left, @NotNull Operator operator,
+			@NotNull AnalyzedExpression right) {
 		super(location);
 		this.left = left;
 		this.operator = operator;
 		this.right = right;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedExpression getLeft() {
 		return left;
 	}
 
-	@Nonnull
+	@NotNull
 	public Operator getOperator() {
 		return operator;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedExpression getRight() {
 		return right;
 	}

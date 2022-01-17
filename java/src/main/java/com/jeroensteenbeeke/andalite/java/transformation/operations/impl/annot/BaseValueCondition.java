@@ -16,7 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot;
 
 import java.util.Objects;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedAnnotation;
@@ -31,7 +31,7 @@ public abstract class BaseValueCondition<T> implements InnerAnnotationCondition 
 	private final T expectedValue;
 
 	protected BaseValueCondition(@Nullable String name,
-			@Nonnull Class<? extends BaseValue<T,?,?>> expectedType,
+			@NotNull Class<? extends BaseValue<T,?,?>> expectedType,
 			@Nullable T expectedValue) {
 		super();
 		this.name = name;

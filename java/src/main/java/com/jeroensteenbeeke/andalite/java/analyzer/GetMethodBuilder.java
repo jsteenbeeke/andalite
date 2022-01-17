@@ -17,7 +17,7 @@ package com.jeroensteenbeeke.andalite.java.analyzer;
 import com.jeroensteenbeeke.andalite.java.transformation.AbstractMethodBuilder;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class GetMethodBuilder
 		extends AbstractMethodBuilder<AnalyzedMethod, GetMethodBuilder> {
@@ -29,7 +29,7 @@ public class GetMethodBuilder
 	}
 
 	@Override
-	public AnalyzedMethod named(@Nonnull String name) {
+	public AnalyzedMethod named(@NotNull String name) {
 		for (AnalyzedMethod analyzedMethod : containingDenomination
 				.getMethods()) {
 			if (name.equals(analyzedMethod.getName())) {

@@ -16,7 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 
 import java.util.List;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
@@ -35,9 +35,9 @@ public class InterfaceMethodNavigation extends
 	private final List<ParameterDescriptor> descriptors;
 
 	public InterfaceMethodNavigation(
-			@Nonnull IJavaNavigation<AnalyzedInterface> classNavigation,
-			@Nonnull String name, @Nullable String type,
-			@Nonnull List<ParameterDescriptor> descriptors) {
+			@NotNull IJavaNavigation<AnalyzedInterface> classNavigation,
+			@NotNull String name, @Nullable String type,
+			@NotNull List<ParameterDescriptor> descriptors) {
 		super(classNavigation);
 		this.name = name;
 		this.type = type;

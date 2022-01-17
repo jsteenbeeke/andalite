@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.annotation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
@@ -22,8 +22,8 @@ import com.jeroensteenbeeke.andalite.core.IOutputCallback;
 import com.jeroensteenbeeke.andalite.core.Location;
 
 public class FieldAccessValue extends BaseValue<String,FieldAccessValue, FieldAccessValue.FieldAccessValueInsertionPoint> {
-	public FieldAccessValue(@Nonnull Location location, @Nullable String name,
-			@Nullable String scope, @Nonnull String value) {
+	public FieldAccessValue(@NotNull Location location, @Nullable String name,
+			@Nullable String scope, @NotNull String value) {
 		super(location, name, createValue(scope, value));
 	}
 
@@ -46,7 +46,7 @@ public class FieldAccessValue extends BaseValue<String,FieldAccessValue, FieldAc
 	}
 
 	private static String createValue(@Nullable String scope,
-			@Nonnull String value) {
+			@NotNull String value) {
 		if (scope != null) {
 			return String.format("%s.%s", scope, value);
 		}

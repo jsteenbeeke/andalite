@@ -6,7 +6,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigat
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.*;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnumScopeOperationBuilder
 		extends AbstractOperationBuilder<AnalyzedEnum, IEnumOperation> {
@@ -24,32 +24,32 @@ public class EnumScopeOperationBuilder
 		return new EnsureEnumMethodBuilder(this::ensure);
 	}
 
-	@Nonnull
+	@NotNull
 	public HasConstructorBuilder<EnsureEnumConstructorOperation,AnalyzedEnum, AnalyzedEnum.EnumInsertionPoint> ensureConstructor() {
 		return new HasConstructorBuilder<>(this::ensure,
 			EnsureEnumConstructorOperation::new);
 	}
 
-	public void ensureImplementedInterface(@Nonnull String iface) {
+	public void ensureImplementedInterface(@NotNull String iface) {
 		ensure(new EnsureEnumInterface(iface));
 	}
 
-	@Nonnull
+	@NotNull
 	public EnumConstructorLocator forConstructor() {
 		return new EnumConstructorLocator(getCollector(), getNavigation());
 	}
 
-	@Nonnull
+	@NotNull
 	public EnumMethodLocator forMethod() {
 		return new EnumMethodLocator(getCollector(), getNavigation());
 	}
 
-	public EnumConstantScopeOperationBuilder forConstant(@Nonnull String constantName) {
+	public EnumConstantScopeOperationBuilder forConstant(@NotNull String constantName) {
 		return new EnumConstantScopeOperationBuilder(getCollector(), new EnumConstantNavigation(getNavigation(), constantName));
 	}
 
-	@Nonnull
-	public ClassScopeOperationBuilder.WithType ensureField(@Nonnull String name) {
+	@NotNull
+	public ClassScopeOperationBuilder.WithType ensureField(@NotNull String name) {
 		return type -> accessModifier -> {
 			EnsureEnumField operation = new EnsureEnumField(name, type, accessModifier);
 			ensure(operation);
@@ -57,7 +57,7 @@ public class EnumScopeOperationBuilder
 		};
 	}
 
-	@Nonnull
+	@NotNull
 	public FieldOperationBuilder forField(String name) {
 		return new FieldOperationBuilder(getCollector(), getNavigation(), name);
 	}

@@ -14,14 +14,18 @@
  */
 package com.jeroensteenbeeke.andalite.xml.navigation;
 
+import org.jetbrains.annotations.NotNull;
+
 public class RootElementNavigation implements IElementNavigation {
 
 	@Override
+	@NotNull
 	public String getXPathExpression() {
 		return "/";
 	}
 
 	@Override
+	@NotNull
 	public String getDescription() {
 		return "Document root";
 	}

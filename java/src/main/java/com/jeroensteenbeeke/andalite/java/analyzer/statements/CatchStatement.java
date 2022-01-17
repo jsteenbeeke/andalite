@@ -22,7 +22,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.java.analyzer.IAnnotationAddable;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +45,7 @@ public class CatchStatement extends BaseStatement<CatchStatement> implements IAn
 		this.annotations = Lists.newArrayList();
 	}
 
-	public CatchStatement addAnnotation(@Nonnull AnalyzedAnnotation annotation) {
+	public CatchStatement addAnnotation(@NotNull AnalyzedAnnotation annotation) {
 		annotations.add(annotation);
 		return this;
 	}

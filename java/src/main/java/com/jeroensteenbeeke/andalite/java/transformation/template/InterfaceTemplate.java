@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class InterfaceTemplate {
 	private final ImmutableList<TypeReference> interfaces;
@@ -16,7 +16,7 @@ public class InterfaceTemplate {
 		this.templates = templates;
 	}
 
-	public InterfaceTemplate withExtendedInterface(@Nonnull String fqdn) {
+	public InterfaceTemplate withExtendedInterface(@NotNull String fqdn) {
 		return new InterfaceTemplate(ImmutableList.<TypeReference>builder()
 			.addAll(interfaces)
 			.add(TypeReference.of(fqdn))

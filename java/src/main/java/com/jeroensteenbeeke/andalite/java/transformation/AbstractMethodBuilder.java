@@ -15,7 +15,7 @@
 package com.jeroensteenbeeke.andalite.java.transformation;
 
 import javax.annotation.CheckForNull;
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 
@@ -41,5 +41,5 @@ public abstract class AbstractMethodBuilder<T, B extends AbstractMethodBuilder<T
 	}
 
 	@CheckForNull
-	public abstract T named(@Nonnull String name);
+	public abstract T named(@NotNull String name);
 }

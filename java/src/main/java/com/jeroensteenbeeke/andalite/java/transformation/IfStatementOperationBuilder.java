@@ -24,7 +24,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureE
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureNextStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureStatementComment;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class IfStatementOperationBuilder<S extends AnalyzedStatement<? super S, ?>>
 		extends AbstractOperationBuilder<S, IJavaOperation<S>> {
@@ -40,12 +40,12 @@ public class IfStatementOperationBuilder<S extends AnalyzedStatement<? super S, 
 	}
 
 	@SuppressWarnings("unchecked")
-	public <I extends Enum<I> & IInsertionPoint<S>> void ensurePrefixComment(@Nonnull String comment) {
+	public <I extends Enum<I> & IInsertionPoint<S>> void ensurePrefixComment(@NotNull String comment) {
 		ensure((IJavaOperation<S>) new EnsureStatementComment<I>(comment, true));
 	}
 
 	@SuppressWarnings("unchecked")
-	public <I extends Enum<I> & IInsertionPoint<S>> void ensureSuffixComment(@Nonnull String comment) {
+	public <I extends Enum<I> & IInsertionPoint<S>> void ensureSuffixComment(@NotNull String comment) {
 		ensure((IJavaOperation<S>) new EnsureStatementComment<I>(comment,
 																 false));
 	}

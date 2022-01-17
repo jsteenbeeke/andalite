@@ -14,6 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.xml.navigation;
 
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -22,7 +23,7 @@ import com.jeroensteenbeeke.andalite.xml.IXMLNavigation;
 
 public interface IElementNavigation extends IXMLNavigation<Element> {
 	@Override
-	public default Element castNode(Node node) {
+	public default @NotNull Element castNode(Node node) {
 		if (node instanceof Element) {
 			return (Element) node;
 		}

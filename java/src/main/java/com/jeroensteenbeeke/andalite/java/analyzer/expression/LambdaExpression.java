@@ -19,7 +19,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedParameter;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,18 +28,18 @@ public class LambdaExpression extends AnalyzedExpression {
 
 	private final List<AnalyzedParameter> parameters;
 
-	public LambdaExpression(@Nonnull Location location, @Nonnull AnalyzedStatement bodyStatement, @Nonnull List<AnalyzedParameter> parameters) {
+	public LambdaExpression(@NotNull Location location, @NotNull AnalyzedStatement bodyStatement, @NotNull List<AnalyzedParameter> parameters) {
 		super(location);
 		this.bodyStatement = bodyStatement;
 		this.parameters = parameters;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedStatement getBodyStatement() {
 		return bodyStatement;
 	}
 
-	@Nonnull
+	@NotNull
 	public List<AnalyzedParameter> getParameters() {
 		return parameters;
 	}

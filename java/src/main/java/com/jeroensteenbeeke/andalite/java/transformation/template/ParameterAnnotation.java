@@ -5,23 +5,23 @@ import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterScopeOperationBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class ParameterAnnotation extends AnnotationAdditionTemplate<ParameterAnnotation> implements ParameterElementTemplate {
 	private final TypeReference type;
 
-	ParameterAnnotation(@Nonnull TypeReference type) {
+	ParameterAnnotation(@NotNull TypeReference type) {
 		this(type, ImmutableList.of());
 	}
 
-	private ParameterAnnotation(@Nonnull TypeReference type, @Nonnull ImmutableList<AnnotationValueTemplate<?>> values) {
+	private ParameterAnnotation(@NotNull TypeReference type, @NotNull ImmutableList<AnnotationValueTemplate<?>> values) {
 		super(values);
 		this.type = type;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	protected ParameterAnnotation newInstance(@Nonnull ImmutableList<AnnotationValueTemplate<?>> templates) {
+	protected ParameterAnnotation newInstance(@NotNull ImmutableList<AnnotationValueTemplate<?>> templates) {
 		return new ParameterAnnotation(type, templates);
 	}
 

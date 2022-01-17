@@ -14,13 +14,13 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl.annot;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.LongValue;
 
 public class LongArrayValueCondition extends ArrayValueCondition<Long> {
-	public LongArrayValueCondition(@Nonnull final String name,
-			@Nonnull final Long... values) {
+	public LongArrayValueCondition(@NotNull final String name,
+			@NotNull final Long... values) {
 		super(name, LongValue.class, values);
 	}
 }

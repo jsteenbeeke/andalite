@@ -6,7 +6,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.FileSelectQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.templates.fn.CheckedBiFunction;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class FileSelectionQuestionTemplate extends QuestionTemplate<FileSelectio
 
 	private final QuestionCreator questionCreator;
 
-	FileSelectionQuestionTemplate(@Nonnull String key, @Nonnull String question) {
+	FileSelectionQuestionTemplate(@NotNull String key, @NotNull String question) {
 		super(key, question);
 		this.choices = ImmutableList.of();
 		this.questionCreator = FileSelectQuestion.SimpleFileSelectQuestion::new;
@@ -32,7 +32,7 @@ public class FileSelectionQuestionTemplate extends QuestionTemplate<FileSelectio
 		this.questionCreator = questionCreator;
 	}
 
-	public FileSelectionQuestionTemplate withChoices(@Nonnull File... choices) {
+	public FileSelectionQuestionTemplate withChoices(@NotNull File... choices) {
 		return new FileSelectionQuestionTemplate(getKey(), getQuestion(), getFollowupQuestion(),
 												 ImmutableList.<File>builder()
 													  .addAll(this.choices)
@@ -43,21 +43,21 @@ public class FileSelectionQuestionTemplate extends QuestionTemplate<FileSelectio
 	}
 
 	@Override
-	protected FileSelectionQuestionTemplate newInstance(@Nonnull String key, @Nonnull String question, @Nonnull ImmutableList<FollowUp> followupQuestions, @Nonnull CheckedBiFunction<Answers, String, String> formatter) {
+	protected FileSelectionQuestionTemplate newInstance(@NotNull String key, @NotNull String question, @NotNull ImmutableList<FollowUp> followupQuestions, @NotNull CheckedBiFunction<Answers, String, String> formatter) {
 		return new FileSelectionQuestionTemplate(key, question, followupQuestions, choices, questionCreator, formatter);
 	}
 
-	public FileSelectionQuestionTemplate withQuestionCreator(@Nonnull QuestionCreator questionCreator) {
+	public FileSelectionQuestionTemplate withQuestionCreator(@NotNull QuestionCreator questionCreator) {
 		return new FileSelectionQuestionTemplate(getKey(), getQuestion(), getFollowupQuestion(), choices, questionCreator, getFormatter());
 	}
 
 	@FunctionalInterface
 	public interface QuestionCreator {
-		FileSelectQuestion createQuestion(@Nonnull String key, @Nonnull String question, @Nonnull List<File> choices);
+		FileSelectQuestion createQuestion(@NotNull String key, @NotNull String question, @NotNull List<File> choices);
 	}
 
 	@Override
-	public FileSelectQuestion toQuestion(@Nonnull Answers answers) throws ForgeException {
+	public FileSelectQuestion toQuestion(@NotNull Answers answers) throws ForgeException {
 		return questionCreator.createQuestion(getKey(), getFormattedQuestion(answers), choices);
 	}
 }

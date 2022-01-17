@@ -15,20 +15,20 @@
 
 package com.jeroensteenbeeke.andalite.java.analyzer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public final class ClassDefinition {
 	private final String packageName;
 
 	private final String className;
 
-	private ClassDefinition(@Nonnull String packageName, @Nonnull String className) {
+	private ClassDefinition(@NotNull String packageName, @NotNull String className) {
 		super();
 		this.packageName = packageName;
 		this.className = className;
 	}
 
-	@Nonnull
+	@NotNull
 	public String getFullName() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(packageName);
@@ -40,18 +40,18 @@ public final class ClassDefinition {
 		return sb.toString();
 	}
 
-	@Nonnull
+	@NotNull
 	public String getClassName() {
 		return className;
 	}
 
-	@Nonnull
+	@NotNull
 	public String getPackageName() {
 		return packageName;
 	}
 
-	@Nonnull
-	public static ClassDefinition fromFQDN(@Nonnull String fqdn) {
+	@NotNull
+	public static ClassDefinition fromFQDN(@NotNull String fqdn) {
 		if (fqdn.isEmpty()) {
 			return new ClassDefinition("", "");
 		} else {

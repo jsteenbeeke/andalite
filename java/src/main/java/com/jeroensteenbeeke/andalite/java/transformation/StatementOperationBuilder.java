@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
@@ -44,17 +44,17 @@ public class StatementOperationBuilder<S extends AnalyzedStatement<? super S, ?>
 	}
 
 	@SuppressWarnings("unchecked")
-	public void ensureNextStatement(@Nonnull String statement) {
+	public void ensureNextStatement(@NotNull String statement) {
 		ensure((IJavaOperation<S>) new EnsureNextStatement<>(statement));
 	}
 
 	@SuppressWarnings("unchecked")
-	public <I extends Enum<I> & IInsertionPoint<S>> void ensurePrefixComment(@Nonnull String comment) {
+	public <I extends Enum<I> & IInsertionPoint<S>> void ensurePrefixComment(@NotNull String comment) {
 		ensure((IJavaOperation<S>) new EnsureStatementComment<I>(comment, true));
 	}
 
 	@SuppressWarnings("unchecked")
-	public <I extends Enum<I> & IInsertionPoint<S>> void ensureSuffixComment(@Nonnull String comment) {
+	public <I extends Enum<I> & IInsertionPoint<S>> void ensureSuffixComment(@NotNull String comment) {
 		ensure((IJavaOperation<S>) new EnsureStatementComment<I>(comment,
 																 false));
 	}

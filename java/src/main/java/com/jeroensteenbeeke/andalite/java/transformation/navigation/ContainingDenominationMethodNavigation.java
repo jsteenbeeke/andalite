@@ -19,7 +19,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.*;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -34,10 +34,10 @@ public class ContainingDenominationMethodNavigation<T extends ContainingDenomina
 	private final List<ParameterDescriptor> descriptors;
 
 	public ContainingDenominationMethodNavigation(
-			@Nonnull IJavaNavigation<T> denominationNavigation,
-			@Nonnull String name, @Nullable String type,
+			@NotNull IJavaNavigation<T> denominationNavigation,
+			@NotNull String name, @Nullable String type,
 			@Nullable AccessModifier modifier,
-			@Nonnull List<ParameterDescriptor> descriptors) {
+			@NotNull List<ParameterDescriptor> descriptors) {
 		super(denominationNavigation);
 		this.name = name;
 		this.type = type;

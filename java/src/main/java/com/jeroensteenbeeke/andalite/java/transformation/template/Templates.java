@@ -4,22 +4,22 @@ import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.transformation.IAnnotationOperationBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class Templates {
 	static final String JAVA_LANG = "java.lang";
 
-	@Nonnull
+	@NotNull
 	public static ClassTemplate aPublicClass() {
 		return new ClassTemplate(JavaRecipeBuilder::ensurePublicClass, JavaRecipeBuilder::inPublicClass);
 	}
 
-	@Nonnull
+	@NotNull
 	public static ClassTemplate aPackageClass(String name) {
 		return new ClassTemplate(b -> b.ensurePackageClass(name), b -> b.inPackageClass(name));
 	}
 
-	@Nonnull
+	@NotNull
 	public static InterfaceTemplate aPublicInterface() {
 		return new InterfaceTemplate(ImmutableList.of(), ImmutableList.of());
 	}
@@ -28,42 +28,42 @@ public class Templates {
 		return new EnumTemplate(ImmutableList.of(), ImmutableList.of());
 	}
 
-	public static EnumConstantTemplate enumConstant(@Nonnull String name) {
+	public static EnumConstantTemplate enumConstant(@NotNull String name) {
 		return new EnumConstantTemplate(name);
 	}
 
-	@Nonnull
-	public static ClassAnnotation classAnnotation(@Nonnull String type) {
+	@NotNull
+	public static ClassAnnotation classAnnotation(@NotNull String type) {
 		return new ClassAnnotation(TypeReference.of(type), ImmutableList.of());
 	}
 
-	@Nonnull
-	public static EnsuredImport ensuredImport(@Nonnull String fqdn) {
+	@NotNull
+	public static EnsuredImport ensuredImport(@NotNull String fqdn) {
 		return new EnsuredImport(TypeReference.of(fqdn));
 	}
 
-	@Nonnull
-	public static FieldOfType field(@Nonnull String name) {
+	@NotNull
+	public static FieldOfType field(@NotNull String name) {
 		return type -> new FieldTemplate(TypeReference.of(type), name);
 	}
 
 	@FunctionalInterface
 	public interface FieldOfType {
-		FieldTemplate ofType(@Nonnull String type);
+		FieldTemplate ofType(@NotNull String type);
 	}
 
-	@Nonnull
-	public static PropertyOfType property(@Nonnull String name) {
+	@NotNull
+	public static PropertyOfType property(@NotNull String name) {
 		return type -> new PropertyTemplate(TypeReference.of(type), name);
 	}
 
 	@FunctionalInterface
 	public interface PropertyOfType {
-		@Nonnull
-		PropertyTemplate ofType(@Nonnull String type);
+		@NotNull
+		PropertyTemplate ofType(@NotNull String type);
 	}
 
-	public static Initializer initializer(@Nonnull String expression) {
+	public static Initializer initializer(@NotNull String expression) {
 		return new Initializer(expression);
 	}
 
@@ -71,75 +71,75 @@ public class Templates {
 		return new ConstructorTemplate();
 	}
 
-	public static MethodOfType method(@Nonnull String name) {
+	public static MethodOfType method(@NotNull String name) {
 		return type -> new MethodTemplate(TypeReference.of(type), name);
 	}
 
 	@FunctionalInterface
 	public interface MethodOfType {
-		@Nonnull
-		MethodTemplate ofType(@Nonnull String type);
+		@NotNull
+		MethodTemplate ofType(@NotNull String type);
 	}
 
-	public static ParameterOfType parameter(@Nonnull String name) {
+	public static ParameterOfType parameter(@NotNull String name) {
 		return type -> new ParameterTemplate(TypeReference.of(type), name);
 	}
 
 	@FunctionalInterface
 	public interface ParameterOfType {
-		@Nonnull
-		ParameterTemplate ofType(@Nonnull String type);
+		@NotNull
+		ParameterTemplate ofType(@NotNull String type);
 	}
 
-	public static ParameterAnnotation parameterAnnotation(@Nonnull String type) {
+	public static ParameterAnnotation parameterAnnotation(@NotNull String type) {
 		return new ParameterAnnotation(TypeReference.of(type));
 	}
 
-	public static MethodAnnotation methodAnnotation(@Nonnull String type) {
+	public static MethodAnnotation methodAnnotation(@NotNull String type) {
 		return new MethodAnnotation(TypeReference.of(type));
 	}
 
-	public static Returns returns(@Nonnull String expression) {
+	public static Returns returns(@NotNull String expression) {
 		return new Returns(expression);
 	}
 
-	public static StatementTemplate statement(@Nonnull String statement) {
+	public static StatementTemplate statement(@NotNull String statement) {
 		return new StatementTemplate(statement);
 	}
 
-	public static FieldAnnotation fieldAnnotation(@Nonnull String type) {
+	public static FieldAnnotation fieldAnnotation(@NotNull String type) {
 		return new FieldAnnotation(TypeReference.of(type));
 	}
 
-	public static GetterAnnotation getterAnnotation(@Nonnull String type) {
+	public static GetterAnnotation getterAnnotation(@NotNull String type) {
 		return new GetterAnnotation(TypeReference.of(type));
 	}
 
-	public static OptionalGetterAnnotation optionalGetterAnnotation(@Nonnull String type) {
+	public static OptionalGetterAnnotation optionalGetterAnnotation(@NotNull String type) {
 		return new OptionalGetterAnnotation(TypeReference.of(type));
 	}
 
-	public static SetterParameterAnnotation setterParameterAnnotation(@Nonnull String type) {
+	public static SetterParameterAnnotation setterParameterAnnotation(@NotNull String type) {
 		return new SetterParameterAnnotation(TypeReference.of(type));
 	}
 
-	public static AnnotationValueBuilder<String> stringField(@Nonnull String name) {
+	public static AnnotationValueBuilder<String> stringField(@NotNull String name) {
 		return value -> new AnnotationValueTemplate<>(name, value, IAnnotationOperationBuilder::ensureStringValue);
 	}
 
-	public static AnnotationValueBuilder<Integer> intField(@Nonnull String name) {
+	public static AnnotationValueBuilder<Integer> intField(@NotNull String name) {
 		return value -> new AnnotationValueTemplate<>(name, value, IAnnotationOperationBuilder::ensureIntegerValue);
 	}
 
-	public static AnnotationValueBuilder<Boolean> booleanField(@Nonnull String name) {
+	public static AnnotationValueBuilder<Boolean> booleanField(@NotNull String name) {
 		return value -> new AnnotationValueTemplate<>(name, value, IAnnotationOperationBuilder::ensureBooleanValue);
 	}
 
-	public static AnnotationValueBuilder<String> fieldAccessField(@Nonnull String name) {
+	public static AnnotationValueBuilder<String> fieldAccessField(@NotNull String name) {
 		return value -> new AnnotationValueTemplate<>(name, value, IAnnotationOperationBuilder::ensureFieldAccessValue);
 	}
 
-	public static AnnotationValueBuilder<String> classField(@Nonnull String name) {
+	public static AnnotationValueBuilder<String> classField(@NotNull String name) {
 		return value -> new AnnotationValueTemplate<>(name, value, IAnnotationOperationBuilder::ensureClassValue);
 	}
 

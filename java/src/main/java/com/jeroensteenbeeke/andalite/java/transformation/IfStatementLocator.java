@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.IInsertionPoint;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
@@ -37,7 +37,7 @@ public class IfStatementLocator<T extends IBodyContainer<T, I>, I extends Enum<I
 	}
 
 	public IfStatementLocatorTerminator withExpression(
-			@Nonnull String expression) {
+			@NotNull String expression) {
 		return nextInChain(new ByExpressionIfStatementNavigation<>(
 				body.getNavigation(), expression));
 	}

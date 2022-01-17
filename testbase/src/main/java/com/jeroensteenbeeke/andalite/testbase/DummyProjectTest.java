@@ -1,36 +1,26 @@
 package com.jeroensteenbeeke.andalite.testbase;
 
-import static org.junit.Assert.assertTrue;
+import com.google.common.collect.*;
+import com.google.common.io.Files;
+import com.google.common.util.concurrent.Atomics;
+import com.jeroensteenbeeke.andalite.core.AndaliteContext;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
+import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
+import com.jeroensteenbeeke.lux.Result;
+import com.jeroensteenbeeke.lux.TypedResult;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-import com.jeroensteenbeeke.lux.Result;
-import org.junit.After;
-import org.junit.Before;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.io.Files;
-import com.google.common.util.concurrent.Atomics;
-import com.jeroensteenbeeke.lux.ActionResult;
-import com.jeroensteenbeeke.andalite.core.AndaliteContext;
-import com.jeroensteenbeeke.lux.TypedResult;
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
-import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public abstract class DummyProjectTest {
 	private static final Logger log = LoggerFactory
@@ -81,7 +71,7 @@ public abstract class DummyProjectTest {
 		return ImmutableMap.copyOf(config);
 	}
 
-	@Before
+	@BeforeEach
 	public void initContext() {
 		Multimap<String, DummyFile> packageDummies = LinkedHashMultimap
 				.create();
@@ -152,7 +142,7 @@ public abstract class DummyProjectTest {
 							}
 						});
 
-		assertTrue(result.get(), success.get());
+		assertTrue(success.get(), result.get());
 	}
 
 	protected final File getBaseFolder() {
@@ -244,7 +234,7 @@ public abstract class DummyProjectTest {
 		return result;
 	}
 
-	@After
+	@AfterEach
 	public void tearDownContext() {
 		deleteTree(baseFolder);
 	}

@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.expression;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
@@ -25,19 +25,19 @@ public class CastExpression extends AnalyzedExpression {
 	private final AnalyzedType type;
 	private final AnalyzedExpression expression;
 
-	public CastExpression(@Nonnull Location location,
-			@Nonnull AnalyzedType type, @Nonnull AnalyzedExpression expression) {
+	public CastExpression(@NotNull Location location,
+			@NotNull AnalyzedType type, @NotNull AnalyzedExpression expression) {
 		super(location);
 		this.type = type;
 		this.expression = expression;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedType getType() {
 		return type;
 	}
 
-	@Nonnull
+	@NotNull
 	public AnalyzedExpression getExpression() {
 		return expression;
 	}

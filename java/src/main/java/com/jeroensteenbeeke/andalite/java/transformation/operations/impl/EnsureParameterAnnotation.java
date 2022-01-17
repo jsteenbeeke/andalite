@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation.operations.impl;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.core.Transformation;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedParameter;
@@ -29,12 +29,12 @@ public class EnsureParameterAnnotation
 	}
 
 	@Override
-	protected boolean isNewlineBefore(@Nonnull AnalyzedParameter input) {
+	protected boolean isNewlineBefore(@NotNull AnalyzedParameter input) {
 		return false;
 	}
 
 	@Override
-	protected boolean isNewlineAfter(@Nonnull AnalyzedParameter input) {
+	protected boolean isNewlineAfter(@NotNull AnalyzedParameter input) {
 		return false;
 	}
 

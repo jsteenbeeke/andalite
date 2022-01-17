@@ -20,7 +20,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEnumMethod;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnsureEnumMethodBuilder
 		extends AbstractMethodBuilder<IEnumOperation, EnsureEnumMethodBuilder> {
@@ -32,7 +32,7 @@ public class EnsureEnumMethodBuilder
 	}
 
 	@Override
-	public IEnumOperation named(@Nonnull String name) {
+	public IEnumOperation named(@NotNull String name) {
 		EnsureEnumMethod ensureEnumMethod = new EnsureEnumMethod(name,
 				getType(), getModifier(), getDescriptors());
 		onCreate.accept(ensureEnumMethod);

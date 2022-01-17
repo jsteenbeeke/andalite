@@ -6,7 +6,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedExpression;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedStatement;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.SwitchEntryStatement;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -25,7 +25,7 @@ public class SwitchExpression extends AnalyzedExpression {
 		this.statements = statements;
 	}
 
-	public SwitchExpression addStatement(@Nonnull SwitchEntryStatement statement) {
+	public SwitchExpression addStatement(@NotNull SwitchEntryStatement statement) {
 		return new SwitchExpression(getLocation(), selector, ImmutableList.<SwitchEntryStatement>builder()
 			.addAll(statements)
 			.add(statement)

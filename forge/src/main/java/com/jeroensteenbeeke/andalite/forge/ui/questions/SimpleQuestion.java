@@ -14,7 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.forge.ui.questions;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
@@ -30,7 +30,7 @@ public class SimpleQuestion extends AbstractQuestion {
 		return answer instanceof String && !((String) answer).isEmpty();
 	}
 
-	public SimpleQuestion matching(@Nonnull final String pattern) {
+	public SimpleQuestion matching(@NotNull final String pattern) {
 		if (pattern.equals(MATCH_ALL)) {
 			return this;
 		}
@@ -46,7 +46,7 @@ public class SimpleQuestion extends AbstractQuestion {
 	}
 
 	public SimpleQuestion withDisallowedWords(Boolean caseSensitive,
-		@Nonnull Set<String> disallowedWords) {
+		@NotNull Set<String> disallowedWords) {
 		if (caseSensitive == null) {
 			return this;
 		}

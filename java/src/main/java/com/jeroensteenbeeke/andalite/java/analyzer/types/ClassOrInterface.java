@@ -19,7 +19,7 @@ import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.java.analyzer.LocatedName;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
@@ -33,10 +33,10 @@ public class ClassOrInterface extends AnalyzedType {
 
 	private final List<AnalyzedType> typeArguments;
 
-	public ClassOrInterface(@Nonnull final Location location,
-			@Nonnull final LocatedName<?> name,
+	public ClassOrInterface(@NotNull final Location location,
+			@NotNull final LocatedName<?> name,
 			@Nullable final ClassOrInterface scope,
-			@Nonnull final List<AnalyzedType> typeArguments) {
+			@NotNull final List<AnalyzedType> typeArguments) {
 		super(location);
 		this.name = name.getName();
 		this.nameLocation = name.getLocation();

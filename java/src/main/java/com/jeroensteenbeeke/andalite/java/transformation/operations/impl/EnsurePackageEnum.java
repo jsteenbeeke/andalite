@@ -26,7 +26,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedEnum;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.ICompilationUnitOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Ensures that a given compilation unit will have a enum with default
@@ -54,7 +54,7 @@ public class EnsurePackageEnum implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedSourceFile input) {
+	public List<Transformation> perform(@NotNull AnalyzedSourceFile input) {
 		for (AnalyzedEnum analyzedEnum : input.getEnums()) {
 			if (analyzedEnum.getAccessModifier() == AccessModifier.DEFAULT
 					&& expectedEnumName.equals(analyzedEnum.getEnumName())) {
@@ -74,7 +74,7 @@ public class EnsurePackageEnum implements ICompilationUnitOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedSourceFile input) {
+	public ActionResult verify(@NotNull AnalyzedSourceFile input) {
 		for (AnalyzedEnum analyzedEnum : input.getEnums()) {
 			if (analyzedEnum.getAccessModifier() == AccessModifier.DEFAULT
 					&& expectedEnumName.equals(analyzedEnum.getEnumName())) {

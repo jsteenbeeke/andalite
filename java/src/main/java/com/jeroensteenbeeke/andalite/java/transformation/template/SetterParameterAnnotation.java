@@ -4,23 +4,23 @@ import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class SetterParameterAnnotation extends AnnotationAdditionTemplate<SetterParameterAnnotation> implements PropertyElementTemplate {
 	private final TypeReference type;
 
-	SetterParameterAnnotation(@Nonnull TypeReference type) {
+	SetterParameterAnnotation(@NotNull TypeReference type) {
 		this(type, ImmutableList.of());
 	}
 
-	private SetterParameterAnnotation(@Nonnull TypeReference type, @Nonnull ImmutableList<AnnotationValueTemplate<?>> values) {
+	private SetterParameterAnnotation(@NotNull TypeReference type, @NotNull ImmutableList<AnnotationValueTemplate<?>> values) {
 		super(values);
 		this.type = type;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	protected SetterParameterAnnotation newInstance(@Nonnull ImmutableList<AnnotationValueTemplate<?>> templates) {
+	protected SetterParameterAnnotation newInstance(@NotNull ImmutableList<AnnotationValueTemplate<?>> templates) {
 		return new SetterParameterAnnotation(type, templates);
 	}
 

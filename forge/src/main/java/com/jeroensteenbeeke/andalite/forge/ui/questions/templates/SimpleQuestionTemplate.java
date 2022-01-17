@@ -7,7 +7,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.SimpleQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.templates.fn.CheckedBiFunction;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 public class SimpleQuestionTemplate
@@ -20,7 +20,7 @@ public class SimpleQuestionTemplate
 
 	private final Boolean disallowCaseSensitive;
 
-	SimpleQuestionTemplate(@Nonnull String key, @Nonnull String question) {
+	SimpleQuestionTemplate(@NotNull String key, @NotNull String question) {
 		super(key, question);
 		this.pattern = MATCH_ALL;
 		this.disallowCaseSensitive = null;
@@ -37,7 +37,7 @@ public class SimpleQuestionTemplate
 		this.disallowedWords = ImmutableSet.copyOf(disallowedWords);
 	}
 
-	public SimpleQuestionTemplate matchingPattern(@Nonnull String pattern) {
+	public SimpleQuestionTemplate matchingPattern(@NotNull String pattern) {
 		return new SimpleQuestionTemplate(getKey(), getQuestion(),
 			getFollowupQuestion(), pattern, getFormatter(), disallowCaseSensitive, disallowedWords);
 	}
@@ -48,28 +48,28 @@ public class SimpleQuestionTemplate
 	}
 
 	@Override
-	protected SimpleQuestionTemplate newInstance(@Nonnull String key,
-		@Nonnull String question,
-		@Nonnull ImmutableList<FollowUp> followupQuestions,
-		@Nonnull CheckedBiFunction<Answers, String, String> formatter) {
+	protected SimpleQuestionTemplate newInstance(@NotNull String key,
+		@NotNull String question,
+		@NotNull ImmutableList<FollowUp> followupQuestions,
+		@NotNull CheckedBiFunction<Answers, String, String> formatter) {
 		return new SimpleQuestionTemplate(key, question, followupQuestions,
 			pattern, formatter, disallowCaseSensitive, disallowedWords);
 	}
 
 	public SimpleQuestionTemplate withDisallowedWords(
-		@Nonnull Set<String> disallowedWords) {
+		@NotNull Set<String> disallowedWords) {
 		return new SimpleQuestionTemplate(getKey(), getQuestion(),
 			getFollowupQuestion(), pattern, getFormatter(), false, disallowedWords);
 	}
 
 	public SimpleQuestionTemplate withCaseSensitiveDisallowedWords(
-		@Nonnull Set<String> disallowedWords) {
+		@NotNull Set<String> disallowedWords) {
 		return new SimpleQuestionTemplate(getKey(), getQuestion(),
 			getFollowupQuestion(), pattern, getFormatter(), true, disallowedWords);
 	}
 
 	@Override
-	public SimpleQuestion toQuestion(@Nonnull Answers answers)
+	public SimpleQuestion toQuestion(@NotNull Answers answers)
 		throws ForgeException {
 		return new SimpleQuestion(getKey(), getFormattedQuestion(answers))
 			.matching(pattern).withDisallowedWords(disallowCaseSensitive, disallowedWords);

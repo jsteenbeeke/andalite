@@ -8,12 +8,12 @@ import com.jeroensteenbeeke.andalite.java.analyzer.statements.IfStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IStatementOperation;
 import com.jeroensteenbeeke.lux.ActionResult;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class EnsureElseBlock implements IStatementOperation<IfStatement, BaseStatement.BaseStatementInsertionPoint> {
 	@Override
-	public List<Transformation> perform(@Nonnull IfStatement input) throws OperationException {
+	public List<Transformation> perform(@NotNull IfStatement input) throws OperationException {
 		if (input.getElseStatement() == null) {
 			return ImmutableList.of(input.insertAt(BaseStatement.BaseStatementInsertionPoint.AFTER, "else {}"));
 		}
@@ -22,7 +22,7 @@ public class EnsureElseBlock implements IStatementOperation<IfStatement, BaseSta
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull IfStatement input) {
+	public ActionResult verify(@NotNull IfStatement input) {
 		if (input.getElseStatement() == null) {
 			return ActionResult.error("Statement does not have an else statement");
 		} else {

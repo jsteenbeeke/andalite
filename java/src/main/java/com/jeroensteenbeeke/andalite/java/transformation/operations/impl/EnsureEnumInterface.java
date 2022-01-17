@@ -25,7 +25,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumOperati
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IInterfaceOperation;
 import com.jeroensteenbeeke.lux.ActionResult;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +37,7 @@ public class EnsureEnumInterface implements IEnumOperation {
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull AnalyzedEnum input)
+	public List<Transformation> perform(@NotNull AnalyzedEnum input)
 		throws OperationException {
 		if (input.getInterfaces().stream().map(GenerifiedName::getName).anyMatch(interfaceName::equals)) {
 			return ImmutableList.of();
@@ -55,7 +55,7 @@ public class EnsureEnumInterface implements IEnumOperation {
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull AnalyzedEnum input) {
+	public ActionResult verify(@NotNull AnalyzedEnum input) {
 		if (input
 			.getInterfaces()
 			.stream()

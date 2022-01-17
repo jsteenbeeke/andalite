@@ -29,7 +29,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.IBodyContainer;
 import com.jeroensteenbeeke.andalite.java.analyzer.statements.ReturnStatement;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IBodyContainerOperation;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class EnsureStatement<T extends IBodyContainer<T, I>, I extends Enum<I> & IInsertionPoint<T>> implements IBodyContainerOperation<T,I> {
 	private static final Logger logger = LoggerFactory
@@ -59,7 +59,7 @@ public abstract class EnsureStatement<T extends IBodyContainer<T, I>, I extends 
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull T input)
+	public List<Transformation> perform(@NotNull T input)
 			throws OperationException {
 		if (input.isAbstract()) {
 			throw new OperationException(
@@ -95,7 +95,7 @@ public abstract class EnsureStatement<T extends IBodyContainer<T, I>, I extends 
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull T input) {
+	public ActionResult verify(@NotNull T input) {
 		if (!verification) {
 			return ActionResult.ok();
 		}

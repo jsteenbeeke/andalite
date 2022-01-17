@@ -16,7 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.InterfaceMethodType;
 import org.slf4j.Logger;
@@ -35,8 +35,8 @@ public class EnsureInterfaceMethodBuilder extends
 
 	private final InterfaceMethodType interfaceMethodType;
 
-	EnsureInterfaceMethodBuilder(@Nonnull InterfaceMethodType interfaceMethodType,
-								 @Nonnull Consumer<IInterfaceOperation> onCreate) {
+	EnsureInterfaceMethodBuilder(@NotNull InterfaceMethodType interfaceMethodType,
+								 @NotNull Consumer<IInterfaceOperation> onCreate) {
 		super("void", AccessModifier.PUBLIC);
 		this.interfaceMethodType = interfaceMethodType;
 		this.onCreate = onCreate;

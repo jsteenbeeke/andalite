@@ -5,7 +5,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.*;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureField;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.function.BiFunction;
 
 public class FieldTemplate implements ClassElementTemplate, EnumElementTemplate,
@@ -22,7 +22,7 @@ public class FieldTemplate implements ClassElementTemplate, EnumElementTemplate,
 
 	private final ImmutableList<FieldElementTemplate> templates;
 
-	FieldTemplate(@Nonnull TypeReference type, @Nonnull String name) {
+	FieldTemplate(@NotNull TypeReference type, @NotNull String name) {
 		this(type, name, AccessModifier.PRIVATE, false, false,
 			ImmutableList.of());
 	}
@@ -38,7 +38,7 @@ public class FieldTemplate implements ClassElementTemplate, EnumElementTemplate,
 		this.templates = templates;
 	}
 
-	public FieldTemplate withAccessModifier(@Nonnull AccessModifier modifier) {
+	public FieldTemplate withAccessModifier(@NotNull AccessModifier modifier) {
 		return new FieldTemplate(type, name, modifier, shouldBeStatic,
 			shouldBeFinal, templates);
 	}
@@ -53,7 +53,7 @@ public class FieldTemplate implements ClassElementTemplate, EnumElementTemplate,
 			templates);
 	}
 
-	public FieldTemplate with(@Nonnull FieldElementTemplate... templates) {
+	public FieldTemplate with(@NotNull FieldElementTemplate... templates) {
 		return new FieldTemplate(type, name, modifier, shouldBeStatic,
 			shouldBeFinal,
 			ImmutableList.<FieldElementTemplate>builder().addAll(this.templates)

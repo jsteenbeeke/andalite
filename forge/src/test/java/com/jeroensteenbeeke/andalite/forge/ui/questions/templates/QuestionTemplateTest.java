@@ -3,12 +3,12 @@ package com.jeroensteenbeeke.andalite.forge.ui.questions.templates;
 import com.google.common.collect.ImmutableSet;
 import com.jeroensteenbeeke.andalite.forge.ui.renderer.ScriptedQuestionRenderer;
 import com.jeroensteenbeeke.andalite.forge.util.JUnitFeedbackHandler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.jeroensteenbeeke.andalite.core.ResultMatchers.hasError;
 import static com.jeroensteenbeeke.andalite.core.ResultMatchers.isOk;
 import static com.jeroensteenbeeke.andalite.forge.ui.questions.templates.Questions.*;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class QuestionTemplateTest {
 	private static final String KEY_NAME = "name";

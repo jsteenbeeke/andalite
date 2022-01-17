@@ -4,23 +4,23 @@ import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.transformation.FieldOperationBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class FieldAnnotation extends AnnotationAdditionTemplate<FieldAnnotation> implements PropertyElementTemplate {
 	private final TypeReference type;
 
-	FieldAnnotation(@Nonnull TypeReference type) {
+	FieldAnnotation(@NotNull TypeReference type) {
 		this(type, ImmutableList.of());
 	}
 
-	private FieldAnnotation(@Nonnull TypeReference type, @Nonnull ImmutableList<AnnotationValueTemplate<?>> values) {
+	private FieldAnnotation(@NotNull TypeReference type, @NotNull ImmutableList<AnnotationValueTemplate<?>> values) {
 		super(values);
 		this.type = type;
 	}
 
-	@Nonnull
+	@NotNull
 	@Override
-	protected FieldAnnotation newInstance(@Nonnull ImmutableList<AnnotationValueTemplate<?>> templates) {
+	protected FieldAnnotation newInstance(@NotNull ImmutableList<AnnotationValueTemplate<?>> templates) {
 		return new FieldAnnotation(type, templates);
 	}
 

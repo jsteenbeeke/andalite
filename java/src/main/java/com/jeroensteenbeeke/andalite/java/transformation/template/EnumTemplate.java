@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class EnumTemplate {
 	private final ImmutableList<TypeReference> interfaces;
@@ -17,7 +17,7 @@ public class EnumTemplate {
 		this.templates = templates;
 	}
 
-	public EnumTemplate withImplementedInterface(@Nonnull String fqdn) {
+	public EnumTemplate withImplementedInterface(@NotNull String fqdn) {
 		return new EnumTemplate(
 			ImmutableList.<TypeReference>builder().addAll(interfaces)
 				.add(TypeReference.of(fqdn)).build(), templates);

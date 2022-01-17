@@ -27,7 +27,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.ContainingDenomination;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
 import com.jeroensteenbeeke.lux.ActionResult;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,8 +44,8 @@ public abstract class EnsureField<T extends ContainingDenomination<T,I>,I extend
 
 	private boolean volatileField = false;
 
-	public EnsureField(@Nonnull String name, @Nonnull String type,
-					   @Nonnull AccessModifier modifier) {
+	public EnsureField(@NotNull String name, @NotNull String type,
+					   @NotNull AccessModifier modifier) {
 		super();
 		this.name = name;
 		this.type = type;
@@ -71,7 +71,7 @@ public abstract class EnsureField<T extends ContainingDenomination<T,I>,I extend
 	}
 
 	@Override
-	public List<Transformation> perform(@Nonnull T input)
+	public List<Transformation> perform(@NotNull T input)
 		throws OperationException {
 		AnalyzedField field = getField(input, name);
 
@@ -167,7 +167,7 @@ public abstract class EnsureField<T extends ContainingDenomination<T,I>,I extend
 	}
 
 	@Override
-	public ActionResult verify(@Nonnull T input) {
+	public ActionResult verify(@NotNull T input) {
 		AnalyzedField field = getField(input, name);
 		if (field != null) {
 
