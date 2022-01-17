@@ -45,7 +45,7 @@ pipeline {
             steps {
                 mavenDeploy deployUser: env.MAVEN_DEPLOY_USER,
                         deployPassword: env.MAVEN_DEPLOY_PASSWORD,
-                        projects: [".", "core", "forge", "java", "maven-plugin", "testbase", "xml"]
+                        projects: [".", "core", "core-test", "forge", "java", "maven-plugin", "testbase", "xml"]
             }
         }
     }
