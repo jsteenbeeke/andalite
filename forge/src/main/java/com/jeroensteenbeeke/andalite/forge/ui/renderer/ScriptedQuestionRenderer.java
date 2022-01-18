@@ -66,7 +66,7 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 		@NotNull Question question) {
 		if (scriptedAnswers.isEmpty()) {
 			return TypedResult.fail(
-				"Scenario incorrect, no answers left but questions remaining");
+				"Scenario incorrect, no answers left but questions remaining. Next question: "+ question.getQuestion());
 		}
 		Object answer = scriptedAnswers.remove(0);
 		feedbackHandler.info("Question: %s", question.getQuestion());
