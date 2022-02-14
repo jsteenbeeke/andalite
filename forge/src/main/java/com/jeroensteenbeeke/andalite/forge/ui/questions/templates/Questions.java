@@ -88,8 +88,8 @@ public class Questions {
 			}
 
 			return withSources(sourceFiles.get(0), sourceFiles
-				.subList(0, sourceFiles.size())
-				.toArray(new AnalyzedSourceFile[sourceFiles.size() - 1]));
+				.subList(1, sourceFiles.size())
+				.toArray(AnalyzedSourceFile[]::new));
 		}
 	}
 
