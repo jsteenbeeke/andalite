@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class Questions {
+	public static NoQuestionTemplate none() {
+		return new NoQuestionTemplate();
+	}
 	public static WithKey<SimpleQuestionTemplate> simple(@NotNull String question) {
 		return key -> new SimpleQuestionTemplate(key, question);
 	}

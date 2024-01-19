@@ -25,6 +25,7 @@ import com.jeroensteenbeeke.andalite.forge.ui.actions.Failure;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.AbstractQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.Answers;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.MultipleChoiceQuestion;
+import com.jeroensteenbeeke.andalite.forge.ui.questions.NoQuestion;
 import com.jeroensteenbeeke.andalite.forge.ui.questions.templates.QuestionTemplate;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
@@ -68,20 +69,23 @@ public class ScriptedQuestionRenderer implements QuestionRenderer {
 			return TypedResult.fail(
 				"Scenario incorrect, no answers left but questions remaining. Next question: "+ question.getQuestion());
 		}
+
+		if (question instanceof NoQuestion) {
+			return TypedResult.ok(answers);
+		}
+
 		Object answer = scriptedAnswers.remove(0);
 		feedbackHandler.info("Question: %s", question.getQuestion());
-		if (question instanceof MultipleChoiceQuestion) {
-			MultipleChoiceQuestion mcq = (MultipleChoiceQuestion) question;
+		if (question instanceof MultipleChoiceQuestion mcq) {
 
-			mcq.getChoices().forEach(
+		    mcq.getChoices().forEach(
 				c -> feedbackHandler.info("\t\t - %s", c));
 		}
 
 		feedbackHandler.info("\tAnswer: %s", answer.toString());
 
-		if (question instanceof AbstractQuestion) {
-			AbstractQuestion aq = (AbstractQuestion) question;
-			if (!aq.isValidAnswer(answer)) {
+		if (question instanceof AbstractQuestion aq) {
+		    if (!aq.isValidAnswer(answer)) {
 				if (answer instanceof File) {
 					TypedResult<AnalyzedSourceFile> file = new ClassAnalyzer((File) answer).analyze()
 						.filter(aq::isValidAnswer, String.format("%s is not a valid answer", answer));

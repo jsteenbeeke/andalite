@@ -29,7 +29,6 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 
 	}
 
-
 	@Override
 	public TypedResult<ForgeRecipe> renderRecipeSelection(
 		@NotNull
@@ -48,9 +47,10 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 	}
 
 	@Override
-	public TypedResult<Answers> renderQuestion(
-		@NotNull Answers answers,
-		@NotNull Question question) {
+	public TypedResult<Answers> renderQuestion(@NotNull Answers answers, @NotNull Question question) {
+		if (question instanceof NoQuestion) {
+			return TypedResult.ok(answers);
+		}
 
 		String nextInput = input.remove(0);
 
@@ -95,10 +95,9 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 			}
 
 		}
-		if (question instanceof FileSelectQuestion) {
-			FileSelectQuestion fsQuestion = (FileSelectQuestion) question;
+		if (question instanceof FileSelectQuestion fsQuestion) {
 
-			log.info("\t{}", fsQuestion.getChoices().stream().map(File::getName).collect(Collectors.joining(", ")));
+		    log.info("\t{}", fsQuestion.getChoices().stream().map(File::getName).collect(Collectors.joining(", ")));
 
 			try {
 				int choice = Integer.parseInt(nextInput);
@@ -118,8 +117,7 @@ public class FileInputRenderer implements QuestionRenderer, FeedbackHandler {
 			}
 		}
 
-		if (question instanceof SourceFileSelectQuestion) {
-			SourceFileSelectQuestion fsQuestion = (SourceFileSelectQuestion) question;
+		if (question instanceof SourceFileSelectQuestion fsQuestion) {
 
 			log.info("\t{}", fsQuestion
 				.getChoices()
