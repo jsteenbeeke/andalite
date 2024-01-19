@@ -19,6 +19,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.ClassAnalyzer;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.lux.TypedResult;
 import io.spring.javaformat.formatter.FileFormatter;
+import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +84,8 @@ public class JavaRecipe {
 			result = new ClassAnalyzer(file).analyze();
 
 			if (!result.isOk()) {
-				logger.error("ERROR: transformation rendered file unparseable");
+				logger.error("ERROR: transformation rendered file {} unparseable", file.getPath());
+				Try.of(() -> Files.readString(file.toPath())).onSuccess(logger::error);
 				return TypedResult.fail(
 					"Navigation: %s\nOperation: %s\nParse result: %s",
 					step.navigationToString(), step.operationToString(),

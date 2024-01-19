@@ -16,13 +16,14 @@ package com.jeroensteenbeeke.andalite.forge.ui.actions;
 
 import java.io.File;
 
-import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
-import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
-import com.jeroensteenbeeke.lux.TypedResult;
-import org.w3c.dom.Document;
+import com.jeroensteenbeeke.lux.ActionResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JavaTransformation extends AbstractCompoundableAction {
+	private static final Logger log = LoggerFactory.getLogger(JavaTransformation.class);
+
 	private final File targetFile;
 
 	private final JavaRecipe recipe;
@@ -34,7 +35,9 @@ public class JavaTransformation extends AbstractCompoundableAction {
 
 	@Override
 	public ActionResult perform() {
-		return recipe.applyTo(targetFile).asSimpleResult();
+		log.info("Transforming {}", targetFile.getPath());
+
+	    return recipe.applyTo(targetFile).asSimpleResult();
 	}
 
 }
