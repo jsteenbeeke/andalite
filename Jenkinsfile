@@ -1,4 +1,8 @@
-library 'jenkins-shared-library@main'
+@Library(value = 'jenkins-shared-library@main', changelog = false)
+import com.jeroensteenbeeke.hyperion.*
+
+Hyperion hyperion = new Hyperion(this)
+def pollInterval = hyperion.scmPollInterval()
 
 pipeline {
     agent {
@@ -9,7 +13,7 @@ pipeline {
     }
 
     triggers {
-       pollSCM('H/5 * * * *')
+       pollSCM(pollInterval)
     }
 
     options {
