@@ -123,10 +123,12 @@ public class EnsureInterfaceMethod implements IInterfaceOperation {
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
 					AnalyzedType returnType = analyzedMethod.getReturnType();
-					final String returnTypeAsString = returnType != null ? returnType
-						.toJavaString() : "void";
+					final String returnTypeAsString = returnType
+											.toJavaString();
 
-					if (!type.equals(returnTypeAsString)) {
+					final String expectedReturnType = type.toJavaString(input);
+
+					if (!expectedReturnType.equals(returnTypeAsString)) {
 						return ActionResult
 							.error("Method with expected signature exists, but has incorrect return type %s (expected %s)",
 								   returnTypeAsString, type);
