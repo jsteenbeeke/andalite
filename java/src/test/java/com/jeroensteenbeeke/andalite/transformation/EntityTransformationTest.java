@@ -12,6 +12,7 @@ import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.NamedReturnType;
 import com.jeroensteenbeeke.lux.TypedResult;
 import io.vavr.control.Try;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,7 @@ public class EntityTransformationTest extends DummyAwareTest
 
 		builder.inPublicClass()
 			.forMethod()
+			.withReturnType(new NamedReturnType("Long"))
 			.named("getId")
 			.ensureAnnotation("NotNull");
 
@@ -50,6 +52,7 @@ public class EntityTransformationTest extends DummyAwareTest
 
 		builder.inPublicClass()
 			.forMethod()
+			.withReturnType(new NamedReturnType("List<FooBarRule>"))
 			.named("getRules")
 			.ensureAnnotation("NotNull");
 
@@ -64,6 +67,7 @@ public class EntityTransformationTest extends DummyAwareTest
 
 		builder.inPublicClass()
 			.forMethod()
+			.withReturnType(new NamedReturnType("String"))
 			.named("getName")
 			.ensureAnnotation("NotNull");
 
@@ -78,6 +82,7 @@ public class EntityTransformationTest extends DummyAwareTest
 
 		builder.inPublicClass()
 			.forMethod()
+			.withReturnType(new NamedReturnType("User"))
 			.named("getOwner")
 			.ensureAnnotation("NotNull");
 
@@ -92,6 +97,7 @@ public class EntityTransformationTest extends DummyAwareTest
 
 		builder.inPublicClass()
 			.forMethod()
+			.withReturnType(new NamedReturnType("List<FooBarTemplate>"))
 			.named("getTemplates")
 			.ensureAnnotation("NotNull");
 
