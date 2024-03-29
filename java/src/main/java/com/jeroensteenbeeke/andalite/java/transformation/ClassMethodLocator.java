@@ -14,10 +14,12 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedClass;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.ContainingDenominationMethodNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.VoidReturnType;
 import org.jetbrains.annotations.NotNull;
 
 public class ClassMethodLocator extends
@@ -29,7 +31,7 @@ public class ClassMethodLocator extends
 
 	ClassMethodLocator(IStepCollector collector,
 			IJavaNavigation<AnalyzedClass> parentNavigation) {
-		super(null, null);
+		super(VoidReturnType.VOID, AccessModifier.PUBLIC);
 		this.collector = collector;
 		this.parentNavigation = parentNavigation;
 

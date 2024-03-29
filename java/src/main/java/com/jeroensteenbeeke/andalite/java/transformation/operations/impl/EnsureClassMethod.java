@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.MethodReturnType;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
@@ -30,11 +31,12 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IClassOperation;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
+import org.jetbrains.annotations.NotNull;
 
 public class EnsureClassMethod extends AbstractEnsureMethod<AnalyzedClass, AnalyzedClass.ClassInsertionPoint> implements IClassOperation {
 
-	public EnsureClassMethod(String name, String type, AccessModifier modifier,
-			List<ParameterDescriptor> descriptors) {
+	public EnsureClassMethod(@NotNull String name, @NotNull MethodReturnType type, @NotNull AccessModifier modifier,
+							 @NotNull List<ParameterDescriptor> descriptors) {
 		super(name, type, modifier, descriptors);
 	}
 

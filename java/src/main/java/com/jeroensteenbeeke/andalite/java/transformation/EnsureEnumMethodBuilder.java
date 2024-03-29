@@ -20,6 +20,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEnumMethod;
 
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.VoidReturnType;
 import org.jetbrains.annotations.NotNull;
 
 public class EnsureEnumMethodBuilder
@@ -27,11 +28,12 @@ public class EnsureEnumMethodBuilder
 	private final Consumer<IEnumOperation> onCreate;
 
 	EnsureEnumMethodBuilder(Consumer<IEnumOperation> onCreate) {
-		super("void", AccessModifier.PUBLIC);
+		super(VoidReturnType.VOID, AccessModifier.PUBLIC);
 		this.onCreate = onCreate;
 	}
 
 	@Override
+	@NotNull
 	public IEnumOperation named(@NotNull String name) {
 		EnsureEnumMethod ensureEnumMethod = new EnsureEnumMethod(name,
 				getType(), getModifier(), getDescriptors());

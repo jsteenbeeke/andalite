@@ -3,6 +3,8 @@ package com.jeroensteenbeeke.andalite.java.transformation.template;
 import com.jeroensteenbeeke.andalite.core.test.DummyAwareTest;
 import com.jeroensteenbeeke.andalite.java.analyzer.*;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.NamedReturnType;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.VoidReturnType;
 import com.jeroensteenbeeke.lux.TypedResult;
 import org.junit.jupiter.api.Test;
 
@@ -143,22 +145,22 @@ public class TemplatesTest extends DummyAwareTest {
 		AnalyzedMethod setFoo = analyzedClass
 			.getMethod()
 			.withParameterOfType("String")
-			.withReturnType("void")
+			.withReturnType(VoidReturnType.VOID)
 			.named("setFoo");
 		AnalyzedMethod setBar = analyzedClass
 			.getMethod()
 			.withParameterOfType("int")
-			.withReturnType("void")
+			.withReturnType(VoidReturnType.VOID)
 			.named("setBar");
 		AnalyzedMethod setBaz = analyzedClass
 			.getMethod()
 			.withParameterOfType("Date")
-			.withReturnType("void")
+			.withReturnType(VoidReturnType.VOID)
 			.named("setBaz");
 		AnalyzedMethod setUnits = analyzedClass
 			.getMethod()
 			.withParameterOfType("List<Unit>")
-			.withReturnType("void")
+			.withReturnType(VoidReturnType.VOID)
 			.named("setUnits");
 
 		assertThat(setFoo, notNullValue());
@@ -206,17 +208,17 @@ public class TemplatesTest extends DummyAwareTest {
 		AnalyzedClass analyzedClass = classes.get(0);
 
 		assertTrue(analyzedClass.getMethod().withModifier(AccessModifier.PUBLIC)
-								.withReturnType("String").named("getFoo")
+								.withReturnType(new NamedReturnType("String")).named("getFoo")
 								.hasAnnotation("CheckForNull"));
 		assertTrue(analyzedClass.getMethod().withModifier(AccessModifier.PUBLIC)
-								.withReturnType("Optional<String>").named("foo")
+								.withReturnType(new NamedReturnType("Optional<String>")).named("foo")
 								.hasAnnotation("NotNull"));
 		AnalyzedMethod setFoo = analyzedClass.getMethod()
-											 .withModifier(AccessModifier.PUBLIC).withReturnType("void")
+											 .withModifier(AccessModifier.PUBLIC).withReturnType(VoidReturnType.VOID)
 											 .withParameterOfType("String").named("setFoo");
 		assertTrue(setFoo.getParameters().get(0).hasAnnotation("Nullable"));
 		assertTrue(analyzedClass.getMethod().withModifier(AccessModifier.PUBLIC)
-								.withReturnType("String").named("getBar").hasAnnotation("NotNull"));
+								.withReturnType(new NamedReturnType("String")).named("getBar").hasAnnotation("NotNull"));
 
 		assertTrue(analyzedClass.getMethod().withModifier(AccessModifier.PUBLIC)
 								.withParameterOfType("String").named("setBar").getParameters()

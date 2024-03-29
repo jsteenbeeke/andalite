@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.MethodReturnType;
 import com.jeroensteenbeeke.lux.ActionResult;
 import com.jeroensteenbeeke.andalite.core.Location;
 import com.jeroensteenbeeke.andalite.core.Transformation;
@@ -35,13 +36,13 @@ import org.jetbrains.annotations.NotNull;
 public class EnsureInterfaceMethod implements IInterfaceOperation {
 	private final String name;
 
-	private final String type;
+	private final MethodReturnType type;
 
 	private final InterfaceMethodType methodType;
 
 	private final List<ParameterDescriptor> descriptors;
 
-	public EnsureInterfaceMethod(String name, String type, InterfaceMethodType methodType,
+	public EnsureInterfaceMethod(String name, MethodReturnType type, InterfaceMethodType methodType,
 								 List<ParameterDescriptor> descriptors) {
 		this.name = name;
 		this.type = type;
@@ -59,7 +60,7 @@ public class EnsureInterfaceMethod implements IInterfaceOperation {
 					final String returnTypeAsString = returnType
 						.toJavaString();
 
-					if (!type.equals(returnTypeAsString)) {
+					if (!type.toJavaString(input).equals(returnTypeAsString)) {
 						throw new OperationException(
 							String.format(
 								"Method with expected signature exists, but has incorrect return type %s (expected %s)",
@@ -86,7 +87,7 @@ public class EnsureInterfaceMethod implements IInterfaceOperation {
 				break;
 		}
 
-		code.append(type);
+		code.append(type.toJavaString(input));
 		code.append(" ");
 		code.append(name);
 		code.append("(");

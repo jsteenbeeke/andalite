@@ -14,6 +14,7 @@
  */
 package com.jeroensteenbeeke.andalite.java.analyzer.matchers;
 
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.VoidReturnType;
 import org.hamcrest.Matcher;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
@@ -26,12 +27,12 @@ public class GetMethodBuilder
 		extends
 		AbstractMethodBuilder<Matcher<ContainingDenomination<?,?>>, GetMethodBuilder> {
 	public GetMethodBuilder() {
-		super("void", AccessModifier.PUBLIC);
+		super(VoidReturnType.VOID, AccessModifier.PUBLIC);
 	}
 
 	@Override
 	@NotNull
-	public Matcher<ContainingDenomination<?,?>> named(String name) {
+	public Matcher<ContainingDenomination<?,?>> named(@NotNull String name) {
 		return new MethodMatcher(getModifier(), getType(), name,
 				getDescriptors());
 	}

@@ -5,6 +5,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.NamedReturnType;
 import com.jeroensteenbeeke.lux.Result;
 import com.jeroensteenbeeke.lux.TypedResult;
 import org.junit.jupiter.api.Test;
@@ -42,13 +43,13 @@ public class EnumTest extends DummyAwareTest {
 			.inPublicEnum()
 			.ensureMethod()
 			.withModifier(AccessModifier.PUBLIC)
-			.withReturnType("String")
+			.withReturnType(new NamedReturnType("String"))
 			.named("getDescription");
 		builder
 			.inPublicEnum()
 			.forMethod()
 			.withModifier(AccessModifier.PUBLIC)
-			.withReturnType("String")
+			.withReturnType(new NamedReturnType("String"))
 			.named("getDescription")
 			.inBody()
 			.ensureReturnAsLastStatement("\"Test\"");
@@ -57,14 +58,14 @@ public class EnumTest extends DummyAwareTest {
 			.forConstant("foo")
 			.ensureMethod()
 			.withModifier(AccessModifier.PUBLIC)
-			.withReturnType("String")
+			.withReturnType(new NamedReturnType("String"))
 			.named("getBar");
 		builder
 			.inPublicEnum()
 			.forConstant("foo")
 			.forMethod()
 			.withModifier(AccessModifier.PUBLIC)
-			.withReturnType("String")
+			.withReturnType(new NamedReturnType("String"))
 			.named("getBar")
 			.inBody()
 			.ensureReturnAsLastStatement("\"BAR\"");

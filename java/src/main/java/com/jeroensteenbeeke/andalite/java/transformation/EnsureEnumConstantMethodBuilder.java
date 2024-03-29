@@ -20,6 +20,7 @@ import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumOperati
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEnumConstantMethod;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.EnsureEnumMethod;
 
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.VoidReturnType;
 import org.jetbrains.annotations.NotNull;
 import java.util.function.Consumer;
 
@@ -28,11 +29,12 @@ public class EnsureEnumConstantMethodBuilder
 	private final Consumer<IEnumConstantOperation> onCreate;
 
 	EnsureEnumConstantMethodBuilder(Consumer<IEnumConstantOperation> onCreate) {
-		super("void", AccessModifier.PUBLIC);
+		super(VoidReturnType.VOID, AccessModifier.PUBLIC);
 		this.onCreate = onCreate;
 	}
 
 	@Override
+	@NotNull
 	public IEnumConstantOperation named(@NotNull String name) {
 		EnsureEnumConstantMethod ensureEnumMethod = new EnsureEnumConstantMethod(name,
 																		 getType(), getModifier(), getDescriptors());

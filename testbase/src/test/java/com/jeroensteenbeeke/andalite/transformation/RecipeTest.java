@@ -23,6 +23,8 @@ import com.jeroensteenbeeke.andalite.java.analyzer.annotation.BaseValue;
 import com.jeroensteenbeeke.andalite.java.analyzer.annotation.StringValue;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipe;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.NamedReturnType;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.VoidReturnType;
 import com.jeroensteenbeeke.lux.Result;
 import com.jeroensteenbeeke.lux.TypedResult;
 import org.hamcrest.MatcherAssert;
@@ -86,25 +88,25 @@ public class RecipeTest extends DummyAwareTest {
 				.ofType("String").named("setFoo");
 		java.inPublicClass().ensureMethod().withParameter("bar")
 				.ofType("String").named("setBar");
-		java.inPublicClass().ensureMethod().withReturnType("String")
+		java.inPublicClass().ensureMethod().withReturnType(new NamedReturnType("String"))
 				.named("getFoo");
-		java.inPublicClass().ensureMethod().withReturnType("String")
+		java.inPublicClass().ensureMethod().withReturnType(new NamedReturnType("String"))
 				.named("getBar");
 
 		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
-				.withReturnType("String").named("getFoo").inBody()
+				.withReturnType(new NamedReturnType("String")).named("getFoo").inBody()
 				.ensureReturnAsLastStatement("foo");
 
 		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
-				.withReturnType("String").named("getBar").inBody()
+				.withReturnType(new NamedReturnType("String")).named("getBar").inBody()
 				.ensureStatement("return bar;");
 
 		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
-				.withReturnType("void").withParameter("foo").ofType("String")
+				.withReturnType(VoidReturnType.VOID).withParameter("foo").ofType("String")
 				.named("setFoo").inBody().ensureStatement("this.foo = foo;");
 
 		java.inPublicClass().forMethod().withModifier(AccessModifier.PUBLIC)
-				.withReturnType("void").withParameter("bar").ofType("String")
+				.withReturnType(VoidReturnType.VOID).withParameter("bar").ofType("String")
 				.named("setBar").inBody().ensureStatement("this.bar = bar;");
 
 		java.ensureImport(

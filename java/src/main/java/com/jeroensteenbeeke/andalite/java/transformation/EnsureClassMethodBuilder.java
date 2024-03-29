@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import java.util.function.Consumer;
 
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.VoidReturnType;
 import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
@@ -27,12 +28,13 @@ public class EnsureClassMethodBuilder extends
 	private final Consumer<IClassOperation> onCreate;
 
 	EnsureClassMethodBuilder(@NotNull Consumer<IClassOperation> onCreate) {
-		super("void", AccessModifier.PUBLIC);
+		super(VoidReturnType.VOID, AccessModifier.PUBLIC);
 		this.onCreate = onCreate;
 	}
 
 	@Override
-	public EnsureClassMethod named(String name) {
+	@NotNull
+	public EnsureClassMethod named(@NotNull String name) {
 		EnsureClassMethod classMethod = new EnsureClassMethod(name, getType(),
 				getModifier(), getDescriptors());
 		onCreate.accept(classMethod);

@@ -1,13 +1,13 @@
 package com.jeroensteenbeeke.andalite.java.transformation.template;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList;
 import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
 import com.jeroensteenbeeke.andalite.java.transformation.ClassScopeOperationBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.JavaRecipeBuilder;
 import com.jeroensteenbeeke.andalite.java.transformation.MethodOperationBuilder;
-
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.NamedReturnType;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Predicate;
 
 public class PropertyTemplate implements ClassElementTemplate {
@@ -17,20 +17,25 @@ public class PropertyTemplate implements ClassElementTemplate {
 
 	private final boolean nullable;
 
+	private final boolean fluent;
+
 	private final ImmutableList<PropertyElementTemplate> templates;
 
 	private final ImmutableList<String> extraImports;
 
 	PropertyTemplate(TypeReference type, String name) {
-		this(type, name, type.nullable(), ImmutableList.of(), ImmutableList.of());
+		this(type, name, type.nullable(), false, ImmutableList.of(), ImmutableList.of());
 	}
 
-	private PropertyTemplate(TypeReference type, String name, boolean nullable, ImmutableList<PropertyElementTemplate> templates, ImmutableList<String> extraImports) {
+	private PropertyTemplate(
+		TypeReference type, String name, boolean nullable, boolean fluent, ImmutableList<PropertyElementTemplate> templates,
+		ImmutableList<String> extraImports) {
 		this.type = type;
 		this.name = name;
 		this.nullable = nullable;
 		this.templates = templates;
 		this.extraImports = extraImports;
+		this.fluent = fluent;
 	}
 
 	public PropertyTemplate nullable(boolean nullable) {
@@ -42,7 +47,7 @@ public class PropertyTemplate implements ClassElementTemplate {
 			return this;
 		}
 
-		return new PropertyTemplate(type, name, nullable, templates, extraImports);
+		return new PropertyTemplate(type, name, nullable, fluent, templates, extraImports);
 	}
 
 	public PropertyTemplate nonNull() {
@@ -50,12 +55,21 @@ public class PropertyTemplate implements ClassElementTemplate {
 			return this;
 		}
 
-		return new PropertyTemplate(type, name, false, templates, extraImports);
+		return new PropertyTemplate(type, name, false, fluent, templates, extraImports);
 	}
+
+	public PropertyTemplate fluentSetter() {
+		if (fluent) {
+			return this;
+		}
+
+		return new PropertyTemplate(type, name, nullable, true, templates, extraImports);
+	}
+
 
 	public PropertyTemplate with(PropertyElementTemplate... templates) {
 		return new PropertyTemplate(
-			type, name, nullable,
+			type, name, nullable, fluent,
 			ImmutableList.<PropertyElementTemplate>builder()
 				.addAll(this.templates)
 				.addAll(ImmutableList.copyOf(templates))
@@ -80,7 +94,7 @@ public class PropertyTemplate implements ClassElementTemplate {
 
 	public PropertyTemplate whichRequiresImport(String... imports) {
 		return new PropertyTemplate(
-			type, name, nullable, templates,
+			type, name, nullable, fluent, templates,
 			ImmutableList.<String>builder()
 				.addAll(this.extraImports)
 				.addAll(ImmutableList.copyOf(imports))
@@ -113,12 +127,12 @@ public class PropertyTemplate implements ClassElementTemplate {
 
 		inClass
 			.ensureMethod()
-			.withReturnType(type.name())
+			.withReturnType(type.toMethodReturnType())
 			.withModifier(AccessModifier.PUBLIC)
 			.named(getter);
 		MethodOperationBuilder getterOperationBuilder = inClass
 			.forMethod()
-			.withReturnType(type.name())
+			.withReturnType(type.toMethodReturnType())
 			.withModifier(AccessModifier.PUBLIC)
 			.named(getter);
 		getterOperationBuilder
@@ -129,11 +143,11 @@ public class PropertyTemplate implements ClassElementTemplate {
 
 		if (nullable) {
 			builder.ensureImport("java.util.Optional");
-			inClass.ensureMethod().withReturnType(String.format("Optional<%s>", type.name()))
-				   .withModifier(AccessModifier.PUBLIC).named(name);
+			inClass.ensureMethod().withReturnType(new NamedReturnType(String.format("Optional<%s>", type.name())))
+				.withModifier(AccessModifier.PUBLIC).named(name);
 			MethodOperationBuilder optionalGetterOperationBuilder = inClass
 				.forMethod()
-				.withReturnType(String.format("Optional<%s>", type.name()))
+				.withReturnType(new NamedReturnType(String.format("Optional<%s>", type.name())))
 				.withModifier(AccessModifier.PUBLIC)
 				.named(name);
 			optionalGetterOperationBuilder
@@ -149,7 +163,13 @@ public class PropertyTemplate implements ClassElementTemplate {
 			.withModifier(AccessModifier.PUBLIC)
 			.named(setter);
 
-		MethodOperationBuilder setterOperationBuilder = inClass
+		MethodOperationBuilder setterOperationBuilder = fluent ? inClass
+			.forMethod()
+			.withFluentReturnType()
+			.withParameter(name)
+			.ofType(type.name())
+			.withModifier(AccessModifier.PUBLIC)
+			.named(setter) : inClass
 			.forMethod()
 			.withParameter(name)
 			.ofType(type.name())
@@ -158,6 +178,11 @@ public class PropertyTemplate implements ClassElementTemplate {
 		setterOperationBuilder
 			.inBody()
 			.ensureStatement(String.format("this.%1$s = %1$s", this.name));
+		if (fluent) {
+			setterOperationBuilder
+				.inBody()
+				.ensureStatement("return this");
+		}
 		templates.forEach(t -> t.onSetter(builder, setterOperationBuilder));
 
 	}

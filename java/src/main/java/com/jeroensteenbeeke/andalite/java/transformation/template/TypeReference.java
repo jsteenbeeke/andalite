@@ -1,5 +1,8 @@
 package com.jeroensteenbeeke.andalite.java.transformation.template;
 
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.MethodReturnType;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.NamedReturnType;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.VoidReturnType;
 import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
@@ -33,6 +36,14 @@ public interface TypeReference {
 				return new PrimitiveReference(representation);
 			default:
 				return ClassReference.of(representation);
+		}
+	}
+	@NotNull
+	default MethodReturnType toMethodReturnType() {
+		if ("void".equals(name())) {
+			return VoidReturnType.VOID;
+		} else {
+			return new NamedReturnType(name());
 		}
 	}
 }

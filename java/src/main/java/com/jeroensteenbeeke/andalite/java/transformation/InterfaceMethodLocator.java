@@ -14,6 +14,8 @@
  */
 package com.jeroensteenbeeke.andalite.java.transformation;
 
+import com.jeroensteenbeeke.andalite.java.analyzer.AccessModifier;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.VoidReturnType;
 import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedInterface;
@@ -27,9 +29,9 @@ public class InterfaceMethodLocator extends
 
 	private final IJavaNavigation<AnalyzedInterface> parentNavigation;
 
-	InterfaceMethodLocator(IStepCollector collector,
-			IJavaNavigation<AnalyzedInterface> parentNavigation) {
-		super(null, null);
+	InterfaceMethodLocator(@NotNull IStepCollector collector,
+						   @NotNull IJavaNavigation<AnalyzedInterface> parentNavigation) {
+		super(VoidReturnType.VOID, AccessModifier.PUBLIC);
 		this.collector = collector;
 		this.parentNavigation = parentNavigation;
 

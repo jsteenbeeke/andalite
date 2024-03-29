@@ -15,8 +15,11 @@
 package com.jeroensteenbeeke.andalite.java.transformation;
 
 import com.jeroensteenbeeke.andalite.core.ILocatable;
+import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
+import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedSourceFile;
 import com.jeroensteenbeeke.andalite.java.transformation.navigation.IJavaNavigation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IJavaOperation;
+import org.jetbrains.annotations.NotNull;
 
 public class AbstractOperationBuilder<T extends ILocatable, O extends IJavaOperation<T>>
 		implements IScopedOperationBuilder<T, O> {

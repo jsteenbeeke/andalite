@@ -17,6 +17,7 @@ package com.jeroensteenbeeke.andalite.java.transformation.navigation;
 import com.jeroensteenbeeke.andalite.core.exceptions.NavigationException;
 import com.jeroensteenbeeke.andalite.java.analyzer.*;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.MethodReturnType;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,7 @@ public class ContainingDenominationMethodNavigation<T extends ContainingDenomina
 		ChainedNavigation<T, AnalyzedMethod> {
 	private final String name;
 
-	private final String type;
+	private final MethodReturnType type;
 
 	private final AccessModifier modifier;
 
@@ -35,8 +36,8 @@ public class ContainingDenominationMethodNavigation<T extends ContainingDenomina
 
 	public ContainingDenominationMethodNavigation(
 			@NotNull IJavaNavigation<T> denominationNavigation,
-			@NotNull String name, @Nullable String type,
-			@Nullable AccessModifier modifier,
+			@NotNull String name, @NotNull MethodReturnType type,
+			@NotNull AccessModifier modifier,
 			@NotNull List<ParameterDescriptor> descriptors) {
 		super(denominationNavigation);
 		this.name = name;
@@ -58,14 +59,15 @@ public class ContainingDenominationMethodNavigation<T extends ContainingDenomina
 			if (name.equals(analyzedMethod.getName())) {
 				if (AnalyzeUtil.matchesSignature(analyzedMethod, descriptors)) {
 					AnalyzedType returnType = analyzedMethod.getReturnType();
-					final String returnTypeAsString = returnType != null ? returnType
-							.toJavaString() : "void";
+					final String returnTypeAsString = returnType
+												.toJavaString();
 
-					if (type != null && !type.equals(returnTypeAsString)) {
+					String expectedReturnType = type.toJavaString(chainedTarget);
+					if (!expectedReturnType.equals(returnTypeAsString)) {
 						throw new NavigationException(
 								"Method %s found, but has incorrect return type %s (expected %s)",
 								AnalyzeUtil.getMethodSignature(name,
-										descriptors), returnTypeAsString, type);
+										descriptors), returnTypeAsString, expectedReturnType);
 					}
 
 					if (modifier != null

@@ -20,6 +20,7 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedMethod;
 import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedType;
 import com.jeroensteenbeeke.andalite.java.analyzer.ContainingDenomination;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.MethodReturnType;
 import com.jeroensteenbeeke.andalite.java.util.AnalyzeUtil;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -30,12 +31,12 @@ import java.util.stream.Collectors;
 public class MethodMatcher extends
 		TypeSafeDiagnosingMatcher<ContainingDenomination<?,?>> {
 	private final AccessModifier modifier;
-	private final String type;
+	private final MethodReturnType type;
 	private final String name;
 	private final List<ParameterDescriptor> descriptors;
 
-	public MethodMatcher(AccessModifier modifier, String type, String name,
-			List<ParameterDescriptor> descriptors) {
+	public MethodMatcher(AccessModifier modifier, MethodReturnType type, String name,
+						 List<ParameterDescriptor> descriptors) {
 		this.modifier = modifier;
 		this.type = type;
 		this.name = name;
@@ -47,7 +48,7 @@ public class MethodMatcher extends
 		description.appendText("denomination has method ");
 		description.appendText(modifier.getOutput());
 		description.appendText(" ");
-		description.appendText(type);
+		description.appendText(type.toString());
 		description.appendText(" ");
 		description.appendText(name);
 		description.appendText("(");
@@ -70,10 +71,11 @@ public class MethodMatcher extends
 					final String returnTypeAsString = returnType != null ? returnType
 							.toJavaString() : "void";
 
-					if (!type.equals(returnTypeAsString)) {
+					String typeJavaString = type.toJavaString(item);
+					if (!typeJavaString.equals(returnTypeAsString)) {
 						mismatchDescription
 								.appendText("method has correct signature, but expected return type ");
-						mismatchDescription.appendText(type);
+						mismatchDescription.appendText(typeJavaString);
 						mismatchDescription.appendText(", and found ");
 						mismatchDescription.appendText(returnTypeAsString);
 

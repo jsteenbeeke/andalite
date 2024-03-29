@@ -16,6 +16,7 @@ package com.jeroensteenbeeke.andalite.java.transformation;
 
 import java.util.function.Consumer;
 
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.VoidReturnType;
 import org.jetbrains.annotations.NotNull;
 
 import com.jeroensteenbeeke.andalite.java.transformation.operations.impl.InterfaceMethodType;
@@ -35,9 +36,10 @@ public class EnsureInterfaceMethodBuilder extends
 
 	private final InterfaceMethodType interfaceMethodType;
 
-	EnsureInterfaceMethodBuilder(@NotNull InterfaceMethodType interfaceMethodType,
-								 @NotNull Consumer<IInterfaceOperation> onCreate) {
-		super("void", AccessModifier.PUBLIC);
+	EnsureInterfaceMethodBuilder(
+		@NotNull InterfaceMethodType interfaceMethodType,
+		@NotNull Consumer<IInterfaceOperation> onCreate) {
+		super(VoidReturnType.VOID, AccessModifier.PUBLIC);
 		this.interfaceMethodType = interfaceMethodType;
 		this.onCreate = onCreate;
 	}
@@ -46,7 +48,7 @@ public class EnsureInterfaceMethodBuilder extends
 	public EnsureInterfaceMethodBuilder withModifier(AccessModifier modifier) {
 		if (modifier != AccessModifier.PUBLIC && modifier != AccessModifier.PRIVATE) {
 			log.warn("Access modifier {} ignored on interface",
-					 modifier.name());
+				modifier.name());
 			return this;
 		}
 
@@ -54,7 +56,8 @@ public class EnsureInterfaceMethodBuilder extends
 	}
 
 	@Override
-	public IInterfaceOperation named(String name) {
+	@NotNull
+	public IInterfaceOperation named(@NotNull String name) {
 		EnsureInterfaceMethod ensureInterfaceMethod = new EnsureInterfaceMethod(
 			name, getType(), interfaceMethodType, getDescriptors());
 		onCreate.accept(ensureInterfaceMethod);

@@ -20,11 +20,12 @@ import com.jeroensteenbeeke.andalite.java.analyzer.AnalyzedEnumConstant;
 import com.jeroensteenbeeke.andalite.java.transformation.ParameterDescriptor;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumConstantOperation;
 import com.jeroensteenbeeke.andalite.java.transformation.operations.IEnumOperation;
+import com.jeroensteenbeeke.andalite.java.transformation.returntypes.MethodReturnType;
 
 import java.util.List;
 
 public class EnsureEnumConstantMethod extends AbstractEnsureMethod<AnalyzedEnumConstant, AnalyzedEnumConstant.EnumConstantInsertionPoint> implements IEnumConstantOperation {
-	public EnsureEnumConstantMethod(String name, String type, AccessModifier modifier, List<ParameterDescriptor> descriptors) {
+	public EnsureEnumConstantMethod(String name, MethodReturnType type, AccessModifier modifier, List<ParameterDescriptor> descriptors) {
 		super(name, type, modifier, descriptors);
 	}
 
