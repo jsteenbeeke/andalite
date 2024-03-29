@@ -156,12 +156,22 @@ public class PropertyTemplate implements ClassElementTemplate {
 			templates.forEach(t -> t.onOptionalGetter(builder, optionalGetterOperationBuilder));
 		}
 
-		inClass
-			.ensureMethod()
-			.withParameter(name)
-			.ofType(type.name())
-			.withModifier(AccessModifier.PUBLIC)
-			.named(setter);
+		if (fluent) {
+			inClass
+				.ensureMethod()
+				.withFluentReturnType()
+				.withParameter(name)
+				.ofType(type.name())
+				.withModifier(AccessModifier.PUBLIC)
+				.named(setter);
+		} else {
+			inClass
+				.ensureMethod()
+				.withParameter(name)
+				.ofType(type.name())
+				.withModifier(AccessModifier.PUBLIC)
+				.named(setter);
+		}
 
 		MethodOperationBuilder setterOperationBuilder = fluent ? inClass
 			.forMethod()
