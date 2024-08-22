@@ -17,6 +17,10 @@ public interface PropertyElementTemplate extends FieldElementTemplate{
 
 	}
 
+	default void onFluentSetter(JavaRecipeBuilder builder, MethodOperationBuilder methodBuilder) {
+
+	}
+
 	@Override
 	default void onField(JavaRecipeBuilder builder, FieldOperationBuilder fieldBuilder) {
 

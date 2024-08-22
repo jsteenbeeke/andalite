@@ -194,7 +194,9 @@ public class PropertyTemplate implements ClassElementTemplate {
 				.ensureStatement("return this");
 		}
 		templates.forEach(t -> t.onSetter(builder, setterOperationBuilder));
-
+		if (fluent) {
+			templates.forEach(t -> t.onFluentSetter(builder, setterOperationBuilder));
+		}
 	}
 
 	@FunctionalInterface

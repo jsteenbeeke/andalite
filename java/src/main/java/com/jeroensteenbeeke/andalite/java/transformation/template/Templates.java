@@ -119,6 +119,10 @@ public class Templates {
 		return new OptionalGetterAnnotation(TypeReference.of(type));
 	}
 
+	public static FluentSetterAnnotation fluentSetterAnnotation(@NotNull String type) {
+		return new FluentSetterAnnotation(TypeReference.of(type));
+	}
+
 	public static SetterParameterAnnotation setterParameterAnnotation(@NotNull String type) {
 		return new SetterParameterAnnotation(TypeReference.of(type));
 	}
