@@ -40,7 +40,8 @@ pipeline {
             }
 
             steps {
-                jacoco changeBuildStatus: false, exclusionPattern: '**/*Test*.class,**/HelpMojo.class'
+		discoverGitReferenceBuild()
+		recordCoverage(tools: [[parser: 'JACOCO']])
             }
         }
         stage('Deploy') {
